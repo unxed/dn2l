@@ -1,0 +1,11 @@
+; Dos Navigator Quick run configuration file
+
+;Ctrl-Shift-F1
+;>>1
+;nemo
+;Ctrl-Shift-F2
+; Run command in the separate session.
+>2
+rar
+
+

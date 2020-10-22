@@ -1,0 +1,369 @@
+==============================================================================
+          Description of Dos Navigator's startup parameters  (DN.INI file)
+==============================================================================
+
+  * bool - boolean parameter (can have values : false/true, 0/1, no/yes)
+  * str  - string parameter
+  * long - longint parameter
+
+==============================================================================
+
+ [Interface]
+
+ EscForOutputWindow = bool  - When set to 0, the Esc key pressing acts the
+                              same as Alt-F5 pressing (User screen), when
+                              set to 1 - the same as Ctrl-O pressing (Output
+                              window)
+                              (default: 0)
+
+ SkipXLatMenu = bool        - When set to 0, the XLat table in viewer
+                              (Shift-F6) can be choosen by convenient menu,
+                              when set to 1 - by unconvenient, but habitual
+                              for some old DN users file dialog
+                              (default: 0)
+
+ UseEnterInViewer = long    - When set to 0, the Enter key pressing in viewer
+                              does nothing. When set to 1, the Enter key
+                              pressing will close viewer window. When set
+                              to 2, the Enter key pressing will switch
+                              between text, hexadecimal and dump viewing modes
+                              in viewer.
+                              (default: 0)
+
+ PreserveMenuPositions = bool - When switched on, the current positions in
+                              all menus will be preserved when program will
+                              be started next time.
+                              (default: 0)
+
+ HistoryErrorBeep = bool    - If switched on, Del key pressing on the "frozen"
+                              item in input history will cause the sound
+                              signal. Otherwise Del pressing on such item will
+                              be just ignored.
+                              (default: 1)
+
+ ReuseViewers = long,
+ ReuseEditors = long        - The first parameter defines the behaviour of
+                              viewer vindows, the second one defines the
+                              behaviour of editor windows. When value is set
+                              to 1, then user will be asked for activation of
+                              existing window instead of opening of the second
+                              window for the same file. When value is set
+                              to 2, such activation will be done
+                              automatically. Zero value will cause opening of
+                              new window always.
+                              (default: 0)
+
+ ReflectCopyDirection = bool - When set to 1, the copy progress indicator will
+                              grow from right to left side if files are
+                              being copied from right panel to left one.
+                              (default: 0)
+
+
+ VertScrollBarChars = str,
+ HorizScrollBarChars = str  - set the symbols for scrollbar drawing and
+                              consist of 5 symbols: first and last symbols,
+                              bar symbol, grip symbol and empty bar symbol.
+                              (default: ±þ²)
+
+
+ SystemMenuChar = long      - sets the symbol, used in first item of main
+                              menu. Symbol can be set by it's number in ASCII
+                              table
+                              (default: 4)
+
+
+ DriveSelectVCenter = bool  - When set to 1, then drive choice window
+                              (Alt-F1/Alt-F2) will be aligned vertically in
+                              cener of the screen
+                              (default: 0)
+
+ WinManagerSelectNext = bool - When set to 1, then window choise by Alt-0 will
+                               highlite by default the window following after
+                               current instead current window
+                              (default: 1)
+
+ CutDriveInfo = bool        - When set to 1, then drive descriptions in drive
+                              choice window (Alt-F1/Alt-F2) will be shortened
+                              (default: 1)
+
+==============================================================================
+
+ [Clock]
+
+ RightAlignClock = bool     - When set to 1, then the clock will be always
+                              adjacent to the right screen border
+                              (default: 0)
+
+ DaysOfWeek = str           - Allows to set the names for the days of week,
+                              which will be shown in clock area when Ctrl is
+                              pressed. These names can be different from
+                              current language defaults. If the value of this
+                              key has 14-character length, then the days of
+                              week will have two-character names, whereas
+                              if the value of the  key has 21-character
+                              length, then the days of week will have
+                              three-character names. The names of the days
+                              of week must be listed without spaces or any
+                              separators, beginning from Sunday.
+                              For example: SunMonTueWedThuFriSat. If parameter
+                              is blank or has wrong length, then two-character
+                              names will be used, which are defined in
+                              language resources.
+                              (default: use language default)
+
+ ShowDayOfWeek = bool       - Show day of week when Ctrl is pressed.
+                              (default: 1)
+
+ ShowCentury = bool         - Show four digits for current year when Ctrl
+                              is pressed.
+                              (default: 1)
+
+ ShowSeconds = bool         - Show seconds.
+                              (default: 1)
+
+ BlinkSeparator = bool      - Switches on/off the separator blinking in the
+                              clock when the key ShowSeconds is switched off.
+                              (default: 1)
+
+==============================================================================
+
+ [SmartPad]
+
+ LineChar = long            - Allows to set the symbol used as a separator in
+                              the SmartPad. The symbol must be set by it's
+                              number in ASCII table. The pseudographycal
+                              symbol used as default (-) could be unsuitable
+                              sometimes because it can not be translated to
+                              another code page.
+                              (default: 196)
+
+ InsertDate = bool          - Insert the date when opening SmartPad.
+                              (default: 1)
+
+
+==============================================================================
+
+ [Game]
+
+ EnableGame = bool          - When set to 0, then built-in game is disabled.
+                              (default: 1)
+==============================================================================
+
+ [Clipboard]
+
+ MaxClipboardSize = long    - The maximal stored Clipboard size
+                              (default: 4096)
+
+ SaveClipboardOnExit = bool - To save or not to save the Clipboard until
+                              next program start
+                              (default: 1)
+==============================================================================
+
+ [Kernel]
+
+ CtrlBreakKill = bool
+
+ SmartWindowsBoxClose = long - Defines the reaction of DN/2 on attempt to
+                               close the console window with the system close
+                               button or through the window's system menu:
+                               0 - no reaction (standard console application
+                                   behaviour)
+                               1 - the same reaction as after Alt-X pressing
+                                   or exiting program through the main menu
+                               2 - the same as 1, but without confirmation
+                                   to exit program
+                               3 - simulates reaction to Ctrl-Break pressing
+                              (default: 0)
+
+ StoreVideoMode = long      - Defines how to store video mode chosen from
+                              menu:
+                              0 - don't store
+                              1 - store as user-defined video mode 1
+                              2 - store as user-defined video mode 2
+                              (default: 0)
+
+ CoàyLimit = long           - Sets the limit of copying buffer in kilobytes.
+                              Value 0 means no buffer limitation.
+                              (default: 8192)
+
+ ShowKeyCode = long         - This key should be changed only for debug
+                              purpose. Possible values:
+                              0 - Don't show key kodes
+                              1 - Show Scan/ASCII pairs in separate window
+                              2 - Show Scan code in upper right corner
+                              3 - both 1 and 2 simultaneously
+                              (default: 0)
+
+ AutoSave = bool            - Save all DN.INI keys after restart
+                              (default: 1)
+
+ ForceDefaultArchiver = str - Can take a value of one of supported types of
+                              archivers (see "Archive files" dialog) or
+                              empty string. If non-empty value set - the
+                              archiver defined by this key will be always
+                              chosen in archiving dialog as default archiver
+                              (default: empty)
+
+==============================================================================
+
+ [Editor]
+
+ AutoBracketPairs = str     - Allows to define any number of symbol pairs,
+                              which are concerned to be a brackets for
+                              AutoBrackets function. (Note: this key has no
+                              relation to paired brackets search function)
+                              default: ()[]{}<>
+
+ WinManagerPosToEdit = bool - When set to 1, then the cursor in
+                              Windows Manager opened from the editor
+                              by Alt-0 pressing will be positioned to next
+                              editor window instead positioning to next window
+                              of any type.
+                              Note: This key action has higher priority then
+                              WinManagerSelectNext key.
+                              (default: 1)
+
+ FastSearchDeep = long      - The searching of keyword pairs like "begin/end"
+                              etc. can fail when commentaries contain these
+                              words (loosing pairs count). Setting of maximal
+                              searching depth (for example, 300 lines) allows
+                              to prevent unlimited searching through the file
+                              with long waiting time.
+                              (default: 0 - unlimited search)
+
+ DefCodePage = str          - Allows to set default code page for new files.
+                              This key can take values Dos, Win, Koi, Auto.
+                              When Auto set, then the attempt of code page
+                              autodetect will be undertaken.
+                              (default: Dos)
+
+ FastBookmark = bool        - Show (1) or hide (0) the quick bookmarks launch
+                              bar on the lower editor window border.
+                              (default: 1)
+
+ ShowBookmarks = bool       - To show (1) bookmarks in editor.
+                              (default: 1)
+
+ AutoScopeDetect = bool     - Autodetection of string search/replace scope
+                              in editor: if there is selected text then to
+                              search/replace in selected text, otherwice
+                              global.
+                              (default: 1)
+
+ DrawRShift = bool          - To switch between single and double line drawing
+                              in editor by Right Shift.
+                              (default: 1)
+
+ UnlimitUnindent = bool     - Allows to define behaviour of block shifting
+                              leftward with Ctrl+K U or Alt-Left - to shift
+                              until all strings could be shifted or to shift
+                              always.
+                              (default: 0)
+
+ F6_DuplicatesLine = bool     - When set to 0, F6 in editor used to switch
+                              on/off Optimal Fill option, when set to 1 -
+                              for current line duplication.
+                              (default: 0)
+
+==============================================================================
+
+ [FilePanels]
+
+ QuickRenameInDialog = bool - When set to 1, then Quick Rename (by Alt-F6)
+                              will be done in separate dialog window.
+                              (default: 0)
+
+
+ ShowLongName = bool        - Show long file name (if any) in selected files
+                              informatiom line (if there is neither selected
+                              files nor panel mask).
+                              (default: 1)
+
+ ShowFileMask = bool        - Show file mask if it differs from *.*
+                              (default: 1)
+
+ UpperCaseSorting = bool    - Sort file names converted to upper (1) or lower
+                              (0) case
+                              (default: 0)
+
+
+==============================================================================
+
+ [NetInfo]
+
+ NoLevelsInfo = bool        - Don't show the network information SFT/TTS Lev.
+                              Note: in DN/2 does not affects anything and kept
+                              for compatibility with DN OSP 16bit.
+                              (default: 0)
+
+==============================================================================
+
+ [TaskList]
+
+ShowExePaths = bool         - When set to 0, then the executables the
+                              processes were started from will be shown as
+                              names only, when set to 1 - as names with full
+                              path.
+                              (default: 0)
+
+KillAllowed = bool          - When set to 0, then there is a possibility to
+                              kill the process.
+                              (default: 0)
+
+FilteredList = bool         - When set to 1, then only those processes will
+                              be shown in the tasl list, which are switchable
+                              (i.e. it is possible to make them active) and
+                              are absent in user exception list. When set to
+                              0, then all processes will be shown.
+                              (default: 1)
+
+UserTaskFilter = str        - Allows to set the executables' names for the
+                              processes which are need to be excluded from
+                              task list. The names must be separated with "#"
+                              symbol.
+
+==============================================================================
+
+ [Language]
+
+ ShowLanguageMenu = bool    - The value 1 means, that choosing the
+                              "Change language" command in menu or pressing
+                              Alt-F12 will show the menu containing list of
+                              all languages available (the set of available
+                              languages is defined by searching of resource
+                              files in DN and %DNDLG% directories). This is
+                              convenient when there is more then two
+                              languages installed in program. Te value 0
+                              (default) means that the "Change language"
+                              command or Alt-F12 pressing will automatically
+                              switch to next language available after current.
+                              (default: 0)
+
+ HelpLanguageOverride = str - When non-empty value is set, then it will be
+                              concerned to be the name of the help system
+                              language. For example, when
+                              "HelpLanguageOverride=english" is set, then
+                              the help file "english.hlp" will be used.
+                              When value is empty or key is absent, then
+                              help file for current (active) language will be
+                              used. If help file for active language is
+                              absent, then help file for English language
+                              will be used.
+                              (default: )
+
+ ActiveLanguage = str       - When non-empty value is set, then it will be
+                              used as a current language name. For example,
+                              when "ActiveLanguage=russian" is set, then
+                              resource files "russian.*" will be used.
+                              When value is empty or key is absent, then
+                              the "DNLNG" environment variable will be used.
+                              If this environment variable is absent as well,
+                              then English language will be used.
+
+==============================================================================
+
+[SetupStorage]              - The keys stored in this section are used by
+                              DN/2 internally for storing Setup options and
+                              they are not supposed to be edited by user.
+
+

@@ -1,0 +1,190 @@
+[!] Now the DPMI32 version of DN/2 is available.
+[!] [OS/2][DPMI32] Now DN is able to enter network directories
+    (cd \\server\share\path), however operating system cannot run
+    programs from them (one should try full path: Shift+Ctrl+Enter, 
+    Enter).
+[!] Added search in panels of Search, Branch and Search in archive, and also 
+    search in directories and archives in panels of Search, Branch, etc.
+[!] Added ability to search files in selected subdirectories 
+    of a current directory, and also among selected files in panels
+    of Files, Search, Branch, etc.
+
+[*] Irrelevant hot key Alt+Tab is replaced with Ctrl+Shift+Tab 
+    for switching windows.
+[-] Strange commands like 'cd \?' gave strange results.
+[-] It was impossible to copy symbols with code less than $20 (space)
+    from Character Table to input lines.
+[*] To enter symbols from Character Table without its closing there's a new
+    hot key (Space) added to Ctrl+Enter.
+[*] Added hint for Character Table in status bar.
+[*] Changed format of system error message. Numerical code moved 
+    to window title, and string with message from OS added, 
+    if description exists for the code.
+[*] [OS2] When pressing Ctrl+F, a folder opened in background of DN window.
+    Now it is opened in foreground.
+[-] When switching to file in editor (Ctrl+Enter), paths without recursion
+    didn't work in search paths setup.
+[-] Moving of file (F6) didn't work if source and destination drives
+    seemed to the be same, but in fact weren't the same (it is possible
+    for network drives and on NDFS under OS/2).
+[-] When moving a file (F6) to a write protected directory,
+    wrong error message was shown.
+[*] [DPMI] Now vertical mouse wheel works with CuteMouse 2.x driver.
+[*] Removed unnecessary delivery of time slice in main waiting cycle.
+    It could lead to delays, especially under Win9x.
+[-] Fixed errors when working with multiline descriptions and
+    descriptions containing long lines (more than 255 symbols).
+[-] When entering '*', a letter and BackSpace in quick search mask, 
+    asteriks was deleted along with a letter.
+[-] In many cases directories with unknown size were treated 
+    as having size of -1 byte.
+[*] Now in editor, when "Overwrite blocks" option is turned on
+    and a command to paste from buffer is received, the block nevertheless
+    is not overwritten if its content is identical to the content 
+    of buffer. This lightens multiple insertion of the same buffer.
+[-] Error message when entering specified directory displayed
+    error code 21 (drive not ready) regardless of actual error code.
+[-] In archives and possibly other non-disk panels sometimes
+    random descriptions in footer were shown.
+[-] Decreased number of situations when single Alt was recognized
+    and quick search was called mistakenly (for example, as the result
+    of switching layout with Alt+Shift).
+[-] In archives made under other OS the name consisting of one point only
+    displayed incorrectly.
+[-] [DPMI32] DOS session of OS/2 had effect of 100% CPU loading.
+[*] Now when pressing F3 file opened in Quick View window 
+    is opened in Viewer even with ReuseViewers=2.
+[*] Now dn.err is appended instead of being rewritten, and information
+    about version of DN is placed there.
+[*] Now footer and description column show as much text as possible
+    for multiline descriptions. Line feeds and initial spaces 
+    are replaces with a single space.
+[*] Unified hot keys of sorting dialog and menu.
+[*] Added indication of current sorting mode with a letter 
+    in top left corner of panel border. Small letter represents normal
+    order and capital letter is for reversed order. Clicking mouse button
+    on this indicator calls sorting selection menu.
+[*] Sorting selection menu now contains "Directories by name" item.
+[*] In sorting selection menu selecting item from modes section
+    now doesn't result in menu closing.
+[-] Double click with right mouse button on clock resulted 
+    in hiding panels.
+[*] Added bew type of menu item: submenu with default item.
+    Such item is labeled with opening arrow in square brackets.
+    Default submenu item is executed without opening submenu with Enter
+    or mouse click in item's main text. To open submenu one can use 
+    Shift+Enter or mouse click within brackets.
+    To change default menu item one should open submenu, select needed
+    item and press Space.
+[*] This technique used in sorting selection menu (Alt+B) and preset menu
+    (Alt+-).
+[*] Now last set default submenu value in sorting selection menu 
+    and preset menu is saved to dn.cfg.
+[*] Preset loading type with Ctrl+number in file panel is now similar
+    to default value of submenu in preset selection menu.
+[*] Now vertical menu open submenu on right arrow and close them 
+    on left arrow.
+[-] [DPMI32] Not all interrupt vectors restored after executing dn.prg.
+[-] [DPMI32] Hot keys Ctrl+number (except for Ctrl+2 and Ctrl+6) 
+    didn't work.
+[-] In information panel tildes in dirinfo texts were changing text color 
+    instead of being displayed.
+[*] Added new hot key '2' (the same button as '@') to drive selection menu.
+[-] Copying (F5) and moving (F6) a directory to '..' didn't work.
+[-] In footer of file selection dialog (Shift+F4) tildes in path 
+    were changing text color instead of being displayed.
+[-] When entering network directory, a root shared resource was detected
+    incorrectly, which resulted in errors, for example, in file creation 
+    dialog.
+[-] [DPMI32] DN crashed under DOS with DOSLFN loaded when trying to execute
+    something through user menu.
+[*] Now it is possible not to show file name in line with information
+    about current file.
+[*] Now at least one space is left between sorting indicator and path
+    in right panel.
+[*] In dialogs of sorting and panel appearance setup added ability
+    to mark separate elements. When marked elements exist, only them
+    are saved and recorded.
+[-] In line with information about current file in footer file name
+    and length merged when 12-hour time format was selected.
+[*] Block of long file name format options in footer moved 
+    from panel appearance setup dialog to file manager setup.
+[*] File panel column titles output options moved from file manager 
+    setup dialog to panel appearance setup.
+[*] In general setup options of file manager added possibility to turn off
+    sorting indicator.
+[-] Long file name with tildes was shown incorrectly in footer.
+[*] Now large amounts of files, drives, memory are shown uncut (at least 
+    up to 10 terabytes).
+[-] [Win32] With autorefresh of panels it was impossible to delete 
+    a directory while standing on its subdirectory in other panel.
+    Good chance that other situations of "undeletable" directory
+    are also fixed.
+[-] [OS2] After calling some buggy external console programs
+    mouse in DN stopped working.
+[*] Now DPMI32 version under W9x shows time of file creation 
+    and last access.
+[-] In DPMI32 version when Win32 LFN API was not accessible, 
+    garbage was shown instead of time of file creation and last access;
+    not nothing is displayed in this case.
+[-] Dialog of search in archive had effect of 100% CPU loading.
+[-] Search mask was displayed incorrectly in title of panel
+    when searching files within an archive.
+[-] In network browser panel now files search is now called in place
+    not related to it.
+[*] Check boxes in search dialogs are regrouped: now options common 
+    for all dialogs come first, and the last are options which set up
+    criteria of searching a text line in file.
+[*] "Don't sort" option is now available when searching in archive too.
+[-] When searching in archive an empty panel was shown if no files
+    were found.
+[-] In dates of file creation and last access in corresponding panel columns
+    year was shown incorrectly.
+[*] Lots of messages flashed by when deleting files from Search 
+    or Branch panel.
+[*] Switching of hidden files display mode now works in Search
+    and Branch panels.
+[-] Search and Branch panels didn't reflect changes of file attributes
+    or time.
+[*] Now it is not necessary to restart DN/2 after changing language.
+[*] "(D:\PATH)" command line mode for running sessions in a separate 
+    window is now accessible not only in OS/2, but in Win32 version too,
+    and also in DPMI32 version under Win9x. In DPMI32 version under OS/2
+    both "(D:\PATH)" and "[D:\PATH]" modes are available, however
+    HSTART utility presence is required for them to work.
+[-] Hot keys of changing command line type (Alt+/ and Alt+Shift+/) 
+    didn't work under Win32.
+[*] Essentially optimized re-reading of panels in some situations.
+[*] Added two palette elements for a long file name in panel footer.
+[-] When scrolling long file names in panel with arrows (when width
+    of name column is more than width of a panel) and also when scrolling
+    descriptions, paths, etc. footer was scrolling along with them.
+[-] Built-in default palettes have been corrected to comply
+    with the latest changes in palette elements.
+[-] When setting up colors with "B/W" or "Mono" modes active,
+    changes were mistakenly saved in pallette of "Color" mode.
+[-] In Colors Setup dialog garbage was displayed in preview box
+    if foreground and background colors were set to black.
+[-] Now extracting files from archives works in DPMI32 version.
+[*] In DPMI32 version in archivers setup added option
+    "Swap when execute" to set up whether DN/2 should unload itself 
+    from memory when calling archiver; "Short command line" option, 
+    being unnecessary under DOS, has been eliminated in DPMI32 version.
+[*] Archivers not supporting file lists in DPMI32 version 
+    now work with "Swap when execute" option turned on too.
+[-] Viewing files through a filter worked incorrectly in DPMI32 version.
+[*] When switching additional modes of sorting, selection menu
+    sometimes changed its width.
+[*] Now color of opened combo box complies with color of a closed one.
+[*] Drive information with Ctrl+L in DN/DPMI32.
+    Sometimes network drives didn't have VolumeLabel, also a garbage 
+    could be displayed in this case.
+    If there's no information about serial number or file system,
+    these lines are not shown at all.
+    Cluster size is displayed.
+    Disk size and free space is shown correctly for large drives.
+[*] Improved detection of LHA and GZip archives.
+[*] Fixed working with RAR archives. Now DN correctly handles
+    "end of archive" block.
+
+[*] Lots of small optimizations

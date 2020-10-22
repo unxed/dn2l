@@ -1,0 +1,190 @@
+doc Documentation for DN/2
+resource Resource source for DN/2
+_dnco.cmd Batch for compilation under OS/2
+_dncod.cmd Batch for compilation DPMI32 version under OS/2
+_dncow.cmd Batch for compilation Win32 version under OS/2
+_dncw.bat Batch for compilation under Windows 9x
+_dncw.cmd Batch for compilation under Windows NT
+_dncwd.cmd Batch for compilation DPMI32 version under Win32
+_dncwo.cmd Batch for compilation OS/2 version under Win32
+_rcpo.cmd Batch for compilation Resources
+_apps.pas DN/2 Plugin Interface - object model
+_collect.pas DN/2 Plugin Interface - object model
+_defines.pas DN/2 Plugin Interface - object model
+_dialogs.pas DN/2 Plugin Interface - object model
+_dnfuncs.pas DN/2 Plugin Interface - object model
+_drives.pas DN/2 Plugin Interface - object model
+_editors.pas DN/2 Plugin Interface - object model
+_fviewer.pas DN/2 Plugin Interface - object model
+_gauge.pas DN/2 Plugin Interface - object model
+_menus.pas DN/2 Plugin Interface - object model
+_model1.pas DN/2 Plugin Interface - object model
+_model2.pas DN/2 Plugin Interface - object model
+_objects.pas DN/2 Plugin Interface - object model
+_regexp.pas DN/2 Plugin Interface - object model
+_streams.pas DN/2 Plugin Interface - object model
+_views.pas DN/2 Plugin Interface - object model
+_vmtreg.pas DN/2 Plugin Interface - object model
+advance.pas Advanced procedures: startup
+advance1.pas Advanced procedures: String functions
+advance2.pas Advanced procedures: File related functions
+advance3.pas Advanced procedures: Misc stuff
+advance4.pas Advanced procedures: OS/2 support
+advance6.pas Advanced procedures
+advance7.pas Advanced procedures: Help oriented
+arc_ace.pas Support for ACE
+arc_ain.pas Support for AIN
+arc_arc.pas Support for ARC
+arc_bs2.pas Support for BS2
+arc_bsa.pas Support for BSA
+arc_cab.pas Support for CAB
+arc_chz.pas Support for CHZ
+arc_ha.pas Support for HA
+arc_hap.pas Support for HAP
+arc_hpk.pas Support for HPK
+arc_hyp.pas Support for HYP
+arc_is3.pas Support for IS3
+arc_lha.pas Support for LHA
+arc_lim.pas Support for LIM
+arc_qrk.pas Support for QuArk
+arc_rar.pas Support for RAR
+arc_sqz.pas Support for SQZ
+arc_tar.pas Support for TAR
+arc_tgz.pas Support for TGZ
+arc_uc2.pas Support for UC2
+arc_ufa.pas Support for UFA
+arc_zip.pas Support for ZIP
+arc_zoo.pas Support for ZOO
+arc_zxz.pas Support for ZXZ
+archdet.pas Archiver detectors
+archiver.pas Archivators access
+archread.pas Archivers output list reader
+archset.pas Archivers setups manager
+arcview.pas View archives as drives
+arvid.pas Access to ARVID tapes
+arvidavt.pas Support for AVT format
+arvidtdr.pas Support for TDR format
+asciitab.pas ASCII table
+calc.pas Spreadsheet's cells
+calculat.pas Main calculator module
+calendar.pas Calendar
+callspcb.pas Compiler-independent mechanisms to call special functions
+ccalc.pas Calculator
+cellscol.pas Cells collection for spreadsheet
+cmdline.pas Command line
+collect.pas Collections
+colors.pas Colors
+colorsel.pas Color selector
+colorvga.pas VGA Color
+commands.pas Constants
+dblwnd.pas Double Window
+dbview.pas .DBF Viewer
+dbwatch.pas .DBF access
+decoder.pas Part of DisAsm
+defcoll.pas Defines collection
+dialogs.pas Basic dialogs
+diskimg.pas Disk image unpacker
+diskinfo.pas Disk info
+dn.pas Main program module
+dn1.pas Main program module, Part 2
+dn2pmapi.pas OS/2 Presentation Manager API interface
+dnapp.pas DN Application unit
+dnexec.pas Execution functions
+dnfuncs.pas Interface with plugins - functions & objects to export
+dnhelp.pas Help constants
+dnini.pas Ini Configuration
+dnpmapil.pas OS/2 Presentation Manager API interface
+dnstddlg.pas DN Standard dialogs
+dnutil.pas DN Utilites: About & other
+drivers._vp Drivers for VP
+drivers.pas Low-level device drivers
+drivers2.pas Fail information
+drives.pas Drive access
+eaoper.pas Enhanced Attributes handling (OS/2 only)
+ed2.pas Part of editor
+editor.pas Part of editor
+edwin.pas Part of editor
+eraser.pas File eraser
+errmess.pas Error messages
+fbb.pas LongCopy
+file_id.diz Logo
+filecopy.pas Files copyer
+filediz.pas Files descriptions support
+filefind.pas Files finder
+filelst.pas Files list creating
+filescol.pas Files collection
+findobj.pas Find objects (for ARVID support)
+fio._vp File Input/Output for VP
+flpanel.pas Files panel
+flpanelx.pas Files panel
+fltools.pas Files tools
+fstorage.pas Files storage
+fviewer.pas File viewer
+gauge.pas Gauges: Bar, Percent
+gauges.pas Gauges: Clock, Heap, TrashCan, Macros
+getconst.pas Getting constants
+helpfile.pas Access to help file
+helpkern.pas Help kernel
+hideview.pas Hide view
+highlite.pas Syntax highliter
+histlist.pas History list
+histries.pas Histories
+idlers.pas Idle (screen savers)
+inifiles.pas Access to .INI files
+lfnvp.pas LFN Support for VP
+listmakr.pas Part of Resource Compiler
+macro.pas Macro editor & environment editor
+memory.pas Memory access
+menus.pas Menus
+messages.pas Message boxes
+microed.pas Editor
+microed2.pas Microed: Read/Write/Store/Load methods
+objects.pas Main objects: TObject, Streams, other.
+objtype.pas Object types
+openobj.pas WPS file object opening utility for DN/2
+phones.pas Phones book
+pktview.pas Fido PKT viewer
+plugin.pas Interface with plugins
+plugman.pas Plugin Manager
+plugrez.pas Access to plugin's resources
+printman.pas Print manager
+profile.pas .INI file parser
+rcp.pas DN Resource Compiler
+rcpvpd.ini Resource compiler options for DPMI
+rcpvpo.ini Resource compiler options for OS/2
+rcpvpw.ini Resource compiler options for Win32
+regall.pas Registration of all objects
+regexp.pas Regular Expression Engine
+rstrings.pas Strings cashe
+scroller.pas Scrollers
+setups.pas Setups DN
+startup.pas Startup configuration
+stdefine.inc Defines for project
+strview.pas TDStringView
+swe.pas Inputs
+tasklst.pas Task list
+tetris.pas Tetris
+titleset.pas Application title changing support
+tree.pas View of disk tree
+tvhc.pas TV Help Compiler
+u_keymap.pas Keyboard map
+u_myapp.pas Main aplication object
+u_srchf.pas Search File Names
+ufnmatch.pas Filename matches the UNIX style mask
+uniwin.pas Uni Window
+usermenu.pas User menu routines
+usersavr.pas User saver
+uucode.pas UU Encode/Decode
+uue2inc.pas UU encode/decode
+validate.pas Validators
+vars.pas Access to global variables from Win32 plugins
+version.pas Version.Inc generator
+videoman.pas Video mode manager
+views._vp Views for VP
+views.pas Standard views
+vpc.cfg VPC Configutation file
+vpsyslo2.pas VPSysLow extension unit for VP
+vpsyslow.pas основная часть VPSysLow
+winclpvp.pas Windows clipboard connection for VP
+xdblwnd.pas Double Window
+xtime.pas Extended time support

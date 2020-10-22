@@ -1,0 +1,21 @@
+; Dos Navigator Viewer configuration file
+
+chi:   chiview !.!
+;Use "!.!" instead !.! if you need access to files with spaces in names
+; используйте кавычки, чтобы иметь доступ к файлам с пробелами в именах,
+; но помните, что не все старые дос-приложения их понимают
+gif,jpg:c:\utl\DVPEG.bat "!.!"
+;gif,jpg:D:\UTL\PMVIEW2\pmview.exe "!.!"
+jpe:c:\utl\DVPEG.bat !.! +exit
+pcx,ico,tif,vgl,RLE,fli,flc,tga:pv !.! $C0103
+;bmp,png:c:\utl\qpv\qpv.exe !.!
+bmp,png:sea.bat !:!\!.!
+tgp:C:\TP7\TURBOGRA\tgview.exe !.!
+wmf:vector !.!
+ain:ainview.bat !.!
+j:archview.bat -jar !.!
+mp3,wav:D:\OS2APPS\QU2\quvio.exe !:!\!.!
+htm,html,doc,rtf,wri:C:\VC\view160 !.! /C!%F
+mpg,mpe: mpg.bat !:!\!.!
+avi: qv.exe /W3,530,7,0 /O10 /Q0 !.!
+cr3:koi_cyr.exe !.! !%F 3

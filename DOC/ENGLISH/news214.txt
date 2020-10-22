@@ -1,0 +1,26 @@
+The main differences between 2.14 beta and 2.12 beta versions.
+
+(2.13 alpha version already had large files support,
+but was not publicly announced due to a number of errors)
+
+[!] [OS2, Win32] Now DN can handle large files (over 4 GB):
+    added support for copying, viewing as Text/Hex,
+    archives in 7z, ACE, RAR, TAR, ZIP formats.
+[!] Added an option to cancel copying files while preserving the part
+    that has been copied, and to resume copying if the names of the
+    source and target are the same (when the target size is smaller).
+
+[-] In calculator there were useless tips in status line (Ctrl-S, Ctrl-A).
+[-] In calculator copying result to clipboard ("Copy" button) stored
+    result in a form selected at last change of input line, instead
+    of currently selected form.
+[*] In calculator introduced output precision control in all forms.
+[-] The English help for calculator was out-of-date.
+[-] DN crashed when entering a broken empty ZIP archive.
+[-] [DPMI32] Date and time information for files was displayed incorrectly.
+[*] [DPMI32] Information about subst-drives is displayed correctly now.
+[*] [DPMI32] Added recognition of software drives, which system indentifies
+    as network drives but does not show network path.
+[-] [DPMI32] With DOSLFN installed, removing a directory caused false
+    error message 3 to appear.
+[*] Added support of bzip2 archives.

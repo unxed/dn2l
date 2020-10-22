@@ -1,0 +1,1 @@
+for %%i in (UKRAIN\dn*.???) do 866_1125.cmd %%i

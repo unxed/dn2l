@@ -1,0 +1,33 @@
+; Dos Navigator Quick run configuration file
+
+;Ctrl-Shift-F1
+>>1
+@80x30
+@noblink2
+@nemo
+;Ctrl-Shift-F2
+; Run command in the separate OS/2 session.
+>>2
+@80x30
+@ra2
+
+>>3
+@80x30
+@ra2 !.!
+
+
+>]4
+hexedit !.!
+
+>]5
+flcopy
+
+>>6
+@80x30
+@D:\OS2\FC\fc.exe
+
+>7
+@eject I:
+
+>>9
+@D:\DN2\dn.exe

@@ -1,0 +1,5 @@
+; Dos Navigator Editor configuration file
+
+pas:vp !.!
+C,cpp:bc !.!
+exe:D:\UTL\hed !:!\!.!

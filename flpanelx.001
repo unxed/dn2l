@@ -1,0 +1,25 @@
+AK155   5.04.2005 <flpanelx.pas> flpanelx.001
+
+1. В TFilePanelRoot были такие два метода:
+
+    procedure ChDirName;
+    procedure SetDirName; virtual;
+
+При этом ChDirName имеет следующее глубокомысленное определение:
+
+procedure TFilePanelRoot.ChDirName;
+  begin
+  SetDirName;
+  end;
+
+     Так что я выкинул ChDirName вообще, а его вызовы заменил на SetDirName
+(вызовы были только внутри flpanelx, а также всего один вызов в fltools).
+Виртуальность нигде не используется, но убирать её я не стал.
+
+     Что касается названия SetDirName, то оно совершенно не соответствует
+выполняемым действиям: там вызываются DrawView собственно панели, подвала
+и заголовка. Никакого DirName при этом нет и близко. Так что переименовал
+его в RedrawPanelInfoDir. При этом заодно стала очевидной ненужность
+вызова DrawView в конце CM_SortBy.
+
+

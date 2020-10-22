@@ -1,0 +1,602 @@
+;================================================================
+;
+; Dos Navigator Editor Syntax Highlight configuration file
+; See details at the end of this file
+;
+;================================================================
+
+;================================================================
+;
+; HGL file
+;
+; Macros:
+;  1 FILES *.1/END
+;  2 Macro 1/Endmacro
+;
+;================================================================
+
+FILES *.HGL;
+  CommentStart ;
+  GeneralFLAGS  4
+  StringFLAGS   12
+  Keywords1    DEFAULT,FILES,MACRO,ENDMACRO,END,GENERALFLAGS,STRINGFLAGS
+  Keywords1    KEYWORDS1,KEYWORDS2,OCTONUMFLAGS,OCTQNUMFLAGS,OCTBNUMFLAGS,
+  Keywords1    BINNUMFLAGS,HEXNUMFLAGS,DECNUMFLAGS,OCTNUMFLAGS,COMMENTSTART
+  Keywords1    COMMENTSTRING,COMMENT
+  Keywords2    ON,OFF,YES,NO
+  Macro 1
+    GoToX 0
+    InsLine
+    Print ';================================================================'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';================================================================'^M^S
+    Print ^X^E^E^E^E^D^D
+  EndMacro
+  Macro 2
+    Print #1'FILES'#32'*.'#6^M^M'END'^M#5
+    End
+    Print #1#5#9
+  EndMacro
+  Macro 3
+    Print #1'Macro'#32#6^M^M'EndMacro'^M#5
+    End
+    Print #1#5#9
+  EndMacro
+END
+
+;================================================================
+;
+; Dos Navigator configuration files
+;
+;================================================================
+
+FILES DN.VWR; DN.EDT; DN.XRN; DN.MNU; DN.EXT
+  CommentStart ;
+  GeneralFLAGS  14
+END
+
+;================================================================
+;
+; Dos Navigator resource files
+;
+;================================================================
+
+
+FILES DN.DNL
+  CommentStart ;
+  GeneralFLAGS   32
+  StringFLAGS    76
+END
+
+FILES DN.DNR
+  CommentStart ;
+  GeneralFLAGS   32
+  StringFLAGS    76
+  Keywords1    SUBMENU, MENUITEM, MENULINE, MENU, END, STATUSDEF, STATUSITEM,
+  Keywords1    STATUSLINE, DIALOG, LABEL, INPUTLINE, HEXLINE, BUTTON,
+  Keywords1    CHECKBOXES, RADIOBUTTONS, HISTORY, ITEM, HELPCTX, STATICTEXT,
+  Keywords1    LISTBOX, SCROLLBAR, MOUSESCROLLBAR, PARAMTEXT, COLORGROUP,
+  Keywords1    COLORITEM, COLORDIALOG, UPPERTABLE, SELECTBACK, SELECTFORWARD,
+  Keywords1    COMMAND, EDITOR COMMANDS, DRIVECHECKBOXES, COLORPOINT
+END
+;================================================================
+;
+; Include files, usually assembler but also pascal and other.
+;
+;================================================================
+
+;FILES *.INC
+;  CommentStart  $,%
+;  CommentString //,#,;
+;  Comment       /* */,(* *),{ }
+;END
+
+;================================================================
+;
+; Assembler files *.S35;*.S03;*.S01;*.S90
+;
+;================================================================
+
+FILES *.ASM;*.S35;*.S0?;*.S90
+  CommentString ;
+  HexNumFLAGS    31
+  DecNumFLAGS    31
+  OctNumFLAGS    31
+  BinNumFLAGS    31
+  Keywords1     public,extern,extrn,include,macro,endm,segment
+  Keywords1     ends,proc,endp,end,title,subtitle,module,code
+  Keywords1     data,const,rcode,equ,global,name,group,assume
+  Keywords1     org
+  Keywords2     if,ifdef,ifndef,elif,else,endif,define,undef
+  Macro 1
+    GoToX 0
+    InsLine
+    Print ';================================================================'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';================================================================'^M^S
+    Print ^X^E^E^E^E^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ^X^E^G^E^E^D^D
+  EndMacro
+END
+
+;================================================================
+;
+; Configuration files
+;
+;================================================================
+
+FILES *.CFG; *.EVT; *.INI; *.CTL
+  CommentStart  ;,#,$,%
+  CommentString //
+  GeneralFLAGS   14
+END
+
+;================================================================
+;
+; Batch files
+;
+;================================================================
+
+FILES *.SYS; *.BAT; *.CMD
+  CommentString REM ,::
+  GeneralFLAGS   14
+END
+
+;================================================================
+;
+; Basic files
+;
+;================================================================
+
+FILES *.BAS
+  CommentString REM ,'
+END
+
+;================================================================
+;
+; C/C++ files
+;
+;================================================================
+
+FILES *.C;*.H;*.CPP;*.HPP;*.CXX;*.HXX;*.CC
+  AutoBrackets  Off
+  CommentString //
+  Comment       /* */
+  GeneralFLAGS   17
+  StringFLAGS    3
+  Keywords1     and,and_eq,asm,auto,bitand,bitor,bool,break,case,catch,char,
+  Keywords1     class,compl,const,const_cast,continue,default,delete,do,
+  Keywords1     double,dynamic_cast,else,enum,explicit,export,extern,false,
+  Keywords1     float,for,friend,goto,if,inline,int,long,mutable,namespace,
+  Keywords1     new,not,operator,or,or_eq,private,protected,public,register,
+  Keywords1     reinterpret_cast,return,short,signed,sizeof,static,
+  Keywords1     static_cast,struct,switch,template,this,throw,true,try,
+  Keywords1     typedef,typeid,typename,union,unsigned,using,virtual,void,
+  Keywords1     volatile,wchar_t,while,xor,xor_eq
+  Keywords2     #if,#ifdef,#ifndef,#elif,#else,#endif,#define
+  Keywords2     #undef,#pragma,#line,#include
+  Macro 1
+    GoToX 0
+    InsLine
+    Print '/*****************************************************************'^M^S
+    Print ' *'^M^S
+    Print ' *'^M^S
+    Print ' *'^M^S
+    Print ' *****************************************************************/'^M^S
+    Print ^X^E^E^E^E^D^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print '/*'^M^S
+    Print ' *'^M^S
+    Print ' */'^M^S
+    Print ^X^E^G^E^E^D^D^D
+  EndMacro
+END
+
+;================================================================
+;
+; Pascal/Delphi files
+;
+;================================================================
+
+FILES *.PAS;*.PA1;*.PA2;*.PA3;*.PA4;*.INC;*._VP;*._BP
+  CommentString //
+  Comment       (* *),{ }
+  GeneralFLAGS   32
+  StringFLAGS    76
+  Keywords1     and,asm,array,begin,case,const,constructor
+  Keywords1     destructor,div,do,downto,else,end,file,for
+  Keywords1     function,if,implementation,in,interface,mod,nil
+  Keywords1     not,object,of,or,procedure,program,record,repeat
+  Keywords1     set,shl,shr,string,then,to,type,unit,until,uses
+  Keywords1     var,while,with,xor,inherited,goto,label,inline
+  Keywords1     packed,exports,library
+  Keywords2     absolute,assembler,export,external,far,forward
+  Keywords2     index,interrupt,near,private,public,resident
+  Keywords2     virtual
+  Macro 1
+    GoToX 0
+    InsLine
+    Print '(*****************************************************************'^M^S
+    Print ' *'^M^S
+    Print ' *'^M^S
+    Print ' *'^M^S
+    Print ' *****************************************************************)'^M^S
+    Print ^X^E^E^E^E^D^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print '(*'^M^S
+    Print ' *'^M^S
+    Print ' *)'^M^S
+    Print ^X^E^G^E^E^D^D^D
+  EndMacro
+  Macro 3
+    Print 'begin'^M^M
+    Print 'end;'
+    WordLeft
+    MoveUp
+  EndMacro
+  Macro 4
+    Print '{$IFDEF }'
+  EndMacro
+  Macro 5
+    Print '{$ELSE}'^M^M
+    Print '{$ENDIF}'
+  EndMacro
+END
+
+;================================================================
+;
+; Modula II files
+;Added by DataCompBoy
+;================================================================
+
+FILES *.MOD,*.DEF
+  Comment       (* *)
+  GeneralFLAGS   1
+  HEXNUMFLAGS    1
+  StringFLAGS    92
+  OCTQNUMFLAGS   1
+  Keywords1  AND,FOR,OR,ARRAY,FORWARD,POINTER,GOTO,RECORD,CASE,IF,REPEAT,CONST
+  Keywords1  SET,DIV,IN,THEN,DO,LABEL,TO,ELSE,LOOP,TYPE,ELSIF,MOD,UNTIL,EXIT
+  Keywords1  NOT,WHILE,EXPORT,OF,WITH
+  Keywords2  PROCEDURE,MODULE,END,BEGIN,FROM,BY,IMPLEMENTATION,RETURN
+  Keywords2  VAR,IMPORT,DEFINITION
+  Macro 1
+    GoToX 0
+    InsLine
+    Print '(*****************************************************************'^M^S
+    Print ' *'^M^S
+    Print ' *'^M^S
+    Print ' *'^M^S
+    Print ' *****************************************************************)'^M^S
+    Print ^X^E^E^E^E^D^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print '(*'^M^S
+    Print ' *'^M^S
+    Print ' *)'^M^S
+    Print ^X^E^G^E^E^D^D^D
+  EndMacro
+  Macro 3
+    Print 'begin'^M^M
+    Print 'end;'
+    WordLeft
+    MoveUp
+  EndMacro
+END
+
+;================================================================
+;
+; Make files
+;
+;================================================================
+
+FILES *.MAK;MAKEFILE.???
+  CommentString #
+  Keywords1     .NEWSOURCES,.SOURCE,.SOURCES,.TARGET,.TARGETROOT
+  Keywords1     .VERSION,BUILTINS,CWD,FIRSTTARGET,INPUTFILE
+  Keywords1     MAKEARGS,MAKEDIR,MAKEMACROS,MAKEPID,MAKESTATUS
+  Keywords1     MAKETARGETS,MAKEVERSION,status
+  Keywords2     %if,%ifdef,%ifndef,%elif,%elseif,%else,%endif
+  Keywords2     %foreach,%while,%end,%break,%continue,%abort
+  Keywords2     %chdir,%do,%echo,%error,%exec,%getenv,%include
+  Keywords2     %restart,%set,%setenv,%undef,%defined,%dir,%empty
+  Keywords2     %exists,%file,%length,%make,%member,%null,
+  Keywords2     %readable,%time,%writable
+  Macro 1
+    GoToX 0
+    InsLine
+    Print '#################################################################'^M^S
+    Print '#'^M^S
+    Print '#'^M^S
+    Print '#'^M^S
+    Print '#################################################################'^M^S
+    Print ^X^E^E^E^E^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print '#'^M^S
+    Print '#'^M^S
+    Print '#'^M^S
+    Print ^X^E^G^E^E^D^D
+  EndMacro
+END
+
+;================================================================
+;
+; Text files
+;
+;================================================================
+
+FILES *.TXT;*.FMT
+  CommentStart ;
+  GeneralFLAGS  14
+  Macro 1
+    GoToX 0
+    InsLine
+    Print ';================================================================'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';================================================================'^M^S
+    Print ^X^E^E^E^E^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ';'^M^S
+    Print ^X^E^G^E^E^D^D
+  EndMacro
+END
+
+;================================================================
+;
+; IAR Linker files.
+;
+;================================================================
+
+FILES *.XCL
+  AutoBrackets  Off
+  CommentString //
+  Comment       /* */
+  Comment       -! -!
+  Macro 1
+    GoToX 0
+    InsLine
+    Print '//////////////////////////////////////////////////////////////////'^M^S
+    Print '//'^M^S
+    Print '//'^M^S
+    Print '//'^M^S
+    Print '//////////////////////////////////////////////////////////////////'^M^S
+    Print ^X^E^E^E^E^D^D^D
+  EndMacro
+  Macro 2
+    GotoX 0
+    InsLine
+    Print '//'^M^S
+    Print '//'^M^S
+    Print '//'^M^S
+    Print ^X^E^G^E^E^D^D^D
+  EndMacro
+END
+
+;================================================================
+;
+; HTML files.
+;
+;================================================================
+
+FILES *.HTM; *.HTML
+  CommentString <!
+  GeneralFLAGS   14
+ Keywords1 A,ABBR,ACRONYM,ADDRESS,APPLET,AREA,B,BASE,BASEFONT,BDO,BIG,BLOCKQUOTE,BODY
+ Keywords1 BR,BUTTON,CAPTION,CENTER,CITE,CODE,COL,COLGROUP,DD,DEL,DFN,DIR,DIV,DL,DT,EM
+ Keywords1 FIELDSET,FONT,FORM,FRAME,FRAMESET,H1,H2,H3,H4,H5,H6,HEAD,HR,HTML,I,IFRAME,IMG
+ Keywords1 INPUT,INS,ISINDEX,KBD,LABEL,LEGEND,LI,LINK,MAP,MENU,META,NOFRAMES,NOSCRIPT
+ Keywords1 OBJECT,OL,OPTGROUP,OPTION,P,PARAM,PRE,Q,S,SAMP,SCRIPT,SELECT,SMALL,SPAN,STRIKE
+ Keywords1 STRONG,STYLE,SUB,SUP,TABLE,TBODY,TD,TEXTAREA,TFOOT,TH,THEAD,TITLE,TR,TT,U,UL,VAR
+ Keywords2 abbr,accept,accept-charset,accesskey,action,align,alink,alt,archive,axis
+ Keywords2 background,bgcolor,border,cellpadding,cellspacing,char,charoff,charset
+ Keywords2 checked,cite,class,classid,clear,code,codebase,codetype,color,cols,colspan
+ Keywords2 compact,content,coords,data,datetime,declare,defer,dir,disabled,enctype
+ Keywords2 face,for,frame,frameborder,headers,height,href,hreflang,hspace,http-equiv
+ Keywords2 id,ismap,label,lang,language,link,longdesc,marginheight,marginwidth,maxlength
+ Keywords2 media,method,multiple,name,noresize,noshade,nowrap,object,onblur,onchange
+ Keywords2 onclick,ondblclick,onfocus,onkeydown,onkeypress,onkeyup,onload,onmousedown
+ Keywords2 onmousemove,onmouseout,onmouseover,onmouseup,onreset,onselect,onsubmit,onunload
+ Keywords2 onunload,profile,prompt,readonly,readonly,rel,rev,rows,rows,rowspan,rules
+ Keywords2 scheme,scope,scrolling,selected,shape,size,span,src,standby,start,style
+ Keywords2 summary,tabindex,target,text,title,type,usemap,valign,value,valuetype,version
+ Keywords2 vlink,vspace
+
+;-----------------------------------------------------------------------------
+
+;
+; Possible keywords:
+;     FILES <filter>
+;        <Highlight option>
+;        ................
+;        <Highlight option>
+;        ................
+;        <Macro>
+;        ................
+;        <Macro>
+;     END
+;
+;  Options are:
+;
+;     COMMENT       <S1><space><S2>,...,[<Sn*2-1><space><Sn*2>]
+;
+;       Standard comment like /* */ or { }.
+;       NB: Dos Navigator supports any types of comments in one line yet.
+;
+;
+;     COMMENTSTRING <S1>,...,[Sn]
+;
+;       Comment strings for comment from string position to the end of line.
+;
+;
+;     COMMENTSTART  <S1>,...,[Sn]
+;
+;       Comment strings for comment from string position (start of line only)
+;       to the end of line.
+;
+;
+;     GENERALFLAGS   Num              - bitfield:
+;                                      1  - Case Sensitive
+;                                      2  - No numbers
+;                                      4  - No symbols
+;                                      8  - No strings
+;                                      16 - C-Style numbers (0x####)
+;                                      32 - Pascal numbers  ($####)
+;
+;     HEXNUMFLAGS    NumFLAGS           - bitfield:
+;                                       1  -    ####h
+;                                       2  -   &H####
+;                                       4  - &H'####'
+;                                       8  -   H'####
+;                                       16 -  H'####'
+;
+;     DECNUMFLAGS    NumFLAGS           - bitfield:
+;                                       As above with character 'D'
+;
+;     OCTONUMFLAGS   NumFLAGS           - bitfield:
+;                                       As above with character 'O'
+;     OCTQNUMFLAGS   NumFLAGS           - bitfield:
+;                                       As above with character 'Q'
+;     OCTBNUMFLAGS   NumFLAGS           - bitfield:
+;                                       As above with character 'B'
+;                                       (For Modula II)
+;
+;     BINNUMFLAGS    NumFLAGS           - bitfield:
+;                                       As above with character 'B'
+;
+;     STRINGFLAGS    Num              - bitfield:
+;                                       1 - \" is a "
+;                                       2 - \' is a '
+;                                       4 - #num is a character
+;                                       8 - ^char is a character
+;                                       16 - octal_numberC represents a character
+;                                       32 - Do not highlight single quoted strings
+;                                       64 - Do not highlight double quoted strings
+;
+;
+;     Macro has following structure:
+;
+;      MACRO <Name>
+;        commands
+;      ENDMACRO
+;
+;       Macro Commands are:
+;
+;           Print '<String>' [repetitions] - type string <String>
+;           GotoXY <X>, <Y>                - place cursor at X,Y (absolute)
+;           GotoX  <X>         - place cursor at horisontal pos. X (absolute)
+;           GotoY  <Y>         - place cursor at vertical pos. X (absolute)
+;           Mark   <N>         - mark current position of cursor (1..9)
+;           Goto   <N>         - go to marked position (1..9)
+;
+;        Each following command has format <COMMAND> [repetitions]:
+
+;         SaveText
+;         LoadText
+;         SaveTextAs
+;         SwitchBlock
+;         SwitchIndent
+;         SwitchFill
+;         SwitchBack
+;         SwitchSave
+;
+;         WordLeft
+;         WordRight
+;         DelWordRight
+;         DelWordLeft
+;         ScrollUp
+;         ScrollDn
+;         Center
+;         StartSearch
+;         ContSearch
+;         DelBackChar
+;         DelChar
+;         SwitchIns
+;         PgUp
+;         PgDn
+;         MoveUp
+;         MoveLeft
+;         MoveRight
+;         MoveDown
+;         BlockStart
+;         BlockEnd
+;         MarkWord
+;         MarkLine
+;         BlockRead
+;         BlockWrite
+;         BlockPrint
+;         IndentBlock
+;         UnIndentBlock
+;         Tab
+;         SpecChar
+;         Replace
+;         End
+;         Enter
+;         InsLine
+;         FJustify
+;         FCenter
+;         FLeft
+;         FRight
+;         LJustify
+;         LCenter
+;         LLeft
+;         LRight
+;         DeltoEOLN
+;         SetMargins
+;         CtrlHome
+;         CtrlEnd
+;         SwitchHighLight
+;         GotoLineNumber
+;         SwitchWrap
+;         SwitchHiLine
+;         SwitchHiColumn
+;         UpString
+;         LowString
+;         CapString
+;         UpBlock
+;         LowBlock
+;         CapBlock
+;         InsertTime
+;         InsertDate
+;         SortBlock
+;         CalcBlock
+;         CopyBlock
+;         MoveBlock
+;         HideBlock
+;         MoveBlockStart
+;         MoveBlockEnd
+;         InsertOn
+;         InsertOff
+;         IndentOn
+;         IndentOff
+
+
+

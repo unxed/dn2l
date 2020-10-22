@@ -1,0 +1,731 @@
+{/////////////////////////////////////////////////////////////////////////
+//
+//  Dos Navigator Open Source 1.51.08
+//  Based on Dos Navigator (C) 1991-99 RIT Research Labs
+//
+//  This programs is free for commercial and non-commercial use as long as
+//  the following conditions are aheared to.
+//
+//  Copyright remains RIT Research Labs, and as such any Copyright notices
+//  in the code are not to be removed. If this package is used in a
+//  product, RIT Research Labs should be given attribution as the RIT Research
+//  Labs of the parts of the library used. This can be in the form of a textual
+//  message at program startup or in documentation (online or textual)
+//  provided with the package.
+//
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are
+//  met:
+//
+//  1. Redistributions of source code must retain the copyright
+//     notice, this list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright
+//     notice, this list of conditions and the following disclaimer in the
+//     documentation and/or other materials provided with the distribution.
+//  3. All advertising materials mentioning features or use of this software
+//     must display the following acknowledgement:
+//     "Based on Dos Navigator by RIT Research Labs."
+//
+//  THIS SOFTWARE IS PROVIDED BY RIT RESEARCH LABS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//  DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR
+//  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+//  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+//  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+//  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+//  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+//  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+//  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//  The licence and distribution terms for any publically available
+//  version or derivative of this code cannot be changed. i.e. this code
+//  cannot simply be copied and put under another distribution licence
+//  (including the GNU Public Licence).
+//
+//////////////////////////////////////////////////////////////////////////}
+
+CursorHidden: Boolean = True;
+
+procedure ShowBuffer(BufOfs, Len: Word);
+  begin
+  asm
+                push    esi
+                push    edi
+                mov     esi,ScreenBuffer
+                add     esi,BufOfs                // Pointer to screen
+                mov     edx,esi
+                mov     edi,[ScreenMirror]
+                add     edi,BufOfs                // Pointer to mirror
+                mov     ecx,Len                   // Length of required update
+                mov     eax,ecx
+                shr     ecx,2
+                and     eax,3
+                test    eax,eax                   // divisible by 4?
+                je      @@Byte4
+                inc     ecx
+              @@Byte4:
+                cld
+                repe    cmpsd                     // Compare mirror and buffer
+                jne     @@Update                  // Buffers ne; search from other end
+                xor     eax,eax                   // Do not update screen
+                jmp     @@Equal
+              @@Update:
+                inc     ecx
+                sub     edi,4                     // Adjust pointers
+                sub     esi,4
+                sub     edx,esi                   // Subtract new from old
+                sub     BufOfs,edx                // Set new offset to start from
+
+                push    esi                       // Store place to update from
+                push    edi
+                lea     esi,[esi+ecx*4-4]
+                lea     edi,[edi+ecx*4-4]
+                std
+                repe    cmpsd
+                pop     edi
+                pop     esi
+                inc     ecx                       // Increase counter
+                mov     eax,ecx                   // Store new length
+                shl     eax,2                     // New length times dword size
+                cld
+                rep     movsd                     // Update
+              @@Equal:
+                mov     Len,eax
+                pop     edi
+                pop     esi
+  end;
+  if Len <> 0 then
+    SysTvShowBuf(BufOfs, Len);
+  end { ShowBuffer };
+
+{ Convert color into attribute                          }
+{ In    AL = Color                                      }
+{ Out   AL = Attribute                                  }
+
+procedure MapColor;
+  assembler; {&USES ebx}
+  {&FRAME-}
+  const
+    Self = 8;
+    vmtHeaderSize = 8;
+    TView_GetPalette = vmtHeaderSize+$30;
+    asm
+                test    al,al
+                jz      @@3
+                mov     ecx,[ebp].Self
+              @@1:
+                push    ecx
+                push    eax
+                push    ecx                     { [1]:Pointer = Self    }
+                mov     ecx,[ecx]
+                Call    DWord Ptr [ecx].TView_GetPalette
+                mov     ebx,eax
+                pop     eax
+                pop     ecx
+                test    ebx,ebx
+                jz      @@2
+                cmp     al,[ebx]
+                ja      @@3
+                xlat
+                test    al,al
+                jz      @@3
+              @@2:
+                mov     ecx,[ecx].TView.Owner
+                jecxz   @@4
+                jmp     @@1
+              @@3:
+                mov     al,ErrorAttr
+              @@4:
+end;
+
+    { Convert color pair into attribute pair                }
+    { In    AX = Color pair                                 }
+    { Out   AX = Attribute pair                             }
+
+  procedure MapCPair; {&USES None}
+    {&FRAME-}
+  asm
+                test    ah,ah
+                jz      @@1
+                xchg    al,ah
+                Call    MapColor
+                xchg    al,ah
+              @@1:
+                Call    MapColor
+end;
+
+  { Write to view                                         }
+  { In    eax   = Y coordinate                            }
+  {       ebx   = X coordinate                            }
+  {       ecx   = Count                                   }
+  {       edi   = Buffer Pointer                          }
+
+  procedure WriteView;
+    assembler; {&USES None}
+    {&FRAME-}
+    const
+      Self = 8;
+      Target = -4;
+      Buffer = -8;
+      BufOfs = -12;
+      asm
+                mov     [ebp].BufOfs,ebx
+                mov     [ebp].Buffer[0],edi
+                add     ecx,ebx
+                xor     edx,edx         { edx = Flag (0:Char&Attr,1:Char only) }
+                mov     edi,[ebp].Self
+                test    eax,eax
+                jl      @@3
+                cmp     eax,[edi].TView.Size.Y
+                jge     @@3
+                test    ebx,ebx
+                jge     @@1
+                xor     ebx,ebx
+              @@1:
+                cmp     ecx,[edi].TView.Size.X
+                jle     @@2
+                mov     ecx,[edi].TView.Size.X
+              @@2:
+                cmp     ebx,ecx
+                jl      @@10
+              @@3:
+                ret
+
+              @@10:
+                test    [edi].TView.State,sfVisible
+                jz      @@3
+                cmp     [edi].TView.Owner,0
+                jz      @@3
+                mov     [ebp].Target,edi
+                add     eax,[edi].TView.Origin.Y
+                mov     esi,[edi].TView.Origin.X
+                add     ebx,esi
+                add     ecx,esi
+                add     [ebp].BufOfs,esi
+                mov     edi,[edi].TView.Owner
+                cmp     eax,[edi].TGroup.Clip.A.Y
+                jl      @@3
+                cmp     eax,[edi].TGroup.Clip.B.Y
+                jge     @@3
+                cmp     ebx,[edi].TGroup.Clip.A.X
+                jge     @@11
+                mov     ebx,[edi].TGroup.Clip.A.X
+              @@11:
+                cmp     ecx,[edi].TGroup.Clip.B.X
+                jle     @@12
+                mov     ecx,[edi].TGroup.Clip.B.X
+              @@12:
+                cmp     ebx,ecx
+                jge     @@3
+                mov     edi,[edi].TGroup.Last
+              @@20:
+                mov     edi,[edi].TView.Next
+                cmp     edi,[ebp].Target
+                je      @@40
+                test    [edi].TView.State,sfVisible
+                jz      @@20
+                mov     esi,[edi].TView.Origin.Y
+                cmp     eax,esi
+                jl      @@20
+                add     esi,[edi].TView.Size.Y
+                cmp     eax,esi
+                jl      @@23
+                test    [edi].TView.State,sfShadow
+                jz      @@20
+                add     esi,ShadowSize.Y
+                cmp     eax,esi
+                jge     @@20
+                mov     esi,[edi].TView.Origin.X
+                add     esi,ShadowSize.X
+                cmp     ebx,esi
+                jge     @@22
+                cmp     ecx,esi
+                jle     @@20
+                Call    @@30
+              @@22:
+                add     esi,[edi].TView.Size.X
+                jmp     @@26
+              @@23:
+                mov     esi,[edi].TView.Origin.X
+                cmp     ebx,esi
+                jge     @@24
+                cmp     ecx,esi
+                jle     @@20
+                Call    @@30
+              @@24:
+                add     esi,[edi].TView.Size.X
+                cmp     ebx,esi
+                jge     @@25
+                cmp     ecx,esi
+                jle     @@31
+                mov     ebx,esi
+              @@25:
+                test    [edi].TView.State,sfShadow
+                je      @@20
+                push    esi
+                mov     esi,[edi].TView.Origin.Y
+                add     esi,ShadowSize.Y
+                cmp     eax,esi
+                pop     esi
+                jl      @@27
+                add     esi,ShadowSize.X
+              @@26:
+                cmp     ebx,esi
+                jge     @@27
+                inc     edx
+                cmp     ecx,esi
+                jle     @@27
+                Call    @@30
+                dec     edx
+              @@27:
+                jmp     @@20
+
+              @@30:
+                push    DWord Ptr [ebp].Target
+                push    DWord Ptr [ebp].BufOfs
+                push    edi
+                push    esi
+                push    edx
+                push    ecx
+                push    eax
+                mov     ecx,esi
+                Call    @@20
+                pop     eax
+                pop     ecx
+                pop     edx
+                pop     esi
+                pop     edi
+                pop     DWord Ptr [ebp].BufOfs
+                pop     DWord Ptr [ebp].Target
+                mov     ebx,esi
+              @@31:
+                ret
+
+              @@40:
+                mov     edi,[edi].TView.Owner
+                mov     esi,[edi].TGroup.Buffer
+                test    esi,esi
+                jz      @@44
+                cmp     esi,ScreenBuffer
+                jne     @@43
+                push    eax
+                push    ecx
+                push    edx
+                Call    UpdateMouseWhere
+                pop     edx
+                pop     ecx
+                pop     eax
+                cmp     eax,MouseWhere.Y
+                jne     @@43
+                cmp     ebx,MouseWhere.X
+                ja      @@43
+                cmp     ecx,MouseWhere.X
+                jbe     @@43
+                push    eax
+                push    ecx
+                push    edx
+                Call    HideMouse
+                pop     edx
+                pop     ecx
+                pop     eax
+                Call    @@50
+                push    eax
+                push    ecx
+                push    edx
+                Call    ShowMouse
+                pop     edx
+                pop     ecx
+                pop     eax
+                jmp     @@44
+              @@43:
+                Call    @@50
+              @@44:
+                cmp     [edi].TGroup.LockFlag,0
+                jne     @@31
+                jmp     @@10
+
+{ Copy to Buffer }
+
+              @@50:
+                push    edi
+                push    ecx
+                push    ebx
+                push    eax
+                mul     [edi].TView.Size.X.Byte[0]
+                add     eax,ebx
+                lea     edi,[esi+eax*2]
+                xor     al,al
+                mov     ah,ShadowAttr
+                sub     ecx,ebx
+                xchg    esi,ebx
+                sub     esi,[ebp].BufOfs
+                shl     esi,1
+                add     esi,[ebp].Buffer
+                push    edi
+                push    ecx
+                cld
+                test    edx,edx
+                jnz     @@52
+                shr     ecx,1
+                rep     movsd
+                adc     ecx,ecx
+                rep     movsw
+                jmp     @@53
+              @@52:
+                lodsb
+                inc     esi
+                stosw
+                loop    @@52
+              @@53:
+                pop     ecx
+                pop     edi
+                mov     eax,ScreenBuffer
+                cmp     ebx,eax
+                jne     @@54
+                shl     ecx,1
+                sub     edi,eax
+                push    edi                     { [1]:DWord = Offset }
+                push    ecx                     { [2]:DWord = Length }
+                Call    ShowBuffer
+              @@54:
+                pop     eax
+                pop     ebx
+                pop     ecx
+                pop     edi
+                ret
+end;
+
+    function TView.Exposed: Boolean;
+      assembler; {&USES ebx,esi,edi}
+      {&FRAME+}
+      var
+        Target: Pointer;
+        asm
+                mov     edi,Self
+                test    [edi].TView.State,sfExposed
+                je      @@2
+                xor     eax,eax
+                cmp     eax,[edi].TView.Size.X
+                jge     @@2
+                cmp     eax,[edi].TView.Size.Y
+                jge     @@2
+              @@1:
+                xor     ebx,ebx
+                mov     ecx,[edi].TView.Size.X
+                push    eax
+                Call    @@11
+                pop     eax
+                jnc     @@3
+                mov     edi,Self
+                inc     eax
+                cmp     eax,[edi].TView.Size.Y
+                jl      @@1
+              @@2:
+                mov     al,0
+                jmp     @@30
+              @@3:
+                mov     al,1
+                jmp     @@30
+
+              @@8:
+                stc
+              @@9:
+                ret
+
+              @@10:
+                mov     edi,[edi].TView.Owner
+                cmp     [edi].TGroup.Buffer,0
+                jne     @@9
+              @@11:
+                mov     Target,edi
+                add     eax,[edi].TView.Origin.Y
+                mov     esi,[edi].TView.Origin.X
+                add     ebx,esi
+                add     ecx,esi
+                mov     edi,[edi].TView.Owner
+                test    edi,edi
+                jz      @@9
+                cmp     eax,[edi].TGroup.Clip.A.Y
+                jl      @@8
+                cmp     eax,[edi].TGroup.Clip.B.Y
+                jge     @@8
+                cmp     ebx,[edi].TGroup.Clip.A.X
+                jge     @@12
+                mov     ebx,[edi].TGroup.Clip.A.X
+              @@12:
+                cmp     ecx,[edi].TGroup.Clip.B.X
+                jle     @@13
+                mov     ecx,[edi].TGroup.Clip.B.X
+              @@13:
+                cmp     ebx,ecx
+                jge     @@8
+                mov     edi,[edi].TGroup.Last
+              @@20:
+                mov     edi,[edi].TView.Next
+                cmp     edi,Target
+                je      @@10
+                test    [edi].TView.State,sfVisible
+                jz      @@20
+                mov     esi,[edi].TView.Origin.Y
+                cmp     eax,esi
+                jl      @@20
+                add     esi,[edi].TView.Size.Y
+                cmp     eax,esi
+                jge     @@20
+                mov     esi,[edi].TView.Origin.X
+                cmp     ebx,esi
+                jl      @@22
+                add     esi,[edi].TView.Size.X
+                cmp     ebx,esi
+                jge     @@20
+                mov     ebx,esi
+                cmp     ebx,ecx
+                jl      @@20
+                stc
+                ret
+              @@22:
+                cmp     ecx,esi
+                jle     @@20
+                add     esi,[edi].TView.Size.X
+                cmp     ecx,esi
+                jg      @@23
+                mov     ecx,[edi].TView.Origin.X
+                jmp     @@20
+              @@23:
+                push    Target
+                push    edi
+                push    esi
+                push    ecx
+                push    eax
+                mov     ecx,[edi].TView.Origin.X
+                Call    @@20
+                pop     eax
+                pop     ecx
+                pop     ebx
+                pop     edi
+                pop     Target
+                jc      @@20
+                retn
+              @@30:
+end;
+
+      function TView.GetColor(Color: Word): Word; {&USES None}
+        {&FRAME+}
+      asm
+                mov     eax,Color
+                Call    MapCPair
+end;
+
+      procedure TView.ResetCursor; {&USES esi,edi}
+        {&FRAME-}
+      asm
+                mov     edi,Self
+                xor     eax,eax
+                mov     ax,[edi].TView.State
+                not     eax
+                test    eax,sfVisible+sfCursorVis+sfFocused
+                jne     @@Hide
+                mov     eax,[edi].TView.Cursor.Y
+                mov     edx,[edi].TView.Cursor.X
+              @@1:
+                test    eax,eax
+                jl      @@Hide
+                cmp     eax,[edi].TView.Size.Y
+                jge     @@Hide
+                test    edx,edx
+                jl      @@Hide
+                cmp     edx,[edi].TView.Size.X
+                jge     @@Hide
+                add     eax,[edi].TView.Origin.Y
+                add     edx,[edi].TView.Origin.X
+                mov     ecx,edi
+                mov     edi,[edi].TView.Owner
+                test    edi,edi
+                jz      @@Show
+                test    [edi].TView.State,sfVisible
+                je      @@Hide
+                mov     edi,[edi].TGroup.Last
+              @@2:
+                mov     edi,[edi].TView.Next
+                cmp     ecx,edi
+                jne     @@3
+                mov     edi,[edi].TView.Owner
+                jmp     @@1
+              @@3:
+                test    [edi].TView.State,sfVisible
+                je      @@2
+                mov     esi,[edi].TView.Origin.Y
+                cmp     eax,esi
+                jl      @@2
+                add     esi,[edi].TView.Size.Y
+                cmp     eax,esi
+                jge     @@2
+                mov     esi,[edi].TView.Origin.X
+                cmp     edx,esi
+                jl      @@2
+                add     esi,[edi].TView.Size.X
+                cmp     edx,esi
+                jge     @@2
+              @@Hide:
+                mov     al,0                    // Show := False
+                xor     ecx,ecx
+                jmp     @@4
+{ Set Cursor Position }
+              @@Show:
+                push    edx                     // [1]:DWord = Column
+                push    eax                     // [2]:DWord = Row
+                Call    SysTVSetCurPos
+{ Set Cursor Shape }
+                mov     al,1                    // Show := True
+                mov     cx,CursorLines
+                mov     edi,Self
+                test    [edi].TView.State,sfCursorIns
+                jz      @@4
+                mov     ch,1
+                test    cl,cl
+                jne     @@4
+                mov     cl,7
+              @@4:
+                xor     al,1
+                mov     CursorHidden,al
+                xor     al,1
+                movzx   edx,ch
+                movzx   ecx,cl
+                push    edx                     // [1]:Integer = Y1
+                push    ecx                     // [2]:Integer = Y2
+                push    eax                     // [3]:Boolean = Show
+                Call    SysTVSetCurType
+end;
+
+      procedure TView.WriteBuf(X, Y, W, H: Integer; var Buf);
+        assembler; {&USES ebx,esi,edi}
+        {&FRAME+}
+        var
+          Target: Pointer; {Variables used by WriteView}
+          Buffer: Pointer;
+          Offset: Word;
+          asm
+                cmp     H,0
+                jle     @@2
+              @@1:
+                mov     eax,Y
+                mov     ebx,X
+                mov     ecx,W
+                mov     edi,Buf
+                Call    WriteView
+                mov     eax,W
+                shl     eax,1
+                add     Buf,eax
+                inc     Y
+                dec     H
+                jnz     @@1
+              @@2:
+end;
+
+        procedure TView.WriteChar(X, Y: Integer; C: Char; Color: Byte;
+            Count: Integer);
+          assembler; {&USES ebx,esi,edi}
+          {&FRAME+}
+          var
+            Target: Pointer; {Variables used by WriteView}
+            Buffer: Pointer;
+            Offset: Word;
+            asm
+                mov     al,Color
+                Call    MapColor
+                mov     ah,al
+                mov     al,C
+                mov     ecx,Count
+                test    ecx,ecx
+                jle     @@2
+                cmp     ecx,256
+                jle     @@1
+                mov     ecx,256
+              @@1:
+                lea     ebx,[ecx*2+2]
+                and     ebx,NOT 11b
+                sub     esp,ebx
+                mov     edi,esp
+                mov     edx,eax
+                shl     eax,16
+                mov     ax,dx
+                mov     edx,ecx
+                cld
+                shr     ecx,1
+                rep     stosd
+                adc     ecx,ecx
+                rep     stosw
+                mov     ecx,edx
+                mov     edi,esp
+                mov     eax,Y
+                push    ebx
+                mov     ebx,X
+                Call    WriteView
+                pop     eax
+                add     esp,eax
+              @@2:
+end;
+
+          procedure TView.WriteLine(X, Y, W, H: Integer; var Buf);
+            assembler; {&USES ebx,esi,edi}
+            {&FRAME+}
+            var
+              Target: Pointer; {Variables used by WriteView}
+              Buffer: Pointer;
+              Offset: Word;
+              asm
+                cmp     H,0
+                jle     @@2
+              @@1:
+                mov     eax,Y
+                mov     ebx,X
+                mov     ecx,W
+                mov     edi,Buf
+                Call    WriteView
+                inc     Y
+                dec     H
+                jne     @@1
+              @@2:
+end;
+
+
+            procedure TView.WriteStr(X, Y: Integer; Str: String;
+                 Color: Byte);
+              assembler; {&USES ebx,esi,edi}
+              {&FRAME+}
+              var
+                Target: Pointer; {Variables used by WriteView}
+                Buffer: Pointer;
+                Offset: Word;
+                asm
+                mov     al,Color
+                Call    MapColor
+                mov     ah,al
+                mov     esi,Str
+                xor     ecx,ecx
+                cld
+                lodsb
+                mov     cl,al
+                jecxz   @@2
+                lea     ebx,[ecx*2+2]
+                and     ebx,NOT 11b
+                sub     esp,ebx
+                mov     edi,esp
+                mov     edx,ecx
+              @@1:
+                lodsb
+                stosw
+                loop    @@1
+                mov     ecx,edx
+                mov     edi,esp
+                mov     eax,Y
+                push    ebx
+                mov     ebx,X
+                Call    WriteView
+                pop     eax
+                add     esp,eax
+              @@2:
+end;
+
+

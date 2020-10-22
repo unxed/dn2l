@@ -1,0 +1,3 @@
+; Dos Navigator Viewer configuration file
+txt:C:\VC\wpview.exe !.!
+dbf:C:\VC\dbview.exe !.!

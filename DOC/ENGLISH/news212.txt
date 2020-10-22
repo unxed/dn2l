@@ -1,0 +1,102 @@
+The main differences between 2.12 and 2.11 beta versions.
+
+[-] In file search dialogs' input lines history button covered
+    the end of input line.
+[-] [Win32] Scrolling of mouse wheel in file panel, editor, etc. 
+    resulted in cursor movement instead of window scrolling.
+[-] When activating information panel and changing drive in this panel
+    (Alt+F1/F2), garbage was shown in panel title, and sometimes
+    DN crashed.
+[-] Directory description in information panel (dirinfo, etc.) 
+    was displayed unpredictably. Usually it wasn't displayed right after
+    Ctrl-L and appeared after changing drive on disk panel.
+[-] [Win32] Problems with drive changing could occure, 
+    if OS returns path with small drive letter in response to query 
+    for current directory. For example, if making a shortcut to run DN/2 
+    with 'c:\dn-2\dn.exe' path instead of 'C:\dn-2\dn.exe'.
+[-] [OS/2] Disk was detected incorrectly for "Drive - Volume label" 
+    operation.
+[*] Operation "Disk - Volume label" is now ignored if there is a network
+    directory in active panel.
+[-] Calculator didn't interpret an order with explicit "+" sign,
+    for example, 1e+6.
+[-] In calculator a result of computation by "Calculate" button
+    looked like it was selected, but in fact it wasn't. For example,
+    in couldn't be copied to buffer with Ctrl-Ins.
+[*] Now in calculator the result of computation by "Calculate" button
+    is shown in selected representation form.
+[*] Now texts in the result block are displayed in form corresponding
+    to one in the input line. For example, line with the result
+    in binary form now shows something like "1101b" instead of "1101".
+[-] When extracting an input line value from history, the corresponding
+    dialog elements were not updated. This was apparent, for instance,
+    in calculator (expression was not recalculated) and in text search
+    dialogs (HEX string was not updated).
+[-] In calculator trigonometric functions were used for ASH ACOSH ACH 
+    instead of hyperbolic.
+[-] Cosmetic correctings in Russian and Ukraininan help to calculator.
+[*] Internal optimizations in calculator.
+[-] Sorting indicator was shown regardless of its display option.
+[-] If saving desktop with an archive opened in one of panels,
+    and then restoring desktop when there is neither archive left nor
+    letter of drive which the archived was located on, DN crashed.
+[-] When pressing Ctrl+\ in a network directory of non-root level,
+    cursor was moved to the beginning of panel instead of being located
+    on the root level directory we were in (therefore behaviour
+    of Ctrl+\ in a network directory was different from one in
+    a directory on local drive).
+[-] When showing free space or directory information on divider 
+    in file panels, the separator line completely disappeared.
+[-] Ctrl-Enter hot key in editor didn't work with full path.
+[-] DN crashed in some situations when panels autorefresh was
+    turned on. There are two of such situations. First one:
+    quickly switching to destination directory after copying
+    files from an archive NOT through a temporary directory
+    and not hurrying to close the dialog. After some time file cursor
+    disappears from panel and from now on deleting leads to crash.
+    Second situation: similar actions with the dialog of overwriting
+    a file when copying from archive through a temporary directory.
+    Demonstration of both situations was noticed in Win32 DN version.
+[*] [Win32] Now a base directory path for 'subst' drives is shown 
+    in drive menu under NT systems (as for network drives).
+[*] DN/2 is now compiled with defines {$DEFINE PrintManager} and
+    {$DEFINE Printer}; so, menu items "File => Print" and "Options =>
+    Configuration => Printer setup..." now are enabled;
+[*] In "Printer Setup" dialog additionally to the standard output devices
+    (COM1-COM4, LPT1-LPT4, NUL) and output to file also two user-defined
+    output devices could be chosen, i.e. names of shared printers in the
+    network
+[*] In directories, view and edit history dialogs the new "Stand at" button
+    is added. Pressing this button causes directory changing in active file
+    panel to the directory containing current history item (file or
+    directory) and positioning of file cursor to the current file/directory
+[*] The possibility to open password-protected shared directories with
+    the Password and User name request was added to the Network browser
+[*] Localization of Network error messages;
+[-] DN/2 crashed after Network error messages;
+[-] The cursor was not positioned on previous shared folder after changing
+    from it to shared folders panel of upper level;
+[*] While entering shared directory proceeds, "Please stand by..." message
+    is shown;
+[*] If attempt to enter the Password and User name while opening
+    password-protected shared directory is failed then the current directory
+    will not be changed in the Network panel, and its content will not be
+    reread
+
+[-] TAR archives were read incorrectly.
+
+[-] If setting up autohide for a long file name in footer (Options -
+    File Manager - Setup... - If not fully shown anywhere [X]),
+    the '..' element was not hidden.
+[-] Orthographical edition in Russian panel view dialog.
+[-] [Win32, DPMI32] Panel mask was always applied to short file names,
+    whereas file search (Alt+F7) always concerned long file names.
+    Now in both cases the names which are currently displayed in panel
+    are used.
+[*] [Win32, DPMI32] Now panel of file search results (Alt+F7) inherits
+    short/long names display mode from the panel the search was called in.
+[-] [Win32, DPMI32] The flag of short/long names in panel columns was not
+    visible in Russian panel view dialog.
+[-] If switching off sorting indicator in Manager setup, it appeared again
+    after hiding and showing file panel (for example, Ctrl+L, Ctrl+L)
+    until changing directory.

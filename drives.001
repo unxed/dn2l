@@ -1,0 +1,6 @@
+Drives.pas drives.001 AK155
+
+Вместо Length(Dr^)+Length(SR.FullName) было Length(Dr^+SR.FullName).
+Что, для суммирования длин надо сложить строки?!
+А что такое 2?
+

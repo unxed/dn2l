@@ -1,0 +1,234 @@
+Version 2.10 alpha: the main differences from 1.51.10 beta 16.
+
+[!] File panel setup options are completely new-made. Added new abilities.
+[!] Drive menu and its setup is completely new-made.
+[!] DBF viewer is borrowed from DN OSP with new abilities:
+    - in field list (F2) a current field is selected, and one can move
+      to any field of current record via field list;
+    - hot keys Alt-Ctrl-Up, Alt-Ctrl-Down allow to move records;
+    - codetable change now has effect on field names too.
+[!] [Win32] Added very much preliminary version of net browser.
+[!] Added very much preliminary DPMI32 version.
+[!] Now mouse wheel is understood in a window under NT 5 and above,
+    as well as under OS/2 with Amouse (with 2 or more "arrows").
+    Under NT 4 and 9x/ME this should not work. Rotation of the wheel
+    is treated in the editor, file panels, and help the same way as
+    pressing of the scrollbar arrow. In all other cases the effect of
+    the wheel's rotation is the same as that of using the cursor arrows
+    (up or down).
+
+[-] Appreciably changed country setup. Now DN is not limited to Russian
+    language only. One can set corresponding tables, and DN will work
+    correctly with any language (switch to upper/lower case, text search
+    in OEM and Win- codetables, keyboard layout fix (Alt-F12)). It seems
+    that the only place limited to Russian now is code page autodetection.
+[!] Introduced new non-file panel - view of file descriptions.
+    Hot key is Ctrl-D. Works with all file panels but archives.
+
+[*] Now panel redraw on file selection removal in batch operations
+    takes place on timer, which noticeably speeds up such operations.
+
+[-] Fixed multiple bugs with search in different code pages.
+
+[*] Now works D&D to path in panel header.
+
+[*] In editor one can add Ctrl to Up, Dn, Shift-Up, Shift-Dn keys,
+    to make text scroll with fixed cursor, instead of moving cursor
+    with fixed text.
+    Enabling ScrollLock mode now change this behaviour to the opposite:
+    for example, Up scrolls text and Ctrl-Up moves cursor.
+
+[*] Default codepage setting in dn.ini is separated for editor and viewer.
+    DefCodePage key now has effect only on editor, and the separate key
+    DefCodePageView is introduced for viewer.
+
+[-] Removed unneeded delay before handling mouse events, which was
+    noticeable under OS/2 (DN/2 window became stuck for some time
+    after moving mouse cursor over it).
+
+[-] It was impossible to use AltGrey in editor under Windows NT
+    for entering national symbols.
+
+[*] Changed drive menu and interface setup connected with it.
+
+[*] Added new option for file search: "Don't sort result".
+
+[*] (Win32) In Info panel and the bottom of file panel an information
+    about HDD size and free space is always get from path in panel
+    instead of drive letter (there may be difference on NTFS in case
+    of softlinks.
+
+[-] Descriptions are copied correctly from TEMP:, search and list panels.
+[-] Multiline descriptions are copied correctly.
+[-] When editing descriptions (Alt-Ins), only a first line is edited,
+    other lines stay intact and don't get lost.
+
+[*] Support for editing environment variables with more than 255 characters
+    length.
+[*] When trying to copy/move inaccessible files, the dialog
+    "Retry/Skip/Skip all/Cancel" is shown.
+[-] In file panels Alt-Ctrl-Enter, Alt-Ctrl-Ins, Alt-Ctrl-[, Alt-Ctrl-]
+    combinations work similar to those without Alt, but give (under Win32)
+    a name opposite to one in panel (for example, if panel shows LFN
+    then Ctrl-Alt-Ins copies short name to clipboard).
+
+[*] 7-Zip archives support.
+
+[*] Command line key '/DNHIS=' or environment variable DNHIS sets
+    suffix for history file name. This allows to have several different
+    histories with common settings.
+
+[*] Panel setup is completely new-made. Added new ways of formatting
+    file names in panel and the bottom of panel.
+
+[-] In OS/2 version the clipboard is cleared before copying to it.
+    Absence of this operation caused that when copying something
+    to clipboard in Mozilla, everything that DN copied after that
+    was ignored by Mozilla.
+[-] (Win32) Fixed copying full file name to clipboard (ak50514a.dif caused
+    that long file name was copied with short path, and vice versa).
+[-] (Win32) Added ability to copy alternate full file name to clipboard
+    with Ctrl+Alt+Shift+Ins.
+[-] In editor when searching for one symbol backwards with option "Whole words"
+    turned on, and there is sought character which is not a separate word,
+    search could get caught in an endless loop.
+[-] In editor when searching for a pattern consisting of similar separator
+    characters (for example, '***'), and it appears in text among
+    the same characters (for example, '*****'), this pattern could be found
+    later than needed (or not found at all).
+[+] Added ability to insert an empty record in current dBase record
+    with Ctrl+I.
+[+] Added ability to move a line up or down in dBase file with hot keys
+    Alt+Ctrl+Up ¨ Alt+Ctrl+Down.
+[*] Improved SFX detection.
+[-] (Win32) DN crashed when turning off and on automatic refresh of panels.
+[-] (Win32) "Name" column width could not be changed with mouse.
+[-] It was impossible to enter 7z archives with Ctrl-PgDn. Some other
+    demonstrations of this error also could happen.
+[*] When opening a non-file panel (for example, with Ctrl-Q) in maximized
+    file panel, this command is not ignored now. It turns off maximization
+    and then works as usual.
+[*] When turning on quick search the mask appears immediately, not after
+    entering first symbol as earlier.
+[-] In quick search mode the second press of quick search hot key
+    (for example, pressing and releasing Alt), did not turn off quick
+    search.
+[-] Sometimes (in a random way) when dn.cfg was missing, the About panel
+    was not shown.
+[-] Quick search cursor could spontaneously jump anywhere when automatic
+    refresh of panels was turned on.
+[-] Drive line never got renewed with automatic refresh of panels
+    turned off.
+[*] Ineffective insertion sort when reading directory was replaced
+    by regular sort of file collection.
+[*] Considerable rework of information panel.
+[-] When copying files, the cluster size of destination drive
+    was calculated incorrectly.
+[*] Select preset menu can be accessed not only with Alt-"-", but also
+    via main menu item "Panel => Select appearance preset..."
+[*] In select preset menu (Alt-"-") "Description" flag is shown
+    only for those types of panel where it is really used.
+[*] If full directory name does not fit in width of directory history
+    dialog, the path is cut so that directory name can be seen.
+[-] In dialogs of editor and viewer history the last character
+    in file name could not be seen.
+[*] The width of command history, directory history, viewer and editor
+    history dialogs was extended to 78 symbols.
+[*] In history dialogs of commands, directories, viewer and editor it is
+    now possible to use Ctrl-Left/Right to switch between the ordinary mode
+    of cutting file names and the mode in which only the left part of path
+    is cut.
+[*] Added ability to open branch of a directory or an achive including
+    not only files but directories as well (hot key Alt-Ctrl-H).
+[*] Now DN/2 will show time and speed when copying files.
+[*] Panel setup options in menu moved from main "Panel" submenu to
+    "Options" submenu.
+[-] DN crashed after setting video mode in which number of lines multiplied
+    by number of columns exceeded 8192.
+[*] Eliminated file manager setup option "Separator", because now any
+    information can be shown on separator, so there is no reason to turn
+    it off.
+[-] In HEX mode in lines shorter than 16 bytes symbols with codes < 0x20
+    were highlighted incorrectly.
+[-] In editor when trying to make a selection right after search,
+    the first position of selection was the beginning of line instead of
+    cursor position.
+[-] Fixed cursor positioning in HEX mode.
+[*] Start with only one non-English package is possible.
+[-] Correct loading of resources in case of errors in country setup.
+[-] DN/W32 did not show disk information if disk label consisted of
+    11 symbols.
+[-] Tildes in file description were incorrectly shown in the bottom of panel.
+[-] After disabling showing on separator and enabling showing in the bottom
+    of file panel, D&D from the corresponding place still worked like if
+    information remained there.
+[*] Introduced setup of alphabet sorting in country setup. In Win32 version
+    only the option of using xlt-file works now.
+[*] Added file XLT\sort866.xlt which assigns the alphabet sorting for
+    code page 866. This file is based on system table of sorting for
+    eComStation.
+[-] Masks '*' and '.' in dn.edt did not work.
+[-] When copying files the free space on destination drive was not
+    controlled regardless of the corresponding option.
+[*] Optimized work with buffered streams. This may speed up viewing (F3)
+    files from network, and probably other file operations.
+[*] Detection of CAB-SFX kind of Microsoft product hotfix.
+[-] DN crashed after selecting a single-line stream block, which does not
+    contain correct expression, and pressing Alt-Ins.
+[-] If a non-file panel was active in file manager, then something strange
+    was inserted in command line with Ctrl-Enter. Now the current directory
+    in tree is inserted from tree panel, and nothing is inserted from
+    Viewer, Info and Description panels.
+[-] On presence of a non-file panel, information in window list (Alt-0)
+    reflected the previous file panel which was on the same place before
+    calling this non-file panel.
+[-] (Win32) In file panels hot keys Ctrl-[ and Ctrl-] with and without Alt
+    worked in opposition to what is needed (without Alt they should copy
+    file name visible in panel to command line, and with Alt they should
+    copy alternate file name).
+[-] Hot keys Ctrl-Shift-[ and Ctrl-Shift-] did not work in file panels
+    under Windows NT.
+[-] In file panels hot keys Ctrl-Shift-Up, Ctrl-Shift-Down worked very
+    strange: cursor was not moved, but after releasint Ctrl file was opened
+    fore viewing. Now these combinations do nothing.
+[-] After turning off D&D with mouse from panels, it still worked from
+    the bottom of file panel.
+[*] Added ability to turn off quick search completely.
+
+[*] Obscure and incorrectly working modes of inserting paths were eliminated
+    from dialog of making file list. Instead of them buttons for inserting
+    file name and path were added.
+
+[*] Optimized detection of archives.
+[-] Fixed errors in "Split/combine" function.
+
+[*] Now using the mouse on the scrollbar arrows in the editor, file panels,
+    and help moves the text up or down while the text cursor stays fixed
+    relative to the window.
+[*] DosShell, PCTools, and Blue  palettes are removed from the distribution
+    and not supported anymore. If someone really needs them, please write
+    about that to akorop[at]online.kharkiv.net, they can be restored.
+[*] Calendar has been incorporated from the DOS version of DN OSP, with
+    the following differences:
+    - reminder eliminated;
+    - day highlighting is done by color, not brackets;
+    - added highlighting of the current date;
+    - Ctrl-Ins copies selected date into the buffer;
+    - if calendar is called from the editor, Enter inserts the date
+      selected into the text being edited;
+    - in the dialog with color settings, the color names were adjusted.
+    ATTENTION! For the new calendar to be functioning correctly, the
+    new palettes should be used. They are supplied together with dn.exe,
+    but the palettes must be loaded manually.
+[*] Now the action of the RIGHT mouse button on square brackets in the
+    drive line is the wide opening of the respective panels (']' for the
+    right panel, '[' for the left panel).
+[*] If a file panel has already been widely opened, then the mouse actions
+    in the drive line are related to that panel, i.e. it becomes hidden
+    by using the left mouse button or shrinks to its standard size by
+    using the right mouse button.
+[*] Now clicking the mouse outside of all panels and command line is
+    equivalent to Ctrl-O.
+[-] Treatment of Ctrl-Enter in the editor was restored.
+[*] The loading files for edit is optimised.
+

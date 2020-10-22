@@ -1,0 +1,56 @@
+>1 Сравнить !.! и $:$\$.$
+  start /n /f  gfc !.! $:$\$.$
+>1 Сравнить !.! и $:$\!.!
+  start /n /f  gfc !.! $:$\!.!
+>1 Очистить exe.olf
+   for %%i in (vpi lib bak lnk obj dll exe lng dlg hlp inc pas) do del EXE.olf\*.%%i
+>1 Очистить exe.wlf
+   for %%i in (vpi lib bak lnk obj dll exe lng dlg hlp inc pas) do del EXE.WLF\*.%%i
+>1 Очистить exe.d32
+   for %%i in (vpi lib bak lnk obj dll exe lng dlg hlp inc pas) do del EXE.D32\*.%%i
+   del EXE.D32\dn.prg EXE.D32\dn.flg
+>1 ~C~ Перекомпилировать DN (OS/2)
+ vpc dn /m /dDN /dDNPRG /q  /cO:OLF:OS2;LargeFileSupport
+>1 Перекомпилировать DN (Win32)
+ vpc dn /m /dDN /dDNPRG /q  /cW:WLF:Win32;LargeFileSupport
+>1 ~R~ Перекомпилировать ресурсы (OS/2)
+  set Host=OLF
+  if [%RUNWORKPLACE%]==[] set Host=WLF
+  exe.%Host%\rcp O OS2
+>1 Перекомпилировать ресурсы (Win32)
+  set Host=OLF
+  if [%RUNWORKPLACE%]==[] set Host=WLF
+  exe.%Host%\rcp W Win32
+>1 ~H~ Перекомпилировать хелп
+  set Host=OLF
+  if [%RUNWORKPLACE%]==[] set Host=WLF
+  EXE.%Host%\tvhc resource\english\dnhelp.htx EXE.OLF\english.hlp EXE.OLF\dnhelp.pas /4DN_OSP
+  EXE.%Host%\tvhc resource\english\dnhelp.htx EXE.WLF\english.hlp EXE.WLF\dnhelp.pas /4DN_OSP
+  EXE.%Host%\tvhc resource\russian\dnhelp.htx EXE.OLF\russian.hlp EXE.OLF\dnhelp.pas /4DN_OSP
+  EXE.%Host%\tvhc resource\russian\dnhelp.htx EXE.WLF\russian.hlp EXE.WLF\dnhelp.pas /4DN_OSP
+  EXE.%Host%\tvhc resource\ukrain\dnhelp.htx EXE.OLF\ukrain.hlp EXE.OLF\dnhelp.pas /4DN_OSP
+  EXE.%Host%\tvhc resource\ukrain\dnhelp.htx EXE.WLF\ukrain.hlp EXE.WLF\dnhelp.pas /4DN_OSP
+
+>1 ~D~ Вызвать DN
+  set Host=OLF
+  if [%RUNWORKPLACE%]==[] set Host=WLF
+  start /n /i exe.%Host%\dn
+>1 ~V~P
+  start /n /f vp
+>1 извлечь из архива файл !.!
+  uc e C:\arch\DNOSPOS2 !\!.!
+>1 CRC
+  crc * > N:\crc
+>1 diff1
+  _diff1 %1
+>1 Создать автохелп
+  set Host=OLF
+  if [%RUNWORKPLACE%]==[] set Host=WLF
+  I:\DN_Util\EXE.%Host%\autohelp *.pas *._vp *.inc LIB.OLF\*.pas LIB.WLF\*.pas
+  pause
+  I:\DN_Util\EXE.%Host%\MK_H_IND.EXE < autohelp.txt | sort /+68  > dnprgh.ind
+  @echo ~DN_Comments DN_Comments > dnprgh.tit
+  hg  /p dnprgh.tit dnprgh.ind autohelp.txt , dn2.vph
+  pause
+  copy dn2.vph I:\VP21\COMMON
+  del autohelp.txt dn2.vph dnprgh.ind dnprgh.tit

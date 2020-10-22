@@ -1,0 +1,1386 @@
+;/////////////////////////////////////////////////////////////////////////
+;/
+;/  Dos Navigator Open Source 1.51.08
+;/  Based on Dos Navigator (C) 1991-99 RIT Research Labs
+;/
+;/  This programs is free for commercial and non-commercial use as long as
+;/  the following conditions are aheared to.
+;/
+;/  Copyright remains RIT Research Labs, and as such any Copyright notices
+;/  in the code are not to be removed. If this package is used in a
+;/  product, RIT Research Labs should be given attribution as the RIT Research
+;/  Labs of the parts of the library used. This can be in the form of a textual
+;/  message at program startup or in documentation (online or textual)
+;/  provided with the package.
+;/
+;/  Redistribution and use in source and binary forms, with or without
+;/  modification, are permitted provided that the following conditions are
+;/  met:
+;/
+;/  1. Redistributions of source code must retain the copyright
+;/     notice, this list of conditions and the following disclaimer.
+;/  2. Redistributions in binary form must reproduce the above copyright
+;/     notice, this list of conditions and the following disclaimer in the
+;/     documentation and/or other materials provided with the distribution.
+;/  3. All advertising materials mentioning features or use of this software
+;/     must display the following acknowledgement:
+;/     "Based on Dos Navigator by RIT Research Labs."
+;/
+;/  THIS SOFTWARE IS PROVIDED BY RIT RESEARCH LABS "AS IS" AND ANY EXPRESS
+;/  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+;/  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+;/  DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR
+;/  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+;/  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+;/  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;/  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+;/  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+;/  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+;/  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;/
+;/  The licence and distribution terms for any publically available
+;/  version or derivative of this code cannot be changed. i.e. this code
+;/  cannot simply be copied and put under another distribution licence
+;/  (including the GNU Public Licence).
+;/
+;//////////////////////////////////////////////////////////////////////////
+
+dlAltTable            'QWERTYUIOP'#0#0#0#0'ASDFGHJKL'#0#0#0#0#0'ZXCVBNM'
+
+erInvalidFormula,     ^M^C'Invalid formula in'
+erInvalidCell,        ^M^C'Invalid cell number in'
+erInvalidValue,       ^M^C'Invalid value in'
+erInvalidFunction,    ^M^C'Invalid function in'
+erRecurseTooDeep,     ^M^C'Recursively formula call in'
+erDeepDependence,     ^M^C'Too copmlicated dependencies in'
+erInvalidFileFormat,  ^M^C'Invalid file format'
+erInvalidIF,          ^M^C'Invalid IF expression in'
+erGotoInvalidNumber,  ^M^C'Invalid cell number'
+erCantReadDesktop,    ^C'Error reading desktop file'
+erDesktopError,       ^C'Could not open desktop file'
+erInvalidDesktop,     ^C'Error: Invalid desktop file'
+erCantCreateFile,     ^C'Could not create the file %s'^M^C
+erNotEnoughMemory,    ^C'Not enough memory to complete operation.'
+erCantOpenConfig,     ^C'Could not create config file'
+erCantOpenHelp,       ^C'Could not open help file.'
+erInvalidDrive,       ^C'Invalid drive or directory.'
+erInvalidFileName,    ^C'Invalid file name.'
+erNoDiskSpace,        ^C'There is not enough room'^M+
+                      ^C'on drive %c: to copy'^M+
+                      ^C'file %s. Copy next file?'^M
+erNoDiskSpacePre,     ^C'There is not enough room'^M+
+                      ^C'on drive %c: to copy'^M+
+                      ^C'all selected files. Proceed with copying?'^M
+erTextNotFound        ^C'Search text not found'
+erNoQuickDirs         ^C'No fast accessed'^M^C'directories defined.'
+eruuNoStuff           ^C'There is no UUCode stuff in this file'
+eruuUnknownMode       ^C'Unknown endcoding mode'
+eruuBlankLine         ^C'Blank line occurred in file'^M^C
+eruuNonUULine         ^C'Non-UU line occurred in file'^M^C
+eruuLineNo            ', line '
+eruuIncorrectTerm     ^C'File is incorrectly terminated'
+dlUUDecoding          ^M^M^C'UU decoding '
+dlSetDirHistory       ^C'Set the interface option'^M^C'"Track directories" ON first'
+dlSetEditHistory      ^C'Set the interface option'^M^C'"Track editing history" ON first'
+dlSetViewHistory      ^C'Set the interface option'^M^C'"Track viewing history" ON first'
+
+dlPromptForQDir       ^C'Store this directory'^M+
+                      ^C'to quick-change list?'
+
+dlOpenFile,           'Open a File'
+dlOpenFileName,       '~N~ame'
+dlSaveFileAs,         'Save File As'
+dlSaveFileAsName,     '~S~ave File As'
+dlFileExist,          ^C'File %s already exists.'^M^C'Overwrite?'
+dlCanNotWrite,        ^C'Can''t write'^M^C'%s'
+
+dlValuteDialog,       'New currency'
+dlValuteDlgName,      '~N~ame'
+dlValuteDlgSymbol,    '~S~ymbol'
+dlValuteDlgSForward,  'Symbol ~f~orward'
+dlValuteDlgSComma,    '~C~omma'
+
+dlOptions,            'Options'
+
+dlCellDialog,         'Cell/Block format'
+dlCellAsIs,           '~A~s is'
+dlCellDec,            'D~e~cimal'
+dlCellBool,           '~L~ogical'
+dlCellCurrency,       'C~u~rrency'
+dlCellDisplay,        'Display as'
+dlCellJLeft,          'Le~f~t'
+dlCellJRight,         '~R~ight'
+dlCellJCenter,        'Cen~t~ered'
+dlCellJustify,        'Justify'
+dlCellCurrencyName,   'C~u~rrency'
+dlCellDecimals,       '~D~ecimals'
+dlCellWidth,          'Column ~w~idth'
+dlCellExponent,       'E~x~ponent'
+dlCellNothing,        'D~o~n''t display'
+dlCellProtect,        '~P~rotected'
+dlCellComma,          '~C~omma'
+dlCellPercent,        'Perce~n~t'
+
+dlGotoCellNum,        'Go to Cell Number'
+dlGotoCellName,       '~E~nter new cell number'
+
+dlFindCellTitle,      'Find in spreadsheet'
+dlFindCellPattern,    '~P~attern'
+dlFindCellSensitive,  '~C~ase sesitive'
+dlFindCellWhole,      '~W~hole words only'
+dlFindCellSearchAs,   'Search as'
+dlFindCellString,     '~S~tring'
+dlFindCellValue,      '~V~alue'
+dlReplaceTitle,       'Replace'
+dlReplacePattern,     '~R~eplace to'
+dlReplacePrompt,      '~N~o prompt on replace'
+
+dlYesButton,          '~Y~es'
+dlOKButton,           'O~K~'
+dlNoButton,           '~N~o'
+dlNextButton,         'Ne~x~t'
+dlAppendButton,       'A~p~pend'
+dl2YesButton,         '~Y~es'
+dlAllButton,          '~A~ll'
+dlCancelButton,       'Cancel'
+dlHelpButton,         'Help'
+dlTreeButton,         '~T~ree'
+dlDriveButton,        '~D~rive...'
+dlViewButton,         '~V~iew...'
+dlHexASCIIButton,     '~H~ex/ASCII'
+dlMkDirButton,        '~M~kDir'
+dlRereadButton,       '~R~e-read'
+dlOverwriteButton,    '~O~verwrite'
+dlSkipButton,         '~S~kip'
+
+dlYesForAll,          'Accept choice for ~a~ll files'
+dlRead,               ' Read:'
+dlWrite,              'Write:'
+
+dlChooseDir,          'Choose Directory'
+dlChooseFile,         'Choose File'
+
+dlColors,             'Colors'
+dlColorsGroup,        'Group'
+dlColorsItem,         'Item'
+dlColorsText,         'Text'
+dlColorsBack,         'Backgroud'
+dlColorsColor,        'Color'
+dlColorsNormal,       'Normal'
+dlColorsHighlight,    'Highlight'
+dlColorsUnderline,    'Underline'
+dlColorsInverse,      'Inverse'
+
+dlDBViewNumeric,      'Numeric'
+dlDBViewCharacter,    'Character'
+dlDBViewMemo,         'Memo'
+dlDBViewLogical,      'Logical'
+dlDBViewDate,         'Date'
+dlDBViewFloat,        'Float'
+dlDBViewPicture,      'Picture'
+dlDBViewEmpty,        ^C'This database is empty'
+dlDBViewNoMemo,       ^C'Could not find MEMO file'
+dlDBViewViewMemo,     'Memo view'
+dlDBViewInfo,         'Structure of '
+dlDBViewInfoString,   '   N      Name       Type    Length Decimals'
+dlDBViewSearchNot,    ^C'Search string not found'
+dlDBViewSearch,       'Search mask: '
+dlDBViewSearchingIn,  'Searching in'
+dlDBViewTextSearch,   '~T~ext to search'
+dlDBEditField         'Edit field'
+dlDBValue             '~V~alue'
+dlDBCantEdit          'Could not edit field - file is write-protected'
+dlDBEmptyStruc        'Empty database '
+
+
+dlComparing           ^M^M^C'Comparing files...'
+dlDICurDir,           'Current directory'
+dlDINoFiles,          'No files in this directory'
+dlDIFiles,            'files'
+dlDIBytes,            'bytes'
+dlDIFile,             'file'
+dlDIDirectory,        'directory'
+dlDIByte,             'byte'
+dlDIWith,             ' with '
+dlDITotalDisk,        '~ total bytes'
+dlDIFreeDisk,         '~ free bytes'
+dlDIVolumeID,         'Volume label: ~'
+dlDISerialNo,         'Serial number: ~' { Rainbow }
+dlDIFileSys,          'File system: ~' { Rainbow }
+dlDIUsed,             'bytes used'
+dlDIClusterSize,      ', Cluster ~'
+dlDIMemoryTotal,      '~K Bytes free physical memory'
+dlDIMemoryForUser,    '~ Bytes memory for user'
+dlDIMemoryForDN,      '~K Bytes free virtual memory'
+dlDIEMS1,             '~K total, ~'
+dlDIEMS2,             '~K free'
+dlDIXMSFree,          '~K bytes free extended memory '
+dlDINone,             'None'
+dlDITemporary         'Virtual drive'
+dlDIFileFind          'File Find results'
+dlDIFFMask            'Mask: '
+dlDICurArchive        'Current archive:'
+dlDIArcTotalFiles     'Total files: ~'
+dlDIPackedSize        'Packed size total: ~'
+dlDIUnpackedSize      'Unpacked size total: ~'
+;JO+
+dlDIVersionToExtract  'Version to extract: ~'
+;JO-
+
+dlStdDlgManyFiles,    ^C'Too many files.'
+dlDirectory,          'Directory'
+dlFile,               'File'
+dlDrive,              'Drive'
+dlFiles,              '~F~iles'
+dlDirectoriesLabel,   '~D~irectories'
+
+dlClear,              '~C~lear'
+dlOpen,               '~O~pen'
+dlStop,               '~S~top'
+dlReplace,            '~R~eplace'
+dlWarning,            'Warning'
+dlCloseButton,        '~C~lose'
+dlOCloseButton,       'Close'
+dlCopyButton,         '~C~opy'
+dlRenameButton,       '~R~ename'
+
+dlDTDiskFull1,        ^C'Root directory on drive '
+dlDTDiskFull2,        ^M^C'is full,'^M^C'sorry, but can''t set'^M^C'Volume Label'
+
+dlEraseRO,            ^M^C'marked as Read-Only.'^M^C'OK to delete it?'
+dlEraseCantDelDir,    ^C'Could not delete the directory %s'
+dlEraseDirNotEmpty,   ^M^C'is not empty.'^M^C'Do you wish delete it?'
+dlEraseConfirm1,      ^C'Do you wish to delete'^M^C'file '
+dlEraseConfirms1,     ^C'Do you wish to delete'^M^C'these files?'
+dlEraseConfirm2,      ^C'OK to delete'^M^C
+dlErase,              'Erase'
+dlErasingFile,        'Erasing the file'
+dlErasingDir,         'Erasing the directory'
+dlErasingNoFile,      ^C'Could not erase the file '
+dlEraseConfirmDir,    ^C'Do you wish to delete'^M^C'directory '
+
+dlFBBNotReadSource,   ^C'Could not read source file'^M^C
+dlFBBOver1,           ^C'File already exists :'^M^C
+dlFBBOver2,           ^M^C'Overwrite it?'
+
+dlFBBInsertDisk,      ^C'Insert disk number '
+dlFBBDiskFull1,       ^C'This disk is full...'^M^C'Please, insert next disk'
+dlFBBNoCreate,        ^C'Could not create file :'^M+
+                      ^C'disk is full or disk error.'^M+
+                      ^C'Insert disk number '
+dlFBBNoWrite,         ^C'Could not write to file'^M^C
+dlFBBDiskFull2,       ^C'Disk full'
+dlFBBFragment,        'Split file'
+dlFBBDEFragment,      'Combine file'
+dlFBBFragmentTo,       ' to'
+dlFBBNoOpen,          ^C'Could not open the file'^M^C
+dlSplit_To,            ' to'
+
+dlFlushingBuffers,    'Flushing buffers'
+
+dlFCOver,             ^M^C'already exists in destination directory'^M +
+                      ^M^C'   Source:   %s   %s bytes' +
+                      ^M^C' Existing:   %s   %s bytes'
+dlFCItself,           ^M^C'can not be copied to itself'
+dlFCNotDiskSpace,     ^C'Not enough disk space'
+dlFCCopy1,            '~C~opy '
+dlFCMove1,            '~R~ename or move '
+dlFCCopy2,            ' to'
+dlFCMove2,            ' to'
+dlFCNoRename1,        ^C'Could not rename '
+dlFCNoRename2,        ^M^C'to '
+dlDIDir,              'directory'
+dlFCNoCreateDir,      ^C'Could not create the directory'^M^C
+dlFCCopy,             'Copy'
+dlFCMove,             'Rename/move'
+dlFCVerifyFailed      ^C'File verify error'^M^C
+
+dlBranch              'Branch: '
+dlUpDir               '<UP--DIR>'
+dlSubDir              '<SUB-DIR>'
+dlSymLink             '<SymLink>'
+dlNoFilesSelected,    ' No files selected '
+dlBytesIn,            ' ~bytes in ~'
+dlSelectedFiles,      ' selected files'
+dlTotal,              'Total: ~'
+dlFileFind,           'File Find'
+dlTempDrive,          'Temporary Drive'
+dlNoFilesFound,       'No files found'
+dlFilesFound,         ' files found'
+
+dlChangeDir,          'Change directory'
+dlSetAttr,            ' Setting Attributes '
+dlSortName,           '~N~ame'
+dlSortExt,            'E~x~tension'
+dlSortSize,           '~S~ize'
+dlSortDate,           '~T~ime'
+dlSortCrDate,         '~C~reation time'
+dlSortLADate,         'Last ~a~ccess time'
+dlSortDIZ,            '~D~escription'
+dlSortUnsorted,       '~U~nsorted'
+dlSortOwner,          'Sort by ~p~ath'
+dlSortGroup,          'Sort by ~g~roup'
+dlSortInverted,       'In~v~erted order'
+dlSortDirsByName,     'D~i~rectories by name'
+
+dlSortTag,            'nxstcadu'
+
+dlViewQuery,          ^C'Information was modified. Save changes?'
+dlViewSearchFor,      '~S~earch for'
+dlViewCase,           '~C~ase sensitive'
+dlViewSaveXlat,       ^C'Save the file translated with'^M^C'the current Xlat Table?'
+
+dlArcMsg1,             ^C'Not enough memory'#13^C'to run archiver'
+dlArcMsg4,             ^C'Could not open file'^M^C
+dlArcMsg5,             ^C'Reading aborted by user'
+dlArcMsg6,             ^C'Broken archive'
+dlArcMsg7,             ^C'No files in archive'
+dlArcMsg8,             ^C'Failed to execute archiver'^M+
+                       ^C'%s'^M+
+                       ^C'(DOS Error #%d)'
+
+dlArcReadArc,          'Reading archive'
+dlArcExtract,          'Extract files'
+dlArcDest,             '~D~estination'
+dlArcSetPsw,           'Set Password'
+dlArcMove,             'Move'
+dlArcAdd,              'Add'
+dlArcInto,             ' files into archive'
+dlArcOpt,              '~O~ptions'
+dlArcDelete,           ^C'Do you wish to delete file(s)?'
+dlArcName,             '~Name:~ '
+dlArcUSize,            '~Original:~ '
+dlArcPSize,            '~Packed:~ '
+dlArcRatio,            '~Ratio:~ '
+dlArcDate,             '~Date:~ '
+dlQueryExit,           ^C'Do you wish to quit'^M^C'DOS Navigator?'
+dlStoreColorPal,       'Store Color Palette'
+dlLoadColorPal,        'Load Color Palette'
+dlFileName,            'File ~N~ame'
+dlDisconnect,          ^M^M^C'Disconnecting'
+dlPercentComplete,     '% complete'
+dlTopName,             ' Short Name ~³~'
+dlTopLFN,              'Name'
+dlTopSplit,            '~³~'
+dlTopSize,             '  Size   ~³~'
+dlTopTime,             '  Time~³~'
+dlTopDate,             '  Date  ~³~'
+dlTopCrTime,           ' CTime~³~'
+dlTopCrDate,           ' CDate  ~³~'
+dlTopLATime,           ' ATime~³~'
+dlTopLADate,           ' ADate  ~³~'
+dlTopPath,             '  Path'
+dlTopOriginal,         ' Original~³~'
+dlTopPacked,           '  Packed  ~³~'
+dlTopRatio,            ' % ~³~'
+
+dlASCIIChart,          'ASCII Chart'
+dlWorksheet,           ^C'Worksheet '
+dlNotSaved,            ^M^C'not saved. Save?'
+dlExportTitle,         'Export To File'
+dlExportLabel,         '~E~xport to'
+
+dlRunButton,           '~R~un'
+dlDropButton,          '~D~rop'
+dlKillButton,          '~K~ill'
+dlDeleteButton,        '~D~elete'
+dlWindowsLabel,        '~W~indows'
+dlWindowManager,       'Window Manager'
+
+dlPhoneBook,           'Phone Book'
+dlPhonesLabel,         '~P~hones'
+dlDialButton,          '~D~ial'
+dlEditButton,          '~E~dit'
+dlPhoneAppend,         '~A~ppend'
+dlPhoneDelete,         'De~l~ete'
+dlPhoneDeleteQuery,    ^C'Delete this record?'
+
+dlPhonesLabelGroup,    '~G~roups'
+dlPhonesLabelPhones,   '~N~ames                           Phones'
+dlPhonesUpDir,         ' Return to Groups'
+
+dlFileManager,         'File Manager '
+dlDBNumeric,           'Numeric'
+dlDBCharacter,         'Character'
+dlDBMemo,              'Memo'
+dlDBLogical,           'Logical'
+dlDBDate,              'Date'
+dlDBFloat,             'Float'
+dlDBPicture,           'Picture'
+dlDBViewName,          'dBase View - '
+
+dlJanuary,             'Jan'
+dlFebruary,            'Feb'
+dlMarch,               'Mar'
+dlApril,               'Apr'
+dlMay,                 'May'
+dlJune,                'Jun'
+dlJuly,                'Jul'
+dlAugust,              'Aug'
+dlSeptember,           'Sep'
+dlOctober,             'Oct'
+dlNovember,            'Nov'
+dlDecember,            'Dec'
+
+dlCluster,             'Cluster'
+dlSector,              'Sector'
+dl1st,                 '1st'
+dl2nd,                 '2nd'
+dl3rd,                 '3rd'
+dlSometh,              'th'
+dlCopyOfFAT,           ' copy of FAT'
+dlReservedSector,      'Reserved Sector'
+
+dlDiskFixer,           'DiskFixer'
+dlFixerFill,           'Fill'
+dlCopyTo,              'Copy block to'
+dlNumberClusters,      '~N~umber of clusters'
+dlStartingCluster,     '~S~tarting cluster'
+dlValidClusters,       ^C'Valid cluster numbers are '^M^C'2 - '
+dlClusterRange,        'Select Cluster Range'
+dlNumberSectors,       '~N~umber of sectors'
+dlStartingSector,      '~S~tarting sector'
+dlValidSectors,        ^C'Valid sector numbers are '^M^C'0 - '
+dlSectorRange,         'Select Sector Range'
+dlSBootSector,         '      0      Boot sector'
+dlBootSector,          'Boot Sector'
+dlS1stFAT,             '1st Copy of FAT'
+dlS2ndFAT,             '2nd Copy of FAT'
+dlRootDirectory,       'Root Directory'
+dlUnusedDirEntry,      '         Unused directory entry'
+
+dlSearching            'Searching'
+dlPasteFromTitle,      'Paste from File'
+dlPasteFromLabel,      '~P~aste from'
+dlQueryModified,       ^C'File %s'^M^C'was modified. Save?'
+dlReadingFile,         'Reading file'
+dlWritingFile,         'Writing file'
+dlQueryReplace,        ^C'Replace this occurence?'
+dlEditTitle,           'Edit'
+
+dlGameTitle,          'Navigator''s game'
+dlNewButton,          '~N~ew'
+dlSetupButton,        '~S~etup'
+dlTop10Button,        '~T~op 10'
+dlPauseButton,        '~P~ause'
+dlTetName             '³~Name:~ '
+dlTetrisBest          ' ~Best~ '
+dlTetrisNext          ' ~Next~ '
+dlGameScore,          '³~Score:~ '
+dlGameLevel,          '³Level: ~'
+dlGameLines,          '³Lines: ~'
+dlGameScore2          '³Score: ~'
+dlGameInfo            ' ~Info~ '
+dlTetris,             'Tetris'
+dlPentix,              'Pentix'
+dlTop10,               'Top 10'
+dlGameOver,            ^C'Game over'^M^M^C'Final score - %d'
+dlTotalWrite,          ' Total: '
+dlTotalWrited,         'Copied: '
+dlBytes,               ' bytes'
+dlViewFile,            'View'
+dlExportingDIZ,        'Exporting description...'
+dlDeletingDIZ,         'Deleting description'
+dlDeletingSource,      'Deleting source file...'
+
+erIntoItself,          ^M^C'can not be copied into itself'
+dlCreatingDirectory,   'Creating directory'
+dlPhoneDirDelete,      ^C'This entry of phonebook may be not empty.'^M+
+                       ^C'Do you wish delete it?'
+
+dlPleaseStandBy,       ^M^M^C'Please stand by...'
+dlArcPacking,          ^M^M^C'Packing...'
+dlArcUnpacking,        ^M^M^C'Unpacking...'
+dlLoadingViewer,       ^M^M^C'Loading viewer...'
+dlLoadingEditor,       ^M^M^C'Loading editor...'
+dlErrorsOccurred,      ^C'Some errors occurred due the operation.'^M+
+                       ^C'Set "Quiet arvhive processing" off'^M+
+                       ^C'and retry the operation'^M^C' to get more information'
+
+dlSelectDirectory      'Select Directory'
+
+dlScreenSaverSetup          'Screen Saver Setup'
+dlSS_S_electedSavers        '~S~elected savers'
+dlSS_A_dd                   '<ÄÄÄÄÄ ~A~dd'
+dlSS_R_emove                '~R~emove ÄÄ>'
+dlSSA_v_ailableSavers       'A~v~ailable savers'
+
+dlSS_T_ime                  '~T~ime'
+dlSSUse_M_ouse              'Use ~m~ouse to call saver'
+
+dlCalculator                'Calculator'
+
+dlUnknownWindowType         'Unknown window type'
+
+dlColorsTitle               'Colors'
+dl_C_olor                   '~C~olor'
+dl_B_ackground              '~B~ackground'
+dl_F_oreground              '~F~oreground'
+dl_I_tem                    '~I~tem'
+dl_G_roup                   '~G~roup'
+
+dlFBBBinary                '~B~inary splitting only'
+dlFBBVerify                '~V~erify disk writes'
+
+dlQueryCreateDir           ^C'Would you like to create directory'^M^C
+dlQueryAbort               ^C'Abort operation?'
+dlFCNotOverDir             ^C'Can not overwrite directory'^M^C
+dlNotRenameDir             ^C'Could not rename directory'^M^C
+dlFCRename                 'Rename file'
+dlFCRenameNew              '~N~ew name'
+dlNoPossibleName           ^C'Could not find any possible name'
+dlEditDesc                 'Edit file description'
+dl_D_escription            '~D~escription'
+dlFC_Writing               ' Writing '
+dlFC_Written               ' written'
+dlFC_Total                 'Total '
+dlFC_To                    'to'
+dlFC_Reading               ' Reading '
+dlFC_WasRead               ' read'
+dlFCCheckingDirs           'Checking directories...'
+dlFC_Older                 'Older file - skipped'
+dlFC_Exists                'File exists - skipped'
+
+dlQueryCancelSearch        ^C'Cancel search?'
+dlReadingList              ^M^M^C'Reading list...'
+
+;dlListDriveTop             '    Name    ~³~ Description'
+
+dlFillQuery                ^C'This operation can not be undoned!'^M^M+
+                           ^C'Fill anyway?'
+
+dlSystemInfo               'System Information'
+dlSI_Ports                 'Other'
+dlSI_OSVer                 ^M' OS version : '
+dlSI_Lpt                   ^M'  LPT ports : '
+dlSI_COM                     '  COM ports : '
+dlSI_Memory                'Memory'
+dlSI_Main                  '  Machine type : %s'^M+
+                           '           CPU : %s %s'^M+
+                           '      CPU Info : Family: %s Model: %s Stepping: %s'^M+
+                           '  Co-processor : %s'
+dlSI_MainBoard             'Main board'
+dlSI_TotalMem              '     Total : '
+dlSI_Expanded              '  Expanded : '
+dlSI_Extended              '  Extended : '
+dlSI_MemAvail              ' Mem avail : '
+dlSI_MaxAvail              ' Max avail : '
+dlSI_DiskDrivers           'Disk drives'
+dlSI_1stHard               '1st Hard drive : '
+dlSI_2ndHard               '2nd Hard drive : '
+dlSI_FloppyDrives          ' Floppy Drives : '
+dlSI_Heads                 ' heads, '
+dlSI_Tracks                ' cylinders, '
+dlSI_SectTrack             ' sect/cyl'
+dlSI_NotPresent            'Not present'
+
+dlDetailButton             '~D~etail'
+dlTSRTitle                 '~T~SR programs'
+dlMemoryInfo               'Memory information'
+dlHookVectors              ^M^C'Hooked vectors:'^M^C
+dlUnknown                  'Unknown'
+dlMI_CmdLine               ^M^C'Command line:'^M^C
+dlMI_PgmPath               ^C'Program path:'^M^C
+dlMI_DeviceHandle1         'Device handle '
+dlMI_DeviceHandle2         ' unit(s)'
+dlMI_DeviceName            'Device name: '
+dlMI_DeviceFlags           #3'Device flags: '
+dlMI_ResArea               #3'This area is reserved for DOS'#13#3'DOS keep '
+dlMI_Files                 'information about opened files here'
+dlMI_Buffers               'disk buffers here'
+dlMI_FCBs                  'information about'#13#3'files opened through FCB here'
+dlMI_Drives                'info about each DOS drive,'#13#3'such as last access path on this drive etc. here'
+dlMI_Stacks                'his internal stacks here'
+dlMI_IFS                   'some IFSes here'
+dlMI_XBuffers              'information about disk buffers '^M^C'which is kept in expanded memory here'
+
+dlMsgWarning               'Warning'
+dlMsgError                 'Error'
+dlMsgInformation           'Information'
+dlMsgConfirm               'Confirm'
+dlMsgQuery                 'Query'
+dlMsgAbout                 'About'
+
+dlED_VertNeed              ^C'Vertical blocks need for this operation'
+dlED_Printed               '% printed'
+dlED_Print                 'Print'
+dlED_PrintQuery            ^C'Print %d lines?'
+dlED_PrintLine             'Line %d of %d'
+dlED_OpenFile              'Open a File'
+dlED_OverQuery             ^C'File %s'^M^C'already exists.'^M^C'OK to overwrite it?'
+dlED_ModifyRO              ^C'File %s '^M^C'is marked as Read-Only.'^M^C'Modify it anyway?'
+
+dlModemNoSetup             ^C'Could not setup communications'^M^C'while transmit is active'
+dlNoModemPort              ^C'Could not find communication port'
+
+dlManualDial               'Manual dial'
+dl_P_honeNumber            '~P~hone number'
+dlMD_Manual                'Manual '
+dlPB_SearchPhone           'Search phone'
+dlPB_S_earchString         '~S~earch string'
+dlPB_NoFind                ^C'Could not find phone(s)'
+dlPB_ImportPhones          'Import phones'
+dlPB_Working               ^M^M^C'Working...'
+dlPB_CnvReport             ' phone numbers converted'
+
+dlAutoDialer               'Dialing'
+dlAD_Name                  'Auto dialer - '
+dlAD_Queue                 'Dial ~q~ueue'
+dlAD_Status                'Status'
+dlAD_Redial                '~R~edial'
+dlAD_ForceDial             '~F~orce dial'
+dlAD_Delete                '~D~elete'
+dlAD_Hold                  '~H~old'
+dlAD_Unhold                '~U~nhold'
+dlAD_HoldUnhold            '~H~old/Unhold'
+dlAD_Dialing               'Dialing '
+dlAD_Holded1               'Hold:'
+dlAD_Holded2               'Press Hold/Unhold to continue'
+dlAD_NoDial                ^C'Could not dial phone.'^M^C'Please check if line is connected'^M^M^C'Dialer holded'
+dlAD_ModemSays             ^M^M^C'Modem says '
+
+dlPrintingPaused           'Printing paused'
+dlPrinting                 'Printing '
+dlPrintOut                 'Enter the output file name'
+dlPrintNoInit              ^C'Could not initialize output'^M+
+                           ^C'device for printing'
+dlPrintCancelQuery         ^C'Cancel print queue?'
+dlPManagerTitle            'Print manager'
+dlPDeleteQeury1            ^C'Delete file '^M^C
+dlPDeleteQeury2            ^M^C'from the print queue?'
+dlCantPrint                ^C'Print manager could not write'^M+
+                           ^C'to output device - please check it.'^M+
+                           ^C'Printing paused.'
+dlCantPrintFile            ^C'Could not print file'^M^C
+;JO+
+dlNotPrinter               ^C'Output device is not a printer'
+;JO-
+dlTermProtocol             'Protocol : '
+dlTermProtocolFile         'File : '
+dlTermProtocolRece         'Received : '
+dlTermProtocolSent         'Sent : '
+dlTermProtocolErrors       'Errors : '
+dlTermProtocolEstimate     'Estimate time - '
+dlTermReceXmodem           'Receive file by Xmodem/Kermit'
+dlTermReceiving            'Receiving'
+dlTermWaitAnswer           'Waiting for answer'
+dlTermSendFile             'Send file'
+dlTermSending              'Sending'
+dlTermWriteFile            'Write file to terminal'
+dlTermSetLog               'Set Capture File'
+dlTermCommandsHistory      'Commands History'
+dlTermCopy_H_istory        'Copy to ~H~istory'
+dlTermCopy_C_lipboard      'Copy to ~C~lipboard'
+dlTerminalTitle            'Terminal'
+
+dlScanningDirs             ^M^M^C'Scanning directories'
+dlTreeFilesWith            ' files with '
+dlTreeTitle                'Directory tree'
+dlTree1FileWith            '1 file with '
+
+dlMNUNotFound              ^C'File DN.MNU not found'
+dlMenuParams               'Menu Parameters'
+dlMenuParamLabel           '~P~arameters'
+dlGrabWelcome              ^C'Use arrows to move area'^M+
+                           ^C'Use Shift-Arrows to change area size'^M^M+
+                           ^C'After selecting press Enter to place'^M+
+                           ^C'area image into SmartPad Clipboard'
+
+dlValueNotInRange          ^C'Value not in the range %d to %d'
+
+dlEnvVarLabel              '~V~ariables'
+dlEnvDelConfirm            ^C'OK to delete the Environment'^M^C'variable "%s"'
+dlEnvAddTitle              'Add Environment Variable'
+dlEnvVariable              '~V~ariable'
+dlEnvRenVar                'Rename variable "%s"'
+
+dlBytesOf                  ' bytes of '
+
+dlHelp                     'Help'
+dlOutputTitle              'Output'
+dlWKZ_Empty                ' Empty'
+dlPM_Print                 ^C'Print '
+dlOverflow                 'Overflow'
+dlEditHistory              'Edit History'
+
+dlArvid_Title              'Arvid Tape directory'
+dlArvid_Type               'Tape format: '
+dlArvid_TimeUsed           'Tape length: ~%d~ min. (~%d~M bytes)'
+dlArvid_TimeLeft           'Tape left: ~%d~ min. (~%d~M bytes)'
+dlArvid_TapeDir            'Tape directory '
+
+dlUUEncode                 'UU Encode'
+dlUUEncoding               'Encoding '
+dlUUDecode                 'UU Decode'
+dlUUDecodingto             'Decoding '
+dlUUencodeSFN              'source file name'
+dlUUencodeOS               'original size'
+dlUUencodeCreated          'created on'
+dlUUencodeTime             'encoded on'
+dlUUencodeSize             'approximate encoded size'
+dlUUencodeSections         'number of sections'
+dlUUencodeLines            'lines per section'
+dlUUDecodeFiles            'Decoded files :'
+dlUUDecodeErrors           '       Errors :'
+dlFileIsSmall,             ^C'The input file is too small to UU-Encode.'
+dlMaxFiles,           ^C'Number of Lines per section is too big.'^M+
+                      ^C'Not enough memory to operate such section.'^M+
+                      ^C'Try to set 900 lines per section.'
+
+dlleSection            'Section'
+dlleSections           'Sections'
+dlleListed             'Listed'
+dlleCalculated         'Calculated'
+dlleFileSizeMismatch   'Size mismatch of file'
+dlleFileCRCMismatch    'CRC mismatch of file'
+dlleErrorOpenTMP       'Internal error opening TMP file'
+dlleCantCreate         'Can not create'
+dlleFailedToDecode     'Failed to decode completely'
+dlleFileNameExp        'File name expected'
+dlleFileNamesMismatch  'Filenames of "section" and "begin" mismatch'
+dlleFileTimeExp        'Filetime number expected'
+dlleInvFileTimeNum     'Invalid filetime number'
+dlleCRC_Err            'CRC error'
+dlleSizeMism           'Size mismatch'
+dlleChkSumFmt          'Can not interpret CheckSum format'
+dlleSectionHdr         'Can not interpret section header'
+dlleMaxSectNumMism     'Maximal section number mismatch'
+dlleDuplicateSection   'Duplicate section'
+dlleOfFile             'of file'
+dlleIsAbsent           'is absent'
+dlleAreAbsent          'are absent'
+dlleUnexpEND           'Unexpected "end" encourented'
+dlleNoTerm             'File is not terminated'
+dlleFailedFinal        'Failed to decode'
+
+dlElapsedTime          'Elapsed time: '
+dlReplacesMade         ^C'%d replaces made'
+dlScrollBack           'Scrollback buffer'
+
+dlColorsColors,       'C~o~lors'
+dlColorsBlack,        'Black'
+dlColorsDark,         'Dark'
+dlColorsGray,         'Gray'
+dlColorsWhite,        'White'
+dlColorsDefault,      '~D~efault colors set'
+dlColorsBlinking,     '~E~nable blinking'
+dlColorsB_W_,         'B/~W~'
+dlColorsMono,         '~M~ono'
+dlColorsVGA,          '~V~GA palette'
+dlColors_D_efault,    '~D~efault set'
+dlColors_P_alette,    '~P~alette'
+dlColorsColor_,       'Color:'
+dlColors_R_ed,        '~R~ed'
+dlColors_G_reen,      '~G~reen'
+dlColors_B_lue,       '~B~lue'
+dlColors_G_ray,       '~I~ntensity'
+dlColors_VGA,         'VGA Color Registers'
+dlColors_C00,         '00 Black'
+dlColors_C01,         '01 Blue'
+dlColors_C02,         '02 Green'
+dlColors_C03,         '03 Cyan'
+dlColors_C04,         '04 Red'
+dlColors_C05,         '05 Magenta'
+dlColors_C06,         '06 Brown'
+dlColors_C07,         '07 Light Gray'
+dlColors_C08,         '08 Dark Gray'
+dlColors_C09,         '09 Light Blue'
+dlColors_C10,         '10 Light Green'
+dlColors_C11,         '11 Light Cyan'
+dlColors_C12,         '12 Light Red'
+dlColors_C13,         '13 Light Magenta'
+dlColors_C14,         '14 Yellow'
+dlColors_C15,         '15 White'
+
+dlAutoexecWarning     ^C'Is it really necessary to launch'^M^M+
+                      ^C'AUTOEXEC.BAT?'
+
+dlSelectXLT           'Select Xlation table'
+
+dlLinkTitle           'Navigator Link'
+dlLinkStarted         ^C'Navigator Link is started'
+dlLinkClose           ^C'OK to close Navigator Link?'
+dlLinkErrors          '%d error(s) per %s Kb'
+dlLinkWaitingCmd      'Waiting for remote commands'
+dlLinkSendingFile     'Sending %s'
+dlLinkReceivingFile   ' Receiving  %s'
+dlLinkWaitFile        'Waiting for %s'
+dlLinkQueryExit       ^C'Abort link session?'
+dlLinkNoRemote        'Remote drive ~%s~ is not accessible'
+dlLinkTransmitFile    'Transmitting %s'
+dlLinkNoRemoteLink    'No remote link'
+dlLinkRemoteError     ^C'Remote Error #%d'
+dlLinkRemoteWait      'Waiting for remote'
+dlLinkEraseDirCfm     ^C'Remote directory'^M+
+                      ^C'%s'^M+
+                      ^C'may be not empty.'^M+
+                      ^C'OK to delete it?'
+dlLinkErasingFile     'Erasing %s'
+dlLinkErase           'Link - Erase'
+dlLinkRemoteDirInfo   'Remote directory:'
+dlLinkSend            'Link - Send'
+dlLinkRcv             'Link - Receive'
+
+dlExecDOScmdHdr       'Execute DOS Command'
+dlExecDOScmdLine      '~C~ommand'
+
+dlPnlDescription      'Description'
+
+dlCE_CriticalError    'Critical disk error on drive %c'
+dlCE_WriteProtected   'Disk is write-protected in drive %c'
+dlCE_DiskNotReady     'Disk is not ready in drive %c'
+dlCE_DataIntegrity    'Data integrity error on drive %c'
+dlCE_SeekError        'Seek error on drive %c'
+dlCE_UnknownMedia     'Unknown media type in drive %c'
+dlCE_SectorNotFound   'Sector not found on drive %c'
+dlCE_OutOfPaper       'Printer out of paper'
+dlCE_WriteFault       'Write fault on drive %c'
+dlCE_ReadFault        'Read fault on drive %c'
+dlCE_GeneralFailure   'General failure on drive %c'
+dlCE_BadImageOfFAT    'Bad memory image of FAT detected'
+dlCE_DeviceError      'Device access error'
+dlCE_InsertDisk       'Insert diskette in drive %c'
+dlCE_SharingViolation 'Sharing violation'
+;JO+
+dlCE_WrongDisk        'Vrong disk %c'
+dlCE_DiskFull         'Disk %c is full'
+dlCE_DeviceInUse      'Device in use'
+;JO-
+dlCE_ErrWndTitle      'System Error'
+;AK155
+dlCE_Filename_Exced_Range 'Long names are not implemented on drive %c'
+dlCE_Dirty_Flag       'System was improperly stopped, drive %c is write protected'
+;/AK155
+;JO+
+dlCE_Filename_Illegal 'File name is illegal for drive %c'
+;JO-
+dlCE_ButAbort            '~A~bort'
+dlCE_ButRetry            '~R~etry'
+dlCE_ButIgnore           '~I~gnore'
+dlCE_ButStop             '~S~top'
+
+
+
+
+dlTeamHint 'Use up and down arrows to scroll the authors list'
+
+dlTeamAll  ^Z'~Dos Navigator (C) Team:~'
+dlTeam2_000  ^Z'~Dos Navigator/2 (C) Open Source Team:~'
+dlTeam2_001  ^Z'~Programming (by alphabet order):~'
+dlTeam2_002  ^Z'Oleg Antoshkiv'
+dlTeam2_003  ^Z'Sergey Biryukov'
+dlTeam2_004  ^Z'Victor Klochko'
+dlTeam2_005  ^Z'Alexey Korop'
+dlTeam2_006  ^Z'Aleksej Kozlov'
+dlTeam2_007  ^Z'Jaroslaw Osadtchiy'
+dlTeam2_008  ^Z'Andrew Vasilyev'
+dlTeam2_009  ^Z'Max Vasilyev'
+dlTeam2_010  ^Z'Kirill Vodonosov'
+dlTeam2_011  ^Z'Pawel Ziemian'
+dlTeam2_012  ^Z'Eugeny Zvyagintzev'
+
+dlTeam000  ^Z'~Dos Navigator (C) Open Source Team:~'
+dlTeam001  ^Z'~Programming:~'
+dlTeam002  ^Z'Sergey Abmetko'
+dlTeam003  ^Z'Mark Adler'
+dlTeam004  ^Z'Vitaly Astaforkin (Gimly)'
+dlTeam005  ^Z'Mariusz Borkowski'
+dlTeam006  ^Z'Ivan Borodikhin (EXCELLENCE)'
+dlTeam007  ^Z'Pavel Borodin (I''am)'
+dlTeam008  ^Z'Anton Fedorov (DataCompBoy)'
+dlTeam009  ^Z'Alexey Feldgendler (X-Man)'
+dlTeam010  ^Z'Vladimir Fonarev (VOL)'
+dlTeam011  ^Z'Alexey Froloff (Sir Raorn)'
+dlTeam012  ^Z'Sergey Gazizyanov (DarkLord)'
+dlTeam013  ^Z'Yuriy Kaminskiy'
+dlTeam014  ^Z'Vladimir Katkov (Chemical)'
+dlTeam015  ^Z'Sergey Klimov'
+dlTeam016  ^Z'Vladimir Korablin (VK)'
+dlTeam017  ^Z'Sergey Korshunoff (SeYKo)'
+dlTeam018  ^Z'Sergei Koryakin'
+dlTeam019  ^Z'Alexey Kostkin (Knave)'
+dlTeam020  ^Z'Aleksey Luzin'
+dlTeam021  ^Z'Andy Neverowsky'
+dlTeam022  ^Z'Anton Novosyolov (ForeverYoung)'
+dlTeam023  ^Z'Ilya Maryasov (IVM)'
+dlTeam024  ^Z'Vadim Ochkin'
+dlTeam025  ^Z'Jaroslaw Osadtchiy (JO)'
+dlTeam026  ^Z'Vladimir Piven'
+dlTeam027  ^Z'Sergey Radkevitch'
+dlTeam028  ^Z'Denis Shamov'
+dlTeam029  ^Z'Lev Shumskii (WildCat)'
+dlTeam030  ^Z'Pawel Skolimowski (PaSkol)'
+dlTeam031  ^Z'Denis Smirnoff (Necromancer)'
+dlTeam032  ^Z'Igor Vagin (Antares19)'
+dlTeam033  ^Z'Max Vasilyev (Piwamoto)'
+dlTeam034  ^Z'Ilya Vdovin (VIV)'
+dlTeam035  ^Z'Vladimir Zakharychev (Bobby Z.)'
+dlTeam036  ^Z'Ondrej Zary (Rainbow)'
+dlTeam037  ^Z'Pawel Ziemian'
+dlTeam038  ^Z'Valerij Zubov'
+dlTeam039  ^Z''
+dlTeam040  ^Z'~Hungarian Localization:~'
+dlTeam041  ^Z'Mesaros Csaba (Gy“r)'
+dlTeam042  ^Z'Laszlo Kormoczi (KaeL)'
+dlTeam043  ^Z''
+dlTeam044  ^Z'~Project Coordinators:~'
+dlTeam045  ^Z'Alexey Korop (AK155)'
+dlTeam046  ^Z''
+dlTeam047  ^Z'~Special thanks to:~'
+dlTeam048  ^Z'Mariusz Borkowskii'
+dlTeam049  ^Z'Dimon Demkin (0xeL) for the logo'
+dlTeam050  ^Z'Joergen Ibsen'
+dlTeam051  ^Z'Uliana Matarikina'
+dlTeam052  ^Z'Igor Novoselov'
+dlTeam053  ^Z'Denis Petrov'
+dlTeam054  ^Z'Oleg Redut'
+dlTeam055  ^Z'Dmitry Shestakov'
+dlTeam056  ^Z'~...and to all RU.SHELL.DN subscribers~'
+dlTeam057  ^Z''
+dlTeam058  ^Z'~Dos Navigator II team:~'
+dlTeam059  ^Z'~Programming:~'
+dlTeam060  ^Z'Stefan Tanurkov'
+dlTeam061  ^Z'Slava Filimonov'
+dlTeam062  ^Z'Dmitry Dotsenko (AxoNSoft)'
+dlTeam063  ^Z'Max Masyutin'
+dlTeam064  ^Z''
+dlTeam065  ^Z'~Special thanks to:~'
+dlTeam066  ^Z'Andrew Zabolotny'
+dlTeam067  ^Z'Sergey Melnik'
+dlTeam068  ^Z'Diman Pavlov'
+dlTeam069  ^Z'(FRIENDS Software, DN I programming)'
+dlTeam070  ^Z''
+dlTeam071  ^Z'~Testing and support:~'
+dlTeam072  ^Z'Ruslan Aglyamoff'
+dlTeam073  ^Z'Sergey Arsent'
+dlTeam074  ^Z'Ilya Bagdasarov'
+dlTeam075  ^Z'Igor K. Bareev'
+dlTeam076  ^Z'Stefan Behnsen'
+dlTeam077  ^Z'Vladimir Bejan'
+dlTeam078  ^Z'Konst Bessonov'
+dlTeam079  ^Z'Aurel Brinzeanu'
+dlTeam080  ^Z'Andrew Burtovoy'
+dlTeam081  ^Z'Oleg Cherkawsky'
+dlTeam082  ^Z'Sergey Chernikov'
+dlTeam083  ^Z'Max Chernobayev'
+dlTeam084  ^Z'Maxim Chernyshoff'
+dlTeam085  ^Z'Daniel Chuwalow'
+dlTeam086  ^Z'Sergey Demchenko'
+dlTeam087  ^Z'Alexey Durchenkoff'
+dlTeam088  ^Z'Alex Exler'
+dlTeam089  ^Z'Max Fateev'
+dlTeam090  ^Z'Denis Fionov'
+dlTeam091  ^Z'Peter Gannushkin'
+dlTeam092  ^Z'Sergey F. Geleznov'
+dlTeam093  ^Z'Maxim Glukhov'
+dlTeam094  ^Z'Juriy Goloveshkin'
+dlTeam095  ^Z'Ilya Golub'
+dlTeam096  ^Z'Slava Gorbanev'
+dlTeam097  ^Z'Gleb Gornostayew'
+dlTeam098  ^Z'Igor Grabelnikov'
+dlTeam099  ^Z'Victoria Gubchak'
+dlTeam100  ^Z'Sergey Ivanov'
+dlTeam101  ^Z'Pavel Izumrudov'
+dlTeam102  ^Z'Vladimir Januszkiewicz'
+dlTeam103  ^Z'Dmitrii Kalintsev'
+dlTeam104  ^Z'Serge Koghin'
+dlTeam105  ^Z'Serg Kurdoglo'
+dlTeam106  ^Z'Loktev Nikola'
+dlTeam107  ^Z'Ilya Lumpov'
+dlTeam108  ^Z'Andrew Manjov'
+dlTeam109  ^Z'Sergey Markelov'
+dlTeam110  ^Z'Boris Mashnikoff'
+dlTeam111  ^Z'Serge Matveev'
+dlTeam112  ^Z'Stanislav Hradilik'
+dlTeam113  ^Z'Pavel Menshinin'
+dlTeam114  ^Z'Jens Mueller'
+dlTeam115  ^Z'Alexey Myagchonkov'
+dlTeam116  ^Z'Dmitry Niqiforoff'
+dlTeam117  ^Z'Alexey Noskov'
+dlTeam118  ^Z'Sergey Okhapkin'
+dlTeam119  ^Z'Sergey Pankov'
+dlTeam120  ^Z'Boris Parkansky'
+dlTeam121  ^Z'Mike Parnanen'
+dlTeam122  ^Z'Alexander Petrosyan aka PAF'
+dlTeam123  ^Z'Andrej Romashevsky'
+dlTeam124  ^Z'Alexander Ryabkov'
+dlTeam125  ^Z'Andrey Semiuglov'
+dlTeam126  ^Z'Marco Sempel'
+dlTeam127  ^Z'Anatoly Sennov'
+dlTeam128  ^Z'Michael Sevostyanov'
+dlTeam129  ^Z'Andrew Shemetov'
+dlTeam130  ^Z'Ivan Sibarov'
+dlTeam131  ^Z'George Skvortsov'
+dlTeam132  ^Z'Anthony Smirnoff'
+dlTeam133  ^Z'Peter Suchkow'
+dlTeam134  ^Z'Roman Sumin'
+dlTeam135  ^Z'Misha Svintsov'
+dlTeam136  ^Z'Andrew Tanas'
+dlTeam137  ^Z'Evgen Tarasenok'
+dlTeam138  ^Z'Vladimir Tregub'
+dlTeam139  ^Z'Alexander Tsoppe'
+dlTeam140  ^Z'Sandu Tsurcan'
+dlTeam141  ^Z'Oleg Vasenyoff'
+dlTeam142  ^Z'Kostya Viktorov'
+dlTeam143  ^Z'Anton Voronov'
+dlTeam144  ^Z'Alex Vostrikov'
+dlTeam145  ^Z'Mikael Winterkvist'
+dlTeam146  ^Z'Serge Yuriev'
+dlTeam147  ^Z'Yevgeniy Zaremba'
+dlTeam148  ^Z'Alexei Zasypkin'
+dlTeam149  ^Z''
+dlTeam150  ^Z'~Thanks to all!~'
+
+;{-$VIV}
+dlFileMask              'Mask: '
+dlNetInfo               'Network Information'
+dlServer                'Server'
+dlConnections           'Connections'
+dlLookedFiles           'Scanned files: '
+dlVeryDeepSearch      ^C'Maximum search deep reached. Continue search?'
+dlLookedDirs            'Scanned dirs: '
+
+;{-$VOL}
+dlSE_Dir2Long         ^C'Maximum search deep reached!'
+
+;{-SSK}
+stDaysWeek              'SuMoTuWeThFrSa'
+
+;{-DataCompBoy-}
+dlSPF01 ';--------------------------------------------------------------------------'
+dlSPF02 '; Format:'
+dlSPF03 '; ~~~~~~~'
+dlSPF04 '; <Format string> ::= <Comment> | <Section> | <Path>'
+dlSPF05 '; <Comment> ::= <;> Any text'
+dlSPF06 '; <Section> ::= <[> <Extension> { <,> <Extension> } <]>'
+dlSPF07 '; <Path> ::= <Directory> { <;> <Directory> }'
+dlSPF08 '; <Directory> ::= [ <*> | <+> ] <MS-DOS Directory>'
+dlSPF09 '; ')
+dlSPF10 '; Comments:'
+dlSPF11 '; ~~~~~~~~~'
+dlSPF12 '; {} - parameter can repeated 0 and more time'
+dlSPF13 '; [] - optional parameter'
+dlSPF14 ';  * - in first char of directory - recurrent search in'
+dlSPF15 ';      directory and all its subdirectory'
+dlSPF16 ';  + - in first char of directory - recurrent search in'
+dlSPF17 ';      directory and all its first level subdirectorys'
+dlSPF18 '; '
+dlSPF19 '; '
+dlSPF20 '; Example:'
+dlSPF21 '; ~~~~~~~~'
+dlSPF22 '; [pas,atl]'
+dlSPF23 '; *c:\bp\rtl\;c:\my\units'
+dlSPF24 '; i:\vex\atl\'
+dlSPF25 ';------------------------------------------------------------- (c) Viv''99 -'
+dlSPFht 'To search files need configuration DN.SPF. Example of DN.SPF created.'
+
+;{-$Excelence}
+dlPresent                 'present'
+dlAbsent                  'absent'
+
+dlImage                   'Image'
+dlImageError              'Error in image file'
+dlUnpackImages            'Unpack diskette images'
+dlTargetDir               'Target directory'
+
+;DataCompBoy
+dlCopied                  'Copied '
+
+dlTestButton                    'Test'
+
+dlArvidNeedDisk         'Cannot copy between ARVID and this type of storage'
+dlArvidCmdFileCreated   ^C'Created an AVCOMSTR command file:'^M^C
+dlArvidCmdFileAppended  ^C'Appended an AVCOMSTR command file:'^M^C
+dlArvidCanChangeOnlyAVT ^C'Can only change AVT files'
+dlArvidVolumeIsNotTape  ^C'This ARVID volume is just a catalog (not a real tape)'
+dlArvidNoReal           '~Disk Catalog~'
+
+dlAnonymous             'Anonymous'
+
+dlMenuItemOn            ' On'
+dlMenuItemOff           'Off'
+
+;DataCompBoy
+dlMachineTypeFF                 'Original IBM PC'
+dlMachineTypeFE                 'IBM XT or Portable PC'
+dlMachineTypeFD                 'PC junior'
+dlMachineTypeFC_1               'IBM AT 3x9'
+dlMachineTypeFC_2               'IBM XT 286'
+dlMachineTypeFC_4               'IBM Personal System/2 Model 50'
+dlMachineTypeFC_5               'IBM Personal System/2 Model 60'
+dlMachineTypeFC_6               'IBM 7552-XXX "Gearbox"'
+dlMachineTypeFC_8               'IBM Personal System/2 Model 25'
+dlMachineTypeFC_0b              'IBM Personal System/1'
+dlMachineTypeFC_20              'Compaq ProLinea'
+dlMachineTypeFC_42              'Olivetti M280'
+dlMachineTypeFC_45              'Olivetti M380'
+dlMachineTypeFC_48              'Olivetti M290'
+dlMachineTypeFC_4F              'Olivetti M250'
+dlMachineTypeFC_50              'Olivetti M380'
+dlMachineTypeFC_51              'Olivetti PCS286'
+dlMachineTypeFC_52              'Olivetti M300'
+dlMachineTypeFC_94              'Zenith 386'
+dlMachineTypeFC_else            'IBM AT or compatible'
+dlMachineTypeFB86               'IBM XT'
+dlMachineType80                 'IBM PC'
+dlMachineTypeFA_1               'IBM Personal System/2 Model 25'
+dlMachineTypeFA_else            'IBM Personal System/2 Model 30'
+dlMachineTypeF9                 'PC Convertible'
+dlMachineTypeF8_4_9_B           'IBM Personal System/2 Model 70'
+dlMachineTypeF8_else            'IBM Personal System/2 Model 80+'
+dlMachineTypeB6                 'Hewlett Packard 110'
+dlMachineType9A                 'Compaq Plus'
+dlMachineType2D                 'Compaq PC'
+dlMachineTypeE1                 'PS/2 Model 55-5530 Laptop'
+dlMachineType30                 'Sperry PC'
+dlMachineTypeElse               'Unknown machine type. Report to RU.SHELL.DN'
+dlMHz                           'MHz'
+dlUnknownDiskDriverType         'Unknown disk driver type'
+dlEmulated                      'Emulated (386+)'
+dlInternal                      'Internal'
+dlNone                          'None'
+dlUnknownCPUFPU                 'Unknown'
+;DataCompBoy
+
+dlcTitle                'Calendar'
+dlcLine                 'Mo Tu We Th Fr Sa Su'
+dlcJanuary              'January'
+dlcFebruary             'February'
+dlcMarch                'March'
+dlcApril                'April'
+dlcMay                  'May'
+dlcJune                 'June'
+dlcJuly                 'July'
+dlcAugust               'August'
+dlcSeptember            'September'
+dlcOctober              'October'
+dlcNovember             'November'
+dlcDecember             'December'
+
+dlOpenNewWindow         'File is already open. Create a new window for it?'
+
+dlMore                  'More... '
+
+dlFindText              'Find text'
+
+dlViewFilter            ^C'After modification, you won''t be able to save this file'^M+
+                        ^C'to its present location and/or format.'^M+
+                        ^C'Proceed with modification ("Save As" will be possible)?'
+
+dlTrashCaption          'Trash'
+
+dlFilDir                '%d file(s) and %d directory(es)'
+dlDirectories           'directory(es)'
+
+dlFindPanel             'Find: '
+;NEW+
+dlListPanel             'List: '
+;NEW-
+dlEmpty                 'empty'
+
+dlFileSearch            'Search: '
+
+dlKillBuffer            ^C'Kill entire buffer?'
+dlSaveScrollback        'Save Scrollback Buffer'
+dlScrollbackSaved       'Scrollback buffer saved '
+dlWriteASCII            'Write to ASCII File'
+dlWriteAvatar           'Write to Avatar File'
+dlWriteAnsi             'Write to ANSI File'
+dlCopyToTerminal        'Copy to ~T~erminal'
+dlCopyToHistory         'Copy to ~H~istory'
+dlCopyToClipboard       'Copy to ~C~lipboard'
+dlSaveAsASCII           'Save as A~S~CII'
+dlSaveAsANSI            'Save as ~A~NSI'
+dlSaveAsAvatar          'Save as A~v~atar'
+
+;NEW
+dlPktView               'View FIDO PKT: '
+dlPktHeader             'PKT-header'
+dlPktFile               'Packet File: '
+dlPktMsg                'Messages in packet : '
+dlViewMsg               'View - FIDO EchoMail'
+dlSaveMsg               'Save massage to file'
+dlMsgFile               '~F~ile name >'
+dlErrorWriting          'Error writing '
+dlNetMailView           'View - FIDO NetMail '
+dlLastMsg               'It is the last message!'
+dlFirstMsg              'It is the first message!'
+dlDelMsg                'Delete message '
+dlNotPkt                'is not FIDO PKT file!'
+dlReadingPkt            'Reading PKT-file'
+dlLine                  'ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ'
+dlNameLong              'L'
+dlNameShort             'S'
+dlFullInfo              'FullInfo '
+dlDescr                 'Description '
+dlPath                  'Path '
+
+;JO+
+dlAdvancedFormat        'Advanced Format Parameters for drive '
+dlBootSector1           'Boot Secto~r~'
+dlEntries               'Entries'
+dlDirEntries            '~D~irectory Entries'
+dlSize                  'Size'
+dlClusterSize           '   Cluster Si~z~e'
+dlTracks                '~T~racks'
+dlHeads                 ' ~H~eads'
+dlSectors1              '~S~ectors'
+dlSectors2              ''
+dlStartTr1              ' Start'
+dlStartTr2              ' Tra~c~k'
+dlStartTr3              ''
+dlInterleave1           ' Inter'
+dlInterleave2           ' lea~v~e'
+dlSectorSh1             'Sector'
+dlSectorSh2             'Sh~i~ft'
+dlSectorSh3             'Factor'
+dlHeadSectSh1           'Head'
+dlHeadSectSh2           'Sector'
+dlHeadSectSh3           'Shi~f~t'
+dlTrackSectSh1          'Track'
+dlTrackSectSh2          'Sect~o~r'
+dlTrackSectSh3          'Shift'
+dlTrack                 'Track'
+dlSectorSize1           'Sector'
+dlSectorSize2           'Siz~e~'
+dlDrivesType            'Drives type'
+dlDisk                  'Disk'
+dlDOS                   'DOS'
+dlAutodetect            'Autodetect'
+;JO-
+;JO+ Extended Attributes
+dl_Failed_to_enumerate_EA    'Failed to enumerate Extended Attributes'
+dl_Failed_to_retrieve_EA     'Failed to retrieve EA'
+dl_Failed_to_store_EA        'Failed to store EA'
+dl_Critical_EA_Copy_Fail     'Can''t store critical EA to destination drive for file:'^M
+dlEditEALongname             'Edit file logical name (.LONGNAME Extended attribute)'
+dl_EALongname                'Logical name:'
+dl_Failed_to_set_volume_label  'Sorry, can''t set volume label'
+;JO-
+
+;X-Man >>>
+sdtError      = ' Unknown';
+sdtFixed      = ' Fixed';
+sdtRemovable  = ' Removable';
+sdtRemote     = ' Remote';
+sdtProgram    - ' Program';
+sdtCDROM      = ' CD-ROM';
+sdtRAMDrive   = ' RAM';
+sdtSubst      = ' Subst';
+;X-Man <<<
+;JO+
+sdtOptical    = ' Optical';
+dlDoes_Not_Exist = 'does not exist'
+dlCmdLineTooLong = 'Command line too long'
+dlCantLoad = 'Can''t load '
+;JO-
+;PZ+
+dlIniDataReadError 'Syntax error in DN.INI, section [%s], parameter %s'
+dlIniDataTooLong   'String contains %d excess characters in DN.INI, section [%s], parameter %s'
+;PZ-
+;PZ begin - regular expressions
+dlResErrorTitle            ^C'Regular expression error.'
+dlResUnknown               ^C'Internal error code: %d'
+dlResCanceled              ^C'Searching aborted by user.'^M+
+                           ^C'Press Ctrl-L to continue'
+dlResTooComplex            ^C'The expression is too complex'
+dlResOutOfSpace            ^C'Out of memory to compile code'
+dlResExpectedParenthesis   ^C'Expected '')'''
+dlResOperandCouldBeEmpty   ^C'Operator ''*'' or ''+'' could be emtpty'
+dlResNested                ^C'Operator ''*'', ''?'', ''+'' or ''{n,m}'' cannot be nested'
+dlResInvalidEscape         ^C'Invalid escape sequence'
+dlResInvalidSetRange       ^C'Invalid char-set definition'
+dlResExpectedSquareBracket ^C'Expected '']'''
+dlResFollowsNothing        ^C'Operator ''*'', ''?'', ''+'' or ''{n,m}'' follows nothing'
+dlResTrailingBackSlash     ^C'Trailing backslash is not allowed'
+;PZ end - regular expressions
+;JO+
+dlNotValidForCurSession 'This videomode is not valid for current session'
+dlCreateObject 'Create object on desktop for: '
+dlObjectTitle  'Object title:'
+dl_CodePage_FS_Error 'Codepage-related file system error'
+dlCre 'Cre '
+dlLac 'Lac '
+;JO-
+;Cat+
+dlPlugins0 'Plugin Manager'
+dlPlugins1 ^C'Too many plugins'
+dlPlugins2 ^C'Cannot install plugin %s'
+dlPlugins3 ^C'Cannot uninstall plugin %s'
+dlPlugins4 'Plugin~s~'
+dlPlugins5 ^C'Cannot write to resource file. Possibly, another copy of DN is active. Please close it'
+dlPlugins6 ^C'Cannot read resource file'^M^C'for plugin %s'
+dlPlugins7 ''
+dlPlugins8 '~I~nstall'
+dlPlugins9 '~R~emove '
+;Cat-
+
+;JOHN_SW begin
+dlInvalidDBFHeader,  ^C'Header is corrupted!'^M
+dlInvalidRecNumber,  ^M^C'Records number in header: '
+dlInvalidRecNumber1, ^M^C'Actually records number : '
+dlInvalidRecSize,    ^M^C'Record''s size in header: %d'^M^C'Actually record''s size : %d'
+dlUseCalcRecNumber,  ^M^M^C'Use header value?'
+dlCopyTimeSpeed,     'Elapsed: %s   Left: %s   Speed: %sb/s'
+;JOHN_SW end
+
+;KV+
+dlWkzQuerySeparatorTitle 'Column separator'
+dlWkzQuerySeparatorLabel '~S~eparator'
+dlWkzWarningClear ^C'All data in the current spreadsheet will be removed.'^M^C'Continue?'
+;KV-
+;AK155+
+dlWkzWarningClearCell ^C'Really clear cell?'
+dlWkzWarningCellTypeChange ^C'Really cell type is changed?'
+;AK155-
+;JO+
+dlArcEncrypted ^C'Archive with encrypted headers'^M^C'use Shift-F2 to unpack entire archive'
+;JO-
+;AK155+
+dlMissingLeftBracket '"(" missing'
+dlMissingRightBracket '")" missing'
+dlWrongText 'Uknown text'
+dlNoOperand 'Operand missing'
+dlMissingOperation 'Operation missing'
+dlWrongComma 'Wrong comma'
+;AK155-
+;JO+
+dlOperationNotValidForDdrive 'This operation is not valid for current drive'
+;JO-
+
+;JOHN_SW begin
+dlHistDelCurDir,     ^C'Could not delete current directory'
+;JOHN_SW end
+
+;JO+
+dlTasklist 'Tasklist'
+dlSwitchButton 'Switch'
+;JO-
+;Flash+
+dlSpacesInPassword = 'The password cannot contain spaces.'
+;Flash-
+;JO+
+dlPressF1 ^M^C'Press F1 for more detailed information'
+;JO-
+;AK155
+dlLayoutErr 'Error in "Keyboard" field'
+dlWinErr 'Error in "WIN:" field'
+dlSortError 'Error in "Sort order" field'
+dlCodetablesErr 'Error in "Additional codetables" field'
+dlCoutrySetupErr 'Error in country setups (Options - Configuration - Country support...)'
+dlOtherPanel 'Other Panel'
+dlUndoPanelSetup 'Undo panel setup'
+dlAllPanelTypes 'All panel types'
+dlCurPanelType 'Current panel type'
+dlAppearanceOnly 'Appearance only'
+dlFullPanelSetup 'Full panel setup'
+;/AK155
+;JO+
+dlInBranch 'Branch'
+dlInFound 'Found'
+dlInBranchOfArchive 'Branch of Archive'
+dlInFoundInArchive 'Found in Archive'
+dlInList 'List'
+dlNetworkError 'Network error'
+dlNoNetworkPath 'Network path is not accessible'
+;JO-
