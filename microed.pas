@@ -1271,11 +1271,12 @@ procedure TFileEditor.CalcMenu;
   else
     DisableCommands([cmRedo]);
   {-$VOL end}
-  if  (ClipBoard <> nil) and (ClipBoard^.Count > 0) or
+{  if  (ClipBoard <> nil) and (ClipBoard^.Count > 0) or
       ( (SystemData.Options and ossUseSysClip <> 0) and GetWinClipSize)
   then
     EnableCommands([cmPaste])
-  else
+  else}
+  // fixme: commented by unxed
     DisableCommands([cmPaste]);
   if OptMenu <> nil then
     begin
@@ -2741,8 +2742,9 @@ L1:
     label
       DelBlk, EndDel;
     begin
-    if SystemData.Options and ossUseSysClip <> 0 then
-      SyncClipOut {(true)};
+//    if SystemData.Options and ossUseSysClip <> 0 then
+//      SyncClipOut {(true)};
+    // fixme: commented by unxed
     EnableMarking := False;
     Marking := False;
     ChangeLine;
@@ -2790,8 +2792,9 @@ EndDel:
     if  (ClipBoard <> nil) then
       Dispose(ClipBoard, Done);
     ClipBoard := GetSelection;
-    if SystemData.Options and ossUseSysClip <> 0 then
-      SyncClipIn;
+    // fixme: commented by unxed
+//    if SystemData.Options and ossUseSysClip <> 0 then
+//      SyncClipIn;
 
     {AK155: не понял, зачем вообще нужен ClipBoardStream. Используется
 он в команде просмотра Clipbioard, но зачем его из коллекции нужно
@@ -2803,7 +2806,8 @@ EndDel:
       {AK155} and (ClipBoard^.Count < 1000) {/AK155}
       then
       ClipBoardStream^.Seek(Positive(ClipBoardStream^.GetPos-4));
-    CopyLines2Stream(ClipBoard, ClipBoardStream);
+    // fixme: commented by unxed
+    //CopyLines2Stream(ClipBoard, ClipBoardStream);
     end { CopyBlock };
 
   procedure CenterScreen;
@@ -3436,13 +3440,15 @@ EndDel:
       DeleteBlock(True, GetSelection);
     BlockOff;
 
-    if GetWinClip(PLineCollection(ClipBoard) {, On}) then
+  // fixme: commented by unxed
+(*    if GetWinClip(PLineCollection(ClipBoard) {, On}) then
       begin
       InsertBlock(ClipBoard, True);
 
       ChangeLine;
       EnableMarking := True;
       end;
+      *)
     end;
 
   procedure DrawLine(Dir: Byte);
@@ -5113,8 +5119,9 @@ procedure OpenClipBoard; {-$VOL begin}
   begin
   ClipboardWindow := ClipboardWindowPtr^; {Cat}
 
-  if SystemData.Options and ossUseSysClip <> 0 then
-    SyncClipOut {(true)};
+  // fixme: commented by unxed
+//  if SystemData.Options and ossUseSysClip <> 0 then
+//    SyncClipOut {(true)};
   if  (ClipboardWindow <> nil) and ClipboardWindow^.GetState(sfModal)
   then
     Exit;

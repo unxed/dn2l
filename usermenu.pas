@@ -91,7 +91,7 @@ implementation
 uses
   Lfnvp, {DataCompBoy}
   DNApp, Advance, Advance1, Advance2, Startup, Messages, Menus,
-  Commands, Microed, WinClp, DNHelp, Dos, Memory, Dialogs, Tree
+  Commands, Microed, {WinClp, // commented by unxed} DNHelp, Dos, Memory, Dialogs, Tree
   , filediz, Collect, VPUtils
   ;
 
@@ -291,14 +291,17 @@ function MakeString(S: String; UserParams: PUserParams;
       ts := '' {KSNK}
     else
       begin
+      {
       if UserParams^.Active^.TType = ttUpDir
       then
         ts := MakeNormName
             (lfGetShortFileName(UserParams^.Active^.Owner^), '')
       else
+
         ts := MakeNormName(GetPath(lfGetShortFileName(MakeNormName(
                   UserParams^.Active^.Owner^,
                    UserParams^.Active^.FlName[False]))), '');
+      }
       end;
     if HandleTildes then
       Replace('~', #0'~', ts);
@@ -341,6 +344,7 @@ function MakeString(S: String; UserParams: PUserParams;
   if  (Pos('$\', S) > 0) or (Pos('$:', S) > 0) or (Pos('$/', S) > 0)
   then
     begin
+    (*
     if UserParams^.Passive = nil then
       ts := '' {KSNK}
     else if UserParams^.Passive^.TType = ttUpDir
@@ -351,6 +355,7 @@ function MakeString(S: String; UserParams: PUserParams;
       ts := MakeNormName(GetPath(lfGetShortFileName(MakeNormName(
                 UserParams^.Passive^.Owner^,
                  UserParams^.Passive^.FlName[False]))), '');
+    *)
     if HandleTildes then
       Replace('~', #0'~', ts);
     Replace('$', #4, ts);
@@ -477,6 +482,7 @@ function MakeString(S: String; UserParams: PUserParams;
 
     if  (Pos(#5'F', S) > 0) or (Pos(#5'f', S) > 0) then
       begin
+      (*
       {$IFNDEF OS2}
       ts := MakeNormName(lfGetShortFileName(SwpDir),
           GetName(CalcTmpFName(CalcTmpId, 'flt', True)));
@@ -484,6 +490,7 @@ function MakeString(S: String; UserParams: PUserParams;
       ts := MakeNormName(SwpDir, GetName(CalcTmpFName(CalcTmpId, 'flt',
                True)));
       {$ENDIF}
+      *)
       if TM <> nil then
         TM^:= ts;
       if HandleTildes then
@@ -1130,12 +1137,14 @@ procedure TGrabber.HandleEvent;
         end;
       ClipBoard^.Insert(NewLongStr(S));
       end;
-    if SystemData.Options and ossUseSysClip <> 0 then
-      SyncClipIn;
+    // fixme: commented by unxed
+//    if SystemData.Options and ossUseSysClip <> 0 then
+//      SyncClipIn;
     if ClipBoardStream <> nil
     then
       ClipBoardStream^.Seek(Positive(ClipBoardStream^.GetPos-4));
-    CopyLines2Stream(ClipBoard, ClipBoardStream);
+    // fixme: commented by unxed
+//    CopyLines2Stream(ClipBoard, ClipBoardStream);
     end { MakeClip };
 
   begin { TGrabber.HandleEvent }
