@@ -52,7 +52,7 @@ interface
 
 uses
   Commands, UKeyMap, Collect, Views, Drivers, Defines, Streams,
-  Lfn {, SBlocks}
+  Lfnvp {, SBlocks}
   ;
 
 { TDoCollection }

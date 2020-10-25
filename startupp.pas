@@ -117,7 +117,7 @@ const
 implementation
 uses
   VpSysLow, Advance, Advance1, Advance2,
-  Lfn
+  Lfnvp
   ;
 
 begin

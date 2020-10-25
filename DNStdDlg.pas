@@ -236,7 +236,7 @@ function GetFileNameMenu(Path, Mask, Default: String;
 implementation
 
 uses
-  Lfn, Dos, Memory, Messages, DNApp,
+  Lfnvp, Dos, Memory, Messages, DNApp,
   HistList, Advance, Advance1, Advance2, Commands,
   Startup, DNHelp, {JO}Menus {JO}
   ;
