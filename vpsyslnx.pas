@@ -784,6 +784,12 @@ begin
   Result := Info.FreeRam + Info.FreeSwap;
 end;
 
+// by unxed, untested
+function PhysMemAvail: Longint;
+begin
+  Result := SysMemAvail;
+end;
+
 function SysMemAlloc(Size,Flags: Longint; var MemPtr: Pointer): Longint;
 begin
   Result := LongInt(LnxMMap(nil, Size, Flags, MAP_ANON or MAP_COPY, 0, 0));
@@ -1409,6 +1415,28 @@ begin
     end;
 
   if LnxStatFS('/', Buffer) = 0 then
+    Result := 1.0 * Buffer.f_BSize * Buffer.f_Blocks
+  else
+    Result := -1;
+end;
+
+// by unxed, untested
+function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
+var
+  Buffer: TStatFS;
+begin
+  if LnxStatFS(Path, Buffer) = 0 then
+    Result := 1.0 * Buffer.f_BSize * Buffer.f_BAvail
+  else
+    Result := -1;
+end;
+
+// by unxed, untested
+function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
+var
+  Buffer: TStatFS;
+begin
+  if LnxStatFS(Path, Buffer) = 0 then
     Result := 1.0 * Buffer.f_BSize * Buffer.f_Blocks
   else
     Result := -1;
@@ -5017,3 +5045,6 @@ begin
   // Nothing
 end;
 
+procedure SysLowInit;
+begin
+end;
