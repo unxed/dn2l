@@ -7,7 +7,7 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 ```
 
 Current state:
-![](https://user-images.githubusercontent.com/1151423/97116079-dd4fb680-170b-11eb-9ad4-ae6bac599a74.png)
+![](https://user-images.githubusercontent.com/1151423/97116611-66b4b800-170f-11eb-86b3-e541f1dcb260.png)
 
 How to build with IDE?
 
