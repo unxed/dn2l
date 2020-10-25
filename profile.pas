@@ -493,8 +493,11 @@ function WritePrivateProfileString;
         }
         // fixme: commented by unxed
         // currently DN writes faulty .INI file with strings > 260 bytes in size
-        // full of $00 chars, and fauls to start after it
+        // full of $00 chars, and faults to start after it
         // so let this part be commented until we fix this issue
+        // two problems, actually:
+        // 1) fatal error if string in ini file > 260 bytes
+        // 2) generation of such strings on ini save
         end
       end
     end
