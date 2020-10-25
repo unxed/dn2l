@@ -185,7 +185,7 @@ const
 implementation
 uses
   {$IFDEF WIN32}Windows, {$ENDIF}Dos, VpSysLow, Drivers, Defines, DNApp,
-  DnIni, DnIni_p, Startup,
+  DnIni, DnInip, Startup,
   Commands, VPUtils {$IFDEF OS2}, Os2Base {$ENDIF}, Messages
   {$IFDEF DPMI32},Dpmi32, Dpmi32df{$ENDIF}
   ;

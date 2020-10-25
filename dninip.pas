@@ -49,7 +49,7 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit DnIni_p;
+unit DnInip;
 {AK155  3.06.2007 Для уменьшения циклических ссылок между модулями
  бывший dnini.pas разбит на два маодуля: dnini.pas и dnini_p.pas,
  при том первый из них содержит бОьшую часть того на что ссылаются
@@ -80,7 +80,7 @@ function ReadIniCache(INItime, INIsize: LongInt): Boolean;
 
 implementation
 uses
-  Dos, Lfn, profile, Advance, Advance1, Collect, Messages, DNApp,
+  Dos, Lfnvp, profile, Advance, Advance1, Collect, Messages, DNApp,
   {$IFDEF WIN32}VpSysLow, {$ENDIF}
   UKeyMap, Country,
   Strings, Streams, Advance2

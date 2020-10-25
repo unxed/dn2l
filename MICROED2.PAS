@@ -78,7 +78,7 @@ const
 implementation
 uses
   DNStdDlg, Advance, DNApp, Commands, Lfn, Advance2, ed2, Advance1, Views,
-  Collect, WinClp, Dos, Messages, Startup, DnIni, DnIni_p, CopyIni,
+  Collect, WinClp, Dos, Messages, Startup, DnIni, DnInip, CopyIni,
   {SBlocks,}UKeyMap, Macro,
   xTime, Memory, Drivers,
   FlTl,

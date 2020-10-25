@@ -70,8 +70,8 @@ uses
   Startup, Startupp, Defines, Streams,
   Setups, DNUtil, Drivers, Commands, DNApp, Messages, Lfn, Dos, FlPanelX,
   UserMenu, CmdLine, FilesCol, Views, ArcView, FileFind,
-  DnIni, DnIni_p, CopyIni, Archiver,
-  U_MyApp, Microed, ArchSet, Advance6, RegAll, DnExec, Histries, Menus,
+  DnIni, DnInip, CopyIni, Archiver,
+  UMyApp, Microed, ArchSet, Advance6, RegAll, DnExec, Histries, Menus,
    VideoMan, Events,
   fnotify,
   {$IFNDEF DPMI32}Killer, {$ENDIF}

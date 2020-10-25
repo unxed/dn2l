@@ -39,7 +39,7 @@ type
 
 implementation
 uses
-  Advance, Advance1, Lfn, DNStdDlg, DnApp, Commands, DnIni
+  Advance, Advance1, Lfnvp, DNStdDlg, DnApp, Commands, DnIni
   ;
 
 constructor TXCoder.Init;

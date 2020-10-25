@@ -798,7 +798,9 @@ procedure TFileInfoPane.Draw;
   var
     B: TDrawBuffer;
     D: String[10];
-    M: String[20];
+    // removed [20] by unxed to fix bild
+    //M: String[20];
+    M: String;
     PM: Boolean;
     Color: Word;
     Time: DateTime;

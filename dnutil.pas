@@ -253,7 +253,7 @@ implementation
 
 uses
   Dos, Lfn, HelpKern, Menus, FileCopy, VPUtils,
-  DNHelp, DnIni, DnIni_p, Histries,
+  DNHelp, DnIni, DnInip, Histries,
   VideoMan, Memory, DblWnd, Messages, HistList, FileFind,
   {$ifdef modem}
   {$IFDEF LINK}NavyLink, {$ENDIF}

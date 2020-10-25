@@ -59,7 +59,7 @@ function LngId: String;
 
 implementation
 
-uses Dos, lfn, DnIni, DnIni_p;
+uses Dos, lfnvp, DnIni, DnInip;
 
 function ValidLngId(LI: String; CheckForHelp: Boolean): Boolean;
   var

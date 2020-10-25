@@ -197,6 +197,9 @@ const
   {$IFDEF DPMI32}
   {}UserTaskFilter: String = ''; {JO}
   {$ENDIF}
+  {$IFDEF LINUX}
+  UserTaskFilter: String = ''; // by unxed
+  {$ENDIF}
   {,'~~~~~~~~~~~~~~~~~~~~~~~~;~~~~~~~~~~~~;~~~~~~~~~~~~~~~~~~~~;~~~~~~~~~~~~~~~~~~`,}
   {;      Variable name      ;   Type     ; Default value      ;          Comments ;}
   { '._______________________;____________;____________________;___________________'}

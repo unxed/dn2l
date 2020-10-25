@@ -219,7 +219,7 @@ uses
   Messages, DNApp, DNHelp, Startup, Commands, Histries, HistList, FLTools,
   FileFind, CmdLine, ArcView, Archiver, DiskImg, DiskInfo, FileCopy,
   DNUtil, FlTl, Dos, Filediz, Collect, VPUtils,
-  DnIni_p, DnIni {-$VIV}
+  DnInip, DnIni {-$VIV}
   {$IFDEF MODEM} {$IFDEF LINK}, NavyLink {$ENDIF} {$ENDIF}
   {$IFDEF UUENCODE}, UUCode {$ELSE}
   {$IFDEF UUDECODE}, UUCode {$ENDIF} {$ENDIF}

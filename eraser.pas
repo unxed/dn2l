@@ -61,7 +61,7 @@ function ValidErase(Files: PCollection): Boolean;
 implementation
 uses
   Defines, Files, Filediz,
-  Dos, Lfn {DataCompBoy}, FilesCol, Commands, Advance, Advance1, Advance2,
+  Dos, Lfnvp {DataCompBoy}, FilesCol, Commands, Advance, Advance1, Advance2,
   Startup, Messages, xTime, Drivers, Tree, Memory,
   DNApp, Gauge, Views, Dialogs, Drives, FileCopy
   , fnotify, Events
