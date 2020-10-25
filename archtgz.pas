@@ -45,162 +45,189 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_HA; {HA}
+unit archTGZ; {TGZ & TAZ & TAR.GZ}
 
 interface
 
 uses
-  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime
+  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime,
+   Advance2
   ;
 
 type
-  PHAArchive = ^THAArchive;
-  THAArchive = object(TARJArchive)
+  PTGZArchive = ^TTGZArchive;
+  TTGZArchive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
     function GetSign: TStr4; virtual;
     end;
 
-type
-  HAHdr = record
-    Method: Byte;
-    PackedSize: LongInt;
-    OriginSize: LongInt;
-    CRC: LongInt;
-    Date: LongInt;
-    end;
-
 implementation
-{ ----------------------------- HA ------------------------------------}
+{ ----------------------------- TAR ------------------------------------}
 
-constructor THAArchive.Init;
+constructor TTGZArchive.Init;
   var
     Sign: TStr5;
     q: String;
   begin
+  TObject.Init;
   Sign := GetSign;
   SetLength(Sign, Length(Sign)-1);
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
-  TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'HA'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'HA'));
+  {$IFDEF WIN32}
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, '7Z'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, '7Z'));
   Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
   ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'am'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a -tgzip'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, ''));
   Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-p'));
   Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths,
-         '+d'));
-  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
-         '+e'));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
+  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
+  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
   SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
   RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PRecurseSubDirs, '+r'));
+         PRecurseSubDirs, '-r0'));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PStoreCompression, '+0'));
+         PStoreCompression, ''));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, '+1'));
+         PFastestCompression, ''));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastCompression, '+1'));
+         PFastCompression, ''));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PNormalCompression, '+1'));
+         PNormalCompression, ''));
   GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PGoodCompression, '+2'));
+         PGoodCompression, ''));
   UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PUltraCompression, '+2'));
+         PUltraCompression, '-mx'));
+  ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
+         '@'));
+  ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
+       '@'));
+  {$ELSE}
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, ''));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'UNTGZOS2'));
+  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-d'));
+  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-d'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, ''));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, ''));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, ''));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
+  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, '-t'));
+  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
+  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
+  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
+  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
+         ''));
+  StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PStoreCompression, ''));
+  FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PFastestCompression, ''));
+  FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PFastCompression, ''));
+  NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PNormalCompression, ''));
+  GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PGoodCompression, ''));
+  UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PUltraCompression, ''));
   ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
          ' '));
   ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
        ' '));
+  {$ENDIF}
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
   q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '0');
   PutDirs := q <> '0';
- {$IFNDEF DPMI32}
-  {$IFDEF OS2}
+  {$IFNDEF DPMI32}
   q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '0');
-  {$ELSE}
-  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '1');
-  {$ENDIF}
   ShortCmdLine := q <> '0';
- {$ELSE}
+  {$ELSE}
   q := GetVal(@Sign[1], @FreeStr[1], PSwapWhenExec, '0');
   SwapWhenExec := q <> '0';
- {$ENDIF}
+  {$ENDIF}
   {$IFNDEF OS2}
-  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
+  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '1');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { THAArchive.Init };
+  end { TTGZArchive.Init };
 
-function THAArchive.GetID;
+function TTGZArchive.GetID;
   begin
-  GetID := arcHA;
+  GetID := arcTGZ;
   end;
 
-function THAArchive.GetSign;
+function TTGZArchive.GetSign;
   begin
-  GetSign := sigHA;
+  GetSign := sigTGZ;
   end;
 
-procedure THAArchive.GetFile;
+procedure TTGZArchive.GetFile;
+  type
+    GZipHdr = record
+      Id: AWord;
+      Flag: AWord;
+      Time: LongInt;
+      end;
   var
-    FP: TFileSize;
-    P: HAHdr;
-    C: Char;
+    P: GZipHdr;
     DT: DateTime;
+    C: Char;
   begin
   ArcFile^.Read(P, SizeOf(P));
-  if  (ArcFile^.Status <> stOK) then
+  if ArcFile^.Eof then
     begin
     FileInfo.Last := 1;
     Exit;
     end;
-  FileInfo.Last := 0;
-  FileInfo.Attr := 0;
-  FileInfo.USize := P.OriginSize;
-  FileInfo.PSize := P.PackedSize;
-  GetUNIXDate(P.Date-14400, DT.Year, DT.Month, DT.Day, DT.Hour, DT.Min,
-     DT.Sec);
+  GetUNIXDate(P.Time, DT.Year, DT.Month, DT.Day, DT.Hour, DT.Min, DT.Sec);
   PackTime(DT, FileInfo.Date);
   FileInfo.FName := '';
-  repeat
-    ArcFile^.Read(C, 1);
-    if C <> #0 then
-      FileInfo.FName := FileInfo.FName+C;
-  until (C = #0) or (Length(FileInfo.FName) > 77);
-  repeat
-    ArcFile^.Read(C, 1);
-    if C <> #0 then
-      FileInfo.FName := FileInfo.FName+C;
-  until (C = #0) or (Length(FileInfo.FName) > 78);
-  if Length(FileInfo.FName) > 79 then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  Replace(#255, '\', FileInfo.FName);
-  if P.Method and $0f = $0e then
-    FileInfo.Attr := Directory;
-  ArcFile^.Read(C, 1);
-  FP := ArcFile^.GetPos+P.PackedSize+Byte(C);
-  if  (Comp(FP) > ArcFile^.GetSize) or (ArcFile^.Status <> stOK)
+  if  (P.Flag and $800 = 0) or (P.Id = $9d1f)
   then
+    if {(UpStrg(GetExt(ArcFileName)) = '.GZ') or}
+        (UpCase(ArcFileName[Length(ArcFileName)]) = 'Z')
+      {gzip changes last char of extension to 'z' or adds '.gz' extension}
+      then
+      FileInfo.FName := GetSName(ArcFileName)
+    else
+      FileInfo.FName := GetName(ArcFileName)
+  else
     begin
-    FileInfo.Last := 2;
-    Exit;
+    if P.Flag and $400 = 0 then
+      P.Time := 10 {skip 10 bytes}
+    else
+      begin
+      ArcFile^.Read(P.Time, SizeOf(P.Time));
+      P.Time := P.Time shr 16+12;
+      end;
+    ArcFile^.Seek(ArcPos+P.Time);
+    repeat
+      ArcFile^.Read(C, 1);
+      if C <> #0 then
+        FileInfo.FName := FileInfo.FName+C
+      else
+        Break;
+    until ArcFile^.Status <> stOK;
     end;
-  ArcFile^.Seek(FP);
-  end { THAArchive.GetFile };
+  FileInfo.PSize := ArcFile^.GetSize;
+  ArcFile^.Seek(CompToFSize(FileInfo.PSize-4));
+  ArcFile^.Read(FileInfo.USize, SizeOf(FileInfo.USize));
+  FileInfo.Attr := 0;
+  FileInfo.Last := 0;
+  end { TTGZArchive.GetFile };
 
 end.

@@ -45,28 +45,46 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_QRK; {QuArk}
+unit archHPK; {HPK}
 
 interface
 
 uses
-  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
+  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime,
+  Collect
   ;
 
 type
-  PQuarkArchive = ^TQuArkArchive;
-  TQuArkArchive = object(TARJArchive)
+  PHPKArchive = ^THPKArchive;
+  THPKArchive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
     function GetSign: TStr4; virtual;
     end;
 
+type
+  PHPKRec = ^THPKRec;
+  THPKRec = record
+    parentIndex: LongInt;
+    PSize, USize: LongInt;
+    Date: LongInt;
+    Name: PString;
+    end;
+
+  PHPKCollection = ^THPKCollection;
+  THPKCollection = object(TCollection)
+    procedure FreeItem(P: Pointer); virtual;
+    end;
+
+var
+  HPKCol: PHPKCollection;
+
 implementation
 
-{ --------------------- Quark (by Luzin Aleksey) -------------------------}
+{ ----------------------------- HPK ------------------------------------}
 
-constructor TQuArkArchive.Init;
+constructor THPKArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -76,37 +94,37 @@ constructor TQuArkArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'QuArk'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'QuArk'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'm'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-g'));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'HPACK'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'HPACK'));
+  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'X'));
+  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'X'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'A -DA -A'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'A -DA -A'));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'D'));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-C'));
+  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 'T'));
   IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
-  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, '-s'));
+  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, '-E'));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
   RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
          ''));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PStoreCompression, ''));
+         PStoreCompression, '-0'));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PFastestCompression, ''));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastCompression, '-m3'));
+         PFastCompression, ''));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PNormalCompression, '-m1'));
+         PNormalCompression, ''));
   GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PGoodCompression, ''));
   UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PUltraCompression, '-m5'));
+         PUltraCompression, ''));
   ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
          ' '));
   ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
@@ -117,68 +135,62 @@ constructor TQuArkArchive.Init;
   q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '0');
   PutDirs := q <> '0';
   {$IFNDEF DPMI32}
-  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '1');
+  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '0');
   ShortCmdLine := q <> '0';
   {$ELSE}
   q := GetVal(@Sign[1], @FreeStr[1], PSwapWhenExec, '0');
   SwapWhenExec := q <> '0';
   {$ENDIF}
   {$IFNDEF OS2}
-  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
+  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '1');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { TQuArkArchive.Init };
+  end { THPKArchive.Init };
 
-function TQuArkArchive.GetID;
+function THPKArchive.GetID;
   begin
-  GetID := arcQUARK;
+  GetID := arcHPK;
   end;
 
-function TQuArkArchive.GetSign;
+function THPKArchive.GetSign;
   begin
-  GetSign := sigQUARK;
+  GetSign := sigHPK;
   end;
 
-procedure TQuArkArchive.GetFile;
+procedure THPKCollection.FreeItem(P: Pointer);
+  begin
+  if P <> nil then
+    begin
+    DisposeStr(PHPKRec(P)^.Name);
+    Dispose(PHPKRec(P));
+    end;
+  end;
+
+procedure THPKArchive.GetFile;
   var
-    FH: record
-      Tmp: array[1..3] of Char;
-      LengthOfName: Byte;
-      end;
-    FH1: record
-      Attr: AWord;
-      DateTime: LongInt;
-      RealSize: LongInt;
-      PackSize: LongInt;
-      CRC: AWord;
-      TPC: Byte;
-      end;
+    DT: DateTime;
+    R: PHPKRec;
   begin
-  if ArcFile^.GetPos = ArcFile^.GetSize then
+  if HPKCol^.Count = 0 then
     begin
     FileInfo.Last := 1;
+    Dispose(HPKCol, Done);
+    HPKCol := nil;
     Exit;
     end;
-  ArcFile^.Read(FH, SizeOf(FH));
-  if  (ArcFile^.Status <> 0) then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  SetLength(FileInfo.FName, FH.LengthOfName);
-  ArcFile^.Read(FileInfo.FName[1], FH.LengthOfName);
-  if FileInfo.FName = '' then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  ArcFile^.Read(FH1, SizeOf(FH1));
+  FileInfo.USize := PHPKRec(HPKCol^.At(0))^.USize;
+  FileInfo.PSize := PHPKRec(HPKCol^.At(0))^.PSize;
+  GetUNIXDate(PHPKRec(HPKCol^.At(0))^.Date, DT.Year, DT.Month, DT.Day,
+     DT.Hour, DT.Min, DT.Sec);
+  PackTime(DT, FileInfo.Date);
+  if PHPKRec(HPKCol^.At(0))^.Name <> nil {DataCompBoy}
+    then
+    FileInfo.FName := PHPKRec(HPKCol^.At(0))^.Name^ {DataCompBoy}
+  else
+    FileInfo.FName := ''; {DataCompBoy}
   FileInfo.Last := 0;
-  FileInfo.Date := FH1.DateTime;
-  FileInfo.Attr := FH1.Attr and not Hidden;
-  FileInfo.USize := FH1.RealSize;
-  FileInfo.PSize := FH1.PackSize;
-  ArcFile^.Seek(ArcFile^.GetPos+FH1.PackSize);
-  end { TQuArkArchive.GetFile };
+  FileInfo.Attr := 0;
+  HPKCol^.AtFree(0);
+  end { THPKArchive.GetFile };
 
 end.

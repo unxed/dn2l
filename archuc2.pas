@@ -45,7 +45,7 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_UC2; {UC2}
+unit archUC2; {UC2}
 
 interface
 
@@ -70,7 +70,7 @@ implementation
 
 uses
   Objects2, Advance2, Advance, DNApp, DnExec, Commands, Advance1, Messages,
-  Dos, LFN
+  Dos, LFNvp
   ;
 
 { ----------------------------- UC2 ------------------------------------}

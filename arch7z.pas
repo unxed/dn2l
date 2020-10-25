@@ -1,6 +1,6 @@
 {/////////////////////////////////////////////////////////////////////////
 //
-//  Dos Navigator Open Source 1.51.08
+//  Dos Navigator Open Source
 //  Based on Dos Navigator (C) 1991-99 RIT Research Labs
 //
 //  This programs is free for commercial and non-commercial use as long as
@@ -43,37 +43,60 @@
 //  cannot simply be copied and put under another distribution licence
 //  (including the GNU Public Licence).
 //
+//////////////////////////////////////////////////////////////////////////
+//
+//  Version history:
+//
+//  2005.02.07 ported from DN OSP 4.9.0 by Max Piwamoto
+{  15.02.2005 AK155: Мелкие коррекции.
+    * ExecAnsiString приводил к порче экрана DN, заменён на ExecStringRR.
+    * В TS7ZArchive.GetFile в связи с AnsiString выплыло несколько
+      некоректностей вроде S[1] для пустой строки. Исправил.
+    * Приформирование в конце строки '\' для каталогов - это неправильно
+      (надо сначала удалить проблелы) и не нужно (это будет сделано
+      позже по FileInfo.Attr = Directory. Приводило к появлению
+      фантомных каталогов с пробелами в конце (7z 4.11). Убрал.
+    * Сделал переформатирование.
+    - Вижу глюки с поиском извне. Если в filefind снять запрет на поиск в
+      7z-архивах, то поиск почти работает, но из панели поиска переход
+      на любой файл внутри 7z-архива приводит при выходе из архива к
+      Sharing violation (при удалении файла в Done). Если проигнорировать
+      - всё работает нормально.
+      Кроме того, поиск иногда (или всегда?) показывает файл, который
+      на самом деле находится в другом архиве.
+      Источник проблем IMHO в том, что файл списка слишком долго держится
+      открытым.
+}
+//
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_AIN; {AIN}
+unit Arch7Z; {7-Zip}
 
 interface
-
 uses
   Archiver
   ;
 
 type
-  PAINArchive = ^TAINArchive;
-  TAINArchive = object(TARJArchive)
+  PS7ZArchive = ^TS7ZArchive;
+  TS7ZArchive = object(TARJArchive)
     ListFileName: String;
     ListFile: System.Text;
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
     function GetSign: TStr4; virtual;
+    destructor Done; virtual;
     end;
 
 implementation
-
 uses
-  Objects2, Advance2, Advance, DNApp, DnExec, Commands, Advance1, Messages,
-  Dos
+  advance, advance1, advance2, Defines, Objects2, Streams, Dos, DnExec
   ;
 
-{ ------------------------------- AIN ------------------------------------- }
+{ --- 7-Zip implemented by piwamoto --- }
 
-constructor TAINArchive.Init;
+constructor TS7ZArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -83,37 +106,43 @@ constructor TAINArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'AIN'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'AIN'));
+{$IFNDEF OS2}
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, '7Z'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, '7Z'));
+{$ELSE}
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, '7ZA'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, '7ZA'));
+{$ENDIF}
   Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
   ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
   Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'm'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, ''));
   Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-p'));
   Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-g'));
   IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
   ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, '-e'));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract,
+         '-sfx'));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
-         ''));
+  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1],
+         PRecurseSubDirs, '-r0'));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PStoreCompression, '-m4'));
+         PStoreCompression, '-mx0'));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, '-m3'));
+         PFastestCompression, '-mx1'));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastCompression, '-m3'));
+         PFastCompression, '-mx1'));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PNormalCompression, '-m2'));
+         PNormalCompression, '-mx5'));
   GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PGoodCompression, '-m1'));
+         PGoodCompression, '-mx7'));
   UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PUltraCompression, '-m1'));
+         PUltraCompression, '-mx9'));
   ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
          '@'));
   ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
@@ -121,128 +150,86 @@ constructor TAINArchive.Init;
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
-  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '1');
+  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '0');
   PutDirs := q <> '0';
   {$IFNDEF DPMI32}
-  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '1');
+  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '0');
   ShortCmdLine := q <> '0';
   {$ELSE}
   q := GetVal(@Sign[1], @FreeStr[1], PSwapWhenExec, '0');
   SwapWhenExec := q <> '0';
   {$ENDIF}
   {$IFNDEF OS2}
-  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
+  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '1');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { TAINArchive.Init };
+  end { TS7ZArchive.Init };
 
-function TAINArchive.GetID;
+function TS7ZArchive.GetID;
   begin
-  GetID := arcAIN;
+  GetID := arc7Z;
   end;
 
-function TAINArchive.GetSign;
+function TS7ZArchive.GetSign;
   begin
-  GetSign := sigAIN;
+  GetSign := sig7Z;
   end;
 
-{
-Модуль настраивался на ain 2.2
-
-Для файлов с не очень длинными именами формат однострочный.
-В этом же примере видно 'решение' проблемы y2k
-
-TEMP\WINL                   5883  18.01.101  20:35:50
-
-Для файлов с более длинными именами формат двухстрочный:
-
-TEMP\KBM35012\KMBR.BIN
-                             338  20.08.97  20:43:38
-
-}
-procedure TAINArchive.GetFile;
+procedure TS7ZArchive.GetFile;
   var
-    l: LongInt;
     DT: DateTime;
-    s: String;
+    S: AnsiString;
   begin
   if TextRec(ListFile).Handle = 0 then
     begin { первый вызов: вызов архиватора для вывода оглавления }
-    FileInfo.Last := 2;
-    ArcFile^.Close;
+    FreeObject(ArcFile);
+    {AK155 если архив не закрыть, то архиватор
+      выдаёт sharing violation }
     ListFileName := MakeNormName(TempDir, '!!!DN!!!.TMP');
-    s := '/C '
-      {$IFDEF OS2}
-      +SourceDir+'dndosout.bat '+ListFileName+' '
-      {$ENDIF}
-      +UnPacker^+' v '+ArcFileName
-      {$IFNDEF OS2}
-      +' > '+ListFileName
-      {$ENDIF}
-      ;
-    if Length(s) < 126 then
-      AnsiExec(GetEnv('COMSPEC'), s)
-    else
-      MessageBox(^C+GetString(dlCmdLineTooLong), nil, mfOKButton+mfError);
+    S := UnPacker^+' l '+SquashesName(ArcFileName)+' >'+ListFileName;
+    ExecStringRR(S, '', False);
     System.Assign(ListFile, ListFileName);
     System.Reset(ListFile);
-    if IOResult <> 0 then
-      Exit;
-    { Пропуск шапки и чтение первой строки файлов }
     repeat
       if Eof(ListFile) then
+        begin
+        FileInfo.Last := 2;
         Exit;
-      Readln(ListFile, s);
-      if IOResult <> 0 then
-        Exit;
-    until (Pos('File name', s) <> 0) or (Pos('Имя файла', s) <> 0);
-    repeat
-      if Eof(ListFile) then
-        Exit;
-      Readln(ListFile, s);
-      if IOResult <> 0 then
-        Exit;
-    until s <> '';
-    end
-  else
-    System.Readln(ListFile, s);
-  l := Pos(' ', s);
-  if l = 1 then
+        end;
+      Readln(ListFile, S);
+    until (S <> '') and (S[1] = '-');
+    end;
+  Readln(ListFile, S);
+  if (Length(S) < 54) or (S[1] = '-') then
     begin
-    Close(ListFile);
-    EraseFile(ListFileName);
-    TextRec(ListFile).Handle := 0;
     FileInfo.Last := 1;
     Exit;
     end;
-  FileInfo.Last := 0;
-
-  { чтение данных об очередном файле}
-  if l = 0 then
-    begin { длина и прочее в следующей строке }
-    FileInfo.FName := s;
-    Readln(ListFile, s);
-    end
-  else
-    begin
-    FileInfo.FName := Copy(s, 1, l-1);
-    System.Delete(s, 1, l);
-    end;
-  DelLeft(s);
-  l := Pos(' ', s);
-  FileInfo.USize := StoI(Copy(s, 1, l-1));
-  FileInfo.PSize := FileInfo.USize;
-  System.Delete(s, 1, l);
-  DelLeft(s);
-  DT.Day := StoI(Copy(s, 1, 2));
-  DT.Month := StoI(Copy(s, 4, 2));
-  DT.Year := 1900 + StoI(fDelRight(Copy(S,7,3)));
-  System.Delete(s, 1, 10);
-  DelLeft(s);
-  DT.Hour := StoI(Copy(s, 1, 2));
-  DT.Min := StoI(Copy(s, 4, 2));
-  DT.Sec := StoI(Copy(s, 7, 4));
+  DT.Year := StoI(Copy(S, 1, 4));
+  DT.Month := StoI(Copy(S, 6, 2));
+  DT.Day := StoI(Copy(S, 9, 2));
+  DT.Hour := StoI(Copy(S, 12, 2));
+  DT.Min := StoI(Copy(S, 15, 2));
+  DT.Sec := StoI(Copy(S, 18, 2));
   PackTime(DT, FileInfo.Date);
-  end { TAINArchive.GetFile };
+  FileInfo.USize := Str2Comp(fDelLeft(Copy(S, 27, 12)));
+  FileInfo.PSize := Str2Comp(fDelLeft(Copy(S, 40, 12)));
+  if S[21] = 'D' then
+    FileInfo.Attr := Directory
+  else
+    FileInfo.Attr := 0;
+  FileInfo.FName := '\'+fDelRight(Copy(S, 54, 255));
+  FileInfo.Last := 0;
+  end { TS7ZArchive.GetFile };
+
+destructor TS7ZArchive.Done;
+  begin
+  if TextRec(ListFile).Handle <> 0 then
+    begin
+    System.Close(ListFile);
+    EraseFile(ListFileName);
+    end;
+  inherited Done;
+  end;
 
 end.

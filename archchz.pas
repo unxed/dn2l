@@ -45,7 +45,7 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_HYP; {HYP}
+unit archCHZ; {CHZ}
 
 interface
 
@@ -54,8 +54,8 @@ uses
   ;
 
 type
-  PHYPArchive = ^THYPArchive;
-  THYPArchive = object(TARJArchive)
+  PCHZArchive = ^TCHZArchive;
+  TCHZArchive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
@@ -63,21 +63,21 @@ type
     end;
 
 type
-  HYPHdr = record
-    Id: LongInt;
+  CHZHdr = record
+    Id: array[1..4] of Char;
     PackedSize: LongInt;
     OriginSize: LongInt;
+    Data: array[1..4] of Byte;
     Date: LongInt;
-    Data: LongInt;
-    Attr: Byte;
-    NameLen: Byte;
+    QQQ: AWord;
+    NameLen: AWord;
     end;
 
 implementation
 
-{ ----------------------------- HYP ------------------------------------}
+{ ----------------------------- CHZ ------------------------------------}
 
-constructor THYPArchive.Init;
+constructor TCHZArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -87,24 +87,23 @@ constructor THYPArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'HYPER'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'HYPER'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-x'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-x'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-m'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'CHARC'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'CHARC'));
+  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-E'));
+  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-E'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-A -T'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-A -T -M'));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-D'));
   Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
   Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, ''));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths,
-         '-p'));
+  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-Y'));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, '-S'));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PRecurseSubDirs, '-r'));
+  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
+         ''));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
@@ -126,10 +125,10 @@ constructor THYPArchive.Init;
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
-  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '0');
+  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '1');
   PutDirs := q <> '0';
   {$IFNDEF DPMI32}
-  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '1');
+  q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '2');
   ShortCmdLine := q <> '0';
   {$ELSE}
   q := GetVal(@Sign[1], @FreeStr[1], PSwapWhenExec, '0');
@@ -139,39 +138,58 @@ constructor THYPArchive.Init;
   q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { THYPArchive.Init };
+  end { TCHZArchive.Init };
 
-function THYPArchive.GetID;
+function TCHZArchive.GetID;
   begin
-  GetID := arcHYP;
+  GetID := arcCHZ;
   end;
 
-function THYPArchive.GetSign;
+function TCHZArchive.GetSign;
   begin
-  GetSign := sigHYP;
+  GetSign := sigCHZ;
   end;
 
-procedure THYPArchive.GetFile;
+procedure TCHZArchive.GetFile;
   var
-    P: HYPHdr;
+    FP: TFileSize;
+    P: CHZHdr;
+    S: String;
+    C: Char;
+
+  label 1;
   begin
-  if ArcFile^.GetPos = ArcFile^.GetSize then
+1:
+  FP := ArcFile^.GetPos;
+  if FP = ArcFile^.GetSize then
     begin
     FileInfo.Last := 1;
     Exit;
     end;
   ArcFile^.Read(P, 4);
-  if  (P.Id and $ffff = 0) then
-    begin
-    FileInfo.Last := 1;
-    Exit;
-    end;
-  if  (ArcFile^.Status <> stOK) or
-      ( (P.Id <> $2550481A {^Z'HP%'}) and (P.Id <> $2554531A {^Z'ST%'}))
+  if  (ArcFile^.Status <> stOK) or (Copy(P.Id, 1, 3) <> 'SCh')
   then
     begin
     FileInfo.Last := 2;
     Exit;
+    end;
+  if P.Id[4] = 'D' then
+    begin
+    ArcFile^.Seek(FP+9);
+    ArcFile^.Read(S[0], 1);
+    ArcFile^.Read(S[1], Length(S));
+    CDir := CDir+S+'\';
+    goto 1;
+    end
+  else if P.Id[4] = 'd' then
+    begin
+    if CDir <> '' then
+      begin
+      SetLength(CDir, Length(CDir)-1);
+      while (CDir <> '') and (CDir[Length(CDir)] <> '\') do
+        SetLength(CDir, Length(CDir)-1);
+      end;
+    goto 1;
     end;
   ArcFile^.Read(P.PackedSize, SizeOf(P)-4);
   if  (ArcFile^.Status <> stOK) then
@@ -185,9 +203,12 @@ procedure THYPArchive.GetFile;
   FileInfo.USize := P.OriginSize;
   FileInfo.PSize := P.PackedSize;
   FileInfo.Date := P.Date {P.Date shl 16) or (P.Date shr 16)};
+  if P.NameLen > 255 then
+    P.NameLen := 255;
   FileInfo.FName[0] := Char(P.NameLen);
   ArcFile^.Read(FileInfo.FName[1], P.NameLen);
-  ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize);
-  end { THYPArchive.GetFile };
+  FileInfo.FName := CDir+FileInfo.FName;
+  ArcFile^.Seek(FP+P.PackedSize);
+  end { TCHZArchive.GetFile };
 
 end.

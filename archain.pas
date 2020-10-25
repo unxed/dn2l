@@ -45,51 +45,35 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_IS3; {IS3}
+unit archAIN; {AIN}
 
 interface
 
 uses
-  Archiver, Advance, Advance1, Defines, Objects2, Streams
+  Archiver
   ;
 
 type
-  PIS3Archive = ^TIS3Archive;
-  TIS3Archive = object(TARJArchive)
-    FoldersOffs: LongInt; {!!s}
-    FilesNumber: LongInt;
+  PAINArchive = ^TAINArchive;
+  TAINArchive = object(TARJArchive)
+    ListFileName: String;
+    ListFile: System.Text;
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
     function GetSign: TStr4; virtual;
     end;
 
-type
-  IS3FileHdr = record
-    HZ1: Byte;
-    FolderNum: AWord;
-    OriginSize: LongInt;
-    PackedSize: LongInt;
-    HZ2: LongInt;
-    DateTime: LongInt;
-    Attr: LongInt;
-    HZ3: LongInt;
-    HZ4: AWord;
-    NameLen: Byte;
-    end;
-
-type
-  IS3FolderHdr = record
-    FileNumber: AWord;
-    SizeOfHdr: AWord;
-    SizeOfName: AWord;
-    end;
-
 implementation
 
-{ --- Z --- aka LIB --- aka InstallShield 3.00.xxx --- by piwamoto ------- }
+uses
+  Objects2, Advance2, Advance, DNApp, DnExec, Commands, Advance1, Messages,
+  Dos
+  ;
 
-constructor TIS3Archive.Init;
+{ ------------------------------- AIN ------------------------------------- }
+
+constructor TAINArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -99,45 +83,45 @@ constructor TIS3Archive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ICOMP'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'ICOMP'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-d'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-d -i'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-c'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-c'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-r'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, '-dt -i'));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'AIN'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'AIN'));
+  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
+  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'm'));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
+  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-g'));
   IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, '-e'));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PRecurseSubDirs, '-i'));
+  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
+         ''));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PStoreCompression, '-sn'));
+         PStoreCompression, '-m4'));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, '-sl'));
+         PFastestCompression, '-m3'));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastCompression, '-sm'));
+         PFastCompression, '-m3'));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PNormalCompression, '-sh'));
+         PNormalCompression, '-m2'));
   GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PGoodCompression, '-sh'));
+         PGoodCompression, '-m1'));
   UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PUltraCompression, '-sh'));
+         PUltraCompression, '-m1'));
   ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
-         ' '));
+         '@'));
   ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
-       ' '));
+       '@'));
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
-  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '0');
+  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '1');
   PutDirs := q <> '0';
   {$IFNDEF DPMI32}
   q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '1');
@@ -147,92 +131,118 @@ constructor TIS3Archive.Init;
   SwapWhenExec := q <> '0';
   {$ENDIF}
   {$IFNDEF OS2}
-  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '1');
+  q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
   UseLFN := q <> '0';
   {$ENDIF}
+  end { TAINArchive.Init };
 
-  FoldersOffs := -1;
-  FilesNumber := -1;
-  end { TIS3Archive.Init };
-
-function TIS3Archive.GetID;
+function TAINArchive.GetID;
   begin
-  GetID := arcIS3;
+  GetID := arcAIN;
   end;
 
-function TIS3Archive.GetSign;
+function TAINArchive.GetSign;
   begin
-  GetSign := sigIS3;
+  GetSign := sigAIN;
   end;
 
-procedure TIS3Archive.GetFile;
+{
+Модуль настраивался на ain 2.2
+
+Для файлов с не очень длинными именами формат однострочный.
+В этом же примере видно 'решение' проблемы y2k
+
+TEMP\WINL                   5883  18.01.101  20:35:50
+
+Для файлов с более длинными именами формат двухстрочный:
+
+TEMP\KBM35012\KMBR.BIN
+                             338  20.08.97  20:43:38
+
+}
+procedure TAINArchive.GetFile;
   var
-    P: IS3FileHdr;
-    P1: IS3FolderHdr;
-    FP, FO: LongInt;  {!!s}
-    C: Char;
-    I: Integer;
-    S: String;
+    l: LongInt;
+    DT: DateTime;
+    s: String;
   begin
-  if FoldersOffs < 0 then
+  if TextRec(ListFile).Handle = 0 then
+    begin { первый вызов: вызов архиватора для вывода оглавления }
+    FileInfo.Last := 2;
+    ArcFile^.Close;
+    ListFileName := MakeNormName(TempDir, '!!!DN!!!.TMP');
+    s := '/C '
+      {$IFDEF OS2}
+      +SourceDir+'dndosout.bat '+ListFileName+' '
+      {$ENDIF}
+      +UnPacker^+' v '+ArcFileName
+      {$IFNDEF OS2}
+      +' > '+ListFileName
+      {$ENDIF}
+      ;
+    if Length(s) < 126 then
+      AnsiExec(GetEnv('COMSPEC'), s)
+    else
+      MessageBox(^C+GetString(dlCmdLineTooLong), nil, mfOKButton+mfError);
+    System.Assign(ListFile, ListFileName);
+    System.Reset(ListFile);
+    if IOResult <> 0 then
+      Exit;
+    { Пропуск шапки и чтение первой строки файлов }
+    repeat
+      if Eof(ListFile) then
+        Exit;
+      Readln(ListFile, s);
+      if IOResult <> 0 then
+        Exit;
+    until (Pos('File name', s) <> 0) or (Pos('Имя файла', s) <> 0);
+    repeat
+      if Eof(ListFile) then
+        Exit;
+      Readln(ListFile, s);
+      if IOResult <> 0 then
+        Exit;
+    until s <> '';
+    end
+  else
+    System.Readln(ListFile, s);
+  l := Pos(' ', s);
+  if l = 1 then
     begin
-    ArcFile^.Seek(ArcPos+$c);
-    ArcFile^.Read(FP, SizeOf(FP));
-    FilesNumber := FP and $ffff;
-    ArcFile^.Seek(ArcPos+$29);
-    ArcFile^.Read(FP, SizeOf(FP));
-    FoldersOffs := i32(FP+ArcPos);
-    ArcFile^.Seek(ArcPos+$33);
-    ArcFile^.Read(FP, SizeOf(FP));
-    FP := i32(FP+ArcPos);
-    ArcFile^.Seek(FP);
-    end;
-  FP := i32(ArcFile^.GetPos);
-  if  (FilesNumber = 0) then
-    begin
+    Close(ListFile);
+    EraseFile(ListFileName);
+    TextRec(ListFile).Handle := 0;
     FileInfo.Last := 1;
     Exit;
     end;
-  ArcFile^.Read(P, SizeOf(P));
-  if  (ArcFile^.Status <> stOK) then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  FO := FoldersOffs;
-  FileInfo.FName := '';
-  S := '';
-
-  for I := 1 to P.NameLen do
-    begin
-    ArcFile^.Read(C, 1);
-    FileInfo.FName := FileInfo.FName+C;
-    end;
-
-  for I := 0 to P.FolderNum do
-    begin
-    ArcFile^.Seek(FO);
-    ArcFile^.Read(P1, SizeOf(P1));
-    FO := FO+P1.SizeOfHdr;
-    end;
-  FO := FO-P1.SizeOfHdr+SizeOf(P1);
-  if P1.SizeOfName > 255 then
-    P1.SizeOfName := 255;
-  SetLength(S, (P1.SizeOfName));
-  if S <> '' then
-    begin
-    ArcFile^.Seek(FO);
-    ArcFile^.Read(S[1], P1.SizeOfName);
-    FileInfo.FName := S+'\'+FileInfo.FName;
-    end;
-
   FileInfo.Last := 0;
-  FileInfo.USize := P.OriginSize;
-  FileInfo.PSize := P.PackedSize;
-  FileInfo.Attr := 0;
-  FileInfo.Date := (P.DateTime shr 16) or (P.DateTime shl 16);
-  Dec(FilesNumber);
-  ArcFile^.Seek(FP+SizeOf(P)+P.NameLen+13);
-  end { TIS3Archive.GetFile };
+
+  { чтение данных об очередном файле}
+  if l = 0 then
+    begin { длина и прочее в следующей строке }
+    FileInfo.FName := s;
+    Readln(ListFile, s);
+    end
+  else
+    begin
+    FileInfo.FName := Copy(s, 1, l-1);
+    System.Delete(s, 1, l);
+    end;
+  DelLeft(s);
+  l := Pos(' ', s);
+  FileInfo.USize := StoI(Copy(s, 1, l-1));
+  FileInfo.PSize := FileInfo.USize;
+  System.Delete(s, 1, l);
+  DelLeft(s);
+  DT.Day := StoI(Copy(s, 1, 2));
+  DT.Month := StoI(Copy(s, 4, 2));
+  DT.Year := 1900 + StoI(fDelRight(Copy(S,7,3)));
+  System.Delete(s, 1, 10);
+  DelLeft(s);
+  DT.Hour := StoI(Copy(s, 1, 2));
+  DT.Min := StoI(Copy(s, 4, 2));
+  DT.Sec := StoI(Copy(s, 7, 4));
+  PackTime(DT, FileInfo.Date);
+  end { TAINArchive.GetFile };
 
 end.

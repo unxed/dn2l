@@ -45,7 +45,7 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_BSA; {BSA}
+unit archBS2; {BS2}
 
 interface
 
@@ -54,8 +54,8 @@ uses
   ;
 
 type
-  PBSAArchive = ^TBSAArchive;
-  TBSAArchive = object(TARJArchive)
+  PBS2Archive = ^TBS2Archive;
+  TBS2Archive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
@@ -63,20 +63,21 @@ type
     end;
 
 type
-  BSAHdr = record
+  BSA2Hdr = record
+    Unknown: array[1..12] of Char;
     Id: array[1..4] of Char;
-    PackedSize: LongInt;
-    OriginSize: LongInt;
     Date: LongInt;
-    Data: array[1..6] of Byte;
+    OriginSize: LongInt;
+    PackedSize: LongInt;
+    Data: LongInt;
     NameLen: Byte;
     end;
 
 implementation
 
-{ ----------------------------- BSA ------------------------------------}
+{ ----------------------------- BS2 ------------------------------------}
 
-constructor TBSAArchive.Init;
+constructor TBS2Archive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -86,13 +87,13 @@ constructor TBSAArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'BSARC'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'BSARC'));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'BS2'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'BS2'));
   Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-xy'));
   ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-xy'));
   Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-ar'));
   Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-am'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-D'));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
   Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-xg'));
   Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, '-t'));
   IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
@@ -108,7 +109,7 @@ constructor TBSAArchive.Init;
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, ''));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, '+q'));
+         PFastestCompression, ''));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PFastCompression, ''));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
@@ -137,42 +138,35 @@ constructor TBSAArchive.Init;
   q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { TBSAArchive.Init };
+  end { TBS2Archive.Init };
 
-function TBSAArchive.GetID;
+function TBS2Archive.GetID;
   begin
-  GetID := arcBSA;
+  GetID := arcBS2;
   end;
 
-function TBSAArchive.GetSign;
+function TBS2Archive.GetSign;
   begin
-  GetSign := sigBSA;
+  GetSign := sigBS2;
   end;
 
-procedure TBSAArchive.GetFile;
+procedure TBS2Archive.GetFile;
   var
-    P: BSAHdr;
+    P: BSA2Hdr;
   begin
+  ArcFile^.Read(P, 6);
+  { if (Copy(P.ID,1,2) = #0#0) then begin FileInfo.Last := 1;Exit;end;}
+  if  (ArcFile^.Status <> stOK) then
+    begin
+    FileInfo.Last := 2;
+    Exit;
+    end;
   if ArcFile^.GetPos = ArcFile^.GetSize then
     begin
     FileInfo.Last := 1;
     Exit;
     end;
-  ArcFile^.Read(P, 4);
-  if  (Copy(P.Id, 1, 2) = #0#0)
-  then
-    begin
-    FileInfo.Last := 1;
-    Exit;
-    end;
-  if  (ArcFile^.Status <> stOK)
-           or not ((P.Id[4] in [#0, #7]) and (Copy(P.Id, 2, 2) = #0#$AE))
-  then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  ArcFile^.Read(P.PackedSize, SizeOf(P)-4);
+  ArcFile^.Read(P.Unknown[7], SizeOf(P)-6);
   if  (ArcFile^.Status <> stOK) then
     begin
     FileInfo.Last := 2;
@@ -186,7 +180,7 @@ procedure TBSAArchive.GetFile;
   FileInfo.Date := P.Date {P.Date shl 16) or (P.Date shr 16)};
   FileInfo.FName[0] := Char(P.NameLen);
   ArcFile^.Read(FileInfo.FName[1], P.NameLen);
-  ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize+1);
-  end { TBSAArchive.GetFile };
+  ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize);
+  end { TBS2Archive.GetFile };
 
 end.

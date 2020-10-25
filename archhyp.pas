@@ -45,7 +45,7 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_ARC; {ARC}
+unit archHYP; {HYP}
 
 interface
 
@@ -54,8 +54,8 @@ uses
   ;
 
 type
-  PARCArchive = ^TARCArchive;
-  TARCArchive = object(TARJArchive)
+  PHYPArchive = ^THYPArchive;
+  THYPArchive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
@@ -63,21 +63,21 @@ type
     end;
 
 type
-  ARCHdr = record
-    Mark: Byte;
-    Version: Byte;
-    Name: array[1..13] of Char;
+  HYPHdr = record
+    Id: LongInt;
     PackedSize: LongInt;
-    Date: LongInt;
-    CRC: AWord;
     OriginSize: LongInt;
+    Date: LongInt;
+    Data: LongInt;
+    Attr: Byte;
+    NameLen: Byte;
     end;
 
 implementation
 
-{ ----------------------------- ARC ------------------------------------}
+{ ----------------------------- HYP ------------------------------------}
 
-constructor TARCArchive.Init;
+constructor THYPArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -87,42 +87,42 @@ constructor TARCArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'PAK'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'PAK'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'E'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'E /WA'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'A'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'A /M'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'D'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '/G'));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 'T'));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'HYPER'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'HYPER'));
+  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-x'));
+  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-x'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-a'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-m'));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
+  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, ''));
+  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths,
+         '-p'));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
   ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract,
-         '/EXE'));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
   RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PRecurseSubDirs, '/I'));
+         PRecurseSubDirs, '-r'));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, ''));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, '/C'));
+         PFastestCompression, ''));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastCompression, '/S'));
+         PFastCompression, ''));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PNormalCompression, '/ZS /BUGS'));
+         PNormalCompression, ''));
   GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PGoodCompression, '/CR'));
+         PGoodCompression, ''));
   UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PUltraCompression, '/O'));
+         PUltraCompression, ''));
   ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
-         '@'));
+         ' '));
   ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
-       '@'));
+       ' '));
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
@@ -139,50 +139,55 @@ constructor TARCArchive.Init;
   q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { TARCArchive.Init };
+  end { THYPArchive.Init };
 
-function TARCArchive.GetID;
+function THYPArchive.GetID;
   begin
-  GetID := arcARC;
+  GetID := arcHYP;
   end;
 
-function TARCArchive.GetSign;
+function THYPArchive.GetSign;
   begin
-  GetSign := sigARC;
+  GetSign := sigHYP;
   end;
 
-procedure TARCArchive.GetFile;
+procedure THYPArchive.GetFile;
   var
-    i: AWord;
-    P: ARCHdr;
+    P: HYPHdr;
   begin
-  ArcFile^.Read(P, 2);
-  if  (P.Mark = $1a {^Z}) and (P.Version <> 0) and (ArcFile^.Status = stOK)
-  then
-    ArcFile^.Read(P.Name, SizeOf(P)-2);
-  if  (P.Version = 0) then
+  if ArcFile^.GetPos = ArcFile^.GetSize then
     begin
     FileInfo.Last := 1;
     Exit;
     end;
+  ArcFile^.Read(P, 4);
+  if  (P.Id and $ffff = 0) then
+    begin
+    FileInfo.Last := 1;
+    Exit;
+    end;
+  if  (ArcFile^.Status <> stOK) or
+      ( (P.Id <> $2550481A {^Z'HP%'}) and (P.Id <> $2554531A {^Z'ST%'}))
+  then
+    begin
+    FileInfo.Last := 2;
+    Exit;
+    end;
+  ArcFile^.Read(P.PackedSize, SizeOf(P)-4);
   if  (ArcFile^.Status <> stOK) then
     begin
     FileInfo.Last := 2;
     Exit;
     end;
-  i := 1;
-  FileInfo.FName := '';
-  while (i < 14) and (P.Name[i] <> #0) do
-    begin
-    FileInfo.FName := FileInfo.FName+P.Name[i];
-    Inc(i);
-    end;
+  {if (P.Method > 20) then begin FileInfo.Last:=2;Exit;end;}
   FileInfo.Last := 0;
   FileInfo.Attr := 0;
   FileInfo.USize := P.OriginSize;
   FileInfo.PSize := P.PackedSize;
-  FileInfo.Date := (P.Date shr 16) or (P.Date shl 16);
+  FileInfo.Date := P.Date {P.Date shl 16) or (P.Date shr 16)};
+  FileInfo.FName[0] := Char(P.NameLen);
+  ArcFile^.Read(FileInfo.FName[1], P.NameLen);
   ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize);
-  end { TARCArchive.GetFile };
+  end { THYPArchive.GetFile };
 
 end.

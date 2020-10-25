@@ -45,17 +45,17 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_HAP; {HAP}
+unit archBSA; {BSA}
 
 interface
 
 uses
-  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
+  Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
 type
-  PHAPArchive = ^THAPArchive;
-  THAPArchive = object(TARJArchive)
+  PBSAArchive = ^TBSAArchive;
+  TBSAArchive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
@@ -63,21 +63,20 @@ type
     end;
 
 type
-  HAPHdr = record
-    C: Char;
-    Id: LongInt;
+  BSAHdr = record
+    Id: array[1..4] of Char;
     PackedSize: LongInt;
-    Reserved: array[1..9] of Byte;
-    Attr: Byte;
-    Date: LongInt;
     OriginSize: LongInt;
+    Date: LongInt;
+    Data: array[1..6] of Byte;
+    NameLen: Byte;
     end;
 
 implementation
 
-{ ----------------------------- HAP ------------------------------------}
+{ ----------------------------- BSA ------------------------------------}
 
-constructor THAPArchive.Init;
+constructor TBSAArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -87,20 +86,20 @@ constructor THAPArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'HAP3'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'PAH3'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'a'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'BSARC'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'BSARC'));
+  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-xy'));
+  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-xy'));
+  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-ar'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-am'));
+  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-D'));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-xg'));
+  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, '-t'));
   IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
   ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, '+s'));
   Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
   RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
          ''));
@@ -109,7 +108,7 @@ constructor THAPArchive.Init;
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, ''));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, ''));
+         PFastestCompression, '+q'));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PFastCompression, ''));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
@@ -125,7 +124,7 @@ constructor THAPArchive.Init;
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
-  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '0');
+  q := GetVal(@Sign[1], @FreeStr[1], PPutDirs, '1');
   PutDirs := q <> '0';
   {$IFNDEF DPMI32}
   q := GetVal(@Sign[1], @FreeStr[1], PShortCmdLine, '1');
@@ -138,57 +137,56 @@ constructor THAPArchive.Init;
   q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { THAPArchive.Init };
+  end { TBSAArchive.Init };
 
-function THAPArchive.GetID;
+function TBSAArchive.GetID;
   begin
-  GetID := arcHAP;
+  GetID := arcBSA;
   end;
 
-function THAPArchive.GetSign;
+function TBSAArchive.GetSign;
   begin
-  GetSign := sigHAP;
+  GetSign := sigBSA;
   end;
 
-procedure THAPArchive.GetFile;
+procedure TBSAArchive.GetFile;
   var
-    P: HAPHdr;
-    C: Char;
+    P: BSAHdr;
   begin
-  ArcFile^.Read(P, 1);
-  if  (ArcFile^.GetPos = ArcFile^.GetSize) then
+  if ArcFile^.GetPos = ArcFile^.GetSize then
     begin
     FileInfo.Last := 1;
     Exit;
     end;
-  ArcFile^.Read(P.Id, SizeOf(P)-1);
-  if  (ArcFile^.Status <> stOK) or (P.Id <> $574a688e {#142#104#74#87})
+  ArcFile^.Read(P, 4);
+  if  (Copy(P.Id, 1, 2) = #0#0)
   then
+    begin
+    FileInfo.Last := 1;
+    Exit;
+    end;
+  if  (ArcFile^.Status <> stOK)
+           or not ((P.Id[4] in [#0, #7]) and (Copy(P.Id, 2, 2) = #0#$AE))
+  then
+    begin
+    FileInfo.Last := 2;
+    Exit;
+    end;
+  ArcFile^.Read(P.PackedSize, SizeOf(P)-4);
+  if  (ArcFile^.Status <> stOK) then
     begin
     FileInfo.Last := 2;
     Exit;
     end;
   {if (P.Method > 20) then begin FileInfo.Last:=2;Exit;end;}
   FileInfo.Last := 0;
-  FileInfo.Attr := P.Attr and not Hidden;
+  FileInfo.Attr := 0;
   FileInfo.USize := P.OriginSize;
   FileInfo.PSize := P.PackedSize;
-  FileInfo.Date := P.Date;
-  FileInfo.FName := '';
-  repeat
-    ArcFile^.Read(C, 1);
-    if C <> #0 then
-      FileInfo.FName := FileInfo.FName+C;
-  until (C = #0) or (Length(FileInfo.FName) > 77);
-  repeat
-    ArcFile^.Read(C, 1);
-  until (C in [#$15, #$16]) or (ArcFile^.Status <> stOK);
-  if  (ArcFile^.Status <> stOK) or (Length(FileInfo.FName) > 79) then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize-1);
-  end { THAPArchive.GetFile };
+  FileInfo.Date := P.Date {P.Date shl 16) or (P.Date shr 16)};
+  FileInfo.FName[0] := Char(P.NameLen);
+  ArcFile^.Read(FileInfo.FName[1], P.NameLen);
+  ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize+1);
+  end { TBSAArchive.GetFile };
 
 end.

@@ -45,7 +45,7 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-unit arc_UFA; {UFA}
+unit archSQZ; {SQZ}
 
 interface
 
@@ -54,19 +54,32 @@ uses
   ;
 
 type
-  PUFAArchive = ^TUFAArchive;
-  TUFAArchive = object(TARJArchive)
+  PSQZArchive = ^TSQZArchive;
+  TSQZArchive = object(TARJArchive)
     constructor Init;
     procedure GetFile; virtual;
     function GetID: Byte; virtual;
     function GetSign: TStr4; virtual;
     end;
 
+type
+  SQZHdr = record
+    Size: Byte;
+    Sum: Byte;
+    Method: Byte;
+    PackedSize: LongInt;
+    OriginSize: LongInt;
+    Date: LongInt;
+    Attr: Byte;
+    CRC: LongInt;
+    Name: array[0..127] of Char;
+    end;
+
 implementation
 
-{ ---------------------- UFA (by Luzin Aleksey)---------------------------}
+{ ----------------------------- SQZ ------------------------------------}
 
-constructor TUFAArchive.Init;
+constructor TSQZArchive.Init;
   var
     Sign: TStr5;
     q: String;
@@ -76,21 +89,21 @@ constructor TUFAArchive.Init;
   Sign := Sign+#0;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'UFA'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'UFA'));
+  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'SQZ'));
+  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'SQZ'));
   Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
   ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
   Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'm'));
+  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'a'));
   Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-g'));
+  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, ''));
   Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
   IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
   ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
+  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
   RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
-  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, '-s'));
+  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, 's'));
+  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
   RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
          ''));
   SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
@@ -98,19 +111,19 @@ constructor TUFAArchive.Init;
   StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, '-m0'));
   FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastestCompression, ''));
+         PFastestCompression, '-m1'));
   FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PFastCompression, '-mq'));
+         PFastCompression, '-m2'));
   NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PNormalCompression, ''));
+         PNormalCompression, '-m4'));
   GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PGoodCompression, ''));
+         PGoodCompression, '-m4'));
   UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
-         PUltraCompression, '-mx'));
+         PUltraCompression, '-m4'));
   ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
-         ' '));
+         '@'));
   ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
-       ' '));
+       '@'));
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');
   AllVersion := q <> '0';
@@ -127,54 +140,58 @@ constructor TUFAArchive.Init;
   q := GetVal(@Sign[1], @FreeStr[1], PUseLFN, '0');
   UseLFN := q <> '0';
   {$ENDIF}
-  end { TUFAArchive.Init };
+  end { TSQZArchive.Init };
 
-function TUFAArchive.GetID;
+function TSQZArchive.GetID;
   begin
-  GetID := arcUFA;
+  GetID := arcSQZ;
   end;
 
-function TUFAArchive.GetSign;
+function TSQZArchive.GetSign;
   begin
-  GetSign := sigUFA;
+  GetSign := sigSQZ;
   end;
 
-procedure TUFAArchive.GetFile;
+procedure TSQZArchive.GetFile;
+  label 1;
   var
-    FH: record
-      Tmp: array[1..$2A] of Char;
-      DateTime: LongInt;
-      PackSize: LongInt;
-      OriginalSize: LongInt;
-      FileNameSize: AWord;
-      end;
+    i: AWord;
+    P: SQZHdr;
   begin
-  if ArcFile^.GetPos = ArcFile^.GetSize then
+1:
+  ArcFile^.Read(P, 1);
+  if  (ArcFile^.Status <> stOK) then
+    begin
+    FileInfo.Last := 2;
+    Exit;
+    end;
+  if  (P.Size = 0) then
     begin
     FileInfo.Last := 1;
     Exit;
     end;
-  ArcFile^.Read(FH, SizeOf(FH));
-  if  (ArcFile^.Status <> 0) or (FH.FileNameSize > 512) then
+  { if P.Size < $19 then} {changed by piwamoto}
+  if P.Size < 18 then
     begin
-    FileInfo.Last := 2;
-    Exit;
+    ArcFile^.Read(i, 2);
+    ArcFile^.Seek(ArcFile^.GetPos+i);
+    goto 1;
     end;
-  if FH.FileNameSize > 250 then
-    FH.FileNameSize := 250;
-  SetLength(FileInfo.FName, FH.FileNameSize);
-  ArcFile^.Read(FileInfo.FName[1], FH.FileNameSize);
-  if FileInfo.FName = '' then
-    begin
-    FileInfo.Last := 2;
-    Exit;
-    end;
-  FileInfo.Attr := 0;
+  ArcFile^.Read(P.Sum, P.Size+1);
+  {if (P.Method > 20) then begin FileInfo.Last:=2;Exit;end;}
   FileInfo.Last := 0;
-  FileInfo.USize := FH.OriginalSize;
-  FileInfo.PSize := FH.PackSize;
-  FileInfo.Date := FH.DateTime;
-  ArcFile^.Seek(ArcFile^.GetPos+FH.PackSize);
-  end { TUFAArchive.GetFile };
+  FileInfo.Attr := P.Attr and not Hidden;
+  FileInfo.USize := P.OriginSize;
+  FileInfo.PSize := P.PackedSize;
+  FileInfo.Date := P.Date;
+  SetLength(FileInfo.FName, P.Size-18);
+  System.Move(P.Name, FileInfo.FName[1], P.Size-18);
+  if Length(FileInfo.FName) > 79 then
+    begin
+    FileInfo.Last := 2;
+    Exit;
+    end;
+  ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize);
+  end { TSQZArchive.GetFile };
 
 end.
