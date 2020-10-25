@@ -50,7 +50,7 @@
 
 program DN;
 {$IFNDEF DPMI32}
-{$R DN.res}
+{.$R DN.res}
 {$ENDIF}
 
 {Cat: методы поддержки плагинов поменялись, поэтому этот кусок
@@ -60,7 +60,7 @@ uses
 {$IFDEF DPMIDEBUG}
   deb_link,
 {$ENDIF}
-  Drivers, Lfn, Files,
+  Drivers, Lfnvp, Files,
   DN1, Dos, DNApp,
   Menus, FlPanelX, FlPanel, FileCopy, Filediz, Filelst, Eraser,
   DiskInfo, Advance, Advance1, Advance2, Advance4, highlite,

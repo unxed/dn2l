@@ -55,7 +55,7 @@ implementation
 
 uses
   Archiver, FStorage, Dos, ArcView, Advance, Advance1, Advance2, Messages,
-  DNApp, Commands, Lfn, Views
+  DNApp, Commands, Lfnvp, Views
   ;
 
 {-DataCompBoy-}
@@ -164,7 +164,7 @@ procedure ReadArcList; {changed & AIN added by piwamoto}
               Continue;
             SetLength(S, I-1);
             if P^.Attr = Directory then
-              S := S+'\';
+              S := S+'/'; // slash change by unxed
             P^.Attr := 0;
             P^.FName := NewStr(CurDir+S);
             end
@@ -225,14 +225,14 @@ procedure ReadArcList; {changed & AIN added by piwamoto}
         I := PosChar(' ', S);
         if I = 0 then
           begin
-          P^.FName := NewStr('\'+S);
+          P^.FName := NewStr('/'+S); // slash change by unxed
           S := F^.GetStr;
           DelLeft(S);
           DelRight(S);
           end
         else
           begin
-          P^.FName := NewStr('\'+Copy(S, 1, I-1));
+          P^.FName := NewStr('/'+Copy(S, 1, I-1)); // slash change by unxed
           Delete(S, 1, I);
           DelLeft(S);
           end;
@@ -285,10 +285,10 @@ procedure ReadArcList; {changed & AIN added by piwamoto}
          if S[21] = 'D' {directory}
            then begin
             P^.Attr := Directory;
-            S := S + '\';
+            S := S + '/'; // slash change by unxed
            end
            else P^.Attr := 0;
-         P^.FName := NewStr('\'+fDelRight(Copy(S, 54, 255)));
+         P^.FName := NewStr('/'+fDelRight(Copy(S, 54, 255))); // slash change by unxed
          PC^.AddFile(P^.FName^, P^.USize, P^.PSize, P^.Date, P^.Attr);
          DisposeStr(P^.FName);
          Dispose(P);

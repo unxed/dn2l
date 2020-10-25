@@ -220,10 +220,10 @@ var
 
 implementation
 uses
-  Lfn {DataCompBoy}, DNApp, Advance1, Advance2, Startup, Dos,
+  Lfnvp {DataCompBoy}, DNApp, Advance1, Advance2, Startup, Dos,
   Memory, Messages, HistList, Commands, FlPanelX, FlPanel
   , FViewer, Microed,
-  Tree, xTime, DNUtil, U_KeyMap, {!!}CmdLine, Histries,
+  Tree, xTime, DNUtil, UKeyMap, {!!}CmdLine, Histries,
   Archiver, ArchDet {JO},
   ArcView {JO: для разархивирования файлов найденных в архивах}
   , Events {AK155 для LongWorkBegin - LongWorkEnd}
@@ -604,12 +604,13 @@ function FindFiles(var Files: PFilesCollection;
           AType^.GetFile;
           if FileInfo.Last = 0 then
             begin
-            Replace('/', '\', FileInfo.FName);
+            // commented by unxed
+            //Replace('/', '\', FileInfo.FName);
             with FileInfo do
               begin
-              if FName[1] <> '\' then
-                FName := '\'+FName;
-              if FName[Length(FName)] = '\' then
+              if FName[1] <> '/' then // slash change by unxed
+                FName := '/'+FName; // slash change by unxed
+              if FName[Length(FName)] = '/' then // slash change by unxed
                 begin
                 SetLength(FName, Length(FName)-1);
                 Attr := Attr or Directory;
@@ -628,10 +629,10 @@ function FindFiles(var Files: PFilesCollection;
               begin
               if  (FileInfo.Attr and Directory) <> 0 then
                 begin
-                if FileInfo.FName[Length(FileInfo.FName)] = '\' then
+                if FileInfo.FName[Length(FileInfo.FName)] = '/' then // slash change by unxed
                   PArcLastDir := NewStr(UpStrg(FileInfo.FName))
                 else
-                  PArcLastDir := NewStr(UpStrg(FileInfo.FName+'\'));
+                  PArcLastDir := NewStr(UpStrg(FileInfo.FName+'/')); // slash change by unxed
                 Inc(MemReq, Length(PArcLastDir^)+1);
                 end;
               if  ( ( (FileInfo.Attr and Directory) = 0) or
@@ -686,7 +687,7 @@ function FindFiles(var Files: PFilesCollection;
                 Inc(MemReq, Length(PArcLastDir^)+1);
                 SetLength(LDir, Length(LDir)-1);
                 for I := Length(LDir) downto 1 do
-                  if LDir[I] = '\' then
+                  if LDir[I] = '/' then // slash change by unxed
                     Break;
                 DrName := Copy(LDir, I+1, MaxStringLength);
                 SetLength(LDir, I);
@@ -776,7 +777,7 @@ NotArchive:
           if  (SR.SR.Attr and Directory <> 0) then
             begin
             if  (FindRec.Options and ffoRecursive <> 0) then
-              DirCol^.Insert(NewStr(Path+SR.FullName+'\'))
+              DirCol^.Insert(NewStr(Path+SR.FullName+'/')) // slash change by unxed
             end
           else
             {JO}
@@ -812,12 +813,12 @@ Skip:
     begin
     MakeSlash(FN);
     if PathExist(FN+GetPath(FindRec.Mask))
-         and (Pos('\', FindRec.Mask) <> 0)
+         and (Pos('/', FindRec.Mask) <> 0) // slash change by unxed
     then
       begin
       FN := FN+GetPath(FindRec.Mask);
-      while Pos('\', FindRec.Mask) <> 0 do
-        Delete(FindRec.Mask, 1, Pos('\', FindRec.Mask));
+      while Pos('/', FindRec.Mask) <> 0 do // slash change by unxed
+        Delete(FindRec.Mask, 1, Pos('/', FindRec.Mask)); // slash change by unxed
       end;
     MakeSlash(FN);
     end;
@@ -853,7 +854,7 @@ Skip:
       for i := 1 to LCol^.Count-1 do
         begin
         P1 := LCol^.At(i);
-        if Pos(P0^+'\', P1^) = 1 then
+        if Pos(P0^+'/', P1^) = 1 then // slash change by unxed
           DisposeStr(P1) // удаляем подкаталог
         else
           begin
@@ -1627,10 +1628,10 @@ procedure DosReread(Files: PFilesCollection; Dir: String;
 //JO:  удаляем всё что лежало в данном каталоге, т.к. оно
 //     заведомо не существует
           while j < Files^.Count do
-            if (UpStrg(MakeNormName(p^.Owner^, p^.FlName[True])+'\')
+            if (UpStrg(MakeNormName(p^.Owner^, p^.FlName[True])+'/') // slash change by unxed
                      = UpStrg(Copy(PFileRec(Files^.At(j))^.Owner^,
                                   1, Length(MakeNormName(p^.Owner^,
-                                           p^.FlName[True])+'\'))))
+                                           p^.FlName[True])+'/')))) // slash change by unxed
             then
               begin
               Files^.AtFree(j);
@@ -1813,7 +1814,7 @@ procedure TFindDrive.UseFile;
     I := PosChar(':', OwnArc);
     OwnArc := Copy(P^.Owner^, 1, I-1);
     PathInside := Copy(P^.Owner^, I+1, MaxStringLength);
-    if PathInside[1] = '\' then
+    if PathInside[1] = '/' then // slash change by unxed
       Delete(PathInside, 1, 1);
     { детектим тип архива}
     New(ArcFile, Init(OwnArc, stOpenRead, 512));
@@ -1871,12 +1872,15 @@ TryAgain:
       { Flash <<< }
       end;
     SS := MakeNormName(PathInside, P^.FlName[True]);
-    if SS[1] = '\' then
+    if SS[1] = '/' then // slash change by unxed
       Delete(SS, 1, 1);
     S2 := OwnArc;
     {$IFNDEF OS2}
+    {
     if not AType^.UseLFN then
       S2 := lfGetShortFileName(OwnArc);
+    }
+    // commented by unxed
     if OwnArc[Length(OwnArc)] = '.' then
       S2 := S2+'.';
     {$ENDIF}
@@ -1900,9 +1904,9 @@ TryAgain:
         Unp := Copy(Unp, PosChar(';', Unp)+1, MaxStringLength);
       S := Unp+' '+S;
       lGetDir(0, DirToChange);
-      LFN.lChDir(TempDir);
+      LFNvp.lChDir(TempDir);
       Message(Application, evCommand, cmExecString, @S);
-      LFN.lChDir(DirToChange);
+      LFNvp.lChDir(DirToChange);
       DirToChange := '';
       end;
     {$IFDEF DPMI32}
@@ -2032,7 +2036,7 @@ constructor TTempDrive.Init;
   DriveType := dtTemp;
   ColAllowed := PanelFileColAllowed[pcList];
   ListFile := nil;
-  Lfn.lGetDir(0, FreeStr); {System.GetDir(0, FreeStr);}
+  Lfnvp.lGetDir(0, FreeStr); {System.GetDir(0, FreeStr);}
   {Cat}
   ClrIO;
   S := NewStr(FreeStr);

@@ -142,8 +142,8 @@ const
 implementation
 uses
   Dos, Tree, Drives, Advance, Advance1, Advance2, Messages, DNHelp,
-  Advance6, DnIni, DnIni_p, Country_, U_KeyMap, fnotify
-  , lfn, DNApp, Validate
+  Advance6, DnIni, DnInip, Country, UKeyMap, fnotify
+  , lfnvp, DNApp, Validate
   ;
 
 procedure ConfirmSetup;

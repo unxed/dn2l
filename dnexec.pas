@@ -81,7 +81,7 @@ uses
   Windows,
   {$ENDIF}
   {$IFDEF DPMI32} dpmi32, {$ENDIF}
-  DNUtil, Advance, DNApp, Advance1, Lfn,
+  DNUtil, Advance, DNApp, Advance1,
   Dos, FlPanelX, CmdLine, Views, Advance2, Drivers, Advance4,
   VideoMan, Memory, VpSysLow, VPSysLo2, Events,
   {$IFDEF UserSaver}
@@ -119,7 +119,7 @@ procedure AnsiExec(const Path: String; const ComLine: AnsiString);
 {$IFNDEF Win32}
 //  освобождаем каталог
   if ActiveDir[2] = ':' then
-    ChDir(Copy(ActiveDir, 1, 2) + '\');
+    ChDir(Copy(ActiveDir, 1, 2) + '/'); // slash change by unxed
 {$ENDIF Win32}
   ChDir(StartDir);
 
@@ -303,6 +303,7 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   SetTitle(S);
   fExec := True;
   {$IFNDEF DPMI32}
+  (*
   if GUIProgram(S) then
     {$IFDEF OS2}
     S := 'start /f /PGM '+ S
@@ -322,6 +323,8 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
     end
     {$ENDIF}
     ;
+  *)
+  // fixme: commented by unxed
   {$ENDIF}
   {$IFNDEF DPMI32}
   AnsiExec(GetEnv('COMSPEC'), '/c ' + S);

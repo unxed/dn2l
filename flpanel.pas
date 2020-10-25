@@ -53,7 +53,7 @@ interface
 
 uses
   Defines, Streams, Views, Drivers, FilesCol,
-  FlPanelX, Collect, TopView_
+  FlPanelX, Collect, TopView
   ;
 
 type
@@ -167,7 +167,7 @@ implementation
 
 uses
   Files, VpSysLow, Dos, Eraser, Drives, DNHelp, TitleSet,
-  Lfn, DNUtil, DNApp, Advance, Advance1, Advance2, Advance3, Startup,
+  Lfnvp, DNUtil, DNApp, Advance, Advance1, Advance2, Advance3, Startup,
   Memory, FileCopy, Messages, Menus, DiskInfo, Dialogs, Commands,
   HistList, Tree, FBB, ArcView, CmdLine, Histries, Archiver,
   Gauges, Gauge, FileFind, FLTools, DnIni, XDblWnd, DblWnd, Filediz
@@ -1665,12 +1665,15 @@ procedure TInfoView.Draw;
     begin
     BriefL1 := 0;
     I := 0;
+    {
     while True do
       begin
       if LineMaker[Y][I](@Self) then
         Break;
       inc(I);
       end;
+    }
+    // fixme: commented by unxed
     WriteLine(0, Y, Size.X, 1, B);
     MoveChar(B, ' ', C1, Size.X);
     end;
@@ -2003,7 +2006,7 @@ procedure TFilePanel.HandleEvent;
            pqsAlt)) or
           ( (Event.KeyCode = kbDoubleCtrl) and (FMSetup.Quick = pqsCtrl)) or
           ( (Event.CharCode >= #32) and (Event.CharCode <= #254) and
-            (Event.CharCode <> '\') and (FMSetup.Quick = pqsCaps) and
+            (Event.CharCode <> '/') and (FMSetup.Quick = pqsCaps) and // slash change by unxed
             (I and $40 <> 0)) or
           ( (Event.CharCode >= #32) and (Event.CharCode <= #254) and
             (ShiftState and 3 <> 0) and (ShiftState and 4 = 0) and

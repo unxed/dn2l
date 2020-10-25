@@ -302,7 +302,7 @@ var
 implementation
 uses
   Advance, Advance1, Advance2, Commands, DNHelp, DNApp
-  , U_KeyMap
+  , UKeyMap
   ;
 
 const

@@ -117,7 +117,7 @@ const
 implementation
 uses
   VpSysLow, Advance, Advance1, Advance2,
-  Lfn
+  Lfnvp
   ;
 
 begin
@@ -125,7 +125,7 @@ TempDir := '';
 TempFile := '';
 
 SourceDir := lFExpand(ParamStr(0));
-while SourceDir[Length(SourceDir)] <> '\' do
+while SourceDir[Length(SourceDir)] <> '/' do // slash change by unxed
   SetLength(SourceDir, Length(SourceDir)-1);
 StartupDir := SourceDir;
 {SourceDir := Dos.GetEnv('DN')}

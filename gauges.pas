@@ -297,7 +297,9 @@ procedure TClockView.Update;
   var
     h, m, s, hund: Word;
     d, mn, y: Word;
-    SS: String[40];
+    //SS: String[40];
+    // removed [40] by unxed to fix build
+    SS: String;
     Event: TEvent;
     P: PView;
     DayWeek: Byte;

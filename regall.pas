@@ -55,11 +55,11 @@ implementation
 
 uses
   {$IFNDEF RCP}
-  arc_Zip, arc_LHA, arc_RAR, arc_ACE, arc_HA, arc_CAB,
+  archZip, archLHA, archRAR, archACE, archHA, archCAB,
   {$IFNDEF MINARCH}
-  arc_ARC, arc_BSA, arc_BS2, arc_HYP, arc_LIM, arc_HPK, arc_TAR,
-  arc_ZXZ, arc_QRK, arc_AIN, arc_CHZ, arc_HAP, arc_IS3, arc_SQZ,
-  arc_UC2, arc_UFA, arc_ZOO, arc_TGZ, arc_7Z,  arc_BZ2,
+  archARC, archBSA, archBS2, archHYP, archLIM, archHPK, archTAR,
+  archZXZ, archQRK, archAIN, archCHZ, archHAP, archIS3, archSQZ,
+  archUC2, archUFA, archZOO, archTGZ, arch7Z,  archBZ2,
   {$ENDIF}
   {$IFDEF ARVID}
   Arvid,
@@ -126,163 +126,163 @@ RWindow : TStreamRec = (
       Load: @Views.TWindow.Load;
       Store: @Views.TWindow.Store);
     {$IFNDEF RCP}
-    { Arc_ZIP }
+    { archZIP }
 RZIPArchiver : TStreamRec = (
       ObjType: otZIPArchiver;
-      VmtLink: (TypeOf(arc_Zip.TZIPArchive));
-      Load: @Arc_ZIP.TZIPArchive.Load;
-      Store: @Arc_ZIP.TZIPArchive.Store);
-    { Arc_LHA }
+      VmtLink: (TypeOf(archZip.TZIPArchive));
+      Load: @archZIP.TZIPArchive.Load;
+      Store: @archZIP.TZIPArchive.Store);
+    { archLHA }
 RLHAArchiver : TStreamRec = (
       ObjType: otLHAArchiver;
-      VmtLink: (TypeOf(arc_LHA.TLHAArchive));
-      Load: @Arc_LHA.TLHAArchive.Load;
-      Store: @Arc_LHA.TLHAArchive.Store);
-    { Arc_RAR }
+      VmtLink: (TypeOf(archLHA.TLHAArchive));
+      Load: @archLHA.TLHAArchive.Load;
+      Store: @archLHA.TLHAArchive.Store);
+    { archRAR }
 RRARArchiver : TStreamRec = (
       ObjType: otRARArchiver;
-      VmtLink: (TypeOf(arc_RAR.TRARArchive));
-      Load: @Arc_RAR.TRARArchive.Load;
-      Store: @Arc_RAR.TRARArchive.Store);
-    { Arc_CAB }
+      VmtLink: (TypeOf(archRAR.TRARArchive));
+      Load: @archRAR.TRARArchive.Load;
+      Store: @archRAR.TRARArchive.Store);
+    { archCAB }
 RCABArchiver : TStreamRec = (
       ObjType: otCABArchiver;
-      VmtLink: (TypeOf(arc_CAB.TCABArchive));
-      Load: @Arc_CAB.TCABArchive.Load;
-      Store: @Arc_CAB.TCABArchive.Store);
-    { Arc_ACE }
+      VmtLink: (TypeOf(archCAB.TCABArchive));
+      Load: @archCAB.TCABArchive.Load;
+      Store: @archCAB.TCABArchive.Store);
+    { archACE }
 RACEArchiver : TStreamRec = (
       ObjType: otACEArchiver;
-      VmtLink: (TypeOf(arc_ACE.TACEArchive));
-      Load: @Arc_ACE.TACEArchive.Load;
-      Store: @Arc_ACE.TACEArchive.Store);
-    { Arc_HA }
+      VmtLink: (TypeOf(archACE.TACEArchive));
+      Load: @archACE.TACEArchive.Load;
+      Store: @archACE.TACEArchive.Store);
+    { archHA }
 RHAArchiver : TStreamRec = (
       ObjType: otHAArchiver;
-      VmtLink: (TypeOf(arc_HA.THAArchive));
-      Load: @Arc_HA.THAArchive.Load;
-      Store: @Arc_HA.THAArchive.Store);
+      VmtLink: (TypeOf(archHA.THAArchive));
+      Load: @archHA.THAArchive.Load;
+      Store: @archHA.THAArchive.Store);
     {$IFNDEF MINARCH}
-    { Arc_arc }
+    { archarc }
 RARCArchiver : TStreamRec = (
       ObjType: otARCArchiver;
-      VmtLink: (TypeOf(arc_ARC.TARCArchive));
-      Load: @Arc_arc.TARCArchive.Load;
-      Store: @Arc_arc.TARCArchive.Store);
-    { Arc_bsa }
+      VmtLink: (TypeOf(archARC.TARCArchive));
+      Load: @archarc.TARCArchive.Load;
+      Store: @archarc.TARCArchive.Store);
+    { archbsa }
 RBSAArchiver : TStreamRec = (
       ObjType: otBSAArchiver;
-      VmtLink: (TypeOf(arc_BSA.TBSAArchive));
-      Load: @Arc_bsa.TBSAArchive.Load;
-      Store: @Arc_bsa.TBSAArchive.Store);
-    { Arc_bs2 }
+      VmtLink: (TypeOf(archBSA.TBSAArchive));
+      Load: @archbsa.TBSAArchive.Load;
+      Store: @archbsa.TBSAArchive.Store);
+    { archbs2 }
 RBS2Archiver : TStreamRec = (
       ObjType: otBS2Archiver;
-      VmtLink: (TypeOf(arc_BS2.TBS2Archive));
-      Load: @Arc_bs2.TBS2Archive.Load;
-      Store: @Arc_bs2.TBS2Archive.Store);
-    { Arc_hyp }
+      VmtLink: (TypeOf(archBS2.TBS2Archive));
+      Load: @archbs2.TBS2Archive.Load;
+      Store: @archbs2.TBS2Archive.Store);
+    { archhyp }
 RHYPArchiver : TStreamRec = (
       ObjType: otHYPArchiver;
-      VmtLink: (TypeOf(arc_HYP.THYPArchive));
-      Load: @Arc_hyp.THYPArchive.Load;
-      Store: @Arc_hyp.THYPArchive.Store);
-    { Arc_lim }
+      VmtLink: (TypeOf(archHYP.THYPArchive));
+      Load: @archhyp.THYPArchive.Load;
+      Store: @archhyp.THYPArchive.Store);
+    { archlim }
 RLIMArchiver : TStreamRec = (
       ObjType: otLIMArchiver;
-      VmtLink: (TypeOf(arc_LIM.TLIMArchive));
-      Load: @Arc_lim.TLIMArchive.Load;
-      Store: @Arc_lim.TLIMArchive.Store);
-    { Arc_hpk }
+      VmtLink: (TypeOf(archLIM.TLIMArchive));
+      Load: @archlim.TLIMArchive.Load;
+      Store: @archlim.TLIMArchive.Store);
+    { archhpk }
 RHPKArchiver : TStreamRec = (
       ObjType: otHPKArchiver;
-      VmtLink: (TypeOf(arc_HPK.THPKArchive));
-      Load: @Arc_Hpk.THPKArchive.Load;
-      Store: @Arc_hpk.THPKArchive.Store);
-    { Arc_TAR }
+      VmtLink: (TypeOf(archHPK.THPKArchive));
+      Load: @archHpk.THPKArchive.Load;
+      Store: @archhpk.THPKArchive.Store);
+    { archTAR }
 RTARArchiver : TStreamRec = (
       ObjType: otTARArchiver;
-      VmtLink: (TypeOf(arc_TAR.TTARArchive));
-      Load: @Arc_TAR.TTARArchive.Load;
-      Store: @Arc_TAR.TTARArchive.Store);
-    { Arc_TGZ }
+      VmtLink: (TypeOf(archTAR.TTARArchive));
+      Load: @archTAR.TTARArchive.Load;
+      Store: @archTAR.TTARArchive.Store);
+    { archTGZ }
 RTGZArchiver : TStreamRec = (
       ObjType: otTGZArchiver;
-      VmtLink: (TypeOf(arc_TGZ.TTGZArchive));
-      Load: @Arc_TGZ.TTGZArchive.Load;
-      Store: @Arc_TGZ.TTGZArchive.Store);
-    { Arc_ZXZ }
+      VmtLink: (TypeOf(archTGZ.TTGZArchive));
+      Load: @archTGZ.TTGZArchive.Load;
+      Store: @archTGZ.TTGZArchive.Store);
+    { archZXZ }
 RZXZArchiver : TStreamRec = (
       ObjType: otZXZArchiver;
-      VmtLink: (TypeOf(arc_ZXZ.TZXZArchive));
-      Load: @Arc_ZXZ.TZXZArchive.Load;
-      Store: @Arc_ZXZ.TZXZArchive.Store);
-    { Arc_QRK }
+      VmtLink: (TypeOf(archZXZ.TZXZArchive));
+      Load: @archZXZ.TZXZArchive.Load;
+      Store: @archZXZ.TZXZArchive.Store);
+    { archQRK }
 RQUARKArchiver : TStreamRec = (
       ObjType: otQUARKArchiver;
-      VmtLink: (TypeOf(arc_QRK.TQuArkArchive));
-      Load: @Arc_QRK.TQuArkArchive.Load;
-      Store: @Arc_QRK.TQuArkArchive.Store);
-    { Arc_UFA }
+      VmtLink: (TypeOf(archQRK.TQuArkArchive));
+      Load: @archQRK.TQuArkArchive.Load;
+      Store: @archQRK.TQuArkArchive.Store);
+    { archUFA }
 RUFAArchiver : TStreamRec = (
       ObjType: otUFAArchiver;
-      VmtLink: (TypeOf(arc_UFA.TUFAArchive));
-      Load: @Arc_UFA.TUFAArchive.Load;
-      Store: @Arc_UFA.TUFAArchive.Store);
-    { Arc_IS3 }
+      VmtLink: (TypeOf(archUFA.TUFAArchive));
+      Load: @archUFA.TUFAArchive.Load;
+      Store: @archUFA.TUFAArchive.Store);
+    { archIS3 }
 RIS3Archiver : TStreamRec = (
       ObjType: otIS3Archiver;
-      VmtLink: (TypeOf(arc_IS3.TIS3Archive));
-      Load: @Arc_IS3.TIS3Archive.Load;
-      Store: @Arc_IS3.TIS3Archive.Store);
-    { Arc_SQZ }
+      VmtLink: (TypeOf(archIS3.TIS3Archive));
+      Load: @archIS3.TIS3Archive.Load;
+      Store: @archIS3.TIS3Archive.Store);
+    { archSQZ }
 RSQZArchiver : TStreamRec = (
       ObjType: otSQZArchiver;
-      VmtLink: (TypeOf(arc_SQZ.TSQZArchive));
-      Load: @Arc_SQZ.TSQZArchive.Load;
-      Store: @Arc_SQZ.TSQZArchive.Store);
-    { Arc_HAP }
+      VmtLink: (TypeOf(archSQZ.TSQZArchive));
+      Load: @archSQZ.TSQZArchive.Load;
+      Store: @archSQZ.TSQZArchive.Store);
+    { archHAP }
 RHAPArchiver : TStreamRec = (
       ObjType: otHAPArchiver;
-      VmtLink: (TypeOf(arc_HAP.THAPArchive));
-      Load: @Arc_HAP.THAPArchive.Load;
-      Store: @Arc_HAP.THAPArchive.Store);
-    { Arc_ZOO }
+      VmtLink: (TypeOf(archHAP.THAPArchive));
+      Load: @archHAP.THAPArchive.Load;
+      Store: @archHAP.THAPArchive.Store);
+    { archZOO }
 RZOOArchiver : TStreamRec = (
       ObjType: otZOOArchiver;
-      VmtLink: (TypeOf(arc_ZOO.TZOOArchive));
-      Load: @Arc_ZOO.TZOOArchive.Load;
-      Store: @Arc_ZOO.TZOOArchive.Store);
-    { Arc_CHZ }
+      VmtLink: (TypeOf(archZOO.TZOOArchive));
+      Load: @archZOO.TZOOArchive.Load;
+      Store: @archZOO.TZOOArchive.Store);
+    { archCHZ }
 RCHZArchiver : TStreamRec = (
       ObjType: otCHZArchiver;
-      VmtLink: (TypeOf(arc_CHZ.TCHZArchive));
-      Load: @Arc_CHZ.TCHZArchive.Load;
-      Store: @Arc_CHZ.TCHZArchive.Store);
-    { Arc_UC2 }
+      VmtLink: (TypeOf(archCHZ.TCHZArchive));
+      Load: @archCHZ.TCHZArchive.Load;
+      Store: @archCHZ.TCHZArchive.Store);
+    { archUC2 }
 RUC2Archiver : TStreamRec = (
       ObjType: otUC2Archiver;
-      VmtLink: (TypeOf(arc_UC2.TUC2Archive));
-      Load: @Arc_UC2.TUC2Archive.Load;
-      Store: @Arc_UC2.TUC2Archive.Store);
-    { Arc_AIN }
+      VmtLink: (TypeOf(archUC2.TUC2Archive));
+      Load: @archUC2.TUC2Archive.Load;
+      Store: @archUC2.TUC2Archive.Store);
+    { archAIN }
 RAINArchiver : TStreamRec = (
       ObjType: otAINArchiver;
-      VmtLink: (TypeOf(arc_AIN.TAINArchive));
-      Load: @Arc_AIN.TAINArchive.Load;
-      Store: @Arc_AIN.TAINArchive.Store);
-    { Arc_7Z }
+      VmtLink: (TypeOf(archAIN.TAINArchive));
+      Load: @archAIN.TAINArchive.Load;
+      Store: @archAIN.TAINArchive.Store);
+    { arch7Z }
 RS7ZArchiver : TStreamRec = (
       ObjType: otS7ZArchiver;
-      VmtLink: (TypeOf(arc_7Z.TS7ZArchive));
-      Load: @Arc_7Z.TS7ZArchive.Load;
-      Store: @Arc_7Z.TS7ZArchive.Store);
-    { Arc_BZ2 }
+      VmtLink: (TypeOf(arch7Z.TS7ZArchive));
+      Load: @arch7Z.TS7ZArchive.Load;
+      Store: @arch7Z.TS7ZArchive.Store);
+    { archBZ2 }
 RBZ2Archiver : TStreamRec = (
       ObjType: otBZ2Archiver;
-      VmtLink: (TypeOf(Arc_BZ2.TBZ2Archive));
-      Load: @Arc_BZ2.TBZ2Archive.Load;
-      Store: @Arc_BZ2.TBZ2Archive.Store);
+      VmtLink: (TypeOf(archBZ2.TBZ2Archive));
+      Load: @archBZ2.TBZ2Archive.Load;
+      Store: @archBZ2.TBZ2Archive.Store);
     {$ENDIF MINARCH}
     { Archiver }
 RARJArchiver : TStreamRec = (
@@ -700,9 +700,9 @@ RDirView : TStreamRec = (
       Store: @FlPanel.TDirView.Store);
 RSortView : TStreamRec = (
       ObjType: otSortView;
-      VmtLink: (TypeOf(TopView_.TSortView));
-      Load: @TopView_.TSortView.Load;
-      Store: @TopView_.TSortView.Store);
+      VmtLink: (TypeOf(TopView.TSortView));
+      Load: @TopView.TSortView.Load;
+      Store: @TopView.TSortView.Store);
 RSeparator : TStreamRec = (
       ObjType: otSeparator;
       VmtLink: (TypeOf(DblWnd.TSeparator));

@@ -213,14 +213,14 @@ function SameFile(P1, P2: PFileRec): Boolean;
 
 implementation
 uses
-  Lfn, DNApp, Menus, Views, FlPanelX, FlPanel, Drives,
+  Lfnvp, DNApp, Menus, Views, FlPanelX, FlPanel, Drives,
   Objects2, Commands, Messages,
   {!!}CmdLine
   {$IFDEF MODEM} {$IFDEF LINK}, NavyLink {$ENDIF} {$ENDIF}
   {$IFDEF NETINFO}, Novell {$ENDIF}
   , VpSysLow, VPUtils
   {$IFDEF PLUGIN}, Plugin {$ENDIF}
-  , FlTl, DnIni, Dos, FileType, PDSetup, U_KeyMap
+  , FlTl, DnIni, Dos, FileType, PDSetup, UKeyMap
   , DNHelp, Advance, Advance1, Advance2, Memory, Startup
   ;
 
@@ -1066,7 +1066,9 @@ function SelectDrive; {-$VIV, JO}
     DrvCnt, I, J, K: Byte;
     DrvStrArr: array [1..26] of TDriveRec;
     MaxFullSLength: Byte;
-    SizeStr: String[MaxSizeDig];
+    //SizeStr: String[MaxSizeDig];
+    // removed [MaxSizeDig] by unxed to fix build
+    SizeStr: String;
 
   begin { SelectDrive }
   Items := nil;

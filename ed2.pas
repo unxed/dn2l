@@ -51,8 +51,8 @@ unit ed2;
 interface
 
 uses
-  Commands, U_KeyMap, Collect, Views, Drivers, Defines, Streams,
-  Lfn {, SBlocks}
+  Commands, UKeyMap, Collect, Views, Drivers, Defines, Streams,
+  Lfnvp {, SBlocks}
   ;
 
 { TDoCollection }

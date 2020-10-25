@@ -75,7 +75,7 @@ begin
 {$IFDEF WIN32}
 uses
   Windows,
-  VpSysLow, U_KeyMap
+  VpSysLow, UKeyMap
   ;
 
 var
@@ -100,6 +100,12 @@ procedure SetTitle(Text: String);
 procedure SetTitle(Text: String);
   begin
   {Cat:todo DPMI32}
+  end;
+{$ENDIF}
+{$IFDEF LINUX}
+procedure SetTitle(Text: String);
+  begin
+    // stub by unxed
   end;
 {$ENDIF}
 

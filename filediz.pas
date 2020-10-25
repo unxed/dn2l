@@ -106,7 +106,7 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
 implementation
 uses
   files, Startup, Advance1, Advance2, Advance,
-  Lfn, Dos, Messages, DNApp, Drives
+  Lfnvp, Dos, Messages, DNApp, Drives
 {$IFDEF DualName}
   , dnini
 {$ENDIF}
@@ -513,9 +513,12 @@ procedure ExportDiz(
     Exit;
   PGetDizName1 := @GetDizName1;
   PGetDizName2 := OldName;
+  {
   if PGetDizName2 <> nil then
     for F := Low(TUseLFN) to High(TUseLFN) do
       UpStr(PGetDizName2^[F]);
+  }
+  // commented by unxed
   MakeSlash(TargetPath);
   ContainerFullName := '';
   if NewDiz^.Container <> nil then

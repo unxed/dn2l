@@ -204,6 +204,8 @@ procedure lEraseFile(var F: lFile);
   inline;
   begin
   Erase(F.F);
+  if IOResult <> 0 then
+      writeln('can not delete file, see lEraseFile');
   end;
 {$ENDIF}
 procedure lEraseText(var T: lText);
@@ -417,13 +419,13 @@ begin
     S := Name[1] + S;
   end;
 
-  if Name[Length(Name)] <> '\' then
-    while S[Length(S)] = '\' do Dec(S[0])
-  else if (Name[Length(Name)] = '\') and
-    (S[Length(S)] <> '\') and (Length(S) < 255) then
+  if Name[Length(Name)] <> '/' then // slash change by unxed
+    while S[Length(S)] = '/' do Dec(S[0]) // slash change by unxed
+  else if (Name[Length(Name)] = '/') and // slash change by unxed
+    (S[Length(S)] <> '/') and (Length(S) < 255) then // slash change by unxed
   begin
     Inc(S[0]);
-    S[Length(S)] := '\';
+    S[Length(S)] := '/'; // slash change by unxed
   end;
 end;
 
@@ -1155,7 +1157,7 @@ procedure lFSplit(const Path: String; var Dir, Name, ext: String);
       if SlashPos <> 0 then
         Break;
       end;
-    if  (Path[B] = '\') and (SlashPos = 0) then
+    if  (Path[B] = '/') and (SlashPos = 0) then // slash change by unxed
       begin
       SlashPos := B;
       if DotPos <> 0 then
@@ -1372,13 +1374,13 @@ function lFExpand(Path: String): String;
     i, j: Integer;
   begin
   for i := 1 to length(Path) do
-    if Path[i] = '/' then
-      Path[i] := '\';
+    if Path[i] = '/' then // slash change by unxed
+      Path[i] := '/'; // slash change by unxed
   if Path = '' then
     Result := ActiveDir
   else if (Copy(Path, 2, 2) = ':\') or (Copy(Path, 1, 2) = '\\') then
     Result := Path // полный путь
-  else if Path[1] = '\' then
+  else if Path[1] = '/' then // slash change by unxed
     Result := CurrentRoot + Path // от корня текущего диска/шары
   else if  (Length(Path) >= 2) and (Path[2] = ':') then
     begin // относительный путь указанного диска
@@ -1391,15 +1393,15 @@ function lFExpand(Path: String): String;
   { Удаление '\..' }
   while True do
     begin
-    j := Pos('\..', Result);
+    j := Pos('/..', Result); // slash change by unxed
     if j = 0 then
       Break;
     i := j-1;
-    while (i <> 0) and (Result[i] <> '\') do
+    while (i <> 0) and (Result[i] <> '/') do // slash change by unxed
       Dec(i);
     Delete(Result, i+1, j-i+2);
     end;
-  Replace('.\', '', Result);
+  Replace('./', '', Result); // slash change by unxed
   if Result[Length(Result)] = '.' then
     SetLength(Result, Length(Result)-1);
   end;
@@ -1416,7 +1418,10 @@ procedure lChDir(Path: String);
     i := GetShareEnd(Path);
     if i = 0 then
       i := 2;
-    CurrentRoot := Copy(ActiveDir, 1, i);
+    CurrentRoot := '';
+    // fixme: commented by unxed
+    // no drive letters on linux
+    //CurrentRoot := Copy(ActiveDir, 1, i);
     if  (InOutRes = 0) and (Length(Path) > 2) and (Path[2] = ':') then
       CurrentPaths[Byte(UpCase(Path[1]))-Byte('A')+1] := ActiveDir;
     end
@@ -1431,7 +1436,7 @@ procedure lGetDir(D: Byte; var Path: String);
   if D = 0 then
     begin
     Path := ActiveDir;
-    if Path[1] = '\' then
+    if Path[1] = '/' then // slash change by unxed
       goto DelDlash;
     D := Byte(UpCase(Path[1]))-Byte('A')+1;
     end;

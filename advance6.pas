@@ -72,9 +72,9 @@ function HotKey(const S: String): Char;
 
 implementation
 uses
-  U_KeyMap, Country_,
+  UKeyMap, Country,
   VpSysLow,
-  Advance, Advance1, Lfn, VideoMan
+  Advance, Advance1, Lfnvp, VideoMan
   ;
 
 function GetLineNumberForOffset(const FName: String; Offset: LongInt)

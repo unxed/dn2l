@@ -1540,7 +1540,7 @@ function TRegExp.RegAtom(var FlagP: TRegExpFlags): PChar;
 
     else { EXACTLY or PREDEFINED or TAGGED }
 exactly:
-        if  (op = '\') and (FInput < FInputEol) then
+        if  (op = '/') and (FInput < FInputEol) then // slash change by unxed
           begin
           op := FInput[0];
           Inc(FInput);
@@ -1964,7 +1964,7 @@ function TRegExp.RegSet: PChar;
       begin
       char1 := FInput[0];
       Inc(FInput);
-      if  (char1 = '\') and not RegEscape(char1) then
+      if  (char1 = '/') and not RegEscape(char1) then // slash change by unxed
         Exit;
       if  (FInput < FInputEol) and (FInput[0] = '-') then
         begin
@@ -1976,7 +1976,7 @@ function TRegExp.RegSet: PChar;
           end;
         char2 := FInput[0];
         Inc(FInput);
-        if  (char2 = '\') and not RegEscape(char2) then
+        if  (char2 = '/') and not RegEscape(char2) then // slash change by unxed
           Exit;
         end
       else
@@ -2082,7 +2082,7 @@ function TRegExp.RegExactly(var FlagP: TRegExpFlags): PChar;
       if b1 >= FInputEol then
         Break;
       c := b1[0];
-      if  (c = '\') then
+      if  (c = '/') then // slash change by unxed
         begin
         if  (b1+1 < FInputEol) and (b1[1] = ':') then
           Break;
@@ -3164,7 +3164,7 @@ function TRegExp.RegSub(ASrc, AReplace: PChar; ARLen: Integer;
       begin
       no := 0;
       end
-    else if (c = '\') then
+    else if (c = '/') then // slash change by unxed
       begin
       if  (FInput < FInputEol) and (FInput[0] in ['0'..'9']) then
         begin

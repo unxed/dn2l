@@ -1,3 +1,5 @@
+{$DEFINE DNPRG} // by unxed
+
 {$IFDEF WIN32}
  {.$DEFINE SEVENZIP}{piwamoto:unpack ARJ,CAB,ZIP with 7-Zip (www.7-zip.org)}
 {$ENDIF}
@@ -38,8 +40,8 @@
  {$DEFINE LITE}
 {$ENDIF}
 
-{$DEFINE UUENCODE}
-{$DEFINE UUDECODE}
+{.$DEFINE UUENCODE}
+{.$DEFINE UUDECODE}
 {$DEFINE DBView}
 {$IFNDEF NONBP}{TEMPORARY COMPILE LITE VERSION FOR NON BP}
  {.$DEFINE Modem}
@@ -126,7 +128,7 @@
  {$DEFINE FileNotify}
  {$IFNDEF DPMI32}
   {$IFNDEF WIN32} {JO: временно, в Win32 ещё не совсем готов}
-   {$DEFINE Tasklist}
+   {.$DEFINE Tasklist}
   {$ENDIF}
  {$ENDIF}
  {.$DEFINE CHDIRTIMER}

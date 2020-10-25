@@ -1167,7 +1167,10 @@ constructor TPhone.Init;
 constructor TPhone.Load;
   begin
   Number := S.ReadStr;
-  S.ReadStrV(Name);
+
+  // fixme: commented by unxed
+  //S.ReadStrV(Name);
+
   {S.Read(Name[0],1); S.Read(Name[1], Byte(Name[0]));}
   Memo1 := S.ReadStr;
   Memo2 := S.ReadStr;
@@ -1223,7 +1226,10 @@ constructor TPhoneDir.Load;
   var
     Q: TFileSize;
   begin
-  S.ReadStrV(Name);
+
+  // fixme: commented by unxed
+  //S.ReadStrV(Name);
+
   {S.Read(Name[0],1); S.Read(Name[1], Byte(Name[0]));}
   Memo1 := S.ReadStr;
   Memo2 := S.ReadStr;

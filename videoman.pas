@@ -185,7 +185,7 @@ const
 implementation
 uses
   {$IFDEF WIN32}Windows, {$ENDIF}Dos, VpSysLow, Drivers, Defines, DNApp,
-  DnIni, DnIni_p, Startup,
+  DnIni, DnInip, Startup,
   Commands, VPUtils {$IFDEF OS2}, Os2Base {$ENDIF}, Messages
   {$IFDEF DPMI32},Dpmi32, Dpmi32df{$ENDIF}
   ;
@@ -249,6 +249,12 @@ procedure DetectVideoType; {JO}
   then VideoType := vtVga
   else VideoType := vtEga;
 
+  end { DetectVideoType };
+{$ENDIF}
+{$IFDEF LINUX}
+  // by unxed: linux part
+  begin { DetectVideoType }
+  VideoType := vtUnknown;
   end { DetectVideoType };
 {$ENDIF}
 
@@ -840,5 +846,35 @@ Ex:
     {$ENDIF};
   DoneIniEngine;
   end { SetScrMode };
+
+// by unxed, linux stubs
+
+procedure SetBlink(Mode: Boolean);
+begin
+end;
+
+procedure ResetVGApalette(Update: Boolean);
+begin
+end;
+
+procedure GetPalette(var Buf); { fill buff with palette 64 bytes   }
+begin
+end;
+
+procedure SetPalette(var Buf); { set palette using buf 64 bytes    }
+begin
+end;
+
+function VGASystem: Boolean;
+begin
+end;
+
+procedure Set_palette(color, r, g, b: Byte);
+begin
+end;
+
+procedure Get_palette(color: Byte; var R, G, B: Byte);
+begin
+end;
 
 end.

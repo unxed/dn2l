@@ -105,7 +105,7 @@ function LoadPluginModule(const ModuleName: String;
   Result := LoadModule(@S[1], LibHandle);
   if not Result then
     begin
-    S := SourceDir+ModuleName+'\'+ModuleName+'.DLL'#0;
+    S := SourceDir+ModuleName+'/'+ModuleName+'.DLL'#0; // slash change by unxed
     Result := LoadModule(@S[1], LibHandle);
     end;
   end;

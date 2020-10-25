@@ -15,9 +15,9 @@ interface
 
 uses
   Defines, Dos, RTPatch, Advance, Advance1, Advance7, Commands,
-   U_KeyMap,
+   UKeyMap,
   xTime, Objects2, Streams, Drivers, RegExp, Collect, FilesCol, FLTools,
-   Lfn,
+   Lfnvp,
   Views, Menus, Scroller, Dialogs, Gauge, Messages, DNApp, Filelst,
    DiskImg,
   DNUtil, UniWin, Editor, EdWin, FViewer, Calculat, FlPanelX, XDblWnd,
@@ -419,9 +419,9 @@ const
 
     DosError: DosError;
 
-    lFindFirst: Lfn.lFindFirst;
-    lFindNext: Lfn.lFindNext;
-    lFindClose: Lfn.lFindClose;
+    lFindFirst: Lfnvp.lFindFirst;
+    lFindNext: Lfnvp.lFindNext;
+    lFindClose: Lfnvp.lFindClose;
 
     CopyFileRec: FilesCol.CopyFileRec;
     CreateFileRec: FilesCol.CreateFileRec;

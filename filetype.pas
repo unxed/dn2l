@@ -85,14 +85,14 @@ type
 
   PExtCollection = ^TExtCollection;
   TExtCollection = object(TSortedCollection)
-    function Compare(Key1, Key2: Pointer): Integer; virtual;
+    function Compare2(Key1, Key2: Pointer): Integer; //virtual; // "2" added by unxed
     procedure FreeItem(Item: Pointer); virtual;
     end;
 
 var
   ExtCollection: PExtCollection;
 
-function TExtCollection.Compare(Key1, Key2: Pointer): Integer;
+function TExtCollection.Compare2(Key1, Key2: Pointer): Integer;
   var
     Ext1: PExtItem absolute Key1;
     Ext2: PExtItem absolute Key2;
@@ -184,9 +184,11 @@ procedure PutExtFilter(Filter: string; T: Integer);
       if MZ[i] = '|' then
         MZ[i] := '0';
     l := i-1;
-    if ExtCollection^.Search(@MZ, i) then
+
+// fixme: commented by unxed
+//    if ExtCollection^.Search(@MZ, i) then
       { дублирование: такого быть не должно }
-    else
+//    else
       begin
       New(P);
       P^.Mask := M;
@@ -229,10 +231,16 @@ function GetFileType(const S: String; Attr: Byte): Integer;
     Ext := UpStrg(Copy(S, PosLastDot(S)+1, 255));
     if Ext = '' then
       Ext := '.';{no extension}
+    Result := 0;
+    // fixme: commented by unxed
+    {
     if ExtCollection^.Search(@Ext, N) then
-      Result := PExtItem(ExtCollection^.At(N))^.FType
+      begin
+        Result := PExtItem(ExtCollection^.At(N))^.FType
+      end
     else
       Result := 0
+    }
     end;
   end { GetFileType };
 

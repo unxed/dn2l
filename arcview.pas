@@ -157,12 +157,12 @@ uses
   Menus, DNApp, Messages, Dialogs, Gauge, FileCopy, Memory, Startup,
   {$IFDEF ARVID}Arvid, {$ENDIF}xTime, VideoMan, DnExec, FileFind
   , UserMenu {JO: для скрывания панелей при разархивировании }
-  , arc_Zip {JO: для CentralDirRecPresent}
+  , archZip {JO: для CentralDirRecPresent}
   , Events {AK155 для LongWorkBegin - LongWorkEnd}
   , PDSetup, FlPanelX, fnotify, Drivers
-  , Lfn, Files, Tree, Dos, Histries, HistList, FlPanel
+  , Lfnvp, Files, Tree, Dos, Histries, HistList, FlPanel
   , Advance, Advance1, Advance2, ArchDet
-  , arc_RAR, arc_ACE
+  , archRAR, archACE
   ;
 
 const
@@ -170,9 +170,9 @@ const
 
 procedure CheckSlashDot(var S: String);{piwamoto}
 begin
-  if ((S[Length(S)] <> '.') and (S[Length(S)-1] <> '\')) then
+  if ((S[Length(S)] <> '.') and (S[Length(S)-1] <> '/')) then // slash change by unxed
     {directory name '.' bugfix by piwamoto}
-    While (PosChar(S[Length(S)], '.\') > 0) do SetLength(S, Length(S)-1);
+    While (PosChar(S[Length(S)], './') > 0) do SetLength(S, Length(S)-1); // slash change by unxed
 end;
 
 function MaxAvail: LongInt;
@@ -237,7 +237,7 @@ constructor TArcDrive.Init;
   else
     begin
     ArcName := lFExpand(AName);
-    Q := '\';
+    Q := '/'; // slash change by unxed
     end;
 
   {lFSplit(ArcName, FreeStr, Nm, Xt);
@@ -349,7 +349,7 @@ constructor TArcDrive.Load;
     goto Failure;
   if  (ArcDate <> SR.SR.Time) or (ArcSize <> SR.SR.Size) then
     begin {архив изменился, надо его перечитывать заново}
-    CurDir := '\';
+    CurDir := '/'; // slash change by unxed
     ReadArchive;
     end
   else
@@ -494,13 +494,14 @@ function TArcDrive.ReadArchive;
     AType^.GetFile;
     if FileInfo.Last = 0 then
       begin
-      Replace('/', '\', FileInfo.FName);
-      if FileInfo.FName[1] <> '\' then
-        FileInfo.FName := '\'+FileInfo.FName;
+      //commented by unxed
+      //Replace('/', '\', FileInfo.FName);
+      if FileInfo.FName[1] <> '/' then // slash change by unxed
+        FileInfo.FName := '/'+FileInfo.FName; // slash change by unxed
       if FileInfo.Attr and Directory <> 0 then
-        FileInfo.FName := FileInfo.FName+'\';
+        FileInfo.FName := FileInfo.FName+'/'; // slash change by unxed
 
-      if FileInfo.FName[length(FileInfo.FName)] = '\' then
+      if FileInfo.FName[length(FileInfo.FName)] = '/' then // slash change by unxed
         FileInfo.Attr := FileInfo.Attr or Directory;
 
       {attribute "Hidden" means "with password"}
@@ -566,7 +567,7 @@ procedure TArcDrive.lChDir;
       do
         SetLength(CurDir, Length(CurDir)-1)
     else
-      LFN.lChDir(GetPath(ArcName));
+      LFNvp.lChDir(GetPath(ArcName));
     Exit;
     end;
   lFSplit(ADir, Dr, Nm, Xt);
@@ -580,8 +581,8 @@ procedure TArcDrive.lChDir;
   else
     CurDir := ADir;
   MakeNoSlash(CurDir);
-  if CurDir[1]<>'\' then
-    CurDir:='\'+CurDir;
+  if CurDir[1]<>'/' then // slash change by unxed
+    CurDir:='/'+CurDir; // slash change by unxed
   CheckSlashDot(CurDir);
   AddToDirectoryHistory(ArcName+':'+CurDir, Integer(DriveType));
   end { TArcDrive.lChDir };
@@ -596,7 +597,7 @@ function TArcDrive.GetDir;
   begin
   CheckSlashDot(CurDir);
   if  (Length(CurDir) > 0) and (not (CurDir[1] in ['\', '/'])) then
-    CurDir := '\'+CurDir;
+    CurDir := '/'+CurDir; // slash change by unxed
   if  (Prev <> nil) and (Prev^.DriveType = dtDisk) then
     lFSplit(VArcName, Dr, Nm, Xt) {JO}
   else
@@ -642,7 +643,7 @@ function TArcDrive.GetDirectory;
     begin
     _USize := Files^.CurFile.Size;
     _PSize := Files^.CurFile.CSize;
-    if  (UpStrg(CurDir+'\') = UpStrg(Files^.LastDir)) and
+    if  (UpStrg(CurDir+'/') = UpStrg(Files^.LastDir)) and // slash change by unxed
         (AllFiles or InFilter(Files^.CurFile.Name, FileMask))
     then
       begin
@@ -661,12 +662,12 @@ function TArcDrive.GetDirectory;
       TTL := TTL+_USize;
       TPL := TPL+_PSize;
       end
-    else if (UpStrg(CurDir+'\') = UpStrg(Copy(Files^.LastDir, 1,
+    else if (UpStrg(CurDir+'/') = UpStrg(Copy(Files^.LastDir, 1, // slash change by unxed
                Length(CurDir)+1)))
     then
       begin
       Dr := Copy(Files^.LastDir, Length(CurDir)+2, MaxStringLength);
-      I := PosChar('\', Dr);
+      I := PosChar('/', Dr); // slash change by unxed
       if I = 0 then
         I := Length(Dr)+1;
       SetLength(Dr, I-1);
@@ -796,13 +797,16 @@ TryAgain:
     { Flash <<< }
     end;
   SS := MakeNormName(P^.Owner^, P^.FlName[True]);
-  if SS[1] = '\' then
+  if SS[1] = '/' then // slash change by unxed
     Delete(SS, 1, 1); {DelFC(SS);}
   {$IFNDEF OS2}
+  {
   if AType^.UseLFN then
     S2 := ArcName
   else
     S2 := lfGetShortFileName(ArcName);
+  }
+  // commented by unxed
   if ArcName[Length(ArcName)] = '.' then
     S2 := S2+'.';
   S := CnvString(AType^.Extract)+' '+S+
@@ -839,11 +843,11 @@ TryAgain:
           Директорию нужно запоминать на том диске, где находится
           временный каталог. А на том, где лежит архив
           с просматриваемым файлом, она запомнится в любом случае. }
-    LFN.lChDir(Copy(TempDir, 1, 2));
+    LFNvp.lChDir(Copy(TempDir, 1, 2));
     lGetDir(0, DirToChange);
-    LFN.lChDir(TempDir);
+    LFNvp.lChDir(TempDir);
     Exec(Unp, {$IFDEF RecodeWhenDraw}OemToCharStr {$ENDIF}(S), '', False);
-    LFN.lChDir(DirToChange);
+    LFNvp.lChDir(DirToChange);
     DirToChange := '';
     end;
   {$IFDEF DPMI32}
@@ -1126,7 +1130,7 @@ function TArcDrive.MakeListFile;
       S1: String;
     begin
     if not (SS[Length(SS)] in ['\', '/']) then
-      AddStr(SS, '\');
+      AddStr(SS, '/'); // slash change by unxed
     Files^.ResetPointer('');
     while not Files^.Last and Files^.GetNextFile do
       if  (SS = Copy(Files^.LastDir, 1, Length(SS)))
@@ -1200,7 +1204,7 @@ function TArcDrive.MakeListFile;
       else
         Writeln(F.T, S1)
     else
-      PutDir('\'+S1+'\');
+      PutDir('/'+S1+'/'); // slash change by unxed
     MakeListFile := S;
     end;
   MakeListFile := S;
@@ -1257,13 +1261,16 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
       lFSplit(VArcName, ExtrDir, Nm, Xt)
       {JO: для распаковки по F4 архивов, просмотренных через фильтр}
       {$IFNDEF OS2}
+    {
     else
       lFSplit(lfGetShortFileName(ArcName), ExtrDir, Nm, Xt)
+    }
+    // commented by unxed
       {$ENDIF}
       ;
 
   if not (ExtrDir[Length(ExtrDir)] in ['\', '/']) then
-    ExtrDir := ExtrDir+'\';
+    ExtrDir := ExtrDir+'/'; // slash change by unxed
 
   SCurDir := CurDir;
   SCr := '';
@@ -1271,7 +1278,7 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
     begin
     while (SCurDir[Length(SCurDir)] = '.') do
       SetLength(SCurDir, Length(SCurDir)-1);
-    while (SCurDir <> '') and (SCurDir[1] = '\') do
+    while (SCurDir <> '') and (SCurDir[1] = '/') do // slash change by unxed
       Delete(SCurDir, 1, 1);
     MakeSlash(SCurDir);
     if  (CnvString(AType^.SetPathInside) <> '') then
@@ -1365,8 +1372,11 @@ TryAgain:
     {$ENDIF}
     ArchiveName := SquashesName(ArcName)
       {$IFNDEF OS2}
+  {
   else
     ArchiveName := SquashesName(lfGetShortFileName(ArcName))
+  }
+  // commented by unxed
       {$ENDIF}
       ;
   if  ( (Options and 4 <> 0) or TempDirUsed) and
@@ -1393,9 +1403,9 @@ TryAgain:
     Директорию нужно запоминать на том диске, где находится
     временный каталог. А на том, где лежит архив
     с просматриваемым файлом, она запомнится в любом случае. }
-  LFN.lChDir(Copy(TempExtrDir,1,2));
+  LFNvp.lChDir(Copy(TempExtrDir,1,2));
   lGetDir(0, DirToChange);
-  LFN.lChDir(TempExtrDir);
+  LFNvp.lChDir(TempExtrDir);
  {$IFDEF DPMI32}
   if AType^.SwapWhenExec and TempDirUsed then
     begin
@@ -1408,7 +1418,7 @@ TryAgain:
   {JO}
   if not TempDirUsed then
     begin
-    LFN.lChDir(DirToChange);
+    LFNvp.lChDir(DirToChange);
     DirToChange := '';
     ExtrDir := '>' + ExtrDir; //признак перечитывания подкаталогов в ветви
     GlobalMessage(evCommand, cmPanelReread, @ExtrDir);
@@ -1436,9 +1446,9 @@ TryAgain:
     FCT^.AtInsert(0, FRT);
     OldConfirms := Confirms;
     Confirms := 0;
-    LFN.lChDir(S);
+    LFNvp.lChDir(S);
     Eraser.EraseFiles(FCT);
-    LFN.lChDir(DirToChange);
+    LFNvp.lChDir(DirToChange);
     DirToChange := '';
     Confirms := OldConfirms;
     FCT^.DeleteAll;
@@ -1571,8 +1581,11 @@ procedure TArcDrive.EraseFiles;
     {$ENDIF}
     S := CnvString(AType^.Delete)+' '+SquashesName(ArcName)
       {$IFNDEF OS2}
+  {
   else
     S := CnvString(AType^.Delete)+' '+lfGetShortFileName(ArcName)
+  }
+  // commented by unxed
       {$ENDIF}
       ;
 
@@ -1606,8 +1619,8 @@ function TArcDrive.GetInternalName;
     IntPath: String;
   begin
   IntPath := GetDir;
-  if PosChar('\', IntPath) > 0 then
-    GetInternalName := Copy(IntPath, PosChar('\', IntPath), 255)
+  if PosChar('/', IntPath) > 0 then // slash change by unxed
+    GetInternalName := Copy(IntPath, PosChar('/', IntPath), 255) // slash change by unxed
   else
     GetInternalName := '';
   end;
@@ -1757,7 +1770,7 @@ function ArcViewer;
     begin
     if Copy(PathInside, Length(PathInside)-1, 2) = '\.' then
       SetLength(PathInside, Length(PathInside)-2);
-    if  (GetPath(PathInside) <> '\') then
+    if  (GetPath(PathInside) <> '/') then // slash change by unxed
       begin
       P^.lChDir(Copy(GetPath(PathInside), 2, 255));
       Message(Application, evCommand, cmPanelReread, nil);
@@ -1859,7 +1872,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
   New(Fils, Init($10, $10));
   Fils^.SortMode := psmLongName;
   Files^.ResetPointer('');
-  Root := UpStrg(CurDir)+'\';
+  Root := UpStrg(CurDir)+'/'; // slash change by unxed
   l := Length(Root);
   {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
   {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
@@ -1894,7 +1907,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
         repeat
           SetLength(LDir, Length(LDir)-1);
           for I := Length(LDir) downto L do
-            if LDir[I] = '\' then
+            if LDir[I] = '/' then // slash change by unxed
               Break;
           DrName := Copy(LDir, I+1, MaxStringLength);
           SetLength(LDir, I);
@@ -2000,7 +2013,7 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
   New(Fils, Init($10, $10));
   Fils^.SortMode := psmLongName;
   Files^.ResetPointer('');
-  Root := UpStrg(CurDir)+'\';
+  Root := UpStrg(CurDir)+'/'; // slash change by unxed
   L := Length(Root);
   {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
   {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
@@ -2043,7 +2056,7 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
           repeat
             SetLength(LDir, Length(LDir)-1);
             for I := Length(LDir) downto L do
-              if LDir[I] = '\' then
+              if LDir[I] = '/' then // slash change by unxed
                 Break;
             DrName := Copy(LDir, I+1, MaxStringLength);
             SetLength(LDir, I);

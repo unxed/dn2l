@@ -132,7 +132,7 @@ program TVHC;
 {$M 8192,8192,655360}
 
 uses
-  Lfn, {DataCompBoy}
+  Lfnvp, {DataCompBoy}
   Drivers, Defines, Streams, Objects2, Dos, Strings,
   HelpKern, Advance, Advance1, Advance2, Collect, ObjType
   , Commands {Cat}

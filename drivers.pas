@@ -58,7 +58,7 @@ unit Drivers;
 interface
 
 uses
-  Lfn, Defines, xTime, DnIni, Advance6, Commands
+  Lfnvp, Defines, xTime, DnIni, Advance6, Commands
   ;
 
 var
@@ -352,7 +352,7 @@ var
   EventQLast: record
     end;
 
-  {$I DRIVERS._VP}
+  {$I DRIVERS.VP}
 
   { ******** SYSTEM ERROR HANDLER ******** }
 const

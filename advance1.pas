@@ -297,7 +297,7 @@ function Str2Comp(const s: String): Comp;
 implementation
 
 uses
-  DnIni, Startup, Commands, Advance, U_KeyMap
+  DnIni, Startup, Commands, Advance, UKeyMap
   ;
 
 function Dec2(w: Word): Str2;
@@ -1091,7 +1091,9 @@ asm
 
 function GetDateTime(Time: Boolean): String;
   var
-    S: String[30];
+    S: String;
+    // removed [30] to fix build by unxed
+    //S: String[30];
     Y, M, D, DW: Word;
     H, Mn, SS, S100: Word;
 

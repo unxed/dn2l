@@ -100,7 +100,7 @@ function FirstNameNum(P: PFilePanelRoot): LongInt;
 implementation
 uses
   fnotify,
-  Lfn, Files, Collect, xTime, DnIni, HistList,
+  Lfnvp, Files, Collect, xTime, DnIni, HistList,
   Advance, Advance1, Advance2, Dos, Defines, Dialogs,
   Views, DNApp, Commands, Drivers, FlPanel, Drives, FileCopy,
   Gauge, Gauges, Archiver, Startup, SWE, Validate, Messages, Menus, DNHelp,
@@ -1359,19 +1359,22 @@ CurTime:
   with DT1 do
     begin
     ok := TimeSet;
-    Hour := CutNumber(D.T);
-    Min := CutNumber(D.T);
+    // fixme: commented by unxed
+    //Hour := CutNumber(D.T);
+    //Min := CutNumber(D.T);
     if ok then
       begin
-      Sec := CutNumber(D.T);
+      // fixme: commented by unxed
+      //Sec := CutNumber(D.T);
       ok := True;
       end;
     TimeSet := ok and not ((Hour > 24) or (Min > 59) or (Sec > 59));
 
     ok := DateSet;
-    Day := CutNumber(D.D);
-    Month := CutNumber(D.D);
-    Year := CutNumber(D.D);
+    // fixme: commented by unxed
+    //Day := CutNumber(D.D);
+    //Month := CutNumber(D.D);
+    //Year := CutNumber(D.D);
     case CountryInfo.DateFmt of
       0: {MM-DD-YY}
         Swap(Day, Month);
@@ -1392,19 +1395,22 @@ CurTime:
   with DT1_Cr do
     begin
     ok := CrTimeSet;
-    Hour := CutNumber(D.T_Cr);
-    Min := CutNumber(D.T_Cr);
+    // fixme: commented by unxed
+    //Hour := CutNumber(D.T_Cr);
+    //Min := CutNumber(D.T_Cr);
     if ok then
       begin
-      Sec := CutNumber(D.T_Cr);
+      // fixme: commented by unxed
+      //Sec := CutNumber(D.T_Cr);
       ok := True;
       end;
     CrTimeSet := ok and not ((Hour > 24) or (Min > 59) or (Sec > 59));
 
     ok := CrDateSet;
-    Day := CutNumber(D.D_Cr);
-    Month := CutNumber(D.D_Cr);
-    Year := CutNumber(D.D_Cr);
+    // fixme: commented by unxed
+    //Day := CutNumber(D.D_Cr);
+    //Month := CutNumber(D.D_Cr);
+    //Year := CutNumber(D.D_Cr);
     case CountryInfo.DateFmt of
       0: {MM-DD-YY}
         Swap(Day, Month);
@@ -1425,19 +1431,22 @@ CurTime:
   with DT1_LAc do
     begin
     ok := LAcTimeSet;
-    Hour := CutNumber(D.T_LAc);
-    Min := CutNumber(D.T_LAc);
+    // fixme: commented by unxed
+    //Hour := CutNumber(D.T_LAc);
+    //Min := CutNumber(D.T_LAc);
     if ok then
       begin
-      Sec := CutNumber(D.T_LAc);
+      // fixme: commented by unxed
+      //Sec := CutNumber(D.T_LAc);
       ok := True;
       end;
     LAcTimeSet := ok and not ((Hour > 24) or (Min > 59) or (Sec > 59));
 
     ok := LAcDateSet;
-    Day := CutNumber(D.D_LAc);
-    Month := CutNumber(D.D_LAc);
-    Year := CutNumber(D.D_LAc);
+    // fixme: commented by unxed
+    //Day := CutNumber(D.D_LAc);
+    //Month := CutNumber(D.D_LAc);
+    //Year := CutNumber(D.D_LAc);
     case CountryInfo.DateFmt of
       0: {MM-DD-YY}
         Swap(Day, Month);
@@ -1989,7 +1998,7 @@ procedure DoRenameSingle(PF: PFileRec; const S, S2: String; DlgRes: Word);
   label
     NameErr;
   begin
-  if PosChar('\', S) <> 0 then
+  if PosChar('/', S) <> 0 then // slash change by unxed
     begin
     DosE := 123; // ERROR_INVALID_NAME
     goto NameErr;

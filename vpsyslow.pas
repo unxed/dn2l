@@ -423,6 +423,7 @@ procedure SysBeep;
 {AK155 in 2.1 build 279 SysLowInitPreTLS and SysLowInitPostTLS
  are inporowed are impowed instead SysLowInit }
 procedure SysLowInit; {for 2.1 build 274 and earlier}
+procedure SysLowInitPreTLS; // added by unxed
 procedure SysLowInitPostTLS; {for 2.1 build 279 and later}
 
 // Clipboard interface

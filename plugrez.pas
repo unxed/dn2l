@@ -56,7 +56,7 @@ function OpenRez(const PluginName: ShortString): LongInt;
     L: String;
     OffsetTableOffset: LongInt;
   begin
-  S := New(PBufStream, Init(SourceDir+PluginName+'\'+LngId+'.REZ',
+  S := New(PBufStream, Init(SourceDir+PluginName+'/'+LngId+'.REZ', // slash change by unxed
          stOpenRead, 16384));
   S^.Read(L[1], Length(RezLabel));
   S^.Read(SC, SizeOf(SC));

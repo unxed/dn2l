@@ -3,7 +3,7 @@ unit XCode;
 interface
 
 uses
-  Defines, Objects2, Streams, U_KeyMap
+  Defines, Objects2, Streams, UKeyMap
   ;
 
 type
@@ -39,7 +39,7 @@ type
 
 implementation
 uses
-  Advance, Advance1, Lfn, DNStdDlg, DnApp, Commands, DnIni
+  Advance, Advance1, Lfnvp, DNStdDlg, DnApp, Commands, DnIni
   ;
 
 constructor TXCoder.Init;

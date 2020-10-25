@@ -150,7 +150,7 @@ const
 
 implementation
 uses
-  VPSysLow, Lfn, Files, FlTl,
+  VPSysLow, Lfnvp, Files, FlTl,
   Startup, Tree, DNApp, FileCopy, Eraser, FlPanel, Commands,
   Dialogs, FileFind, FlPanelX, Filediz, CmdLine
   , xTime, Messages, Events, fnotify, Dos
@@ -309,11 +309,11 @@ procedure TDrive.ChangeRoot;
     B: Boolean;
   begin
   {Cat: проверяем на сетевой путь}
-  if CurDir[1] = '\' then
+  if CurDir[1] = '/' then // slash change by unxed
     begin
     B := False;
     for I := 3 to Length(CurDir) do
-      if CurDir[I] = '\' then
+      if CurDir[I] = '/' then // slash change by unxed
         if B then
           begin
           CurDir := Copy(CurDir, 1, I-1);
@@ -624,13 +624,13 @@ procedure TDrive.lChDir;
     NeedAbort := True;
     ATestDir := lFExpand(ATestDir);
     {Cat: проверяем на сетевой путь}
-    if  (Length(ATestDir) > 2) and (ATestDir[1] = '\')
-         and (ATestDir[2] = '\')
+    if  (Length(ATestDir) > 2) and (ATestDir[1] = '/') // slash change by unxed
+         and (ATestDir[2] = '/') // slash change by unxed
     then
       begin
       OK := False;
       for I := 3 to Length(ATestDir) do
-        if ATestDir[I] = '\' then
+        if ATestDir[I] = '/' then // slash change by unxed
           begin
           OK := True;
           Break;
@@ -647,7 +647,7 @@ procedure TDrive.lChDir;
       repeat
         ClrIO;
         NeedAbort := True;
-        Lfn.lChDir(S);
+        Lfnvp.lChDir(S);
         I := IOResult;
         Abort := Abort or (I <> 0);
         if Abort then
@@ -664,7 +664,7 @@ procedure TDrive.lChDir;
       repeat
         ClrIO;
         NeedAbort := True;
-        Lfn.lChDir(ATestDir);
+        Lfnvp.lChDir(ATestDir);
         I := IOResult;
         Abort := Abort or (I <> 0);
         if Abort then
@@ -1038,7 +1038,9 @@ function TDrive.GetRealDir;
   var
     MM: record
       case Byte of
-        1: (l: LongInt; S: String[1]);
+        1: (l: LongInt; S: String);
+// removed [1] by unxed to fix build
+//        1: (l: LongInt; S: String[1]);
         2: (C: Char);
       end;
   begin
@@ -1053,7 +1055,7 @@ function TDrive.GetRealDir;
       if Abort then
         S := CurrentDirectory;
       NeedAbort := True;
-      LFN.lChDir(CurDir);
+      LFNvp.lChDir(CurDir);
       repeat
         Abort := False;
         NeedAbort := True;
@@ -1081,11 +1083,11 @@ function TDrive.GetRealDir;
       until not Abort;
       NeedAbort := False;
       lGetDir(0, CurDir);
-      LFN.lChDir(S);
+      LFNvp.lChDir(S);
       end
     else
       begin
-      LFN.lChDir(CurDir);
+      LFNvp.lChDir(CurDir);
       if not Abort then
         repeat
           Abort := False;

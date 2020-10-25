@@ -166,7 +166,7 @@ const
 implementation
 uses
   DiskInfo, Commands, FileCopy, FilesCol, Advance, Advance1, Advance2,
-  Startup, DNApp, TopView_, Tree, FViewer
+  Startup, DNApp, TopView, Tree, FViewer
   {$IFDEF NETINFO}, NetInfo {-$VIV} {$ENDIF}
   , Dos, VPUtils
   ;
@@ -825,7 +825,7 @@ procedure TDoubleWindow.HandleCommand;
     if S <> '' then
       begin
       if not (S[Length(S)] in ['\', '/']) then
-        AddStr(S, '\');
+        AddStr(S, '/'); // slash change by unxed
       S := SquashesName(S);
       Message(CommandLine, evCommand, cmInsertName, @S);
       end;

@@ -584,7 +584,7 @@ implementation
 uses
   Startup, DNApp, Advance, Advance1, Advance2, DnIni,
   VpSysLow,
-  Lfn, TitleSet, {DataCompBoy} {AK155 -}VideoMan
+  Lfnvp, TitleSet, {DataCompBoy} {AK155 -}VideoMan
   ;
 
 const
@@ -625,7 +625,7 @@ const
   FixUpList: PFixupList = nil;
   TheTopView: PView = nil;
 
-  {$I Views._VP}
+  {$I Views.VP}
 procedure TPointInc(var A: TPoint; B: TPoint);
   begin
   Inc(A.X, B.X);

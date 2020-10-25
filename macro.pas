@@ -115,7 +115,9 @@ uses
 type
   PLngWord = ^TLngWord;
   TLngWord = object(TObject)
-    Name: String[30];
+    Name: String;
+    // removed [30] by unxed to fix build
+    //Name: String[30];
     l: Word;
     constructor Init(AL: Word; const AName: String);
     end;

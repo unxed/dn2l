@@ -59,7 +59,7 @@ procedure UnpackDiskImages(AOwner: Pointer; Files: PFilesCollection);
 implementation
 
 uses
-  Dos, Lfn, Messages, Views, Commands, Defines, Streams, DNApp, Drivers,
+  Dos, Lfnvp, Messages, Views, Commands, Defines, Streams, DNApp, Drivers,
   Advance1, Advance2, FileCopy, Gauge, xTime
   , Files, Tree, VPUtils
   ;
@@ -339,8 +339,9 @@ function UnpackImage(const FName, DestDir: String; PInfo: PWhileView)
             begin
             SetLength(VolumeLabel, 11); {VolumeLabel[0] := #11}
             Move(DR.Name[0], VolumeLabel[1], 11);
-            DelRight(VolumeLabel);
-            VolumeLabel := VolumeLabel+'\';
+            // fixme: commented by unxed
+            //DelRight(VolumeLabel);
+            VolumeLabel := VolumeLabel+'/'; // slash change by unxed
             Break;
             end
           else
@@ -367,7 +368,7 @@ function UnpackImage(const FName, DestDir: String; PInfo: PWhileView)
         if DR.Attr and Directory <> 0 then
           begin
           if not IsDummyDir(Nm) then
-            ProcessDir(Dir+Nm+'\', DR.Clus, True); {JO}
+            ProcessDir(Dir+Nm+'/', DR.Clus, True); {JO} // slash change by unxed
           Continue;
           end;
         WriteFile(Dir, Nm, DR.Clus, DR.len, DR.Date, DR.Attr);

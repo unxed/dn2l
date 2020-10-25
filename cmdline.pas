@@ -107,7 +107,7 @@ uses
   Startup, xTime, Messages, DNUtil
   , Microed, Histries, FViewer, FlPanelX
   {$IFDEF SS}, Idlers {$ENDIF}
-  , VpSysLow, Lfn, UserMenu, Menus
+  , VpSysLow, Lfnvp, UserMenu, Menus
   , DnIni, VPUtils
   ;
 
@@ -151,7 +151,8 @@ procedure TCommandLine.GetDir;
   var
     MM: record
       case Byte of
-        1: (l: LongInt; S: String[1]);
+        //1: (l: LongInt; S: String[1]);
+        1: (l: LongInt; S: String); // fixme: removed [1] to fix build by unxed
         2: (C: Char);
       end;
     D: PDialog;
@@ -420,7 +421,7 @@ procedure TCommandLine.HandleEvent;
             ls := Length(S);
             c := CurX;
             l := Length(Str);
-            if  (S[Length(S)] <> '\') and (Copy(S, Length(S)-1, 2) <> '\"')
+            if  (S[Length(S)] <> '/') and (Copy(S, Length(S)-1, 2) <> '\"')
             then
               S := S+' ';
             Insert(S, Str, CurX+1);
