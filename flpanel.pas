@@ -1665,12 +1665,15 @@ procedure TInfoView.Draw;
     begin
     BriefL1 := 0;
     I := 0;
+    {
     while True do
       begin
       if LineMaker[Y][I](@Self) then
         Break;
       inc(I);
       end;
+    }
+    // fixme: commented by unxed
     WriteLine(0, Y, Size.X, 1, B);
     MoveChar(B, ' ', C1, Size.X);
     end;
