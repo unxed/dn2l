@@ -70,10 +70,10 @@ function ValidLngId(LI: String; CheckForHelp: Boolean): Boolean;
   if S1 = '' then
     S1 := SourceDir;
   if not (S1[Length(S1)] in ['\', '/']) then
-    S1 := S1+'\';
+    S1 := S1+'/'; // slash change by unxed
   S2 := StartupDir;
   if not (S2[Length(S2)] in ['\', '/']) then
-    S2 := S2+'\';
+    S2 := S2+'/'; // slash change by unxed
   if  (not CheckForHelp) and (not ExistFile(S1+LI+'.DLG')) and
       (not ExistFile(S2+LI+'.DLG'))
   then
@@ -86,7 +86,7 @@ function ValidLngId(LI: String; CheckForHelp: Boolean): Boolean;
     begin
     S1 := SourceDir;
     if not (S1[Length(S1)] in ['\', '/']) then
-      S1 := S1+'\';
+      S1 := S1+'/'; // slash change by unxed
     if  (not ExistFile(S1+LI+'.HLP')) and (not ExistFile(S2+LI+'.HLP'))
     then
       Exit

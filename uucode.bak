@@ -2403,10 +2403,10 @@ end;
         SetLength(S1, Length(S1)-1);
       if S <> '' then
         begin
-        if S[Length(S)] = '\' then
+        if S[Length(S)] = '/' then // slash change by unxed
           MakeNormName := S+S1
         else
-          MakeNormName := S+'\'+S1;
+          MakeNormName := S+'/'+S1; // slash change by unxed
         end
       else
         MakeNormName := S1;

@@ -312,7 +312,7 @@ var
   CurDir: String;
 begin
   lGetDir(0, CurDir);
-  if Length(CurDir) > 3 then CurDir:=CurDir+'\';
+  if Length(CurDir) > 3 then CurDir:=CurDir+'/'; // slash change by unxed
   GetCurDir := CurDir;
 end;
 }
@@ -346,7 +346,7 @@ procedure TFileInputLine.HandleEvent(var Event: TEvent);
       (State and sfSelected = 0)
   then
     begin
-    Dir := PSearchRec(Event.InfoPtr)^.Name+'\';
+    Dir := PSearchRec(Event.InfoPtr)^.Name+'/'; // slash change by unxed
     if PSearchRec(Event.InfoPtr)^.Attr and Directory <> 0 then
       Data := Dir+
         PFileDialog(Owner)^.WildCard^
@@ -711,7 +711,7 @@ function TDirectoryList.GetText(Item: LongInt; MaxLen: Integer): String;
     S[12] := FMSetup.RestChar[1];
     end;
   if SR^.Name[2] <> ':' then
-    GetText := S+'\'
+    GetText := S+'/' // slash change by unxed
   else
     GetText := SR^.Name;
   end;
@@ -1387,7 +1387,7 @@ function TFileDialog.Valid(Command: Word): Boolean;
         if CheckDirectory(lFName) then
           begin
           DisposeStr(Directory);
-          Directory := NewStr(lFName+'\');
+          Directory := NewStr(lFName+'/'); // slash change by unxed
           DirList^.ReadDirectory(Directory^+WildCard^);
           FileList^.ReadDirectory(Directory^+WildCard^);
           if Command <> cmFileInit then

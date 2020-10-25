@@ -178,7 +178,7 @@ procedure TCHZArchive.GetFile;
     ArcFile^.Seek(FP+9);
     ArcFile^.Read(S[0], 1);
     ArcFile^.Read(S[1], Length(S));
-    CDir := CDir+S+'\';
+    CDir := CDir+S+'/'; // slash change by unxed
     goto 1;
     end
   else if P.Id[4] = 'd' then
@@ -186,7 +186,7 @@ procedure TCHZArchive.GetFile;
     if CDir <> '' then
       begin
       SetLength(CDir, Length(CDir)-1);
-      while (CDir <> '') and (CDir[Length(CDir)] <> '\') do
+      while (CDir <> '') and (CDir[Length(CDir)] <> '/') do // slash change by unxed
         SetLength(CDir, Length(CDir)-1);
       end;
     goto 1;

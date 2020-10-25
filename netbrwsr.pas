@@ -531,14 +531,14 @@ begin
 
   if Pos(cNET_, ADir) = 1 then
     if RootState then
-      if Pos(ADir+'\', CurDir) = 1 then
+      if Pos(ADir+'/', CurDir) = 1 then // slash change by unxed
         if Length(ADir) = Length(cNET_) then
           while RootCount > 0 do
             RemoveRootResource(CurDir)
         else
           RemoveRootResource(CurDir)
       else
-        if Pos(CurDir+'\', ADir) = 1 then
+        if Pos(CurDir+'/', ADir) = 1 then // slash change by unxed
           ChangeToSubDir(Copy(ADir, Length(CurDir)+2, MaxLongInt))
         else
           Exit
@@ -552,7 +552,7 @@ begin
         inherited lChDir(ADir);
       end
     else
-      if (ADir[1] = '\') and (ADir[2] = '\') and (Pos('\', Copy(ADir, 3, MaxLongInt)) = 0) then
+      if (ADir[1] = '/') and (ADir[2] = '/') and (Pos('/', Copy(ADir, 3, MaxLongInt)) = 0) then // slash change by unxed
         begin
           CurDir := RootDirSaved;
           RootState := True;

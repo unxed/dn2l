@@ -92,7 +92,7 @@ function BadTemp(var s: String): Boolean;
   if  (s = '') then
     Exit;
   if not (s[Length(s)] in ['\', '/']) then
-    s := s+'\';
+    s := s+'/'; // slash change by unxed
   ClrIO;
   if not PathExist(s) then
     Exit;

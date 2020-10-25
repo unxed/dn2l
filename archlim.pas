@@ -209,7 +209,7 @@ procedure TLIMArchive.GetFile;
   FileInfo.PSize := P.PackedSize;
   FileInfo.Date := P.Date {P.Date shl 16) or (P.Date shr 16)};
   GetName;
-  FileInfo.FName := CDir+'\'+FileInfo.FName;
+  FileInfo.FName := CDir+'/'+FileInfo.FName; // slash change by unxed
   if P.ThreeZeros[3] and Directory <> 0 then
     goto 1;
   ArcFile^.Seek(ArcFile^.GetPos+P.PackedSize);

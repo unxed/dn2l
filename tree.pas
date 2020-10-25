@@ -445,7 +445,7 @@ function FindDir(DC: PCollection; const Dir: String): Integer;
     end;
   repeat
     S := '';
-    while (D[1] <> '\') and (D <> '') do
+    while (D[1] <> '/') and (D <> '') do // slash change by unxed
       begin
       S := S+D[1];
       Delete(D, 1, 1); {DelFC(D)}
@@ -1117,7 +1117,7 @@ function MkFcFromDirRec(D: PDirRec; var FullName: String)
     fr: PFileRec;
   begin
   l := Length(FullName);
-  while FullName[l] <> '\' do
+  while FullName[l] <> '/' do // slash change by unxed
     Dec(l);
   SetLength(FullName, l-1);
   New(Result, Init(1, 1));
@@ -1152,7 +1152,7 @@ procedure TTreeView.HandleCommand;
       I: Integer;
     begin
     SearchForMask := False;
-    if QSMask[1] = '\' then
+    if QSMask[1] = '/' then // slash change by unxed
       begin
       ScrollBar^.SetValue(0);
       SearchForMask := True;
@@ -1494,7 +1494,7 @@ procedure TTreeView.HandleCommand;
             begin
             if QuickSearch then
               begin
-              if  (Event.CharCode = '\') and (QSMask <> '')
+              if  (Event.CharCode = '/') and (QSMask <> '') // slash change by unxed
               then
                 begin
                 CE;
@@ -1521,7 +1521,7 @@ procedure TTreeView.HandleCommand;
               InitQuickSearch(@Self);
               DoQuickSearch(Event.KeyCode);
               SearchForMask(0);
-              if QSMask = '\' then
+              if QSMask = '/' then // slash change by unxed
                 InitQuickSearch(@Self);
               end;
             CE;
@@ -2102,7 +2102,7 @@ function CreateDirInheritance;
     J := I;  // указывает на '\' перед началом имени на очередном уровне
     repeat
       Inc(I);
-    until (S[I] = '\');
+    until (S[I] = '/'); // slash change by unxed
      // I указывает на первый символ за концом имени
     M := Copy(S, 1, I-1); // полный путь очередного уровня
     ClrIO;

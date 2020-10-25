@@ -421,7 +421,7 @@ procedure TCommandLine.HandleEvent;
             ls := Length(S);
             c := CurX;
             l := Length(Str);
-            if  (S[Length(S)] <> '\') and (Copy(S, Length(S)-1, 2) <> '\"')
+            if  (S[Length(S)] <> '/') and (Copy(S, Length(S)-1, 2) <> '\"')
             then
               S := S+' ';
             Insert(S, Str, CurX+1);

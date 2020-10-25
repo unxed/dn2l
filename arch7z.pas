@@ -218,7 +218,7 @@ procedure TS7ZArchive.GetFile;
     FileInfo.Attr := Directory
   else
     FileInfo.Attr := 0;
-  FileInfo.FName := '\'+fDelRight(Copy(S, 54, 255));
+  FileInfo.FName := '/'+fDelRight(Copy(S, 54, 255)); // slash change by unxed
   FileInfo.Last := 0;
   end { TS7ZArchive.GetFile };
 

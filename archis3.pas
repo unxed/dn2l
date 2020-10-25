@@ -223,7 +223,7 @@ procedure TIS3Archive.GetFile;
     begin
     ArcFile^.Seek(FO);
     ArcFile^.Read(S[1], P1.SizeOfName);
-    FileInfo.FName := S+'\'+FileInfo.FName;
+    FileInfo.FName := S+'/'+FileInfo.FName; // slash change by unxed
     end;
 
   FileInfo.Last := 0;

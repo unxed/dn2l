@@ -918,7 +918,7 @@ procedure MakeArchive;
           Writeln(F.T, {$IFDEF RecodeWhenDraw}CharToOemStr {$ENDIF}(S1))
           {piwamoto.src.begin}
       else if B then
-        S := S+#$14+SquashesName(S1+'\*.*')
+        S := S+#$14+SquashesName(S1+'/*.*') // slash change by unxed
       else if Arc^.PutDirs then
         PutDir(S1)
       else {JO}
@@ -941,7 +941,7 @@ procedure MakeArchive;
         lFindClose(SR);
         ClrIO;
         Writeln(F.T, {$IFDEF RecodeWhenDraw}CharToOemStr
-           {$ENDIF}(S1)+'\*.*');
+           {$ENDIF}(S1)+'/*.*'); // slash change by unxed
         end; {/JO}
       {piwamoto.src.end}
       MakeListFile := S;
@@ -1276,7 +1276,7 @@ TryAgain:
       begin
       while (SIntern[Length(SIntern)] = '.') do
         SetLength(SIntern, Length(SIntern)-1);
-      while (SIntern[1] = '\') do
+      while (SIntern[1] = '/') do // slash change by unxed
         Delete(SIntern, 1, 1);
       MakeNoSlash(SIntern);
       SIntern := CnvString(Arc^.SetPathInside)+
@@ -1363,8 +1363,8 @@ procedure UnarchiveFiles;
     DT.S := HistoryStr(hsExtract, 0);
   if DT.S = cTEMP_ then
     DT.S := '';
-  if  (Length(DT.S) > 3) and (DT.S[Length(DT.S)] <> '\') then
-    DT.S := DT.S+'\';
+  if  (Length(DT.S) > 3) and (DT.S[Length(DT.S)] <> '/') then // slash change by unxed
+    DT.S := DT.S+'/'; // slash change by unxed
   {JO}
   // пpовеpяем, находится ли диск в списке дисков, на котоpые надо
   // pазаpхивиpовать не чеpез вpеменный подкаталог (по умолчанию A: и B:)
@@ -1405,8 +1405,8 @@ TryAgain:
   if  (DT.S = '') or (DT.S = '.') then
     DT.S := GetPath(FName);
   ExtrDir := DT.S;
-  if ExtrDir[Length(ExtrDir)] <> '\' then
-    ExtrDir := ExtrDir+'\';
+  if ExtrDir[Length(ExtrDir)] <> '/' then // slash change by unxed
+    ExtrDir := ExtrDir+'/'; // slash change by unxed
 
   {JO}
   // проверяем, содержит ли каталог назначения файлы
@@ -1564,7 +1564,7 @@ TryAgain:
     LFNvp.lChDir(S);
     {$IFDEF DPMI32} {освобождаем каталог}
     if ActiveDir[2] = ':' then
-      ChDir(Copy(ActiveDir, 1, 2) + '\');
+      ChDir(Copy(ActiveDir, 1, 2) + '/'); // slash change by unxed
     {$ENDIF}
     Eraser.EraseFiles(FCT);
     Confirms := OldConfirms;

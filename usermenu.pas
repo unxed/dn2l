@@ -761,7 +761,7 @@ function ExecUserMenu;
   I := Length(S);
   if Abort then
     goto 2;
-  while (I > 0) and (S[I] <> '\') do
+  while (I > 0) and (S[I] <> '/') do // slash change by unxed
     Dec(I);
   if I = 0 then
     goto 2;
@@ -770,7 +770,7 @@ function ExecUserMenu;
     if F <> nil then
       goto 1;
 
-    while (I > 2) and (S[I-1] <> '\') do
+    while (I > 2) and (S[I-1] <> '/') do // slash change by unxed
       begin
       Delete(S, I-1, 1);
       Dec(I);

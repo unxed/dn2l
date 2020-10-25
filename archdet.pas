@@ -472,7 +472,7 @@ function HPKDetect: Boolean;
             S := S+C
         until C = #0;
         if I < P.noDirHdrs
-          then S := S +'\';
+          then S := S +'/'; // slash change by unxed
         PHPKRec(HPKCol^.At(I))^.Name := NewStr(S);
         end;
       Exit;

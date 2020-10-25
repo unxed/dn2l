@@ -818,7 +818,7 @@ function InDirFilter;
       Delete(S, 1, 1); {DelFC(S);}
     DelLeft(S);
     DelRight(S);
-    if  (S <> '') and (S[Length(S)] = '\')
+    if  (S <> '') and (S[Length(S)] = '/') // slash change by unxed
            and InMask(Name, Copy(S, 1, Length(S)-1))
     then
       Exit;
@@ -1124,7 +1124,7 @@ function MakeNormName(const S, S1: String): String;
     if  (S[i] in ['\', '/']) then
       MakeNormName := Copy(S, 1, i)+Copy(S1, 1, j)
     else
-      MakeNormName := Copy(S, 1, i)+'\'+Copy(S1, 1, j);
+      MakeNormName := Copy(S, 1, i)+'/'+Copy(S1, 1, j); // slash change by unxed
     end
   else
     MakeNormName := S1;
@@ -1168,7 +1168,7 @@ function PathExist(s: String): Boolean;
   else
     begin
     S := lFExpand(S);
-    IsRoot := S[Length(s)] = '\';
+    IsRoot := S[Length(s)] = '/'; // slash change by unxed
 
     Attr := AnyFileDir or (Directory shl 8);
     lFindFirst(S, Attr, SR);
@@ -1195,7 +1195,7 @@ function PathExist(s: String): Boolean;
       begin { корень диска }
       delete(S, Length(s), 1);
       end;
-    S := S + '\*.*';
+    S := S + '/*.*'; // slash change by unxed
     lFindFirst(S, Attr, SR);
     Result := DosError in [0, 2, 18];
 FClose:
@@ -1403,8 +1403,8 @@ Finish:
 
 procedure MakeSlash(var S: String);
   begin
-  if (S <> '') and (S[Length(S)] <> '\') then
-    S := S + '\';
+  if (S <> '') and (S[Length(S)] <> '/') then // slash change by unxed
+    S := S + '/'; // slash change by unxed
   end;
 
 procedure MakeNoSlash(var S: String);

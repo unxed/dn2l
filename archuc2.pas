@@ -255,7 +255,7 @@ NextRecord:
     ReadName;
     ReadDTA;
     //    FileInfo.Attr := Directory;
-    FileInfo.FName := FileInfo.FName+'\';
+    FileInfo.FName := FileInfo.FName+'/'; // slash change by unxed
     FileInfo.USize := 0;
     FileInfo.PSize := 0;
     end

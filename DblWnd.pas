@@ -825,7 +825,7 @@ procedure TDoubleWindow.HandleCommand;
     if S <> '' then
       begin
       if not (S[Length(S)] in ['\', '/']) then
-        AddStr(S, '\');
+        AddStr(S, '/'); // slash change by unxed
       S := SquashesName(S);
       Message(CommandLine, evCommand, cmInsertName, @S);
       end;

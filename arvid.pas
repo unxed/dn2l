@@ -325,7 +325,7 @@ constructor TArvidDrive.Init;
   if i > 2 then
     CurDir := q
   else
-    CurDir := '\';
+    CurDir := '/'; // slash change by unxed
   SeekDirectory;
   if ArvidDrives = nil then
     New(ArvidDrives, Init($100, $100));
@@ -414,11 +414,11 @@ procedure TArvidDrive.lChDir;
     begin
     if Dr <> '' then
       CurDir := Dr;
-    if CurDir[1] <> '\' then
-      Insert('\', CurDir, 1);
+    if CurDir[1] <> '/' then // slash change by unxed
+      Insert('/', CurDir, 1); // slash change by unxed
     repeat
       SetLength(CurDir, Length(CurDir)-1)
-    until (CurDir = '') or (CurDir[Length(CurDir)] = '\');
+    until (CurDir = '') or (CurDir[Length(CurDir)] = '/'); // slash change by unxed
     if CurDir <> '' then
       SetLength(CurDir, Length(CurDir)-1);
     end
@@ -439,9 +439,9 @@ function TArvidDrive.GetDir;
   lFSplit(Name^, Dr, Nm, Xt);
   if filetype = avdTdr
   then
-    GetDir := 'TDR:'+Nm+'\'+CurDir
+    GetDir := 'TDR:'+Nm+'/'+CurDir // slash change by unxed
   else
-    GetDir := 'AVT:'+Nm+'\'+CurDir;
+    GetDir := 'AVT:'+Nm+'/'+CurDir; // slash change by unxed
   end;
 
 constructor TArvidDrive.Load;
@@ -555,12 +555,12 @@ procedure TArvidDrive.CopyFiles;
       begin
       if  (FC.Flags and AvtIsDir) <> 0 then
         begin
-        S1 := S1+Nam+'\';
-        S2 := S2+Nam+'\';
+        S1 := S1+Nam+'/'; // slash change by unxed
+        S2 := S2+Nam+'/'; // slash change by unxed
         CopyTree(FC2.ChildOrSize);
         SetLength(S1, Length(S1)-1);
         SetLength(S2, Length(S2)-1);
-        while (S1 <> '') and (S1[Length(S1)] <> '\') do
+        while (S1 <> '') and (S1[Length(S1)] <> '/') do // slash change by unxed
           begin
           SetLength(S1, Length(S1)-1);
           SetLength(S2, Length(S2)-1);
@@ -585,9 +585,9 @@ procedure TArvidDrive.CopyFiles;
     Exit;
   lFSplit(Name^, Dr, Nm, Xt);
   if filetype = avdTdr then
-    S1 := Dr+'TDR:'+Nm+'\'
+    S1 := Dr+'TDR:'+Nm+'/' // slash change by unxed
   else
-    S1 := Dr+'AVT:'+Nm+'\';
+    S1 := Dr+'AVT:'+Nm+'/'; // slash change by unxed
   Message(Application, evCommand, cmPushFirstName, @CopyDirName);
   if not CopyDialog(CopyDir, Mask, CopyOpt, CopyMode, CopyPrn,
       MoveMode, AFiles, 0, Panel, True)
@@ -615,7 +615,7 @@ procedure TArvidDrive.CopyFiles;
       Stream^.Seek( {Cat:warn}Round(PF^.PSize));
       Stream^.Read(FC, SizeOf(FC));
       Desc := AvtCellDesc(FC, Stream^);
-      S1 := MakeNormName('\'+CurDir, PF^.FlName[True]);
+      S1 := MakeNormName('/'+CurDir, PF^.FlName[True]); // slash change by unxed
       S2 := MakeNormName(CopyDir, MkName(PF^.FlName[True], Mask));
       if Pos(S1, S2) = 1 then
         begin
@@ -654,8 +654,8 @@ procedure TArvidDrive.CopyFiles;
             end
           else if (PF^.Attr and Directory <> 0) then
             begin
-            S1 := S1+'\';
-            S2 := S2+'\';
+            S1 := S1+'/'; // slash change by unxed
+            S2 := S2+'/'; // slash change by unxed
             CopyTree(FC2.ChildOrSize);
             end;
           end;
@@ -713,7 +713,7 @@ procedure TArvidDrive.CopyFiles;
     for I := 0 to AFiles^.Count-1 do
       begin
       PF := AFiles^.At(I);
-      S1 := MakeNormName('\'+CurDir, PF^.FlName[True]);
+      S1 := MakeNormName('/'+CurDir, PF^.FlName[True]); // slash change by unxed
       S2 := MakeNormName(CopyDir, MkName(Mask, PF^.FlName[True]));
       if  (PF^.Attr and Directory) = 0 then
         Writeln(T.T,
@@ -1097,14 +1097,14 @@ procedure TArvidDrive.DrvFindFile(FC: PFilesCollection);
       else if DD.Level <= LastLv then
         begin
         repeat
-          while (dr[Length(dr)] <> '\') and (dr <> '') do
+          while (dr[Length(dr)] <> '/') and (dr <> '') do // slash change by unxed
             SetLength(dr, Length(dr)-1);
           if dr <> '' then
             SetLength(dr, Length(dr)-1);
           Dec(LastLv);
         until DD.Level > LastLv;
         if dr = '' then
-          dr := '\';
+          dr := '/'; // slash change by unxed
         dr := MakeNormName(dr, TdrMakeFileName(SS))
         end;
       LastLv := DD.Level;
@@ -1195,12 +1195,12 @@ procedure TArvidDrive.DrvFindFile(FC: PFilesCollection);
       WasDir := False;
       SaveLP := LP;
       LP := L;
-      dr := dr+AvtCellName(AA0, St0^)+'\';
+      dr := dr+AvtCellName(AA0, St0^)+'/'; // slash change by unxed
       AvtSearchInStream(AA0.ChildOrSize);
       WasDir := SaveWasDir;
       LP := SaveLP;
       SetLength(dr, Length(dr)-1);
-      while (dr[Length(dr)] <> '\') and (dr <> '') do
+      while (dr[Length(dr)] <> '/') and (dr <> '') do // slash change by unxed
         SetLength(dr, Length(dr)-1);
       end
     else
@@ -1239,7 +1239,7 @@ procedure TArvidDrive.DrvFindFile(FC: PFilesCollection);
       AA: TAvtHeader;
     begin
     WasTape := False;
-    dr := '\';
+    dr := '/'; // slash change by unxed
     St^.Seek(0);
     St^.Read(AA, SizeOf(AA));
     if AA.signature = $50545641 {'AVTP'} then
@@ -1397,7 +1397,7 @@ procedure TArvidDrive.DrvFindFile(FC: PFilesCollection);
           goto 1;
         end;
       CurDir := FreeStr;
-      if CurDir[1] = '\' then
+      if CurDir[1] = '/' then // slash change by unxed
         Delete(CurDir, 1, 1); {DelFC(CurDir);}
       SeekDirectory;
       F := FindList^.At(R.A.Y);

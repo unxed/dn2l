@@ -1138,7 +1138,7 @@ Err:
       Desktop^.Insert(PV);
       SetLength(TempExtrDir, Length(TempExtrDir)-1);
       Str1 := GetPath(TempExtrDir);
-      CopyDirContent(TempExtrDir+'\'+SCurDir, Str1, True, ForceMod);
+      CopyDirContent(TempExtrDir+'/'+SCurDir, Str1, True, ForceMod); // slash change by unxed
       PV^.Free;
     { удаляем временный каталог со всем, что в нём осталось}
       FRT := NewFileRec(GetName(TempExtrDir),
@@ -1152,7 +1152,7 @@ Err:
       lGetDir(0, DirToChange);
       LFNvp.lChDir(Str1);
       if ActiveDir[2] = ':' then {освобождаем каталог}
-        ChDir(Copy(ActiveDir, 1, 2) + '\');
+        ChDir(Copy(ActiveDir, 1, 2) + '/'); // slash change by unxed
       Eraser.EraseFiles(FCT);
       LFNvp.lChDir(DirToChange);
       DirToChange := '';

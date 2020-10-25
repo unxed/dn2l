@@ -317,7 +317,7 @@ procedure TRARArchive.GetFile;
         SetLength(FileInfo.FName, (PosChar(#0, FileInfo.FName)-1));
       {piwamoto: skip unicode names from winrar2.80beta1+ archives}
       repeat
-        Ps := System.Pos('.\', FileInfo.FName);
+        Ps := System.Pos('./', FileInfo.FName); // slash change by unxed
         if Ps = 0 then
           Break;
         System.Delete(FileInfo.FName, Ps, 1);

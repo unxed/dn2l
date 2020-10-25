@@ -189,7 +189,7 @@ procedure THAArchive.GetFile;
     FileInfo.Last := 2;
     Exit;
     end;
-  Replace(#255, '\', FileInfo.FName);
+  Replace(#255, '/', FileInfo.FName); // slash change by unxed
   if P.Method and $0f = $0e then
     FileInfo.Attr := Directory;
   ArcFile^.Read(C, 1);

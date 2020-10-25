@@ -368,7 +368,7 @@ constructor TDirName.Init;
   begin
   inherited Init;
   OldName := NewStr(AOld);
-  NewName := NewStr(fReplace('.\', '\', ANew));
+  NewName := NewStr(fReplace('./', '/', ANew)); // slash change by unxed
   CopyIt := ACopy;
   Own := AnOwn;
   Attr := AnAttr;
@@ -1615,7 +1615,7 @@ lbStartWrite:
     if CopyPrn then
       begin
       NName := CopyDir;
-      while NName[Length(NName)] = '\' do
+      while NName[Length(NName)] = '/' do // slash change by unxed
         SetLength(NName, Length(NName)-1);
       S1 := lFExpand(FName); {Cat}
       S2 := lFExpand(NName); {Cat}
@@ -1944,13 +1944,13 @@ FileRead:
       L: LongInt;
     begin
     ClrIO;
-    lFindFirst(DirName+'\*.*', AnyFileDir, SR); {JO}
+    lFindFirst(DirName+'/*.*', AnyFileDir, SR); {JO} // slash change by unxed
     while (DosError = 0) and not Abort and not CopyCancel do
       begin
       SSS := MakeNormName(AddDir, SR.FullName);
       if SR.SR.Attr and Directory = 0 then
         begin
-        CopyFile(DirName+'\'+SR.FullName, Copy(AddDir,
+        CopyFile(DirName+'/'+SR.FullName, Copy(AddDir, // slash change by unxed
             Length(CopyDir)+1, MaxStringLength), nil, SR.FullSize,
           SR.SR.Time, SR.SR.Attr);
         end;
@@ -2051,9 +2051,9 @@ FileRead:
       begin
       Info^.Write(5, GetString(dlFCCheckingDirs));
 
-      if  (not CopyPrn) and (Dest <> '') and (Dest[Length(Dest)] <> '\')
+      if  (not CopyPrn) and (Dest <> '') and (Dest[Length(Dest)] <> '/') // slash change by unxed
       then
-        AddStr(Dest, '\');
+        AddStr(Dest, '/'); // slash change by unxed
       q := MakeNormName(Dest, Name);
       if q[Length(q)] = '.' then
         SetLength(q, Length(q)-1);
@@ -2209,7 +2209,7 @@ TrueCopy:
         SR: lSearchRec;
         Drive: Byte;
       begin
-      if Dest[Length(Dest)] = '\' then
+      if Dest[Length(Dest)] = '/' then // slash change by unxed
         SetLength(Dest, Length(Dest)-1);
       if Dest[Length(Dest)] = '.' then
         SetLength(Dest, Length(Dest)-1);
@@ -2226,7 +2226,7 @@ TrueCopy:
         ClrIO;
         end;
       {/AK155}
-      lFindFirst(Source+'\*.*', AnyFileDir, SR); {JO}
+      lFindFirst(Source+'/*.*', AnyFileDir, SR); {JO} // slash change by unxed
       while (DosError = 0) and not Abort and not CopyCancel do
         begin
         if  (SR.SR.Attr and Directory <> 0) and
@@ -2288,8 +2288,8 @@ TrueCopy:
 
     function IsNetworkPath(const Path: String): Boolean; {KV}
       begin
-      IsNetworkPath := ((Length(Path) > 2) and (Path[1] = '\') and
-             (Path[2] = '\'));
+      IsNetworkPath := ((Length(Path) > 2) and (Path[1] = '/') and // slash change by unxed
+             (Path[2] = '/')); // slash change by unxed
       end;
 
     label
@@ -2305,7 +2305,7 @@ TrueCopy:
       Red := [S[1]];
       end;
 
-    if CopyPrn or (S[1] = '\') then
+    if CopyPrn or (S[1] = '/') then // slash change by unxed
       FreeSpc := 0 // устройство или сетевой адрес
     else
       begin
@@ -2442,7 +2442,7 @@ TryGetInfo:
       if P^.Attr and Marked = 0 then
         begin
         SSS := CnvString(P^.Owner);
-        if SSS[Length(SSS)] = '\' then
+        if SSS[Length(SSS)] = '/' then // slash change by unxed
           SetLength(SSS, Length(SSS)-1);
         if Copy(CopyDir, 1, Length(SSS)) = SSS then
           Inhr := 0;
@@ -2863,7 +2863,7 @@ AK155. При этом то восстанавливалось зацикливание, то становилось
     l := I;
     while S[I] = '.' do
       Dec(I);
-    while S[I] = '\' do
+    while S[I] = '/' do // slash change by unxed
       Dec(I);
     if l = I then
       Break;
@@ -2877,7 +2877,7 @@ AK155. При этом то восстанавливалось зацикливание, то становилось
 копирование в текущий каталог). Востановление '\' сделано через ':=',
 а не через 'SetLength(S,I+1)', чтобы не закладывать мину на возможный
 будущий переход от ShortString к AnsiString }
-  if  (Length(SSS) > I) and (SSS[I+1] = '\') then
+  if  (Length(SSS) > I) and (SSS[I+1] = '/') then // slash change by unxed
     S := Copy(SSS, 1, I+1);
   {/AK155 02-01-2003}
 
@@ -2937,7 +2937,7 @@ AK155. При этом то восстанавливалось зацикливание, то становилось
     ClrIO;
     if Length(SSS) = 3 then
       begin
-      CopyDir := S+'\';
+      CopyDir := S+'/'; // slash change by unxed
       Mask := x_x
       end
     else
@@ -2961,7 +2961,7 @@ AK155. При этом то восстанавливалось зацикливание, то становилось
         if IsDummyDir(S) or (not DEr and (SR.SR.Attr and Directory <> 0))
         then
           begin
-          CopyDir := S+'\';
+          CopyDir := S+'/'; // slash change by unxed
           Mask := x_x;
           end
         else if (DEr and (Files^.Count <> 1)
@@ -2973,7 +2973,7 @@ AK155. При этом то восстанавливалось зацикливание, то становилось
               CopyMode := cpmAppend;
             cmNo:
               begin
-              CopyDir := S+'\';
+              CopyDir := S+'/'; // slash change by unxed
               Mask := x_x;
               end;
             else {case}

@@ -1732,7 +1732,7 @@ function TFileViewer.ReadFile;
 если куросор стоит на каталоге AK155}
   ReadDir := True;
   I := Length(FName);
-  if Copy(FName, I-2, 3) = '\..' then
+  if Copy(FName, I-2, 3) = '/..' then // slash change by unxed
     begin
     SetLength(FileName, I-3);
     DirString := FileName;

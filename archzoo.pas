@@ -198,7 +198,7 @@ procedure TZOOArchive.GetFile;
   if S <> '' then
     begin
     ArcFile^.Read(S[1], Byte(S[0]));
-    S[Length(S)] := '\';
+    S[Length(S)] := '/'; // slash change by unxed
     end;
   FileInfo.FName := S+FileInfo.FName;
   if FileInfo.FName = '' then

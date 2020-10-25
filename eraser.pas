@@ -281,7 +281,7 @@ procedure EraseFiles;
           Abort := True;
           Break
           end;
-        if FreeStr[Length(FreeStr)] = '\'
+        if FreeStr[Length(FreeStr)] = '/' // slash change by unxed
         then
           TD^.AtInsert(0, NewStr(Copy(FreeStr, 1, Length(FreeStr)-1)))
         else
@@ -559,7 +559,7 @@ DeleteDirDIZ:
     if PFileRec(Files^.At(I))^.Attr and Directory <> 0 then
       begin
       PStr1 := NewStr('>'+MakeNormName(PFileRec(Files^.At(I))^.Owner^,
-            PFileRec(Files^.At(I))^.FlName[True])+'\');
+            PFileRec(Files^.At(I))^.FlName[True])+'/'); // slash change by unxed
       RereadCollection^.Insert(PStr1);
       end;
     end;
@@ -607,7 +607,7 @@ procedure SetVLabel;
     Dr: Char;
   begin
   Dr := GetCurDrive;
-  if Dr = '\' then
+  if Dr = '/' then // slash change by unxed
     Exit; {!! Это очень некрасивое решение. Лучше бы сделать неактивной
       команду cmSetVolumeLabel, если на активной панели сетевой диск.
       А заодно и если там архив. }

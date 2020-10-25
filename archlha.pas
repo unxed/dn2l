@@ -247,7 +247,7 @@ procedure TLHAArchive.GetFile;
         AddStr(s, P.Name[i]);
         Inc(i)
         end;
-      Replace(#255, '\', s);
+      Replace(#255, '/', s); // slash change by unxed
       System.Insert(s, FileInfo.FName, 1);
       end;
     end;

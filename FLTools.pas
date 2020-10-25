@@ -1998,7 +1998,7 @@ procedure DoRenameSingle(PF: PFileRec; const S, S2: String; DlgRes: Word);
   label
     NameErr;
   begin
-  if PosChar('\', S) <> 0 then
+  if PosChar('/', S) <> 0 then // slash change by unxed
     begin
     DosE := 123; // ERROR_INVALID_NAME
     goto NameErr;

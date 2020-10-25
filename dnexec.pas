@@ -119,7 +119,7 @@ procedure AnsiExec(const Path: String; const ComLine: AnsiString);
 {$IFNDEF Win32}
 //  освобождаем каталог
   if ActiveDir[2] = ':' then
-    ChDir(Copy(ActiveDir, 1, 2) + '\');
+    ChDir(Copy(ActiveDir, 1, 2) + '/'); // slash change by unxed
 {$ENDIF Win32}
   ChDir(StartDir);
 

@@ -109,12 +109,12 @@ procedure TdrSeekDirectory;
     CurLevel := 0;
     CurDir := '';
     Lv := 1;
-    if S[1] = '\' then
+    if S[1] = '/' then // slash change by unxed
       Delete(S, 1, 1); {DelFC(S);}
     while S <> '' do
       begin
       SS := '';
-      while (S[1] <> '\') and (S <> '') do
+      while (S[1] <> '/') and (S <> '') do // slash change by unxed
         begin
         SS := SS+S[1]; {AddStr(SS, S[1]);}
         Delete(S, 1, 1); {DelFC(S);}

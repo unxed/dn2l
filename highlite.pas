@@ -659,7 +659,7 @@ procedure Highlites(Len: Integer; S: PChar; const Params: THighliteParams);
         k := j+1;
         while k < len do
           begin
-          if  (S[k] = '\') and not esc then
+          if  (S[k] = '/') and not esc then // slash change by unxed
             begin
             esc := True;
             end

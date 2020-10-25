@@ -1018,7 +1018,7 @@ procedure TFilePanelRoot.CommandHandle;
       if Drive^.DriveType <> dtDisk then
         ReplaceDrive(FileName[1]);
       Message(@Self, evCommand, cmInsertDrive, Drv);
-      if  (GetPath(PathInside) <> '\') and (Drive^.DriveType = dtArc)
+      if  (GetPath(PathInside) <> '/') and (Drive^.DriveType = dtArc) // slash change by unxed
       then
         begin
         Drive^.lChDir(Copy(GetPath(PathInside), 2, 255));
@@ -1625,7 +1625,7 @@ WrongArc:
         Message(@Self, evCommand, cmInsertDrive, Dr);
         {end}
         end
-      else if S[Length(S)] = '\'
+      else if S[Length(S)] = '/' // slash change by unxed
       then
         begin
         if not PathExist(S) then
@@ -1773,16 +1773,16 @@ WrongArc:
         if PanSetup^.Show.ColumnsMask and psLFN_InColumns <> 0 then
           if  (ShiftState and kbAltShift <> 0)
           then
-            S := lfGetShortFileName(PF^.Owner^)+'\'
+            S := lfGetShortFileName(PF^.Owner^)+'/' // slash change by unxed
           else
-            S := PF^.Owner^+'\'
+            S := PF^.Owner^+'/' // slash change by unxed
         else if (ShiftState and kbAltShift <> 0)
           then
-          S := PF^.Owner^+'\'
+          S := PF^.Owner^+'/' // slash change by unxed
         else
-          S := lfGetShortFileName(PF^.Owner^)+'\'
+          S := lfGetShortFileName(PF^.Owner^)+'/' // slash change by unxed
         {$ELSE}
-        S := PF^.Owner^+'\'
+        S := PF^.Owner^+'/' // slash change by unxed
           {$ENDIF}
       else if ShiftState and 3 <> 0 then
         {$IFDEF DualName}
@@ -2170,9 +2170,9 @@ WrongArc:
         if  (Drive^.DriveType = dtDisk) then
           begin
           {JO: сохраняем в S имя каталога верхнего уровня для текущего}
-          s := Drive^.CurDir+'\';
+          s := Drive^.CurDir+'/'; // slash change by unxed
           l := GetRootStart(s)+1;
-          s := Copy(s, l, PosChar('\', Copy(s, l, MaxStringLength))-1);
+          s := Copy(s, l, PosChar('/', Copy(s, l, MaxStringLength))-1); // slash change by unxed
           end;
         Drive^.ChangeRoot;
         ReadDirectory;
@@ -2549,12 +2549,12 @@ WrongArc:
       Arg: PChar;
     begin
     StrPCopy(@PrgBuf, GetEnv('windir')+'\explorer.exe');
-    if Copy(PathName, Length(PathName)-2, 3) = '\..' then
+    if Copy(PathName, Length(PathName)-2, 3) = '/..' then // slash change by unxed
       StrPCopy(@ArgBuf, '"'+Copy(PathName, 1, Length(PathName)-3)+'"')
     else
       begin
       Arg := @ArgBuf;
-      if PathName[Length(PathName)] <> '\' then
+      if PathName[Length(PathName)] <> '/' then // slash change by unxed
         Arg := StrECopy(@ArgBuf, '/select,');
       StrPCopy(Arg, '"'+PathName+'"');
       end;

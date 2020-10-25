@@ -341,7 +341,7 @@ function UnpackImage(const FName, DestDir: String; PInfo: PWhileView)
             Move(DR.Name[0], VolumeLabel[1], 11);
             // fixme: commented by unxed
             //DelRight(VolumeLabel);
-            VolumeLabel := VolumeLabel+'\';
+            VolumeLabel := VolumeLabel+'/'; // slash change by unxed
             Break;
             end
           else
@@ -368,7 +368,7 @@ function UnpackImage(const FName, DestDir: String; PInfo: PWhileView)
         if DR.Attr and Directory <> 0 then
           begin
           if not IsDummyDir(Nm) then
-            ProcessDir(Dir+Nm+'\', DR.Clus, True); {JO}
+            ProcessDir(Dir+Nm+'/', DR.Clus, True); {JO} // slash change by unxed
           Continue;
           end;
         WriteFile(Dir, Nm, DR.Clus, DR.len, DR.Date, DR.Attr);

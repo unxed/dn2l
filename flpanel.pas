@@ -2003,7 +2003,7 @@ procedure TFilePanel.HandleEvent;
            pqsAlt)) or
           ( (Event.KeyCode = kbDoubleCtrl) and (FMSetup.Quick = pqsCtrl)) or
           ( (Event.CharCode >= #32) and (Event.CharCode <= #254) and
-            (Event.CharCode <> '\') and (FMSetup.Quick = pqsCaps) and
+            (Event.CharCode <> '/') and (FMSetup.Quick = pqsCaps) and // slash change by unxed
             (I and $40 <> 0)) or
           ( (Event.CharCode >= #32) and (Event.CharCode <= #254) and
             (ShiftState and 3 <> 0) and (ShiftState and 4 = 0) and
