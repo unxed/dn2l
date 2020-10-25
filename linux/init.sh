@@ -14,7 +14,7 @@ cd dn2l_tryouts
 git clone https://github.com/unxed/dn2l.git
 # switch to experimental branch
 cd dn2l
-git checkout second_try
+#git checkout second_try
 cd ..
 # get virtual pascal
 mkdir vp_full
