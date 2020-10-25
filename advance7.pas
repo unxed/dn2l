@@ -120,16 +120,20 @@ function LngId: String;
     S := 'English';
   if not ValidLngId(S, False) then
     begin
+     {
      lFindFirst(StartupDir+'*.LNG', AnyFileDir - Directory, SR);
      S := SR.FullName;
      if S <> '' then
        SetLength(S, Length(s)-4);
      lFindClose(SR);
+     }
+      //fixme: commented by unxed, currently broken
     end;
   if not ValidLngId(ActiveLanguage, False) then
     begin
       ActiveLanguage := S;
-      SaveDnIniSettings ( @ActiveLanguage );
+      //SaveDnIniSettings ( @ActiveLanguage );
+      //fixme: commented by unxed, currently broken
     end;
   LngId := S
   end;
