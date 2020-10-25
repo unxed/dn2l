@@ -102,5 +102,11 @@ procedure SetTitle(Text: String);
   {Cat:todo DPMI32}
   end;
 {$ENDIF}
+{$IFDEF LINUX}
+procedure SetTitle(Text: String);
+  begin
+    // stub by unxed
+  end;
+{$ENDIF}
 
 end.
