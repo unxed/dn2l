@@ -139,10 +139,13 @@ procedure TSortView.Draw;
     Exit;
     end;
   SortSetup := @PFilePanelRoot(Panel)^.PanSetup^.Sort;
+  {
   C := GetString(dlSortTag)[SortSetup^.SortMode + 1];
   if (SortSetup^.SortFlags and psfInverted) <> 0  then
     C := Upcase(C);
   MoveChar(B, C, Panel^.Owner^.GetColor(3), 1);
+  }
+  // fixme: commented by unxed
   WriteLine(0, 0, 1, 1, B);
   end;
 
