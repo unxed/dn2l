@@ -27,6 +27,13 @@ function SysTVGetShiftState2: Byte;
   Result := 0;
   end;
 {$ENDIF}
+{$IFDEF LINUX}
+  // fixme: stub by unxed
+  inline;
+  begin
+  Result := 0;
+  end;
+{$ENDIF}
 
 type
   POSSearchRec = ^TOSSearchRec;
@@ -89,21 +96,24 @@ type
 
 function SysFindFirstNew(Path: PChar; Attr: LongInt;
      var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
-{$IFDEF DPMI32} inline;
+// fixme: stub by unxed (non-dpmi)
+{-$IFDEF DPMI32} inline;
   begin
   SysFindFirstNew := SysFindFirst(Path, Attr, POSSearchRec(@F)^, IsPChar)
     ;
-  end; {$ENDIF}
+  end; {-$ENDIF}
 function SysFindNextNew(var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
-{$IFDEF DPMI32} inline;
+// fixme: stub by unxed (non-dpmi)
+{-$IFDEF DPMI32} inline;
   begin
   SysFindNextNew := SysFindNext(POSSearchRec(@F)^, IsPChar);
-  end; {$ENDIF}
+  end; {-$ENDIF}
 function SysFindCloseNew(var F: TOSSearchRecNew): LongInt;
-{$IFDEF DPMI32} inline;
+// fixme: stub by unxed (non-dpmi)
+{-$IFDEF DPMI32} inline;
   begin
   SysFindCloseNew := SysFindClose(POSSearchRec(@F)^);
-  end; {$ENDIF}
+  end; {-$ENDIF}
 
 procedure SysTVKbdDone;
 {$IFNDEF OS2} inline;
