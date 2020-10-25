@@ -1,9 +1,6 @@
 # dn2l
-dos navigator open source linux port tryouts
+dn2l — Dos Navigator Open Source Project linux port tryouts
 
-see
+See https://github.com/unxed/dn2l/tree/first_try for lastest version
 
-https://github.com/unxed/dn2l/tree/first_try
-
-for the version that at least builds :)
 
