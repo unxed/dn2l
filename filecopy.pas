@@ -2080,7 +2080,7 @@ FileRead:
         if DosErrorCode in [5, 80, 183] then
           begin {Возможно, целевой каталог есть, но пустой. Тогда
              его можно удалить и переименование всё-таки проделать }
-          LFN.lRmDir(q);
+          LFNvp.lRmDir(q);
           ClrIO;
           RnFl(SSS, q);
           end;

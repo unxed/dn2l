@@ -220,7 +220,7 @@ var
 
 implementation
 uses
-  Lfn {DataCompBoy}, DNApp, Advance1, Advance2, Startup, Dos,
+  Lfnvp {DataCompBoy}, DNApp, Advance1, Advance2, Startup, Dos,
   Memory, Messages, HistList, Commands, FlPanelX, FlPanel
   , FViewer, Microed,
   Tree, xTime, DNUtil, UKeyMap, {!!}CmdLine, Histries,
@@ -1875,8 +1875,11 @@ TryAgain:
       Delete(SS, 1, 1);
     S2 := OwnArc;
     {$IFNDEF OS2}
+    {
     if not AType^.UseLFN then
       S2 := lfGetShortFileName(OwnArc);
+    }
+    // commented by unxed
     if OwnArc[Length(OwnArc)] = '.' then
       S2 := S2+'.';
     {$ENDIF}
@@ -1900,9 +1903,9 @@ TryAgain:
         Unp := Copy(Unp, PosChar(';', Unp)+1, MaxStringLength);
       S := Unp+' '+S;
       lGetDir(0, DirToChange);
-      LFN.lChDir(TempDir);
+      LFNvp.lChDir(TempDir);
       Message(Application, evCommand, cmExecString, @S);
-      LFN.lChDir(DirToChange);
+      LFNvp.lChDir(DirToChange);
       DirToChange := '';
       end;
     {$IFDEF DPMI32}
@@ -2032,7 +2035,7 @@ constructor TTempDrive.Init;
   DriveType := dtTemp;
   ColAllowed := PanelFileColAllowed[pcList];
   ListFile := nil;
-  Lfn.lGetDir(0, FreeStr); {System.GetDir(0, FreeStr);}
+  Lfnvp.lGetDir(0, FreeStr); {System.GetDir(0, FreeStr);}
   {Cat}
   ClrIO;
   S := NewStr(FreeStr);

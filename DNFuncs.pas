@@ -419,9 +419,9 @@ const
 
     DosError: DosError;
 
-    lFindFirst: Lfn.lFindFirst;
-    lFindNext: Lfn.lFindNext;
-    lFindClose: Lfn.lFindClose;
+    lFindFirst: Lfnvp.lFindFirst;
+    lFindNext: Lfnvp.lFindNext;
+    lFindClose: Lfnvp.lFindClose;
 
     CopyFileRec: FilesCol.CopyFileRec;
     CreateFileRec: FilesCol.CreateFileRec;

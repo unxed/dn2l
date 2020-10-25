@@ -566,7 +566,7 @@ procedure TArcDrive.lChDir;
       do
         SetLength(CurDir, Length(CurDir)-1)
     else
-      LFN.lChDir(GetPath(ArcName));
+      LFNvp.lChDir(GetPath(ArcName));
     Exit;
     end;
   lFSplit(ADir, Dr, Nm, Xt);
@@ -839,11 +839,11 @@ TryAgain:
           Директорию нужно запоминать на том диске, где находится
           временный каталог. А на том, где лежит архив
           с просматриваемым файлом, она запомнится в любом случае. }
-    LFN.lChDir(Copy(TempDir, 1, 2));
+    LFNvp.lChDir(Copy(TempDir, 1, 2));
     lGetDir(0, DirToChange);
-    LFN.lChDir(TempDir);
+    LFNvp.lChDir(TempDir);
     Exec(Unp, {$IFDEF RecodeWhenDraw}OemToCharStr {$ENDIF}(S), '', False);
-    LFN.lChDir(DirToChange);
+    LFNvp.lChDir(DirToChange);
     DirToChange := '';
     end;
   {$IFDEF DPMI32}
@@ -1393,9 +1393,9 @@ TryAgain:
     Директорию нужно запоминать на том диске, где находится
     временный каталог. А на том, где лежит архив
     с просматриваемым файлом, она запомнится в любом случае. }
-  LFN.lChDir(Copy(TempExtrDir,1,2));
+  LFNvp.lChDir(Copy(TempExtrDir,1,2));
   lGetDir(0, DirToChange);
-  LFN.lChDir(TempExtrDir);
+  LFNvp.lChDir(TempExtrDir);
  {$IFDEF DPMI32}
   if AType^.SwapWhenExec and TempDirUsed then
     begin
@@ -1408,7 +1408,7 @@ TryAgain:
   {JO}
   if not TempDirUsed then
     begin
-    LFN.lChDir(DirToChange);
+    LFNvp.lChDir(DirToChange);
     DirToChange := '';
     ExtrDir := '>' + ExtrDir; //признак перечитывания подкаталогов в ветви
     GlobalMessage(evCommand, cmPanelReread, @ExtrDir);
@@ -1436,9 +1436,9 @@ TryAgain:
     FCT^.AtInsert(0, FRT);
     OldConfirms := Confirms;
     Confirms := 0;
-    LFN.lChDir(S);
+    LFNvp.lChDir(S);
     Eraser.EraseFiles(FCT);
-    LFN.lChDir(DirToChange);
+    LFNvp.lChDir(DirToChange);
     DirToChange := '';
     Confirms := OldConfirms;
     FCT^.DeleteAll;

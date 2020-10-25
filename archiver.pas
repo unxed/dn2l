@@ -1494,7 +1494,7 @@ TryAgain:
   if Xt = '' then
     S := S+'.'; {piwamoto: extracting from extensionless archives}
   lGetDir(0, DirToChange);
-  LFN.lChDir(TempExtrDir);
+  LFNvp.lChDir(TempExtrDir);
   DelDoubles('  ', S);
   {$IFDEF DPMI32}
   if AType^.SwapWhenExec then
@@ -1553,7 +1553,7 @@ TryAgain:
     FCT^.AtInsert(0, FRT);
     OldConfirms := Confirms;
     Confirms := 0;
-    LFN.lChDir(S);
+    LFNvp.lChDir(S);
     {$IFDEF DPMI32} {освобождаем каталог}
     if ActiveDir[2] = ':' then
       ChDir(Copy(ActiveDir, 1, 2) + '\');
@@ -1568,7 +1568,7 @@ TryAgain:
     end;
   {/JO}
 ex:
-  LFN.lChDir(DirToChange);
+  LFNvp.lChDir(DirToChange);
   DirToChange := '';
   FreeObject(AType);
   if  (not TempDirUsed) or (Inhr > 0) then

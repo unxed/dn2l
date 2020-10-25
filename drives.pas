@@ -647,7 +647,7 @@ procedure TDrive.lChDir;
       repeat
         ClrIO;
         NeedAbort := True;
-        Lfn.lChDir(S);
+        Lfnvp.lChDir(S);
         I := IOResult;
         Abort := Abort or (I <> 0);
         if Abort then
@@ -664,7 +664,7 @@ procedure TDrive.lChDir;
       repeat
         ClrIO;
         NeedAbort := True;
-        Lfn.lChDir(ATestDir);
+        Lfnvp.lChDir(ATestDir);
         I := IOResult;
         Abort := Abort or (I <> 0);
         if Abort then
@@ -1053,7 +1053,7 @@ function TDrive.GetRealDir;
       if Abort then
         S := CurrentDirectory;
       NeedAbort := True;
-      LFN.lChDir(CurDir);
+      LFNvp.lChDir(CurDir);
       repeat
         Abort := False;
         NeedAbort := True;
@@ -1081,11 +1081,11 @@ function TDrive.GetRealDir;
       until not Abort;
       NeedAbort := False;
       lGetDir(0, CurDir);
-      LFN.lChDir(S);
+      LFNvp.lChDir(S);
       end
     else
       begin
-      LFN.lChDir(CurDir);
+      LFNvp.lChDir(CurDir);
       if not Abort then
         repeat
           Abort := False;

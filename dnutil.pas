@@ -1149,11 +1149,11 @@ Err:
       OldConfirms := Confirms;
       Confirms := 0;
       lGetDir(0, DirToChange);
-      LFN.lChDir(Str1);
+      LFNvp.lChDir(Str1);
       if ActiveDir[2] = ':' then {освобождаем каталог}
         ChDir(Copy(ActiveDir, 1, 2) + '\');
       Eraser.EraseFiles(FCT);
-      LFN.lChDir(DirToChange);
+      LFNvp.lChDir(DirToChange);
       DirToChange := '';
       Confirms := OldConfirms;
       FCT^.DeleteAll;

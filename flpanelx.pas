@@ -777,7 +777,7 @@ procedure TFilePanelRoot.ReadDirectory;
   if  (ActivePanel = @Self) and (Drive^.DriveType = dtDisk) then
     CurrentDirectory := DirectoryName
   else
-    Lfn.lChDir(CurrentDirectory);
+    Lfnvp.lChDir(CurrentDirectory);
   if Drive^.DriveType = dtDisk then
     Message(CommandLine, evCommand, cmRereadInfo, nil);
   Message(Owner, evCommand, cmRereadInfo, nil);
@@ -1535,7 +1535,7 @@ WrongArc:
           begin
           ClrIO;
           RedrawPanelInfoDir;
-          Lfn.lChDir(CurrentDirectory);
+          Lfnvp.lChDir(CurrentDirectory);
           Exit;
           end;
         Drive^.SizeX := Size.X;
