@@ -210,7 +210,7 @@ function CharToOemStr(const CharS: String): String;
 
 implementation
   uses
-    Country_, advance, Streams;
+    Country, advance, Streams;
 
 procedure XLatBuf(var B; Len: Integer; const XTable: TXLat);
   assembler;

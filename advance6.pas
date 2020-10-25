@@ -72,7 +72,7 @@ function HotKey(const S: String): Char;
 
 implementation
 uses
-  UKeyMap, Country_,
+  UKeyMap, Country,
   VpSysLow,
   Advance, Advance1, Lfn, VideoMan
   ;
