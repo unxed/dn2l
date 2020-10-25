@@ -483,12 +483,18 @@ function WritePrivateProfileString;
         CurFile^.Seek(CurApp);
       if Str <> nil then
         begin
+        {
         StrLCopy(Buf, KeyName, 256);
         StrLCat(Buf, '=', 256);
         StrLCat(Buf, Str, 256);
         StrLCat(Buf, #13#10, 256);
         InsertLine(StrLen(Buf));
         CurFile^.Write(Buf, StrLen(Buf))
+        }
+        // fixme: commented by unxed
+        // currently DN writes faulty .INI file with strings > 260 bytes in size
+        // full of $00 chars, and fauls to start after it
+        // so let this part be commented until we fix this issue
         end
       end
     end
