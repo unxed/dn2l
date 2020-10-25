@@ -215,7 +215,7 @@ function OtherFilePanel(P: PFilePanelRoot): PFilePanelRoot;
 implementation
 
 uses
-  Lfn, Files, Advance, Advance1, Advance2, Advance3, VpSysLow,
+  Lfnvp, Files, Advance, Advance1, Advance2, Advance3, VpSysLow,
   Messages, DNApp, DNHelp, Startup, Commands, Histries, HistList, FLTools,
   FileFind, CmdLine, ArcView, Archiver, DiskImg, DiskInfo, FileCopy,
   DNUtil, FlTl, Dos, Filediz, Collect, VPUtils,
@@ -720,7 +720,9 @@ procedure TFilePanelRoot.ReadDirectory;
          PanSetup^.FileMask, TotalInfo));
 
 //  if PanSetup^.Show.FreeSpaceInfo <> fseNotShow then
-    Drive^.GetFreeSpace(FreeSpace);
+
+// fixme: commented by unxed
+//    Drive^.GetFreeSpace(FreeSpace);
 
   if (PanSetup^.Show.ColumnsMask and psShowDescript <> 0) or
      (FMSetup.Options and fmoAlwaysCopyDesc <> 0) or
@@ -1444,8 +1446,11 @@ WrongArc:
            and (UpStrg(S[1]) = UpStrg(DirectoryName[1]))
     then
       begin
+      {
       if PanSetup^.Show.FreeSpaceInfo <> fseNotShow then
         Drive^.GetFreeSpace(FreeSpace);
+      }
+      // fixme: commented by unxed
       if InfoView <> nil then
         InfoView^.DrawView;
       end;

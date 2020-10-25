@@ -153,7 +153,7 @@ function GetFileName(var FileName: String; Mask, Title, ALabel: String;
 implementation
 
 uses
-  Advance, Lfn, Messages, HistList, VPUtils,
+  Advance, Lfnvp, Messages, HistList, VPUtils,
   Collect, Strings, ErrMess,
   Memory, Dos, DNApp, DNStdDlg, Advance1, Advance2,
   MicroEd2, Histries

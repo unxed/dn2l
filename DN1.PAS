@@ -68,7 +68,7 @@ uses
   {$IFDEF WIN95_HIGHPRIORITY}Windows, {Cat for SetPriority} {$ENDIF}
   Advance, Advance1, Advance2, Advance3, Advance4,
   Startup, Startupp, Defines, Streams,
-  Setups, DNUtil, Drivers, Commands, DNApp, Messages, Lfn, Dos, FlPanelX,
+  Setups, DNUtil, Drivers, Commands, DNApp, Messages, Lfnvp, Dos, FlPanelX,
   UserMenu, CmdLine, FilesCol, Views, ArcView, FileFind,
   DnIni, DnInip, CopyIni, Archiver,
   UMyApp, Microed, ArchSet, Advance6, RegAll, DnExec, Histries, Menus,

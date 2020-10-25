@@ -81,7 +81,7 @@ uses
   Windows,
   {$ENDIF}
   {$IFDEF DPMI32} dpmi32, {$ENDIF}
-  DNUtil, Advance, DNApp, Advance1, Lfn,
+  DNUtil, Advance, DNApp, Advance1,
   Dos, FlPanelX, CmdLine, Views, Advance2, Drivers, Advance4,
   VideoMan, Memory, VpSysLow, VPSysLo2, Events,
   {$IFDEF UserSaver}

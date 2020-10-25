@@ -167,7 +167,7 @@ implementation
 
 uses
   Files, VpSysLow, Dos, Eraser, Drives, DNHelp, TitleSet,
-  Lfn, DNUtil, DNApp, Advance, Advance1, Advance2, Advance3, Startup,
+  Lfnvp, DNUtil, DNApp, Advance, Advance1, Advance2, Advance3, Startup,
   Memory, FileCopy, Messages, Menus, DiskInfo, Dialogs, Commands,
   HistList, Tree, FBB, ArcView, CmdLine, Histries, Archiver,
   Gauges, Gauge, FileFind, FLTools, DnIni, XDblWnd, DblWnd, Filediz

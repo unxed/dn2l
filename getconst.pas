@@ -89,7 +89,7 @@ procedure ProcessFile(const FileName: String; Types: PValuesHolder);
 implementation
 
 uses
-  Dos, lfn,
+  Dos, lfnvp,
   Advance, Advance1, Advance2, Commands
   ;
 

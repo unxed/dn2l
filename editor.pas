@@ -64,9 +64,9 @@ type
 implementation
 
 uses
-  Lfn, Views, Defines, Streams, UKeyMap, Collect, ed2,
+  Lfnvp, Views, Defines, Streams, UKeyMap, Collect, ed2,
   Advance, Advance1, Advance2, Dos, Dialogs, DNApp,
-  {SBlocks,}Memory, Gauge, Startup, WinClp, Messages, Commands, Macro,
+  {SBlocks,}Memory, Gauge, Startup, {WinClp, // commented by unxed} Messages, Commands, Macro,
   EdWin, xTime, DnIni, DNUtil, Advance6, Calculat, FViewer {AK155}
   {$IFDEF REGEXP}, RegExp {$ENDIF}
   ;
@@ -1409,7 +1409,8 @@ function TXFileEditor.HandleCommand;
     if  (ClipBoard <> nil) then
       Dispose(ClipBoard, Done);
     ClipBoard := GetSelection;
-    SetWinClip(PLineCollection(ClipBoard));
+    // fixme: commented by unxed
+    //SetWinClip(PLineCollection(ClipBoard));
     end;
 
   {-$VIV 20.05.99--}
@@ -1664,13 +1665,18 @@ function TXFileEditor.HandleCommand;
       CopyWinBlock;
     cmSyncClipIn:
       begin
-      SyncClipIn;
+      // fixme: commented by unxed
+      //SyncClipIn;
       if ClipBoardStream <> nil then
         ClipBoardStream^.Seek(Positive(ClipBoardStream^.GetPos-1));
-      CopyLines2Stream(ClipBoard, ClipBoardStream);
+      // fixme: commented by unxed
+      //CopyLines2Stream(ClipBoard, ClipBoardStream);
       end;
     cmSyncClipOut:
-      SyncClipOut {(true)};
+      begin
+          // fixme: commented by unxed
+          //SyncClipOut {(true)};
+      end;
     cmPlayMacro:
       PlayMacro;
     cmSelectMacro:

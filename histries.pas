@@ -178,7 +178,7 @@ var
 
 implementation
 uses
-  Lfn, Dos, Commands, DNApp, Dialogs, HistList,
+  Lfnvp, Dos, Commands, DNApp, Dialogs, HistList,
   Startup, xTime, Messages, DNUtil, DnIni,
   VpSysLow, EdWin, Advance1,  Advance2,
   {$IFDEF SS}

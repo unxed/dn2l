@@ -213,7 +213,7 @@ function SameFile(P1, P2: PFileRec): Boolean;
 
 implementation
 uses
-  Lfn, DNApp, Menus, Views, FlPanelX, FlPanel, Drives,
+  Lfnvp, DNApp, Menus, Views, FlPanelX, FlPanel, Drives,
   Objects2, Commands, Messages,
   {!!}CmdLine
   {$IFDEF MODEM} {$IFDEF LINK}, NavyLink {$ENDIF} {$ENDIF}

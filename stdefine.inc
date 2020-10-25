@@ -126,7 +126,7 @@
  {$DEFINE FileNotify}
  {$IFNDEF DPMI32}
   {$IFNDEF WIN32} {JO: временно, в Win32 ещё не совсем готов}
-   {$DEFINE Tasklist}
+   {.$DEFINE Tasklist}
   {$ENDIF}
  {$ENDIF}
  {.$DEFINE CHDIRTIMER}

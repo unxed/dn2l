@@ -114,7 +114,7 @@ uses
   , CmdLine
   {$ENDIF}
   , Events {AK155 для LongWorkBegin - LongWorkEnd}
-  , PDSetup, Lfn, Files, Streams, Drivers, Objects2, Dialogs
+  , PDSetup, Lfnvp, Files, Streams, Drivers, Objects2, Dialogs
   ;
 
 const

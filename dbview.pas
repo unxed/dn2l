@@ -207,7 +207,7 @@ implementation
 uses
   Advance, Advance1, Advance2, Startup, DNHelp, DNApp, Messages,
   Histries, Gauge, xTime, DnIni
-  , Events, lfn, Dos, Memory, UKeyMap
+  , Events, lfnvp, Dos, Memory, UKeyMap
   ;
 
 function MaxAvail: LongInt;

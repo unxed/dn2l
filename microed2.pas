@@ -77,8 +77,8 @@ const
 
 implementation
 uses
-  DNStdDlg, Advance, DNApp, Commands, Lfn, Advance2, ed2, Advance1, Views,
-  Collect, WinClp, Dos, Messages, Startup, DnIni, DnInip, CopyIni,
+  DNStdDlg, Advance, DNApp, Commands, Lfnvp, Advance2, ed2, Advance1, Views,
+  Collect, {WinClp, // commented by unxed} Dos, Messages, Startup, DnIni, DnInip, CopyIni,
   {SBlocks,}UKeyMap, Macro,
   xTime, Memory, Drivers,
   FlTl,
@@ -222,7 +222,8 @@ procedure MISaveFile(AED: PFileEditor);
       PC := New(PLineCollection, Init(100, 5, True));
       for I := 0 to FileLines^.Count-1 do
         PC^.Insert(NewLongStr(CnvLongString(FileLines^.At(I))));
-      CopyLines2Stream(PC, ClipBoardStream);
+      // fixme: commented by unxed
+      //CopyLines2Stream(PC, ClipBoardStream);
       Dispose(PC, Done);
       end
     else
@@ -376,7 +377,8 @@ procedure MILoadFile(AED: PFileEditor; Name: String);
         begin {-$VOL begin}
         {Cat:warn лишние переприсваивания}
         PC := nil;
-        CopyStream2Lines(ClipBoardStream, PC);
+        // fixme: commented by unxed
+        //CopyStream2Lines(ClipBoardStream, PC);
         if PC <> nil then
           with PC^ do
             begin

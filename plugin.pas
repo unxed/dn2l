@@ -242,7 +242,7 @@ implementation
 
 uses
   Dos, Strings, Commands,
-  ObjType, Messages, DNApp, Advance, Advance1, Advance2, Lfn, DNFuncs
+  ObjType, Messages, DNApp, Advance, Advance1, Advance2, Lfnvp, DNFuncs
   ;
 
 const

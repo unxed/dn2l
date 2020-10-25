@@ -302,7 +302,7 @@ uses
   UserMenu, Microed, FViewer, DblWnd, CmdLine,
   {$IFDEF DNPRG} Dn2PmApi, {$ENDIF} {AK155}
   {$IFDEF SS}Idlers, {$ENDIF}
-  VpSysLow, Lfn, HistList, Advance7,
+  VpSysLow, Lfnvp, HistList, Advance7,
   DnIni,
   DnExec
   ;

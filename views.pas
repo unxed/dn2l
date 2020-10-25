@@ -584,7 +584,7 @@ implementation
 uses
   Startup, DNApp, Advance, Advance1, Advance2, DnIni,
   VpSysLow,
-  Lfn, TitleSet, {DataCompBoy} {AK155 -}VideoMan
+  Lfnvp, TitleSet, {DataCompBoy} {AK155 -}VideoMan
   ;
 
 const

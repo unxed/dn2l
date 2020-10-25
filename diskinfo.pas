@@ -156,7 +156,7 @@ implementation
 uses
   Startup, DNApp, Commands, DNHelp, Tree, xTime
   , Advance, Advance1, Advance2, VPUtils
-  , VpSysLow, Lfn, UKeyMap, Events, Objects2
+  , VpSysLow, Lfnvp, UKeyMap, Events, Objects2
   , FlTl, FlPanelX, PDSetup, Dos
   ;
 

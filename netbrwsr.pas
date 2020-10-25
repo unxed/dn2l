@@ -93,7 +93,7 @@ const
 implementation
 
 uses
-  Lfn, Drivers, Dos, Strings, Commands, PDSetup, Advance, Advance2,
+  Lfnvp, Drivers, Dos, Strings, Commands, PDSetup, Advance, Advance2,
   Advance1, DnApp, Dialogs, FlPanelX;
 
 procedure CopyNetResource(var Source, Dest: TNetResource);

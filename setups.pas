@@ -143,7 +143,7 @@ implementation
 uses
   Dos, Tree, Drives, Advance, Advance1, Advance2, Messages, DNHelp,
   Advance6, DnIni, DnInip, Country, UKeyMap, fnotify
-  , lfn, DNApp, Validate
+  , lfnvp, DNApp, Validate
   ;
 
 procedure ConfirmSetup;

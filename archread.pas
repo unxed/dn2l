@@ -55,7 +55,7 @@ implementation
 
 uses
   Archiver, FStorage, Dos, ArcView, Advance, Advance1, Advance2, Messages,
-  DNApp, Commands, Lfn, Views
+  DNApp, Commands, Lfnvp, Views
   ;
 
 {-DataCompBoy-}

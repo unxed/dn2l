@@ -252,7 +252,7 @@ procedure PutInClipLong(const S: LongString);
 implementation
 
 uses
-  Dos, Lfn, HelpKern, Menus, FileCopy, VPUtils,
+  Dos, Lfnvp, HelpKern, Menus, FileCopy, VPUtils,
   DNHelp, DnIni, DnInip, Histries,
   VideoMan, Memory, DblWnd, Messages, HistList, FileFind,
   {$ifdef modem}
@@ -277,7 +277,7 @@ uses
   CCalc, Collect, {-$VIV}
   DnExec,
   Setups, RegAll, XDblWnd,
-  Idlers, FlPanelX, WinClp,
+  Idlers, FlPanelX, {WinClp, // commented by unxed}
   Drives, Archiver, ArchSet,
   ArcView, FViewer, CmdLine, FBB, DNStdDlg,
   Colors, Microed, ed2, Editor, EdWin,
@@ -600,8 +600,9 @@ constructor TDNApplication.Init;
       LoadStream^.Seek(0);
       ClipBoardStream^.CopyFrom(LoadStream^,
         i32(LoadStream^.GetSize){!!s-});
-      if SystemData.Options and ossUseSysClip <> 0 then
-        SyncClipOut {(false)};
+// fixme: commented by unxed
+//      if SystemData.Options and ossUseSysClip <> 0 then
+//        SyncClipOut {(false)};
       end;
     FreeObject(LoadStream);
     end;
@@ -3095,8 +3096,9 @@ procedure ClearSelection(AFP: Pointer; FC: Pointer);
 {Cat: переписал для поддержки длинных строк в Clipboard-е}
 procedure GetFromClip;
   begin
-  if SystemData.Options and ossUseSysClip <> 0 then
-    SyncClipOut {(true)};
+// fixme: commented by unxed
+//  if SystemData.Options and ossUseSysClip <> 0 then
+//    SyncClipOut {(true)};
   if  (Microed.ClipBoard = nil) or (Microed.ClipBoard^.At(0) = nil)
   then
     S := ''
@@ -3106,8 +3108,9 @@ procedure GetFromClip;
 
 procedure GetFromClipLong(var S: LongString);
   begin
-  if SystemData.Options and ossUseSysClip <> 0 then
-    SyncClipOut {(true)};
+// fixme: commented by unxed
+//  if SystemData.Options and ossUseSysClip <> 0 then
+//    SyncClipOut {(true)};
   if  (Microed.ClipBoard = nil) or (Microed.ClipBoard^.At(0) = nil)
   then
     S := ''
@@ -3121,11 +3124,13 @@ procedure PutInClip(const S: String);
     Dispose(Microed.ClipBoard, Done);
   Microed.ClipBoard := New(PLineCollection, Init(1, 1, True));
   Microed.ClipBoard^.Insert(NewLongStr(S));
-  if SystemData.Options and ossUseSysClip <> 0 then
-    SyncClipIn;
+// fixme: commented by unxed
+//  if SystemData.Options and ossUseSysClip <> 0 then
+//    SyncClipIn;
   if ClipBoardStream <> nil then
     ClipBoardStream^.Seek(Positive(ClipBoardStream^.GetPos-4));
-  CopyLines2Stream(Microed.ClipBoard, ClipBoardStream);
+// fixme: commented by unxed
+//  CopyLines2Stream(Microed.ClipBoard, ClipBoardStream);
   end;
 
 procedure PutInClipLong(const S: LongString);
@@ -3134,11 +3139,13 @@ procedure PutInClipLong(const S: LongString);
     Dispose(Microed.ClipBoard, Done);
   Microed.ClipBoard := New(PLineCollection, Init(1, 1, True));
   Microed.ClipBoard^.Insert(NewLongStr(S));
-  if SystemData.Options and ossUseSysClip <> 0 then
-    SyncClipIn;
+// fixme: commented by unxed
+//  if SystemData.Options and ossUseSysClip <> 0 then
+//    SyncClipIn;
   if ClipBoardStream <> nil then
     ClipBoardStream^.Seek(Positive(ClipBoardStream^.GetPos-4));
-  CopyLines2Stream(Microed.ClipBoard, ClipBoardStream);
+// fixme: commented by unxed
+//  CopyLines2Stream(Microed.ClipBoard, ClipBoardStream);
   end;
 {/Cat}
 

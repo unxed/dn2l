@@ -150,7 +150,7 @@ const
 
 implementation
 uses
-  VPSysLow, Lfn, Files, FlTl,
+  VPSysLow, Lfnvp, Files, FlTl,
   Startup, Tree, DNApp, FileCopy, Eraser, FlPanel, Commands,
   Dialogs, FileFind, FlPanelX, Filediz, CmdLine
   , xTime, Messages, Events, fnotify, Dos
