@@ -51,7 +51,7 @@ unit DiskInfo;
 interface
 
 uses
-  Defines, Streams, Drivers, Views, Collect, TopView_
+  Defines, Streams, Drivers, Views, Collect, TopView
   ;
 
 type

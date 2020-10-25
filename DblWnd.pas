@@ -166,7 +166,7 @@ const
 implementation
 uses
   DiskInfo, Commands, FileCopy, FilesCol, Advance, Advance1, Advance2,
-  Startup, DNApp, TopView_, Tree, FViewer
+  Startup, DNApp, TopView, Tree, FViewer
   {$IFDEF NETINFO}, NetInfo {-$VIV} {$ENDIF}
   , Dos, VPUtils
   ;

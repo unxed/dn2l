@@ -700,9 +700,9 @@ RDirView : TStreamRec = (
       Store: @FlPanel.TDirView.Store);
 RSortView : TStreamRec = (
       ObjType: otSortView;
-      VmtLink: (TypeOf(TopView_.TSortView));
-      Load: @TopView_.TSortView.Load;
-      Store: @TopView_.TSortView.Store);
+      VmtLink: (TypeOf(TopView.TSortView));
+      Load: @TopView.TSortView.Load;
+      Store: @TopView.TSortView.Store);
 RSeparator : TStreamRec = (
       ObjType: otSeparator;
       VmtLink: (TypeOf(DblWnd.TSeparator));
