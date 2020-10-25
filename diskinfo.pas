@@ -96,7 +96,7 @@ type
 
   TDriveView = object(TTopView)
     InfoPanel: PDiskInfo;
-    function GetText(MaxWidth: Integer): String; virtual;
+    function GetText(MaxWidth: Integer): String; // virtual; // fixme: commented by unxed
     destructor Done; virtual;
     end;
 

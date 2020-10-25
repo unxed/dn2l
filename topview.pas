@@ -17,7 +17,7 @@ type
       {` Текст центрируется, не перекрывая элемент управления окна
       менеджера `}
     function GetPalette: PPalette; virtual;
-    function GetText(MaxWidth: Integer): String; virtual;
+    function GetText(MaxWidth: Integer): String; // virtual; // fixme: commented by unxed
       {` Этот метод обязательно должен быть перекрыт `}
     end;
   {`}
