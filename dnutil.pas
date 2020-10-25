@@ -507,7 +507,11 @@ procedure ClearSwap;
     while DosError = 0 do
       begin
       if SR.SR.Time < l then
-        EraseFile(SR.FullName);
+        // length check by unxed
+        // no need to try do delete files with empty names
+        // fixme: but why do we recieve empty names here?
+        if (Length(SR.FullName) > 0) then
+            EraseFile(SR.FullName);
       ClrIO;
       lFindNext(SR);
       end;
