@@ -15,7 +15,7 @@ interface
 
 uses
   Defines, Dos, RTPatch, Advance, Advance1, Advance7, Commands,
-   U_KeyMap,
+   UKeyMap,
   xTime, Objects2, Streams, Drivers, RegExp, Collect, FilesCol, FLTools,
    Lfn,
   Views, Menus, Scroller, Dialogs, Gauge, Messages, DNApp, Filelst,

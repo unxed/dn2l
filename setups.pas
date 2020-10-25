@@ -142,7 +142,7 @@ const
 implementation
 uses
   Dos, Tree, Drives, Advance, Advance1, Advance2, Messages, DNHelp,
-  Advance6, DnIni, DnIni_p, Country_, U_KeyMap, fnotify
+  Advance6, DnIni, DnIni_p, Country_, UKeyMap, fnotify
   , lfn, DNApp, Validate
   ;
 

@@ -220,7 +220,7 @@ uses
   {$IFDEF NETINFO}, Novell {$ENDIF}
   , VpSysLow, VPUtils
   {$IFDEF PLUGIN}, Plugin {$ENDIF}
-  , FlTl, DnIni, Dos, FileType, PDSetup, U_KeyMap
+  , FlTl, DnIni, Dos, FileType, PDSetup, UKeyMap
   , DNHelp, Advance, Advance1, Advance2, Memory, Startup
   ;
 

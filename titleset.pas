@@ -75,7 +75,7 @@ begin
 {$IFDEF WIN32}
 uses
   Windows,
-  VpSysLow, U_KeyMap
+  VpSysLow, UKeyMap
   ;
 
 var

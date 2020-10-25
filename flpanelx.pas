@@ -225,7 +225,7 @@ uses
   {$IFDEF UUDECODE}, UUCode {$ENDIF} {$ENDIF}
   {$IFDEF USEWPS}, Strings
   {$IFDEF OS2}, Dn2PmApi {$ENDIF}
-  {$IFDEF WIN32}, U_KeyMap {$ENDIF}
+  {$IFDEF WIN32}, UKeyMap {$ENDIF}
   {$ENDIF}
   {$IFDEF PLUGIN}, Plugin {$ENDIF}
   , DblWnd, FlPanel, FileType

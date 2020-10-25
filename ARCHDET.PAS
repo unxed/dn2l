@@ -68,7 +68,7 @@ uses
   {$ENDIF}
   profile, Defines, Streams, Advance1, Advance2,
   {$IFDEF PLUGIN}Plugin, {$ENDIF}Messages,
-  FViewer, U_KeyMap, Commands
+  FViewer, UKeyMap, Commands
   ;
 function ZIPDetect: Boolean;
   var

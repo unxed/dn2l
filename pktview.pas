@@ -166,7 +166,7 @@ const
 implementation
 
 uses
-  DNHelp, Advance2, U_KeyMap, xTime, Commands, DNApp
+  DNHelp, Advance2, UKeyMap, xTime, Commands, DNApp
 
   ;
 

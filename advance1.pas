@@ -297,7 +297,7 @@ function Str2Comp(const s: String): Comp;
 implementation
 
 uses
-  DnIni, Startup, Commands, Advance, U_KeyMap
+  DnIni, Startup, Commands, Advance, UKeyMap
   ;
 
 function Dec2(w: Word): Str2;

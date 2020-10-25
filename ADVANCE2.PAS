@@ -200,7 +200,7 @@ uses
   {$IFNDEF DPMI32}Streams,{$ENDIF}
   Advance1, Strings,
   Commands, DNApp, DnIni, Memory, FlPanelX, dnHelp
-  , VpSysLow, U_KeyMap
+  , VpSysLow, UKeyMap
   ;
 
 var

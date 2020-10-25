@@ -283,7 +283,7 @@ uses
   Colors, Microed, ed2, Editor, EdWin,
   Advance, Advance1, Advance2, Advance3, Advance4, Advance7,
   ColorSel, Eraser,  DiskInfo
-  , FileType, PDSetup, U_KeyMap
+  , FileType, PDSetup, UKeyMap
   , Startup, Startupp
   ;
 

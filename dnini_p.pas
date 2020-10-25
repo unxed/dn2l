@@ -82,7 +82,7 @@ implementation
 uses
   Dos, Lfn, profile, Advance, Advance1, Collect, Messages, DNApp,
   {$IFDEF WIN32}VpSysLow, {$ENDIF}
-  U_KeyMap, Country_,
+  UKeyMap, Country_,
   Strings, Streams, Advance2
   ;
 

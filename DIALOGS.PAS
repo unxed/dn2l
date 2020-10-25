@@ -645,7 +645,7 @@ implementation
 uses
   ASCIITab, HistList, Advance, Advance1, Advance2, Commands,
   Startup, xTime, FlPanelX, DNApp, Objects2, DNUtil
-  , VpSysLow, DnIni, Advance6, U_KeyMap
+  , VpSysLow, DnIni, Advance6, UKeyMap
   ;
 
 const

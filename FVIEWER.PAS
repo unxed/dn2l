@@ -247,7 +247,7 @@ type
 implementation
 
 uses
-  Lfn, Dos, Commands, DNHelp, Advance1, Advance2, U_KeyMap
+  Lfn, Dos, Commands, DNHelp, Advance1, Advance2, UKeyMap
   , Microed, Macro, Advance6, VPUtils
   , Memory, Messages, DNApp, Startup, Dialogs,
   {$IFDEF DisAsm}Decoder, {$ENDIF} {piwamoto}

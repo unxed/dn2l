@@ -223,7 +223,7 @@ uses
   Lfn {DataCompBoy}, DNApp, Advance1, Advance2, Startup, Dos,
   Memory, Messages, HistList, Commands, FlPanelX, FlPanel
   , FViewer, Microed,
-  Tree, xTime, DNUtil, U_KeyMap, {!!}CmdLine, Histries,
+  Tree, xTime, DNUtil, UKeyMap, {!!}CmdLine, Histries,
   Archiver, ArchDet {JO},
   ArcView {JO: для разархивирования файлов найденных в архивах}
   , Events {AK155 для LongWorkBegin - LongWorkEnd}
