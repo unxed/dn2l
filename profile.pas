@@ -221,7 +221,10 @@ function FindApplication(AppName: PChar): Boolean;
         StrDispose(CurAppName);
         CurAppName := StrNew(Buf+1);
         CurApp := i32(CurFile^.GetPos);
-        if  (CurAppName <> nil) and (StrIComp(CurAppName, AppName) = 0)
+        // fixme: AppName sometimes becomes nil on linux build
+        // and our StrIComp may have no nil check
+        //if  (CurAppName <> nil) and (StrIComp(CurAppName, AppName) = 0)
+        if  (CurAppName <> nil) and (AppName <> nil) and (StrIComp(CurAppName, AppName) = 0)
         then
           begin
           FindApplication := True;
