@@ -192,7 +192,9 @@ procedure DoStartup;
       F: PTextReader;
     begin
     FileMode := $40;
-    F := New(PTextReader, Init(SourceDir+'dnhgl.grp'));
+    F := nil;
+    //F := New(PTextReader, Init(SourceDir+'dnhgl.grp'));
+    //fixme: commented by unxed
     if F = nil then
       Exit;
     if not F^.Eof then
