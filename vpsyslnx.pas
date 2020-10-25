@@ -4081,6 +4081,15 @@ begin
   WriteToConsole(linebreak);
 end;
 
+procedure SysMessageBox(_Msg, _Title: PChar; _Error: Boolean);
+begin
+  SysDisplayConsoleError(true,_Title,_Msg);
+  if _Error then
+    SysBeep;
+
+  SysReadKey;
+end;
+
 procedure SysDisplayGUIError(Title, Msg: PChar);
 begin
   SysMessageBox(Msg,Title,true);
@@ -4480,15 +4489,6 @@ end;
 function SysSetMemProtection(_Base: Pointer; _Size: Longint; _Flags: Longint): Boolean;
 begin
   Result := (LnxMProtect(_Base, _Size, _Flags) = 0);
-end;
-
-procedure SysMessageBox(_Msg, _Title: PChar; _Error: Boolean);
-begin
-  SysDisplayConsoleError(true,_Title,_Msg);
-  if _Error then
-    SysBeep;
-
-  SysReadKey;
 end;
 
 function SysClipCanPaste: Boolean;
