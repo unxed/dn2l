@@ -3,7 +3,7 @@ dn2l — Dos Navigator Open Source Project linux port tryouts
 
 To build and run (very experimental) dn2l, use this one-liner:
 ```
-wget https://raw.githubusercontent.com/unxed/dn2l/second_try/linux/init.sh && chmod +x init.sh && ./init.sh
+wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x init.sh && ./init.sh
 ```
 
 Current state:
