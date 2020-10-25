@@ -182,7 +182,9 @@ function BuildLayoutConvXlat(const FN: string): Boolean;
 
 procedure XLatStr(var S: String; const XLat: TXLat);
 
-procedure XLatBuf(var B; Len: Integer; const XTable: TXLat);
+procedure XLatBuf(var B; Len: Longint; const XTable: TXLat);
+// by unxed
+//procedure XLatBuf(var B; Len: Integer; const XTable: TXLat);
 
 procedure FreeCodetables;
   {`Уничтожение всех таблиц, кроме ASCII. При построении таблиц
@@ -212,7 +214,9 @@ implementation
   uses
     Country, advance, Streams;
 
-procedure XLatBuf(var B; Len: Integer; const XTable: TXLat);
+procedure XLatBuf(var B; Len: Longint; const XTable: TXLat);
+//procedure XLatBuf(var B; Len: Integer; const XTable: TXLat);
+// by unxed
   assembler;
   {&Frame-} {$USES ESI, EBX, ECX, EDI}
 asm
@@ -468,7 +472,8 @@ procedure ConvToXlat(Conv: PCodeConv; L: Integer; var Xlat: TXLat);
 function BuildCodeTable(const S: string; var XlatCP: TXLatCP): Boolean;
   var
     CP: Integer;
-    Err: Integer;
+    //Err: Integer;
+    Err: Longint; // by unxed
     I, L: Integer;
     Conv: PCodeConv;
     C: Char;

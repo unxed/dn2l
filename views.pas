@@ -625,7 +625,7 @@ const
   FixUpList: PFixupList = nil;
   TheTopView: PView = nil;
 
-  {$I Views._VP}
+  {$I Views.VP}
 procedure TPointInc(var A: TPoint; B: TPoint);
   begin
   Inc(A.X, B.X);

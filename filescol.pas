@@ -1066,7 +1066,9 @@ function SelectDrive; {-$VIV, JO}
     DrvCnt, I, J, K: Byte;
     DrvStrArr: array [1..26] of TDriveRec;
     MaxFullSLength: Byte;
-    SizeStr: String[MaxSizeDig];
+    //SizeStr: String[MaxSizeDig];
+    // removed [MaxSizeDig] by unxed to fix build
+    SizeStr: String;
 
   begin { SelectDrive }
   Items := nil;

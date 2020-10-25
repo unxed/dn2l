@@ -261,7 +261,9 @@ procedure TIndicator.WrtT(X: CReal; var S: String);
 procedure TIndicator.Draw;
   var
     B: TDrawBuffer;
-    S: String[40];
+    S: String;
+    //S: String[40];
+    // removed [40] by unxed to fix build
     C: Byte;
     L, LL: LongInt;
 

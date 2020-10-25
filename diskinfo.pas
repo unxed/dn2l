@@ -827,7 +827,8 @@ procedure ReadDiskInfo(Dr: String; var B: TDiskInfoRec);
     Dispose(F, Done);
     F := nil;
     end;
-  GetSerFileSys(Dr[1], SerialNo, VolumeLabel, FileSys);
+  // fixme: commented by unxed
+  //GetSerFileSys(Dr[1], SerialNo, VolumeLabel, FileSys);
   if VolumeLabel = '' then
     VolumeLabel := GetString(dlDINone); {JO}
   B.VolumeID := NewStr(GetString(dlDIVolumeID) + VolumeLabel+'~');

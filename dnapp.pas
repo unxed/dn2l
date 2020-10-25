@@ -300,7 +300,7 @@ implementation
 uses
   Dos, DNHelp, Advance, Advance1, Advance2, VideoMan,
   UserMenu, Microed, FViewer, DblWnd, CmdLine,
-  {$IFDEF DNPRG} Dn2PmApi, {$ENDIF} {AK155}
+  {$IFDEF DNPRG} {Dn2PmApi // commented by unxed,} {$ENDIF} {AK155}
   {$IFDEF SS}Idlers, {$ENDIF}
   VpSysLow, Lfnvp, HistList, Advance7,
   DnIni,
@@ -950,7 +950,8 @@ procedure TProgram.GetEvent(var Event: TEvent);
       //    по Alt-Alt, то делаем его по таймеpу, чтобы успеть отpаботать
       //    эту комбиацию клавиш
       GetKeyEvent(Event);
-      if  DN_IsBGWindow then
+      if false then // fixme: commented by unxed
+      //if  DN_IsBGWindow then
         begin
        {$IFDEF OS2}
         if TimerExpired(FocusTmr) then

@@ -1,3 +1,5 @@
+{$DEFINE DNPRG} // by unxed
+
 {$IFDEF WIN32}
  {.$DEFINE SEVENZIP}{piwamoto:unpack ARJ,CAB,ZIP with 7-Zip (www.7-zip.org)}
 {$ENDIF}

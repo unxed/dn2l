@@ -50,7 +50,7 @@
 
 program DN;
 {$IFNDEF DPMI32}
-{$R DN.res}
+{.$R DN.res}
 {$ENDIF}
 
 {Cat: методы поддержки плагинов поменялись, поэтому этот кусок

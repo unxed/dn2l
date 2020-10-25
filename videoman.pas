@@ -251,6 +251,12 @@ procedure DetectVideoType; {JO}
 
   end { DetectVideoType };
 {$ENDIF}
+{$IFDEF LINUX}
+  // by unxed: linux part
+  begin { DetectVideoType }
+  VideoType := vtUnknown;
+  end { DetectVideoType };
+{$ENDIF}
 
 {  vtUnknown, vtMONO, vtCGA, vtEGA, vtVGA, vtXGA, vtSVGA, vtVBE2 }
 
@@ -840,5 +846,35 @@ Ex:
     {$ENDIF};
   DoneIniEngine;
   end { SetScrMode };
+
+// by unxed, linux stubs
+
+procedure SetBlink(Mode: Boolean);
+begin
+end;
+
+procedure ResetVGApalette(Update: Boolean);
+begin
+end;
+
+procedure GetPalette(var Buf); { fill buff with palette 64 bytes   }
+begin
+end;
+
+procedure SetPalette(var Buf); { set palette using buf 64 bytes    }
+begin
+end;
+
+function VGASystem: Boolean;
+begin
+end;
+
+procedure Set_palette(color, r, g, b: Byte);
+begin
+end;
+
+procedure Get_palette(color: Byte; var R, G, B: Byte);
+begin
+end;
 
 end.

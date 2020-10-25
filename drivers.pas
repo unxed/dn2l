@@ -352,7 +352,7 @@ var
   EventQLast: record
     end;
 
-  {$I DRIVERS._VP}
+  {$I DRIVERS.VP}
 
   { ******** SYSTEM ERROR HANDLER ******** }
 const

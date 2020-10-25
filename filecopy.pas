@@ -638,7 +638,9 @@ procedure FilesCopy(Files: PCollection; SourcePanel: PView;
       R: TRect;
       S: String;
       D1, D2,
-      L1, L2: String[30];
+//      L1, L2: String[30];
+      // removed [30] to fix build by unxed
+      L1, L2: String;
       PP: array[1..4] of Pointer;
       DD: LongInt;
       DT: DateTime;

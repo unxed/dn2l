@@ -1,4 +1,8 @@
 #/bin/bash
+../vp/vpc -B -T -\$S- -\$I- -\$Zd+ -\$Asm+ -\$D+ -\$LocInfo+ version.pas
+../vp/pe2elf version.exe
+chmod +x version
+./version version.inc linux 0
 ../vp/vpc -B -T -\$S- -\$I- -\$Zd+ -\$Asm+ -\$D+ -\$LocInfo+ dn.pas 
 read -n1 -r -p "Press any key (try Ctrl-C to quit DN)..."
 ../vp/pe2elf dn.exe 

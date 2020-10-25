@@ -856,7 +856,9 @@ function InSpaceMask;
 function InSpaceFilter;
   var
     i: Integer;
-    S: String[13];
+    //S: String[13];
+    // removed [13] by unxed to fix build
+    S: String;
     B: Boolean;
   begin
   InSpaceFilter := True;

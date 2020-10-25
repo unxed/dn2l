@@ -1038,7 +1038,9 @@ function TDrive.GetRealDir;
   var
     MM: record
       case Byte of
-        1: (l: LongInt; S: String[1]);
+        1: (l: LongInt; S: String);
+// removed [1] by unxed to fix build
+//        1: (l: LongInt; S: String[1]);
         2: (C: Char);
       end;
   begin
