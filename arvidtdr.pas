@@ -51,7 +51,7 @@ interface
 
 uses
   Arvid, Objects2, Streams, Advance1, Messages, DNApp, Commands, Collect,
-  Views, Drivers, Startup, UKeyMap, Advance, Lfn, Files, Dos, Tree,
+  Views, Drivers, Startup, UKeyMap, Advance, Lfnvp, Files, Dos, Tree,
   FilesCol, Advance2, Drives, FlPanel, Memory
   , Defines
   ;
@@ -94,7 +94,9 @@ procedure TdrSeekDirectory;
     I, J: LongInt;
     Lv: Integer;
     DD: TTdrDirCell;
-    SS: String[12];
+    SS: String;
+    // removed [12] to fix build by unxed
+    //SS: String[12];
     S: String;
   begin
   with AvtDr^ do

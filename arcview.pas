@@ -157,12 +157,12 @@ uses
   Menus, DNApp, Messages, Dialogs, Gauge, FileCopy, Memory, Startup,
   {$IFDEF ARVID}Arvid, {$ENDIF}xTime, VideoMan, DnExec, FileFind
   , UserMenu {JO: для скрывания панелей при разархивировании }
-  , arc_Zip {JO: для CentralDirRecPresent}
+  , archZip {JO: для CentralDirRecPresent}
   , Events {AK155 для LongWorkBegin - LongWorkEnd}
   , PDSetup, FlPanelX, fnotify, Drivers
-  , Lfn, Files, Tree, Dos, Histries, HistList, FlPanel
+  , Lfnvp, Files, Tree, Dos, Histries, HistList, FlPanel
   , Advance, Advance1, Advance2, ArchDet
-  , arc_RAR, arc_ACE
+  , archRAR, archACE
   ;
 
 const
@@ -799,10 +799,13 @@ TryAgain:
   if SS[1] = '\' then
     Delete(SS, 1, 1); {DelFC(SS);}
   {$IFNDEF OS2}
+  {
   if AType^.UseLFN then
     S2 := ArcName
   else
     S2 := lfGetShortFileName(ArcName);
+  }
+  // commented by unxed
   if ArcName[Length(ArcName)] = '.' then
     S2 := S2+'.';
   S := CnvString(AType^.Extract)+' '+S+
@@ -1257,8 +1260,11 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
       lFSplit(VArcName, ExtrDir, Nm, Xt)
       {JO: для распаковки по F4 архивов, просмотренных через фильтр}
       {$IFNDEF OS2}
+    {
     else
       lFSplit(lfGetShortFileName(ArcName), ExtrDir, Nm, Xt)
+    }
+    // commented by unxed
       {$ENDIF}
       ;
 
@@ -1365,8 +1371,11 @@ TryAgain:
     {$ENDIF}
     ArchiveName := SquashesName(ArcName)
       {$IFNDEF OS2}
+  {
   else
     ArchiveName := SquashesName(lfGetShortFileName(ArcName))
+  }
+  // commented by unxed
       {$ENDIF}
       ;
   if  ( (Options and 4 <> 0) or TempDirUsed) and
@@ -1571,8 +1580,11 @@ procedure TArcDrive.EraseFiles;
     {$ENDIF}
     S := CnvString(AType^.Delete)+' '+SquashesName(ArcName)
       {$IFNDEF OS2}
+  {
   else
     S := CnvString(AType^.Delete)+' '+lfGetShortFileName(ArcName)
+  }
+  // commented by unxed
       {$ENDIF}
       ;
 

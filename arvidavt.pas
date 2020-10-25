@@ -51,7 +51,7 @@ interface
 
 uses
   Arvid, Objects2, Streams, Messages, DNApp, Commands, Collect,
-  Views, Drivers, Startup, UKeyMap, Advance, Lfn, Files, Dos, Tree,
+  Views, Drivers, Startup, UKeyMap, Advance, Lfnvp, Files, Dos, Tree,
   FilesCol, Advance2, Drives, FlPanel, Memory
   , Defines
   ;

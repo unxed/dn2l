@@ -280,7 +280,7 @@ const
 implementation
 
 uses
-  Lfn, Advance, Advance1, Advance2, DNApp, Commands,
+  Lfnvp, Advance, Advance1, Advance2, DNApp, Commands,
   Dialogs, FilesCol, FViewer, Startup,
   ArcView, FileCopy, HistList, {FStorage,}Menus, ArchDet,
    {UserSavr,}DnIni, Messages,
@@ -835,8 +835,11 @@ procedure MakeArchive;
         if Arc^.UseLFN
         then
           S1 := GetLongRelPath(MakeNormName(SS, SR.FullName))
+        {
         else
           S1 := GetShortRelPath(MakeNormName(SS, SR.SR.Name));
+        }
+        ;// commented by unxed
         {$ELSE}
         S1 := GetLongRelPath(MakeNormName(SS, SR.FullName));
         {$ENDIF}
@@ -900,8 +903,10 @@ procedure MakeArchive;
         {$ENDIF}
         S1 := GetLongRelPath(MakeNormName(PF^.Owner^, PF^.FlName[True]))
           {$IFNDEF OS2}
-      else
+      {else
         S1 := GetShortRelPath(MakeNormName(PF^.Owner^, PF^.FlName[True]))
+      }
+      ;//commented by unxed
           {$ENDIF}
           ;
       {JO:  используем символ #$14 для временного разделения имён файлов}
@@ -1486,9 +1491,12 @@ TryAgain:
     {$ENDIF}
     S := Unp+' '+ExtrChar+' '+FMod+SquashesName(S+FName)
       {$IFNDEF OS2}
+  {
   else
     S := Unp+' '+ExtrChar+' '+FMod+SquashesName
           (S+lfGetShortFileName(FName))
+  }
+  // commented by unxed
       {$ENDIF}
       ;
   if Xt = '' then
