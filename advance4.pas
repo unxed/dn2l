@@ -60,7 +60,7 @@ procedure RunSession(Command: String; Bckg: Boolean;
 implementation
 
 uses
-  Advance, Lfn, Advance1, Drivers
+  Advance, Lfnvp, Advance1, Drivers
   , Dos, DnExec, Startup
   ;
 

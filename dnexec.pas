@@ -303,6 +303,7 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   SetTitle(S);
   fExec := True;
   {$IFNDEF DPMI32}
+  (*
   if GUIProgram(S) then
     {$IFDEF OS2}
     S := 'start /f /PGM '+ S
@@ -322,6 +323,8 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
     end
     {$ENDIF}
     ;
+  *)
+  // fixme: commented by unxed
   {$ENDIF}
   {$IFNDEF DPMI32}
   AnsiExec(GetEnv('COMSPEC'), '/c ' + S);
