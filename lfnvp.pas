@@ -204,6 +204,8 @@ procedure lEraseFile(var F: lFile);
   inline;
   begin
   Erase(F.F);
+  if IOResult <> 0 then
+      writeln('can not delete file, see lEraseFile');
   end;
 {$ENDIF}
 procedure lEraseText(var T: lText);
@@ -1416,7 +1418,10 @@ procedure lChDir(Path: String);
     i := GetShareEnd(Path);
     if i = 0 then
       i := 2;
-    CurrentRoot := Copy(ActiveDir, 1, i);
+    CurrentRoot := '';
+    // fixme: commented by unxed
+    // no drive letters on linux
+    //CurrentRoot := Copy(ActiveDir, 1, i);
     if  (InOutRes = 0) and (Length(Path) > 2) and (Path[2] = ':') then
       CurrentPaths[Byte(UpCase(Path[1]))-Byte('A')+1] := ActiveDir;
     end
