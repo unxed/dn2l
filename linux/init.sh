@@ -14,7 +14,7 @@ cd dn2l_tryouts
 git clone https://github.com/unxed/dn2l.git
 # switch to experimental branch
 cd dn2l
-git checkout first_try
+git checkout second_try
 cd ..
 # get virtual pascal
 mkdir vp_full
@@ -33,7 +33,8 @@ rm -rf artlsrc.rar
 rename 'y/A-Z/a-z/' *
 #cp dos.pas math.pas strings.pas use32.pas vpsyslnx.pas vpsyslow.pas vputils.pas windos.pas ../../dn2l
 # dn has it's own vpsyslow.pas, should we overwrite it?
-cp dos.pas math.pas strings.pas vpsyslnx.pas vputils.pas windos.pas ../../dn2l
+# now we have our own use32.pas and vpsyslnx.pas 
+cp dos.pas math.pas strings.pas vputils.pas windos.pas ../../dn2l
 cd ..
 # linux.pas lnxres.pas 
 mkdir lrtlsrc
@@ -91,4 +92,5 @@ chmod +x ../vp/pe2elf
 #../vp/vpc -B -\$S- dn.pas
 #../vp/pe2elf dn.exe
 #chmod +x dn
+#
 ./dn_.sh
