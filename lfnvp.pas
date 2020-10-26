@@ -205,7 +205,10 @@ procedure lEraseFile(var F: lFile);
   begin
   Erase(F.F);
   if IOResult <> 0 then
-      writeln('can not delete file, see lEraseFile');
+    begin
+      // fixme?
+      // writeln('can not delete file, see lEraseFile');
+    end;
   end;
 {$ENDIF}
 procedure lEraseText(var T: lText);
