@@ -159,11 +159,15 @@ function HotKey(const S: String): Char;
   var
     P: Word;
   begin
+  {
   P := Pos('~', S);
   if P <> 0 then
     HotKey := UpCaseArray[S[P+1]]
   else
     HotKey := #0;
+  }
+  // generates fatal errors
+  // fixme: commented by unxed
   end;
 
 procedure MakeCRCTable;
