@@ -146,7 +146,7 @@ except
       'Press any key...');
 {$I-}
     Assign(DNErrFile, SourceDir);
-    ClrIO;
+    //ClrIO;
     Append(DNErrFile);
     if IOResult <> 0 then
       Rewrite(DNErrFile);
