@@ -24,6 +24,9 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 
 ### Licensing and legal notices
 
-License: modified BSD with a separate exception prohibiting re-licensing under another license, including GPL. See LICENSE.txt for full text. 
+License: modified BSD with a separate exception prohibiting re-licensing under anyanother license, including, but not limited to, GPL. See LICENSE.txt for full text.
 
-The original version of the source code taken in DN open source project (dnosp.com) contained some files from the RTL libraries of Free Pascal and Delphi. The main developer of dn2l is a programmer, not a lawyer, and therefore not sure if modified versions of those files can be redistributed or not. To avoid legal problems, all these files were removed from the source code tree, patches with the necessary changes over the original sources from RTL are used instead.
+The original version of the source code taken in DN open source project (dnosp.com) contained some files from the RTL libraries of Virtual Pascal and Delphi. The main developer of dn2l is a programmer, not a lawyer, and therefore not sure if modified versions of those files can be redistributed or not. To avoid legal problems, all these files were removed from the source code tree, patches with the necessary changes over the original sources from VP RTL are used instead. Those patches are:
+1) sysutils.patch, applied upon sysutils.pas header file from VP. According to FSF, headers can not be copyrighted.
+2) vpsyslnx.patch, applied upon vpsyslnx.pas from VP RTL src. Contains only minimal citations from original, so definitly a fair use.
+3) vpsyslow.patch, applied upon vpsyslow.pas from VP RTL src. Contains only minimal citations from original, so definitly a fair use.
