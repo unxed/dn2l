@@ -22,6 +22,12 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 9. Open "dn.pas", "compile"-"build"
 10. Run pe2elf from dn2l_tryouts/vp on dn2l_tryouts/dn2l/out.lnx/dn.exe to get executable ELF file for linux, don't forget to do chmod +x on it
 
+### Possible further improvements (no concrete plans on it all, though)
+
+- Fix remaining bugs
+- Switch to Free Pascal Compiler
+- Add Unicode support
+
 ### Licensing and legal notices
 
 License: modified BSD with a separate exception prohibiting re-licensing under another license, including, but not limited to, GPL. See LICENSE.txt for full text.
