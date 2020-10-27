@@ -396,6 +396,7 @@ constructor TGameView.Init;
     HiScores[I].StLv := 1;
     HiScores[I].EndLv := 1;
     end;
+  {
   S := New(PDosStream, Init(SourceDir+'TETRIS.CFG', stOpenRead));
   if S^.Status = stOK then
     S^.Read(B, SizeOf(HiScores));
@@ -427,6 +428,8 @@ constructor TGameView.Init;
       Dispose(S, Done);
       Break;
       end;
+  }
+  // fixme: commented by unxed. this makes fatal errors
   NewGame;
   RegisterToBackground(@Self);
   end { TGameView.Init };

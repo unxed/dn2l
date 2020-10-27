@@ -9,13 +9,17 @@ interface
 implementation
 
 uses
-  VPSysLow
+  VPSysLow,
+  linux
   ;
 
 function GetCurMSec: Longint;
-  begin
-    Result := 0; // fixme: stub by unxed
-  end;
+var
+  ms: longint;
+begin
+  SysGetDateTime(nil, nil, nil, nil, nil, nil, nil, @ms);
+  GetCurMSec := ms;
+end;
 
 procedure LongWorkBegin;
   begin
