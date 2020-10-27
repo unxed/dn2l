@@ -1,0 +1,246 @@
+--- vpsyslow.pas	2003-11-14 01:18:00.000000000 +0300
++++ vpsyslow.new	2020-10-27 17:39:41.999000000 +0300
+@@ -9,8 +9,16 @@
+ 
+ {&OrgName+,Speed+,AlignCode+,AlignRec-,CDecl-,Far16-,Frame+,Delphi+}
+ {$X+,W-,I-,J+,H-,Delphi+,R-,S-,Q-,B-,T-,Use32+}
++{Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
+ 
+ unit VPSysLow;
++{$I STDEFINE.INC}
++
++//JO: uncomment this define to use this unit with
++//    Virtual Pascal 2.1 Build 243
++//    or keep it commented to use with
++//    Virtual Pascal 2.1 Build 274
++{.$DEFINE B243}
+ 
+ interface
+ 
+@@ -22,6 +30,25 @@
+ 
+ var
+   Video_Adapter_Found : (mda_found, cga_found, ega_found, vga_found);
++  DriveData: Record
++          {00}RecSize:             SmallWord;
++          {02}StructVersion:       SmallWord;
++          {04}SectorsPerCluster:   LongInt;
++          {08}BytesPerSector:      Longint;
++          {0C}AvailClusters:       LongInt;
++          {10}TotalClusters:       LongInt;
++          {14}NumPhisSectorsAvail: LongInt;
++          {18}NumPhisSectorsTotal: LongInt;
++          {1C}AvailAllocUnits:     LongInt;
++          {20}TotalAllocUnits:     LongInt;
++          {24}Reserved:            Array[0..7] of byte;
++             end;
++{$ENDIF}
++
++{$IFDEF WIN32}
++var
++  hExtCmd: THandle;
++procedure InitialiseKeyboardHandler;
+ {$ENDIF}
+ 
+ type
+@@ -29,26 +56,32 @@
+   PQuad = ^TQuad;
+   TSemHandle = Longint;
+ 
++{$IFDEF OS2}
++{$IFNDEF NoMouseMove} { не позиционировать мышь в левый верхний угол}
++const
++  NoMouseMove: boolean = false;
++{$ENDIF}
++Var
++  LargeFileSupport      :(LargeFileSupport_unknown,LargeFileSupport_yes,LargeFileSupport_no)
++                        =LargeFileSupport_unknown;
++{$ENDIF}
++
+ const
+ {$IFDEF OS2}
+   SemInfinite = sem_indefinite_wait;
+-  PathSeparator = ';';
+   AllFilesMask  = '*';
+ {$ENDIF}
+ {$IFDEF WIN32}
+   SemInfinite = INFINITE;
+-  PathSeparator = ';';
+   AllFilesMask  = '*';
+ {$ENDIF}
+ {$IFDEF DPMI32}
+   SemInfinite = -1; // not used
+-  PathSeparator = ';';
+   AllFilesMask  = '*.*';
+ {$ENDIF}
+ {$IFDEF LINUX}
+   SemInfinite = -1; // not used
+   Exception_Maximum_Parameters = 4;
+-  PathSeparator = ':';
+   AllFilesMask  = '*';
+ {$ENDIF}
+ 
+@@ -85,10 +118,10 @@
+ function SysFileCreate(FileName: PChar; Mode,Attr: Longint; var Handle: Longint): Longint;
+ function SysFileOpen_Create(Open: Boolean;FileName: PChar; Mode,Attr,Action: Longint; var Handle: Longint): Longint;
+ function SysFileCopy(_Old, _New: PChar; _Overwrite: Boolean): Boolean;
+-function SysFileSeek(Handle,Distance,Method: Longint; var Actual: Longint): Longint;
++function SysFileSeek(Handle: Longint; Distance: TFileSize;Method: Longint; var Actual: TFileSize): Longint;
+ function SysFileRead(Handle: Longint; var Buffer; Count: Longint; var Actual: Longint): Longint;
+ function SysFileWrite(Handle: Longint; const Buffer; Count: Longint; var Actual: Longint): Longint;
+-function SysFileSetSize(Handle,NewSize: Longint): Longint;
++function SysFileSetSize(Handle: Longint; NewSize: TFileSize): Longint;
+ function SysFileClose(Handle: Longint): Longint;
+ function SysFileFlushBuffers(Handle: Longint): Longint;
+ function SysFileDelete(FileName: PChar): Longint;
+@@ -132,9 +165,14 @@
+     NameLStr: Pointer;
+     Attr: Byte;
+     Time: Longint;
+-    Size: Longint;
++    Size: TFileSize;
+     Name: ShortString;
+     Filler: array[0..3] of Char;
++{$IfDef Os2}
++{$IfDef LargeFileSupport}
++    Level_3L: boolean;          // fil_Standard/fil_StandardL
++{$EndIf}
++{$EndIf}
+ {$IFDEF WIN32}
+     ExcludeAttr: Longint;
+     FindData:    TWin32FindData;
+@@ -168,6 +206,8 @@
+ function SysDiskSize(Drive: Byte): Longint;
+ function SysDiskFreeLong(Drive: Byte): TQuad;
+ function SysDiskSizeLong(Drive: Byte): TQuad;
++function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
++function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
+ function SysGetFileAttr(FileName: PChar; var Attr: Longint): Longint;
+ function SysSetFileAttr(FileName: PChar; Attr: Longint): Longint;
+ function SysGetFileTime(Handle: Longint; var Time: Longint): Longint;
+@@ -207,22 +247,29 @@
+ 
+ function SysMemInfo(_Base: Pointer; _Size: Longint; var _Flags: Longint): Boolean;
+ function SysSetMemProtection(_Base: Pointer; _Size: Longint; _Flags: Longint): Boolean;
++function PhysMemAvail: Longint;  {AK155 20-08-2003}
+ 
+ // GUI
+ 
+-procedure SysMessageBox(_Msg, _Title: PChar; _Error: Boolean);
++{procedure SysMessageBox(_Msg, _Title: PChar; _Error: Boolean);}
+ 
+ // VPUtils
+ 
++//JO: 24-06-2004 - new drive type dtOptical is introduced,
++//                 currently used only in OS/2 version;
+ type
+   TDriveType = ( dtFloppy, dtHDFAT, dtHDHPFS, dtInvalid,
+                  dtNovellNet, dtCDRom, dtLAN, dtHDNTFS, dtUnknown,
+-                 dtTVFS, dtHDExt2, dtJFS );
++                 dtTVFS, dtHDExt2, dtJFS, dtHDFAT32, dtOptical);
+ 
+ function SysGetVolumeLabel(Drive: Char): ShortString;
+ function SysSetVolumeLabel(Drive: Char; _Label: ShortString): Boolean;
+ function SysGetForegroundProcessId: Longint;
+ function SysGetBootDrive: Char;
++
++//JO: не рекомендуется использовать функцию SysGetDriveType
++//    в исходниках DN/2; желательно использовать вместо неё
++//    функцию GetDriveTypeNew из модуля FlTl
+ function SysGetDriveType(Drive: Char): TDriveType;
+ function SysGetVideoModeInfo( Var Cols, Rows, Colours : Word ): Boolean;
+ function SysSetVideoMode(Cols, Rows: Word): Boolean;
+@@ -372,16 +419,27 @@
+ function SysPlatformName: String;
+ function SysPlatformNameForId( _Id: Integer ): String;
+ procedure SysBeep;
+-procedure SysLowInitPreTLS;
+-procedure SysLowInitPostTLS;
++
++{AK155 in 2.1 build 279 SysLowInitPreTLS and SysLowInitPostTLS
++ are inporowed are impowed instead SysLowInit }
++procedure SysLowInit; {for 2.1 build 274 and earlier}
++procedure SysLowInitPreTLS; // added by unxed
++procedure SysLowInitPostTLS; {for 2.1 build 279 and later}
+ 
+ // Clipboard interface
+ 
++{$IFDEF WIN32}
+ function SysClipCanPaste: Boolean;
+ function SysClipCopy(P: PChar; Size: Longint): Boolean;
+ function SysClipPaste(var Size: Integer): Pointer;
++{$ENDIF}
+ 
+ {$IFDEF DPMI32}
++const
++  wheel_counter: Longint = 0;
++   { число kbUp или kbDown, которые нужно сгененрировать как
++    результат вращения колеса мыши. На каждый щелчок колеса
++    надо генерировать 3 клавиатурных события. См. vpsysd32. }
+ {$ENDIF}
+ 
+ {$IFDEF LINUX}
+@@ -395,7 +453,10 @@
+ function Fix_64k(const _Memory: Pointer; const _Length: Longint): pointer;
+ {$ENDIF}
+ 
++// the path char, e.g. 'Y:\VP21'
+ function SysPathSep: Char;
++// the delimiter, e.g. 'C:\DOS;C:\NC'
++function PathSeparator: Char;
+ 
+ implementation
+ 
+@@ -417,7 +478,11 @@
+ 
+ const
+   // Max. Amount of TLS memory
++{$IFDEF B243}
++  SharedMemSize = 8*1024;
++{$ELSE}
+   SharedMemSize = 32*1024;
++{$ENDIF}
+ 
+ type
+   // This type *must* be in sync with System.TSharedMem or *everything* breaks
+@@ -427,9 +492,11 @@
+     MaxThreadCount: Longint;        // Max thread ID so far
+     MaxThreadId   : Longint;        // Updated before MaxThreadCount
+     TlsMemMgr     : TMemoryManager; // Memory Manager used by Tls Mgr
++{$IFNDEF B243}{Fields added in build 274 of VP 2.1}
+     HeapSemaphore : Longint;        // For synchronizing heap access
+     HeapLockCount : Longint;
+     HeapOwnerTid  : Longint;
++{$ENDIF}
+   end;
+ 
+   TDateTimeRec = record
+@@ -487,6 +554,19 @@
+ {$ENDIF}
+ end;
+ 
++function PathSeparator: Char;
++begin
++{$IFDEF LINUX}
++  if FileSystem = fsUnix then
++    Result := ':'
++  else
++    Result := ';';
++{$ELSE}
++  Result := ';';
++{$ENDIF}
++end;
++
++
+ function SysPlatformNameForId( _Id: Integer ): String;
+ begin
+   case _Id of
+@@ -509,7 +589,7 @@
+ function SysFileExists(const FileName: PChar): Boolean;
+ var
+   S: TOSSearchRec;
+-begin
++begin // $27=allow archive+system+hidden+readonly, no directories
+   Result := SysFindFirst(FileName, $27, S, True) = 0;
+   if Result then
+     SysFindClose(S);
