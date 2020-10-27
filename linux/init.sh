@@ -19,9 +19,10 @@ cd ..
 # get virtual pascal
 mkdir vp_full
 cd vp_full
-wget https://web.archive.org/web/20140919203444/http://old-dos.ru/dl.php?id=2044
+#wget https://web.archive.org/web/20140919203444/http://old-dos.ru/dl.php?id=2044
 #wget http://old-dos.ru/dl.php?id=2044
-mv dl.php\?id=2044 vp.zip
+#mv dl.php\?id=2044 vp.zip
+cp "../dn2l/vp_dist/Virtual Pascal.ver.2.1.279.English.zip" ./vp.zip
 7z x vp.zip
 rm -rf vp.zip
 # rtl
