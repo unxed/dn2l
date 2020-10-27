@@ -1,3 +1,12 @@
+@@ -22,7 +22,7 @@
+ procedure SuspendTrm; forward;
+ procedure ResumeTrm;  forward;
+ 
+-//±±±±±±±±±±±±±±[ DATE/TIME CONVERSION FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±
++//--------------[ DATE/TIME CONVERSION FUNCTIONS ]--------------------
+ 
+ const
+   // The number of seconds in a day.
 @@ -46,6 +46,77 @@
      Year,Month,Day,DayOfWeek,Hour,Min,Sec: LongInt;
    end;
@@ -76,6 +85,87 @@
  // Packs a TDateTime record to a single UTC date/time value. No
  // timezone adjustment is performed.
  function PackUTCTime(DateTime: TDateTime): LongInt;
+@@ -164,7 +235,7 @@
+   end;
+ end;
+ 
+-//±±±±±±±±±±±±±±[ FILENAME CONVERSION FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±
++//--------------[ FILENAME CONVERSION FUNCTIONS ]---------------------
+ 
+ 
+ type
+@@ -240,7 +311,7 @@
+   Result := True;
+ end;
+ 
+-//±±±±±±±±±±±±±±[ OTHER HELPER FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ OTHER HELPER FUNCTIONS ]----------------------------
+ 
+ procedure Unimplemented(const S: string);
+   var
+@@ -263,7 +334,7 @@
+   end;
+ 
+ 
+-//±±±±±±±±±±±±±±[ BASIC FILE FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ BASIC FILE FUNCTIONS ]------------------------------
+ 
+ // Please refer to the online help for VpSysLow for details
+ 
+@@ -653,7 +724,7 @@
+   Result := LnxRmDir(Path);
+ end;
+ 
+-//±±±±±±±±±±±±±±[ MEMORY MANAGEMENT ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ MEMORY MANAGEMENT ]---------------------------------
+ 
+ // Memory management stuff. Since the Linux munmap call needs to
+ // know the size of the block to be disposed, but Virtual Pascal
+@@ -832,7 +909,7 @@
+   Result := 2;
+ end;
+ 
+-//±±±±±±±±±±±±±±[ THREAD MANAGEMENT ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ THREAD MANAGEMENT ]---------------------------------
+ 
+ // Since Linux does not have thread IDs starting from 1, but
+ // assigns each thread a unique process ID instead, we need
+@@ -1217,7 +1294,7 @@
+   Unimplemented('SysCtrlLeaveCritSec');
+ end;
+ 
+-//±±±±±±±±±±±±±±[ ENVIRONMENT ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ ENVIRONMENT ]---------------------------------------
+ 
+ type
+   TPCharArray = array[0..1023] of PChar;
+@@ -1370,7 +1447,7 @@
+   LnxSetTimeOfDay(TimeVal, TimeZone);
+ end;
+ 
+-//±±±±±±±±±±±±±±[ DISK FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ DISK FUNCTIONS ]------------------------------------
+ 
+ const
+   VerifyFlag: Boolean = False;
+@@ -2059,7 +2158,7 @@
+   Result := (ExecResult shr 8) or (Lo(ExecResult) shl 24)
+ end;
+ 
+-//±±±±±±±±±±±±±±[ STRING HANDLING ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ STRING HANDLING ]-----------------------------------
+ 
+ type
+   TCharCaseTable = array[0..255] of Char;
+@@ -2220,7 +2319,7 @@
+   Result := 0;
+ end;
+ 
+-//±±±±±±±±±±±±±±[ SCREEN AND KEYBOARD ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ SCREEN AND KEYBOARD ]-------------------------------
+ 
+ var
+   // Terminal in/out handle
 @@ -3459,6 +3558,7 @@
    J, X, Y, X_STOP, Y_STOP, XLimit: Integer;
    NextLimit: Integer;
@@ -95,3 +185,12 @@
  
              end; (* case Chr *)
  
+@@ -4212,7 +4323,7 @@
+   SysSetVideoMode:=(Cols=ScrWidth) and (Rows=ScrHeight);
+ end;
+ 
+-//±±±±±±±±±±±±±±[ SEMPAHORE FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
++//--------------[ SEMPAHORE FUNCTIONS ]-------------------------------
+ 
+ type
+   sem_types             =(sem_mutex,sem_event);

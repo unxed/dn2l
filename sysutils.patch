@@ -1,0 +1,1912 @@
+@@ -12,8 +12,18 @@
+ 
+ unit SysUtils;
+ 
+-{$H+,J+,P+,S-,T-,W-,R-,Z-,X+}
+-{&Delphi+,PureInt+,AlignRec-,AlignData+,SmartLink+,CDecl-,Use32-,Open32-}
++{AK155 25-06-2002
++    В этом модуле оставлено только то, что необходимо для
++функционирования исключений. В том, что осталсь, Format и
++ShowException упрощены и реализован через Drivers.FormatStr.
++}
++
++{$H-,J+,P+,S-,T-,W-,R-,Z-,X+}
++{&Delphi+,AlignRec-,AlignData+,CDecl-,Use32-,Open32-}
++
++{$IFDEF LINUX}
++  {$UNDEF Win32}
++{$ENDIF}
+ 
+ interface
+ 
+@@ -23,181 +33,23 @@
+ {$ENDIF}
+   VpSysLow;
+ 
++{определения Integer и MaxInt нужны для модуля Math }
+ type
+   Integer = Longint;
+-
+ const
+   MaxInt = MaxLongint;
+ 
+-{ File open modes }
+-
+-  fmOpenRead       = open_access_readOnly;
+-  fmOpenWrite      = open_access_writeOnly;
+-  fmOpenReadWrite  = open_access_ReadWrite;
+-  fmShareCompat    = open_share_denyNone;
+-  fmShareExclusive = open_share_denyReadWrite;
+-  fmShareDenyWrite = open_share_denyWrite;
+-  fmShareDenyRead  = open_share_denyRead;
+-  fmShareDenyNone  = open_share_denyNone;
+-
+-{ File attribute constants }
+-
+-  faReadOnly  = $00000001;
+-  faHidden    = $00000002;
+-  faSysFile   = $00000004;
+-  faVolumeID  = $00000008;      { Not used by OS/2 }
+-  faDirectory = $00000010;
+-  faArchive   = $00000020;
+-  faAnyFile   = $00000037;
+-
+-{ File mode magic numbers }
+-
+-  fmClosed = $A55AD7B0;
+-  fmInput  = $A55AD7B1;
+-  fmOutput = $A55AD7B2;
+-  fmInOut  = $A55AD7B3;
+-
+-{ Seconds and milliseconds per day }
+-
+-  SecsPerDay = 24 * 60 * 60;
+-  MSecsPerDay = SecsPerDay * 1000;
+-
+-{ Days between 1/1/0001 and 12/31/1899 }
+-
+-  DateDelta = 693594;
+-
+-type
+-
+-{ Type conversion records }
+-
+-  WordRec = packed record
+-    Lo, Hi: Byte;
+-  end;
+-
+-  LongRec = packed record
+-    Lo, Hi: Word;
+-  end;
+-
+-  PtrRec = record
+-    Ofs: Longint;
+-  end;
+-
+-  TMethod = record
+-    Code, Data: Pointer;
+-  end;
+-
+-{ General arrays }
+-
+-  PByteArray = ^TByteArray;
+-  TByteArray = array[0..512*1024*1024-1] of Byte;
+-
+-  PWordArray = ^TWordArray;
+-  TWordArray = array[0..256*1024*1024-1] of Word;
+-
+-{ Generic procedure pointer }
+-
+-  TProcedure = procedure;
+-
+-{ Generic filename type }
+-
+-  TFileName = string;
+-
+-{ Search record used by FindFirst, FindNext, and FindClose }
+-
+-  TSearchRec = packed record
+-    FindHandle: Longint;
+-    NameLStr: Pointer;
+-    Attr: Byte;
+-    Time: Longint;
+-    Size: Longint;
+-    Name: ShortString;
+-    Filler: array[0..3] of Char;
+-{$IFDEF LINUX}
+-    // Placed here to make patch work with full version as
+-    // well as with pure interface version of SysUtils.
+-    Private_data: array[1..sizeof(TOSSearchRec)-4-4-1-4-4-256-4] of Byte;
+-{$ENDIF}
+-{$IFDEF WIN32}
+-    ExcludeAttr: Longint;
+-    FindData: TWin32FindData;
+-{$ENDIF}
+-{$IFDEF DPMI32}
+-    Private_data: array[1..sizeof(TOSSearchRec)-4-4-1-4-4-256-4] of Byte;
+-{$ENDIF}
+-  end;
+-
+-{ Typed-file and untyped-file record }
+-
+-  TFileRec = record
+-    Handle: Integer;
+-    Mode: Integer;
+-    RecSize: Cardinal;
+-    Private: array[1..28] of Byte;
+-    UserData: array[1..32] of Byte;
+-    Name: array[0..259] of Char;
+-  end;
+-
+-{ Text file record structure used for Text files }
+-
+-  PTextBuf = ^TTextBuf;
+-  TTextBuf = array[0..127] of Char;
+-  TTextRec = record
+-    Handle: Integer;
+-    Mode: Integer;
+-    BufSize: Cardinal;
+-    BufPos: Cardinal;
+-    BufEnd: Cardinal;
+-    BufPtr: PChar;
+-    OpenFunc: Pointer;
+-    InOutFunc: Pointer;
+-    FlushFunc: Pointer;
+-    CloseFunc: Pointer;
+-    UserData: array[1..32] of Byte;
+-    Name: array[0..259] of Char;
+-    Buffer: TTextBuf;
+-  end;
+-
+-{ FloatToText, FloatToTextFmt, TextToFloat, and FloatToDecimal type codes }
+-
+-  TFloatValue = (fvExtended, fvCurrency);
+-
+-{ FloatToText format codes }
+-
+-  TFloatFormat = (ffGeneral, ffExponent, ffFixed, ffNumber, ffCurrency);
+-
+-{ FloatToDecimal result record }
+-
+-  TFloatRec = packed record
+-    Exponent: Smallint;
+-    Negative: Boolean;
+-    Digits: array[0..20] of Char;
+-  end;
+-
+-{ Date and time record }
+-
+-  TTimeStamp = record
+-    Time: Integer;      { Number of milliseconds since midnight }
+-    Date: Integer;      { One plus number of days since 1/1/0001 }
+-  end;
+-
+ { Exceptions }
+ 
++type
+   Exception = class(TObject)
+   private
+     FMessage: String;
+-    FHelpContext: Integer;
+   public
+     constructor Create(const Msg: string);
+     constructor CreateFmt(const Msg: string; const Args: array of const);
+-    constructor CreateRes(Ident: Integer);
+-    constructor CreateResFmt(Ident: Integer; const Args: array of const);
+-    constructor CreateHelp(const Msg: string; AHelpContext: Integer);
+-    constructor CreateFmtHelp(const Msg: string; const Args: array of const;
+-      AHelpContext: Integer);
+-    constructor CreateResHelp(Ident: Integer; AHelpContext: Integer);
+-    constructor CreateResFmtHelp(Ident: Integer; const Args: array of const;
+-      AHelpContext: Integer);
+-    property HelpContext: Integer read FHelpContext write FHelpContext;
++    constructor CreateRes(Ident: Longint);
++    constructor CreateResFmt(Ident: Longint; const Args: array of const);
+     property Message: string read FMessage write FMessage;
+   end;
+ 
+@@ -215,7 +67,7 @@
+ 
+   EInOutError = class(Exception)
+   public
+-    ErrorCode: Integer;
++    ErrorCode: Longint;
+   end;
+ 
+   EIntError = class(Exception);
+@@ -228,7 +80,6 @@
+   EZeroDivide = class(EMathError);
+   EOverflow = class(EMathError);
+   EUnderflow = class(EMathError);
+-  EFloatError = class(EMathError);
+ 
+   EInvalidPointer = class(Exception);
+ 
+@@ -249,1429 +100,313 @@
+     ExceptionRecord: POSExceptionRecord;
+   end;
+ 
+-const
+-
+-{ Empty string and null string pointer. These constants are provided for
+-  backwards compatibility only. }
+-
+-  EmptyStr: string = '';
+-  NullStr: PString = @EmptyStr;
+-
+-{ Win32 platform identifier.  This will be one of the following values:
+-
+-    0 : Win32s      VER_PLATFORM_WIN32s
+-    1 : Windows 95  VER_PLATFORM_WIN32_WINDOWS
+-    2 : Windows NT  VER_PLATFORM_WIN32_NT
+-    -1: OS/2 }
+-
+-  Win32Platform: Integer = -1;
+ 
+-{ Currency and date/time formatting options }
+-
+-{ CurrencyString - Defines the currency symbol used in floating-point to
+-  decimal conversions. Fetched using SysGetCurrencyFormat.
+-
+-  CurrencyFormat - Defines the currency symbol placement and separation
+-  used in floating-point to decimal conversions. Possible values are:
+-
+-    0 = '$1'
+-    1 = '1$'
+-    2 = '$ 1'
+-    3 = '1 $'
+-
+-  The initial value is fetched using SysGetCurrencyFormat.
+-
+-  NegCurrFormat - Defines the currency format for used in floating-point to
+-  decimal conversions of negative numbers. Possible values are:
+-
+-    0 = '($1)'      4 = '(1$)'      8 = '-1 $'      12 = '$ -1'
+-    1 = '-$1'       5 = '-1$'       9 = '-$ 1'      13 = '1- $'
+-    2 = '$-1'       6 = '1-$'      10 = '1 $-'      14 = '($ 1)'
+-    3 = '$1-'       7 = '1$-'      11 = '$ 1-'      15 = '(1 $)'
+-
+-  The initial value is fetched using SysGetCurrencyFormat.
+-
+-  ThousandSeparator - The character used to separate thousands in numbers
+-  with more than three digits to the left of the decimal separator.
+-  The initial value is fetched using SysGetCurrencyFormat.
+-
+-  DecimalSeparator - The character used to separate the integer part from
+-  the fractional part of a number. The initial value is fetched using
+-  SysGetCurrencyFormat.
+-
+-  CurrencyDecimals - The number of digits to the right of the decimal point
+-  in a currency amount. The initial value is fetched using
+-  SysGetCurrencyFormat.
+-
+-  DateSeparator - The character used to separate the year, month, and day
+-  parts of a date value. The initial value is fetched using SysGetDateFormat.
+-
+-  ShortDateFormat - The format string used to convert a date value to a
+-  short string suitable for editing. For a complete description of date and
+-  time format strings, refer to the documentation for the FormatDate
+-  function. The short date format should only use the date separator
+-  character and the  m, mm, d, dd, yy, and yyyy format specifiers. The
+-  initial value is fetched using SysGetDateFormat.
++{ Exception handling routines }
+ 
+-  LongDateFormat - The format string used to convert a date value to a long
+-  string suitable for display but not for editing. For a complete description
+-  of date and time format strings, refer to the documentation for the
+-  FormatDate function. The initial value is fetched using SysGetDateFormat.
++function ExceptObject: TObject;
++function ExceptAddr: Pointer;
++function ReturnAddr: Pointer;
+ 
+-  TimeSeparator - The character used to separate the hour, minute, and
+-  second parts of a time value. The initial value is fetched using
+-  SysGetTimeFormat.
++procedure ShowException(ExceptObject: TObject; ExceptAddr: Pointer);
+ 
+-  TimeAMString - The suffix string used for time values between 00:00 and
+-  11:59 in 12-hour clock format. The initial value is fetched using
+-  SysGetTimeFormat.
++function Format(const Fmt: String; const Args: array of const): String;
+ 
+-  TimePMString - The suffix string used for time values between 12:00 and
+-  23:59 in 12-hour clock format. The initial value is fetched using
+-  SysGetTimeFormat.
++{$R SYSUTILS.RES}
+ 
+-  ShortTimeFormat - The format string used to convert a time value to a
+-  short string with only hours and minutes. The default value is computed
+-  by SysGetTimeFormat.
++implementation
++uses
++  Strings,
++  Drivers;
+ 
+-  LongTimeFormat - The format string used to convert a time value to a long
+-  string with hours, minutes, and seconds. The default value is computed
+-  by SysGetTimeFormat.
++{$I SYSUTILS.INC}
+ 
+-  ShortMonthNames - Array of strings containing short month names. The mmm
+-  format specifier in a format string passed to FormatDate causes a short
+-  month name to be substituted.
++(* !!!
++{$IFNDEF PM_VERSION}
++  {$I SYSUTILS.PA1}
++{$ENDIF}
++*)
+ 
+-  LongMonthNames - Array of strings containing long month names. The mmmm
+-  format specifier in a format string passed to FormatDate causes a long
+-  month name to be substituted.
++{ Get return address of caller }
+ 
+-  ShortDayNames - Array of strings containing short day names. The ddd
+-  format specifier in a format string passed to FormatDate causes a short
+-  day name to be substituted.
++function ReturnAddr: Pointer; {&USES None} {&FRAME-}
++asm
++                mov     eax,[ebp+4]
++end;
+ 
+-  LongDayNames - Array of strings containing long day names. The dddd
+-  format specifier in a format string passed to FormatDate causes a long
+-  day name to be substituted. }
++{ Exception handling routines }
+ 
+ var
+-  CurrencyString: string;
+-  CurrencyFormat: Byte;
+-  NegCurrFormat: Byte;
+-  ThousandSeparator: Char;
+-  DecimalSeparator: Char;
+-  CurrencyDecimals: Byte;
+-  DateSeparator: Char;
+-  ShortDateFormat: string;
+-  LongDateFormat: string;
+-  TimeSeparator: Char;
+-  TimeAMString: string;
+-  TimePMString: string;
+-  ShortTimeFormat: string;
+-  LongTimeFormat: string;
+-  ShortMonthNames: array[1..12] of string;
+-  LongMonthNames: array[1..12] of string;
+-  ShortDayNames: array[1..7] of string;
+-  LongDayNames: array[1..7] of string;
+-
+-{ Memory management routines }
+-
+-{ AllocMem allocates a block of the given size on the heap. Each byte in
+-  the allocated buffer is set to zero. To dispose the buffer, use the
+-  FreeMem standard procedure. }
+-
+-function AllocMem(Size: Cardinal): Pointer;
+-
+-{ String handling routines }
+-
+-{ NewStr allocates a copy of the given string on the heap. The size of the
+-  allocated heap block is Length(S) + 1. If the string is empty, NewStr
+-  returns NullStr and doesn't allocate any heap space. To dispose the
+-  string, use DisposeStr. }
+-
+-function NewStr(const S: String): PString;
+-
+-{ DisposeStr disposes a string pointer that was previously allocated using
+-  NewStr. If the given pointer is NIL or points to an empty string,
+-  StrDispose does nothing. }
+-
+-procedure DisposeStr(P: PString);
+-
+-{ AssignStr assigns a new dynamically allocated string to the given string
+-  pointer. AssignStr corresponds to the statement "DisposeStr(P)" followed
+-  by the statement "P := NewStr(S)". Note that P must be NIL or contain a
+-  valid string pointer before calling AssignStr. In other words, AssignStr
+-  cannot be used to initialize a string pointer variable. }
+-
+-procedure AssignStr(var P: PString; const S: string);
+-
+-{ AppendStr appends S to the end of Dest. AppendStr corresponds to the
+-  statement "Dest := Dest + S", which is more efficient. }
+-
+-procedure AppendStr(var Dest: string; const S: string);
+-
+-{ UpperCase converts all ASCII characters in the given string to upper case.
+-  The conversion affects only 7-bit ASCII characters between 'a' and 'z'. To
+-  convert 8-bit international characters, use AnsiUpperCase. }
+-
+-function UpperCase(const S: string): string;
+-
+-{ LowerCase converts all ASCII characters in the given string to lower case.
+-  The conversion affects only 7-bit ASCII characters between 'A' and 'Z'. To
+-  convert 8-bit international characters, use AnsiLowerCase. }
+-
+-function LowerCase(const S: string): string;
+-
+-{ CompareStr compares S1 to S2, with case-sensitivity. The return value is
+-  less than 0 if S1 < S2, 0 if S1 = S2, or greater than 0 if S1 > S2. The
+-  compare operation is based on the 8-bit ordinal value of each character
+-  and is not affected by the current code page. }
+-
+-function CompareStr(const S1, S2: string): Integer;
+-
+-{ CompareMem performs a binary compare of Length bytes of memory referenced
+-  by P1 to that of P2.  CompareMem returns True if the memory referenced by
+-  P1 is identical to that of P2. }
+-
+-function CompareMem(P1, P2: Pointer; Length: Integer): Boolean;
+-
+-{ CompareText compares S1 to S2, without case-sensitivity. The return value
+-  is the same as for CompareStr. The compare operation is based on the 8-bit
+-  ordinal value of each character, after converting 'a'..'z' to 'A'..'Z',
+-  and is not affected by the current code page. }
+-
+-function CompareText(const S1, S2: string): Integer;
+-
+-{ SameText compares S1 to S2, without case-sensitivity. Returns true if
+-  S1 and S2 are the equal, that is, if CompareText would return 0. SameText
+-  has the same 8-bit limitations as CompareText }
+-
+-function SameText(const S1, S2: string): Boolean;
+-
+-{ AnsiUpperCase converts all characters in the given string to upper case.
+-  The conversion uses the current Windows locale. }
+-
+-function AnsiUpperCase(const S: string): string;
+-
+-{ AnsiLowerCase converts all characters in the given string to lower case.
+-  The conversion uses the current code page. }
+-
+-function AnsiLowerCase(const S: string): string;
+-
+-{ AnsiCompareStr compares S1 to S2, with case-sensitivity. The compare
+-  operation is controlled by the current code page. The return value is the
+-  same as for CompareStr. }
+-
+-function AnsiCompareStr(const S1, S2: string): Integer;
+-
+-{ AnsiSameStr compares S1 to S2, with case-sensitivity. The compare
+-  operation is controlled by the current Windows locale. The return value
+-  is True if AnsiCompareStr would have returned 0. }
+-
+-function AnsiSameStr(const S1, S2: string): Boolean;
+-
+-{ AnsiCompareText compares S1 to S2, without case-sensitivity. The compare
+-  operation is controlled by the current Windows locale. The return value
+-  is the same as for CompareStr. }
+-
+-function AnsiCompareText(const S1, S2: string): Integer;
+-
+-{ AnsiSameText compares S1 to S2, without case-sensitivity. The compare
+-  operation is controlled by the current Windows locale. The return value
+-  is True if AnsiCompareText would have returned 0. }
+-
+-function AnsiSameText(const S1, S2: string): Boolean;
+-
+-{ AnsiStrComp compares S1 to S2, with case-sensitivity. The compare
+-  operation is controlled by the current Windows locale. The return value
+-  is the same as for CompareStr. }
+-
+-function AnsiStrComp(S1, S2: PChar): Integer;
+-
+-{ AnsiStrIComp compares S1 to S2, without case-sensitivity. The compare
+-  operation is controlled by the current code page. The return value
+-  is the same as for CompareStr. }
+-
+-function AnsiStrIComp(S1, S2: PChar): Integer;
+-
+-{ AnsiStrLComp compares S1 to S2, with case-sensitivity, up to a maximum
+-  length of MaxLen bytes. The compare operation is controlled by the
+-  current code page. The return value is the same as for CompareStr. }
+-
+-function AnsiStrLComp(S1, S2: PChar; MaxLen: Cardinal): Integer;
+-
+-{ AnsiStrLIComp compares S1 to S2, without case-sensitivity, up to a maximum
+-  length of MaxLen bytes. The compare operation is controlled by the
+-  current code page. The return value is the same as for CompareStr. }
+-
+-function AnsiStrLIComp(S1, S2: PChar; MaxLen: Cardinal): Integer;
+-
+-{ AnsiStrLower converts all characters in the given string to lower case.
+-  The conversion uses the current code page. }
+-
+-function AnsiStrLower(Str: PChar): PChar;
+-
+-{ AnsiStrUpper converts all characters in the given string to upper case.
+-  The conversion uses the current code page. }
+-
+-function AnsiStrUpper(Str: PChar): PChar;
+-
+-{ Trim trims leading and trailing spaces and control characters from the
+-  given string. }
+-
+-function Trim(const S: string): string;
+-
+-{ TrimLeft trims leading spaces and control characters from the given
+-  string. }
+-
+-function TrimLeft(const S: string): string;
+-
+-{ TrimRight trims trailing spaces and control characters from the given
+-  string. }
+-
+-function TrimRight(const S: string): string;
+-
+-{ QuotedStr returns the given string as a quoted string. A single quote
+-  character is inserted at the beginning and the end of the string, and
+-  for each single quote character in the string, another one is added. }
+-
+-function QuotedStr(const S: string): string;
+-
+-{ AdjustLineBreaks adjusts all line breaks in the given string to be true
+-  CR/LF sequences. The function changes any CR characters not followed by
+-  a LF and any LF characters not preceded by a CR into CR/LF pairs. }
+-
+-function AdjustLineBreaks(const S: string): string;
+-
+-{ IsValidIdent returns true if the given string is a valid identifier. An
+-  identifier is defined as a character from the set ['A'..'Z', 'a'..'z', '_']
+-  followed by zero or more characters from the set ['A'..'Z', 'a'..'z',
+-  '0..'9', '_']. }
+-
+-function IsValidIdent(const Ident: string): Boolean;
+-
+-{ IntToStr converts the given value to its decimal string representation. }
+-
+-function IntToStr(Value: Integer): string;
+-
+-{ IntToHex converts the given value to a hexadecimal string representation
+-  with the minimum number of digits specified. }
+-
+-function IntToHex(Value: Integer; Digits: Integer): string;
+-
+-{ StrToInt converts the given string to an integer value. If the string
+-  doesn't contain a valid value, an EConvertError exception is raised. }
+-
+-function StrToInt(const S: string): Integer;
+-
+-{ StrToIntDef converts the given string to an integer value. If the string
+-  doesn't contain a valid value, the value given by Default is returned. }
+-
+-function StrToIntDef(const S: string; Default: Integer): Integer;
+-
+-{ LoadStr loads the string resource given by Ident from the application's
+-  executable file. If the string resource does not exist, an empty string
+-  is returned. }
+-
+-function LoadStr(Ident: Integer): string;
+-
+-{ LoadStr loads the string resource given by Ident from the application's
+-  executable file, and uses it as the format string in a call to the
+-  Format function with the given arguments. }
+-
+-function FmtLoadStr(Ident: Integer; const Args: array of const): string;
+-
+-{ File management routines }
+-
+-{ FileOpen opens the specified file using the specified access mode. The
+-  access mode value is constructed by OR-ing one of the fmOpenXXXX constants
+-  with one of the fmShareXXXX constants. If the return value is positive,
+-  the function was successful and the value is the file handle of the opened
+-  file. If the return value is negative, an error occurred and the value is
+-  a negative OS/2 error code. }
+-
+-function FileOpen(const FileName: string; Mode: Integer): Integer;
+-
+-{ FileCreate creates a new file by the specified name. If the return value
+-  is positive, the function was successful and the value is the file handle
+-  of the new file. If the return value is negative, an error occurred and
+-  the value is a negative OS/2 error code. }
+-
+-function FileCreate(const FileName: string): Integer;
+-
+-{ FileRead reads Count bytes from the file given by Handle into the buffer
+-  specified by Buffer. The return value is the number of bytes actually
+-  read; it is less than Count if the end of the file was reached. The return
+-  value is -1 if an error occurred. }
+-
+-function FileRead(Handle: Integer; var Buffer; Count: Integer): Integer;
+-
+-{ FileWrite writes Count bytes to the file given by Handle from the buffer
+-  specified by Buffer. The return value is the number of bytes actually
+-  written, or -1 if an error occurred. }
+-
+-function FileWrite(Handle: Integer; const Buffer; Count: Integer): Integer;
+-
+-{ FileSeek changes the current position of the file given by Handle to be
+-  Offset bytes relative to the point given by Origin. Origin = 0 means that
+-  Offset is relative to the beginning of the file, Origin = 1 means that
+-  Offset is relative to the current position, and Origin = 2 means that
+-  Offset is relative to the end of the file. The return value is the new
+-  current position, relative to the beginning of the file, or -1 if an error
+-  occurred. }
+-
+-function FileSeek(Handle, Offset, Origin: Integer): Integer;
+-
+-{ FileClose closes the specified file. }
+-
+-procedure FileClose(Handle: Integer);
+-
+-{ FileAge returns the date-and-time stamp of the specified file. The return
+-  value can be converted to a TDateTime value using the FileDateToDateTime
+-  function. The return value is -1 if the file does not exist. }
+-
+-function FileAge(const FileName: string): Integer;
+-
+-{ FileExists returns a boolean value that indicates whether the specified
+-  file exists. }
+-
+-function FileExists(const FileName: string): Boolean;
+-
+-{ FindFirst searches the directory given by Path for the first entry that
+-  matches the filename given by Path and the attributes given by Attr. The
+-  result is returned in the search record given by SearchRec. The return
+-  value is zero if the function was successful. Otherwise the return value
+-  is an OS/2 error code; a value of 18 indicates that no files were
+-  found. FindFirst is typically used in conjunction with FindNext and
+-  FindClose as follows:
+-
+-    Result := FindFirst(Path, Attr, SearchRec);
+-    while Result = 0 do
+-    begin
+-      ProcessSearchRec(SearchRec);
+-      Result := FindNext(SearchRec);
+-    end;
+-    FindClose(SearchRec);
+-
+-  where ProcessSearchRec represents user-defined code that processes the
+-  information in a search record. }
+-
+-function FindFirst(const Path: string; Attr: Integer;
+-  var F: TSearchRec): Integer;
+-
+-{ FindNext returs the next entry that matches the name and attributes
+-  specified in a previous call to FindFirst. The search record must be one
+-  that was passed to FindFirst. The return value is zero if the function was
+-  successful. Otherwise the return value is an OS/2 error code; a
+-  value of 18 indicates that there are no more files matching the search
+-  criteria. }
+-
+-function FindNext(var F: TSearchRec): Integer;
+-
+-{ FindClose terminates a FindFirst/FindNext sequence. FindClose does nothing
+-  in the 16-bit version of Windows, but is required in the 32-bit version,
+-  so for maximum portability every FindFirst/FindNext sequence should end
+-  with a call to FindClose. }
+-
+-procedure FindClose(var F: TSearchRec);
+-
+-{ FileGetDate returns the DOS date-and-time stamp of the file given by
+-  Handle. The return value is -1 if the handle is invalid. The
+-  FileDateToDateTime function can be used to convert the returned value to
+-  a TDateTime value. }
+-
+-function FileGetDate(Handle: Integer): Integer;
+-
+-{ FileSetDate sets the DOS date-and-time stamp of the file given by Handle
+-  to the value given by Age. The DateTimeToFileDate function can be used to
+-  convert a TDateTime value to a DOS date-and-time stamp. The return value
+-  is zero if the function was successful. Otherwise the return value is an
+-  OS/2 error code. }
+-
+-function FileSetDate(Handle, Age: Integer): Integer;
+-
+-{ FileGetAttr returns the file attributes of the file given by FileName. The
+-  attributes can be examined by AND-ing with the faXXXX constants defined
+-  above. A return value of -1 indicates that an error occurred. }
+-
+-function FileGetAttr(const FileName: string): Integer;
+-
+-{ FileSetAttr sets the file attributes of the file given by FileName to the
+-  value given by Attr. The attribute value is formed by OR-ing the
+-  appropriate faXXXX constants. The return value is zero if the function was
+-  successful. Otherwise the return value is an OS/2 error code. }
+-
+-function FileSetAttr(const FileName: string; Attr: Integer): Integer;
+-
+-{ DeleteFile deletes the file given by FileName. The return value is True if
+-  the file was successfully deleted, or False if an error occurred. }
+-
+-function DeleteFile(const FileName: string): Boolean;
+-
+-{ RenameFile renames the file given by OldName to the name given by NewName.
+-  The return value is True if the file was successfully renamed, or False if
+-  an error occurred. }
+-
+-function RenameFile(const OldName, NewName: string): Boolean;
+-
+-{ ChangeFileExt changes the extension of a filename. FileName specifies a
+-  filename with or without an extension, and Extension specifies the new
+-  extension for the filename. The new extension can be a an empty string or
+-  a period followed by up to three characters. }
+-
+-function ChangeFileExt(const FileName, Extension: string): string;
+-
+-{ ExtractFilePath extracts the drive and directory parts of the given
+-  filename. The resulting string is the leftmost characters of FileName,
+-  up to and including the colon or backslash that separates the path
+-  information from the name and extension. The resulting string is empty
+-  if FileName contains no drive and directory parts. }
+-
+-function ExtractFilePath(const FileName: string): string;
+-
+-{ ExtractFileDir extracts the drive and directory parts of the given
+-  filename. The resulting string is a directory name suitable for passing
+-  to SetCurrentDir, CreateDir, etc. The resulting string is empty if
+-  FileName contains no drive and directory parts. }
+-
+-function ExtractFileDir(const FileName: string): string;
+-
+-{ ExtractFileDrive extracts the drive part of the given filename.  For
+-  filenames with drive letters, the resulting string is '<drive>:'.
+-  For filenames with a UNC path, the resulting string is in the form
+-  '\\<servername>\<sharename>'.  If the given path contains neither
+-  style of filename, the result is an empty string. }
+-
+-function ExtractFileDrive(const FileName: string): string;
+-
+-{ ExtractFileName extracts the name and extension parts of the given
+-  filename. The resulting string is the leftmost characters of FileName,
+-  starting with the first character after the colon or backslash that
+-  separates the path information from the name and extension. The resulting
+-  string is equal to FileName if FileName contains no drive and directory
+-  parts. }
+-
+-function ExtractFileName(const FileName: string): string;
+-
+-{ ExtractFileExt extracts the extension part of the given filename. The
+-  resulting string includes the period character that separates the name
+-  and extension parts. The resulting string is empty if the given filename
+-  has no extension. }
+-
+-function ExtractFileExt(const FileName: string): string;
+-
+-{ ExpandFileName expands the given filename to a fully qualified filename.
+-  The resulting string consists of a drive letter, a colon, a root relative
+-  directory path, and a filename. Embedded '.' and '..' directory references
+-  are removed. }
+-
+-function ExpandFileName(const FileName: string): string;
+-
+-{ ExpandUNCFileName expands the given filename to a fully qualified filename.
+-  This function is the same as ExpandFileName except that it will return the
+-  drive portion of the filename in the format '\\<servername>\<sharename> if
+-  that drive is actually a network resource instead of a local resource.
+-  Like ExpandFileName, embedded '.' and '..' directory references are
+-  removed. }
+-
+-function ExpandUNCFileName(const FileName: string): string;
+-
+-{  ExtractRelativePath will return a file path name relative to the given
+-   BaseName.  It strips the common path dirs and adds '..\' for each level
+-   up from the BaseName path. }
+-
+-function ExtractRelativePath(const BaseName, DestName: string): string;
+-
+-{ FileSearch searches for the file given by Name in the list of directories
+-  given by DirList. The directory paths in DirList must be separated by
+-  semicolons. The search always starts with the current directory of the
+-  current drive. The returned value is a concatenation of one of the
+-  directory paths and the filename, or an empty string if the file could not
+-  be located. }
+-
+-function FileSearch(const Name, DirList: string): string;
+-
+-{ DiskFree returns the number of free bytes on the specified drive number,
+-  where 0 = Current, 1 = A, 2 = B, etc. DiskFree returns -1 if the drive
+-  number is invalid. }
+-
+-function DiskFree(Drive: Byte): Integer;
+-
+-{ DiskSize returns the size in bytes of the specified drive number, where
+-  0 = Current, 1 = A, 2 = B, etc. DiskSize returns -1 if the drive number
+-  is invalid. }
+-
+-function DiskSize(Drive: Byte): Integer;
+-
+-{ FileDateToDateTime converts a DOS date-and-time value to a TDateTime
+-  value. The FileAge, FileGetDate, and FileSetDate routines operate on DOS
+-  date-and-time values, and the Time field of a TSearchRec used by the
+-  FindFirst and FindNext functions contains a DOS date-and-time value. }
+-
+-function FileDateToDateTime(FileDate: Integer): TDateTime;
+-
+-{ DateTimeToFileDate converts a TDateTime value to a DOS date-and-time
+-  value. The FileAge, FileGetDate, and FileSetDate routines operate on DOS
+-  date-and-time values, and the Time field of a TSearchRec used by the
+-  FindFirst and FindNext functions contains a DOS date-and-time value. }
+-
+-function DateTimeToFileDate(DateTime: TDateTime): Integer;
+-
+-{ GetCurrentDir returns the current directory. }
+-
+-function GetCurrentDir: string;
+-
+-{ SetCurrentDir sets the current directory. The return value is True if
+-  the current directory was successfully changed, or False if an error
+-  occurred. }
+-
+-function SetCurrentDir(const Dir: string): Boolean;
+-
+-{ CreateDir creates a new directory. The return value is True if a new
+-  directory was successfully created, or False if an error occurred. }
+-
+-function CreateDir(const Dir: string): Boolean;
+-
+-{ RemoveDir deletes an existing empty directory. The return value is
+-  True if the directory was successfully deleted, or False if an error
+-  occurred. }
+-
+-function RemoveDir(const Dir: string): Boolean;
+-
+-{ PChar routines }
+-
+-{ StrLen returns the number of characters in Str, not counting the null
+-  terminator. }
+-
+-function StrLen(Str: PChar): Cardinal;
+-
+-{ StrEnd returns a pointer to the null character that terminates Str. }
+-
+-function StrEnd(Str: PChar): PChar;
+-
+-{ StrMove copies exactly Count characters from Source to Dest and returns
+-  Dest. Source and Dest may overlap. }
+-
+-function StrMove(Dest, Source: PChar; Count: Cardinal): PChar;
+-
+-{ StrCopy copies Source to Dest and returns Dest. }
+-
+-function StrCopy(Dest, Source: PChar): PChar;
+-
+-{ StrECopy copies Source to Dest and returns StrEnd(Dest). }
++  OutOfMemory: EOutOfMemory;
+ 
+-function StrECopy(Dest, Source: PChar): PChar;
+-
+-{ StrLCopy copies at most MaxLen characters from Source to Dest and
+-  returns Dest. }
+-
+-function StrLCopy(Dest, Source: PChar; MaxLen: Cardinal): PChar;
+-
+-{ StrPCopy copies the Pascal style string Source into Dest and
+-  returns Dest. }
+-
+-function StrPCopy(Dest: PChar; const Source: String): PChar;
+-
+-{ StrPLCopy copies at most MaxLen characters from the Pascal style string
+-  Source into Dest and returns Dest. }
+-
+-function StrPLCopy(Dest: PChar; const Source: string; MaxLen: Cardinal): PChar;
+-
+-{ StrCat appends a copy of Source to the end of Dest and returns Dest. }
+-
+-function StrCat(Dest, Source: PChar): PChar;
+-
+-{ StrLCat appends at most MaxLen - StrLen(Dest) characters from Source to
+-  the end of Dest, and returns Dest. }
+-
+-function StrLCat(Dest, Source: PChar; MaxLen: Cardinal): PChar;
+-
+-{ StrComp compares Str1 to Str2. The return value is less than 0 if
+-  Str1 < Str2, 0 if Str1 = Str2, or greater than 0 if Str1 > Str2. }
+-
+-function StrComp(Str1, Str2: PChar): Integer;
+-
+-{ StrIComp compares Str1 to Str2, without case sensitivity. The return
+-  value is the same as StrComp. }
+-
+-function StrIComp(Str1, Str2: PChar): Integer;
+-
+-{ StrLComp compares Str1 to Str2, for a maximum length of MaxLen
+-  characters. The return value is the same as StrComp. }
+-
+-function StrLComp(Str1, Str2: PChar; MaxLen: Cardinal): Integer;
+-
+-{ StrLIComp compares Str1 to Str2, for a maximum length of MaxLen
+-  characters, without case sensitivity. The return value is the same
+-  as StrComp. }
+-
+-function StrLIComp(Str1, Str2: PChar; MaxLen: Cardinal): Integer;
+-
+-{ StrScan returns a pointer to the first occurrence of Chr in Str. If Chr
+-  does not occur in Str, StrScan returns NIL. The null terminator is
+-  considered to be part of the string. }
+-
+-function StrScan(Str: PChar; Chr: Char): PChar;
+-
+-{ StrRScan returns a pointer to the last occurrence of Chr in Str. If Chr
+-  does not occur in Str, StrRScan returns NIL. The null terminator is
+-  considered to be part of the string. }
+-
+-function StrRScan(Str: PChar; Chr: Char): PChar;
+-
+-{ StrPos returns a pointer to the first occurrence of Str2 in Str1. If
+-  Str2 does not occur in Str1, StrPos returns NIL. }
+-
+-function StrPos(Str1, Str2: PChar): PChar;
+-
+-{ StrUpper converts Str to upper case and returns Str. }
+-
+-function StrUpper(Str: PChar): PChar;
+-
+-{ StrLower converts Str to lower case and returns Str. }
+-
+-function StrLower(Str: PChar): PChar;
+-
+-{ StrPas converts Str to a Pascal style string. }
+-
+-function StrPas(Str: PChar): String;
+-
+-{ StrAlloc allocates a buffer of the given size on the heap. The size of
+-  the allocated buffer is encoded in a four byte header that immediately
+-  preceeds the buffer. To dispose the buffer, use StrDispose. }
+-
+-function StrAlloc(Size: Cardinal): PChar;
+-
+-{ StrBufSize returns the allocated size of the given buffer, not including
+-  the two byte header. }
+-
+-function StrBufSize(Str: PChar): Cardinal;
+-
+-{ StrNew allocates a copy of Str on the heap. If Str is NIL, StrNew returns
+-  NIL and doesn't allocate any heap space. Otherwise, StrNew makes a
+-  duplicate of Str, obtaining space with a call to the StrAlloc function,
+-  and returns a pointer to the duplicated string. To dispose the string,
+-  use StrDispose. }
+-
+-function StrNew(Str: PChar): PChar;
+-
+-{ StrPNew allocates a copy of Str on the heap. If Str is empty, StrNew returns
+-  NIL and doesn't allocate any heap space. Otherwise, StrNew makes a
+-  duplicate of Str, obtaining space with a call to the StrAlloc function,
+-  and returns a pointer to the duplicated string. To dispose the string,
+-  use StrDispose. }
+-
+-function StrPNew(Str: String): PChar;
+-
+-{ StrDispose disposes a string that was previously allocated with StrAlloc
+-  or StrNew. If Str is NIL, StrDispose does nothing. }
+-
+-procedure StrDispose(Str: PChar);
+-
+-{ String formatting routines }
+-
+-{ The Format routine formats the argument list given by the Args parameter
+-  using the format string given by the Format parameter.
+-
+-  Format strings contain two types of objects--plain characters and format
+-  specifiers. Plain characters are copied verbatim to the resulting string.
+-  Format specifiers fetch arguments from the argument list and apply
+-  formatting to them.
+-
+-  Format specifiers have the following form:
+-
+-    "%" [index ":"] ["-"] [width] ["." prec] type
+-
+-  A format specifier begins with a % character. After the % come the
+-  following, in this order:
+-
+-  -  an optional argument index specifier, [index ":"]
+-  -  an optional left-justification indicator, ["-"]
+-  -  an optional width specifier, [width]
+-  -  an optional precision specifier, ["." prec]
+-  -  the conversion type character, type
+-
+-  The following conversion characters are supported:
+-
+-  d  Decimal. The argument must be an integer value. The value is converted
+-     to a string of decimal digits. If the format string contains a precision
+-     specifier, it indicates that the resulting string must contain at least
+-     the specified number of digits; if the value has less digits, the
+-     resulting string is left-padded with zeros.
+-
+-  e  Scientific. The argument must be a floating-point value. The value is
+-     converted to a string of the form "-d.ddd...E+ddd". The resulting
+-     string starts with a minus sign if the number is negative, and one digit
+-     always precedes the decimal point. The total number of digits in the
+-     resulting string (including the one before the decimal point) is given
+-     by the precision specifer in the format string--a default precision of
+-     15 is assumed if no precision specifer is present. The "E" exponent
+-     character in the resulting string is always followed by a plus or minus
+-     sign and at least three digits.
+-
+-  f  Fixed. The argument must be a floating-point value. The value is
+-     converted to a string of the form "-ddd.ddd...". The resulting string
+-     starts with a minus sign if the number is negative. The number of digits
+-     after the decimal point is given by the precision specifier in the
+-     format string--a default of 2 decimal digits is assumed if no precision
+-     specifier is present.
+-
+-  g  General. The argument must be a floating-point value. The value is
+-     converted to the shortest possible decimal string using fixed or
+-     scientific format. The number of significant digits in the resulting
+-     string is given by the precision specifier in the format string--a
+-     default precision of 15 is assumed if no precision specifier is present.
+-     Trailing zeros are removed from the resulting string, and a decimal
+-     point appears only if necessary. The resulting string uses fixed point
+-     format if the number of digits to the left of the decimal point in the
+-     value is less than or equal to the specified precision, and if the
+-     value is greater than or equal to 0.00001. Otherwise the resulting
+-     string uses scientific format.
++type
++  PRaiseFrame = ^TRaiseFrame;
++  TRaiseFrame = record
++    NextRaise: PRaiseFrame;
++    ExceptAddr: Pointer;
++    ExceptObject: TObject;
++    ExceptionRecord: POSExceptionRecord;
++  end;
+ 
+-  n  Number. The argument must be a floating-point value. The value is
+-     converted to a string of the form "-d,ddd,ddd.ddd...". The "n" format
+-     corresponds to the "f" format, except that the resulting string
+-     contains thousand separators.
++{ Return current exception object }
+ 
+-  m  Money. The argument must be a floating-point value. The value is
+-     converted to a string that represents a currency amount. The conversion
+-     is controlled by the CurrencyString, CurrencyFormat, NegCurrFormat,
+-     ThousandSeparator, DecimalSeparator, and CurrencyDecimals global
+-     variables, all of which are initialized from the Currency Format in
+-     the International section of the Windows Control Panel. If the format
+-     string contains a precision specifier, it overrides the value given
+-     by the CurrencyDecimals global variable.
++function ExceptObject: TObject;
++begin
++  if RaiseList <> nil then
++    Result := PRaiseFrame(RaiseList)^.ExceptObject else
++    Result := nil;
++end;
+ 
+-  p  Pointer. The argument must be a pointer value. The value is converted
+-     to a string of the form "XXXX:YYYY" where XXXX and YYYY are the
+-     segment and offset parts of the pointer expressed as four hexadecimal
+-     digits.
++{ Return current exception address }
+ 
+-  s  String. The argument must be a character, a string, or a PChar value.
+-     The string or character is inserted in place of the format specifier.
+-     The precision specifier, if present in the format string, specifies the
+-     maximum length of the resulting string. If the argument is a string
+-     that is longer than this maximum, the string is truncated.
++function ExceptAddr: Pointer;
++begin
++  if RaiseList <> nil then
++    Result := PRaiseFrame(RaiseList)^.ExceptAddr else
++    Result := nil;
++end;
+ 
+-  x  Hexadecimal. The argument must be an integer value. The value is
+-     converted to a string of hexadecimal digits. If the format string
+-     contains a precision specifier, it indicates that the resulting string
+-     must contain at least the specified number of digits; if the value has
+-     less digits, the resulting string is left-padded with zeros.
+ 
+-  Conversion characters may be specified in upper case as well as in lower
+-  case--both produce the same results.
++{ Raise abort exception }
+ 
+-  For all floating-point formats, the actual characters used as decimal and
+-  thousand separators are obtained from the DecimalSeparator and
+-  ThousandSeparator global variables.
++{$W+}
+ 
+-  Index, width, and precision specifiers can be specified directly using
+-  decimal digit string (for example "%10d"), or indirectly using an asterisk
+-  charcater (for example "%*.*f"). When using an asterisk, the next argument
+-  in the argument list (which must be an integer value) becomes the value
+-  that is actually used. For example "Format('%*.*f', [8, 2, 123.456])" is
+-  the same as "Format('%8.2f', [123.456])".
++procedure Abort;
++begin
++  raise EAbort.CreateRes(SOperationAborted) at ReturnAddr;
++end;
+ 
+-  A width specifier sets the minimum field width for a conversion. If the
+-  resulting string is shorter than the minimum field width, it is padded
+-  with blanks to increase the field width. The default is to right-justify
+-  the result by adding blanks in front of the value, but if the format
+-  specifier contains a left-justification indicator (a "-" character
+-  preceding the width specifier), the result is left-justified by adding
+-  blanks after the value.
++{ Raise out of memory exception }
+ 
+-  An index specifier sets the current argument list index to the specified
+-  value. The index of the first argument in the argument list is 0. Using
+-  index specifiers, it is possible to format the same argument multiple
+-  times. For example "Format('%d %d %0:d %d', [10, 20])" produces the string
+-  '10 20 10 20'.
++procedure OutOfMemoryError;
++begin
++  raise OutOfMemory at ReturnAddr;
++end;
+ 
+-  The Format function can be combined with other formatting functions. For
+-  example
++{$W-}
+ 
+-    S := Format('Your total was %s on %s', [
+-      FormatFloat('$#,##0.00;;zero', Total),
+-      FormatDateTime('mm/dd/yy', Date)]);
++{Cat}
++function Format(const Fmt: String; const Args: array of const): String;
++var
++  I: Integer;
++  Params: array[0..63] of Integer;
++begin
++  for I := Low(Args) to High(Args) do
++    Params[I] := TVarRec(Args[I]).VInteger;
++  FormatStr(Result, Fmt, Params);
++end;
++{/Cat}
+ 
+-  which uses the FormatFloat and FormatDateTime functions to customize the
+-  format beyond what is possible with Format. }
++function LoadStr(Ident: Longint): string;
++var
++  Buffer: array[0..1023] of Char;
++begin
++  Result := StrPas(SysLoadResourceString(Ident, Buffer, SizeOf(Buffer)));
++end;
+ 
+-function Format(const Format: string; const Args: array of const): string;
++{ Exception class }
+ 
+-{ FmtStr formats the argument list given by Args using the format string
+-  given by Format into the string variable given by Result. For further
+-  details, see the description of the Format function. }
++constructor Exception.Create(const Msg: string);
++begin
++  FMessage := Msg;
++end;
+ 
+-procedure FmtStr(var Result: string; const Format: string;
++constructor Exception.CreateFmt(const Msg: string;
+   const Args: array of const);
++begin
++  FMessage := Format(Msg, Args);
++end;
+ 
+-{ StrFmt formats the argument list given by Args using the format string
+-  given by Format into the buffer given by Buffer. It is up to the caller to
+-  ensure that Buffer is large enough for the resulting string. The returned
+-  value is Buffer. For further details, see the description of the Format
+-  function. }
+-
+-function StrFmt(Buffer, Format: PChar; const Args: array of const): PChar;
+-
+-{ StrLFmt formats the argument list given by Args using the format string
+-  given by Format into the buffer given by Buffer. The resulting string will
+-  contain no more than MaxLen characters, not including the null terminator.
+-  The returned value is Buffer. For further details, see the description of
+-  the Format function. }
+-
+-function StrLFmt(Buffer: PChar; MaxLen: Cardinal; Format: PChar;
+-  const Args: array of const): PChar;
+-
+-{ FormatBuf formats the argument list given by Args using the format string
+-  given by Format and FmtLen into the buffer given by Buffer and BufLen.
+-  The Format parameter is a reference to a buffer containing FmtLen
+-  characters, and the Buffer parameter is a reference to a buffer of BufLen
+-  characters. The returned value is the number of characters actually stored
+-  in Buffer. The returned value is always less than or equal to BufLen. For
+-  further details, see the description of the Format function. }
+-
+-function FormatBuf(var Buffer; BufLen: Cardinal; const Format;
+-  FmtLen: Cardinal; const Args: array of const): Cardinal;
+-
+-{ Floating point conversion routines }
+-
+-{ FloatToStr converts the floating-point value given by Value to its string
+-  representation. The conversion uses general number format with 15
+-  significant digits. For further details, see the description of the
+-  FloatToStrF function. }
+-
+-function FloatToStr(Value: Extended): string;
+-
+-{ CurrToStr converts the currency value given by Value to its string
+-  representation. The conversion uses general number format. For further
+-  details, see the description of the CurrToStrF function. }
+-
+-function CurrToStr(Value: Currency): string;
+-
+-{ FloatToStrF converts the floating-point value given by Value to its string
+-  representation. The Format parameter controls the format of the resulting
+-  string. The Precision parameter specifies the precision of the given value.
+-  It should be 7 or less for values of type Single, 15 or less for values of
+-  type Double, and 18 or less for values of type Extended. The meaning of the
+-  Digits parameter depends on the particular format selected.
+-
+-  The possible values of the Format parameter, and the meaning of each, are
+-  described below.
+-
+-  ffGeneral - General number format. The value is converted to the shortest
+-  possible decimal string using fixed or scientific format. Trailing zeros
+-  are removed from the resulting string, and a decimal point appears only
+-  if necessary. The resulting string uses fixed point format if the number
+-  of digits to the left of the decimal point in the value is less than or
+-  equal to the specified precision, and if the value is greater than or
+-  equal to 0.00001. Otherwise the resulting string uses scientific format,
+-  and the Digits parameter specifies the minimum number of digits in the
+-  exponent (between 0 and 4).
+-
+-  ffExponent - Scientific format. The value is converted to a string of the
+-  form "-d.ddd...E+dddd". The resulting string starts with a minus sign if
+-  the number is negative, and one digit always precedes the decimal point.
+-  The total number of digits in the resulting string (including the one
+-  before the decimal point) is given by the Precision parameter. The "E"
+-  exponent character in the resulting string is always followed by a plus
+-  or minus sign and up to four digits. The Digits parameter specifies the
+-  minimum number of digits in the exponent (between 0 and 4).
+-
+-  ffFixed - Fixed point format. The value is converted to a string of the
+-  form "-ddd.ddd...". The resulting string starts with a minus sign if the
+-  number is negative, and at least one digit always precedes the decimal
+-  point. The number of digits after the decimal point is given by the Digits
+-  parameter--it must be between 0 and 18. If the number of digits to the
+-  left of the decimal point is greater than the specified precision, the
+-  resulting value will use scientific format.
+-
+-  ffNumber - Number format. The value is converted to a string of the form
+-  "-d,ddd,ddd.ddd...". The ffNumber format corresponds to the ffFixed format,
+-  except that the resulting string contains thousand separators.
+-
+-  ffCurrency - Currency format. The value is converted to a string that
+-  represents a currency amount. The conversion is controlled by the
+-  CurrencyString, CurrencyFormat, NegCurrFormat, ThousandSeparator, and
+-  DecimalSeparator global variables, all of which are initialized from the
+-  Currency Format in the International section of the Windows Control Panel.
+-  The number of digits after the decimal point is given by the Digits
+-  parameter--it must be between 0 and 18.
+-
+-  For all formats, the actual characters used as decimal and thousand
+-  separators are obtained from the DecimalSeparator and ThousandSeparator
+-  global variables.
+-
+-  If the given value is a NAN (not-a-number), the resulting string is 'NAN'.
+-  If the given value is positive infinity, the resulting string is 'INF'. If
+-  the given value is negative infinity, the resulting string is '-INF'. }
+-
+-function FloatToStrF(Value: Extended; Format: TFloatFormat;
+-  Precision, Digits: Integer): string;
+-
+-{ CurrToStrF converts the currency value given by Value to its string
+-  representation. A call to CurrToStrF corresponds to a call to
+-  FloatToStrF with an implied precision of 19 digits. }
+-
+-function CurrToStrF(Value: Currency; Format: TFloatFormat;
+-  Digits: Integer): string;
+-
+-{ FloatToText converts the given floating-point value to its decimal
+-  representation using the specified format, precision, and digits. The
+-  Value parameter must be a variable of type Extended or Currency, as
+-  indicated by the ValueType parameter. The resulting string of characters
+-  is stored in the given buffer, and the returned value is the number of
+-  characters stored. The resulting string is not null-terminated. For
+-  further details, see the description of the FloatToStrF function. }
+-
+-function FloatToText(Buffer: PChar; const Value; ValueType: TFloatValue;
+-  Format: TFloatFormat; Precision, Digits: Integer): Integer;
+-
+-{ FormatFloat formats the floating-point value given by Value using the
+-  format string given by Format. The following format specifiers are
+-  supported in the format string:
+-
+-  0     Digit placeholder. If the value being formatted has a digit in the
+-        position where the '0' appears in the format string, then that digit
+-        is copied to the output string. Otherwise, a '0' is stored in that
+-        position in the output string.
+-
+-  #     Digit placeholder. If the value being formatted has a digit in the
+-        position where the '#' appears in the format string, then that digit
+-        is copied to the output string. Otherwise, nothing is stored in that
+-        position in the output string.
+-
+-  .     Decimal point. The first '.' character in the format string
+-        determines the location of the decimal separator in the formatted
+-        value; any additional '.' characters are ignored. The actual
+-        character used as a the decimal separator in the output string is
+-        determined by the DecimalSeparator global variable. The default value
+-        of DecimalSeparator is specified in the Number Format of the
+-        International section in the Windows Control Panel.
+-
+-  ,     Thousand separator. If the format string contains one or more ','
+-        characters, the output will have thousand separators inserted between
+-        each group of three digits to the left of the decimal point. The
+-        placement and number of ',' characters in the format string does not
+-        affect the output, except to indicate that thousand separators are
+-        wanted. The actual character used as a the thousand separator in the
+-        output is determined by the ThousandSeparator global variable. The
+-        default value of ThousandSeparator is specified in the Number Format
+-        of the International section in the Windows Control Panel.
+-
+-  E+    Scientific notation. If any of the strings 'E+', 'E-', 'e+', or 'e-'
+-  E-    are contained in the format string, the number is formatted using
+-  e+    scientific notation. A group of up to four '0' characters can
+-  e-    immediately follow the 'E+', 'E-', 'e+', or 'e-' to determine the
+-        minimum number of digits in the exponent. The 'E+' and 'e+' formats
+-        cause a plus sign to be output for positive exponents and a minus
+-        sign to be output for negative exponents. The 'E-' and 'e-' formats
+-        output a sign character only for negative exponents.
+-
+-  'xx'  Characters enclosed in single or double quotes are output as-is, and
+-  "xx"  do not affect formatting.
+-
+-  ;     Separates sections for positive, negative, and zero numbers in the
+-        format string.
+-
+-  The locations of the leftmost '0' before the decimal point in the format
+-  string and the rightmost '0' after the decimal point in the format string
+-  determine the range of digits that are always present in the output string.
+-
+-  The number being formatted is always rounded to as many decimal places as
+-  there are digit placeholders ('0' or '#') to the right of the decimal
+-  point. If the format string contains no decimal point, the value being
+-  formatted is rounded to the nearest whole number.
+-
+-  If the number being formatted has more digits to the left of the decimal
+-  separator than there are digit placeholders to the left of the '.'
+-  character in the format string, the extra digits are output before the
+-  first digit placeholder.
+-
+-  To allow different formats for positive, negative, and zero values, the
+-  format string can contain between one and three sections separated by
+-  semicolons.
+-
+-  One section - The format string applies to all values.
+-
+-  Two sections - The first section applies to positive values and zeros, and
+-  the second section applies to negative values.
+-
+-  Three sections - The first section applies to positive values, the second
+-  applies to negative values, and the third applies to zeros.
+-
+-  If the section for negative values or the section for zero values is empty,
+-  that is if there is nothing between the semicolons that delimit the
+-  section, the section for positive values is used instead.
+-
+-  If the section for positive values is empty, or if the entire format string
+-  is empty, the value is formatted using general floating-point formatting
+-  with 15 significant digits, corresponding to a call to FloatToStrF with
+-  the ffGeneral format. General floating-point formatting is also used if
+-  the value has more than 18 digits to the left of the decimal point and
+-  the format string does not specify scientific notation.
+-
+-  The table below shows some sample formats and the results produced when
+-  the formats are applied to different values:
+-
+-  Format string          1234        -1234       0.5         0
+-  -----------------------------------------------------------------------
+-                         1234        -1234       0.5         0
+-  0                      1234        -1234       1           0
+-  0.00                   1234.00     -1234.00    0.50        0.00
+-  #.##                   1234        -1234       .5
+-  #,##0.00               1,234.00    -1,234.00   0.50        0.00
+-  #,##0.00;(#,##0.00)    1,234.00    (1,234.00)  0.50        0.00
+-  #,##0.00;;Zero         1,234.00    -1,234.00   0.50        Zero
+-  0.000E+00              1.234E+03   -1.234E+03  5.000E-01   0.000E+00
+-  #.###E-0               1.234E3     -1.234E3    5E-1        0E0
+-  ----------------------------------------------------------------------- }
+-
+-function FormatFloat(const Format: string; Value: Extended): string;
+-
+-{ FormatCurr formats the currency value given by Value using the format
+-  string given by Format. For further details, see the description of the
+-  FormatFloat function. }
+-
+-function FormatCurr(const Format: string; Value: Currency): string;
+-
+-{ FloatToTextFmt converts the given floating-point value to its decimal
+-  representation using the specified format. The Value parameter must be a
+-  variable of type Extended or Currency, as indicated by the ValueType
+-  parameter. The resulting string of characters is stored in the given
+-  buffer, and the returned value is the number of characters stored. The
+-  resulting string is not null-terminated. For further details, see the
+-  description of the FormatFloat function. }
+-
+-function FloatToTextFmt(Buffer: PChar; const Value; ValueType: TFloatValue;
+-  Format: PChar): Integer;
+-
+-{ StrToFloat converts the given string to a floating-point value. The string
+-  must consist of an optional sign (+ or -), a string of digits with an
+-  optional decimal point, and an optional 'E' or 'e' followed by a signed
+-  integer. Leading and trailing blanks in the string are ignored. The
+-  DecimalSeparator global variable defines the character that must be used
+-  as a decimal point. Thousand separators and currency symbols are not
+-  allowed in the string. If the string doesn't contain a valid value, an
+-  EConvertError exception is raised. }
+-
+-function StrToFloat(const S: string): Extended;
+-
+-{ StrToCurr converts the given string to a currency value. For further
+-  details, see the description of the StrToFloat function. }
+-
+-function StrToCurr(const S: string): Currency;
+-
+-{ TextToFloat converts the null-terminated string given by Buffer to a
+-  floating-point value which is returned in the variable given by Value.
+-  The Value parameter must be a variable of type Extended or Currency, as
+-  indicated by the ValueType parameter. The return value is True if the
+-  conversion was successful, or False if the string is not a valid
+-  floating-point value. For further details, see the description of the
+-  StrToFloat function. }
+-
+-function TextToFloat(Buffer: PChar; var Value; ValueType: TFloatValue): Boolean;
+-
+-{ FloatToDecimal converts a floating-point value to a decimal representation
+-  that is suited for further formatting. The Value parameter must be a
+-  variable of type Extended or Currency, as indicated by the ValueType
+-  parameter. For values of type Extended, the Precision parameter specifies
+-  the requested number of significant digits in the result--the allowed range
+-  is 1..18. For values of type Currency, the Precision parameter is ignored,
+-  and the implied precision of the conversion is 19 digits. The Decimals
+-  parameter specifies the requested maximum number of digits to the left of
+-  the decimal point in the result. Precision and Decimals together control
+-  how the result is rounded. To produce a result that always has a given
+-  number of significant digits regardless of the magnitude of the number,
+-  specify 9999 for the Decimals parameter. The result of the conversion is
+-  stored in the specified TFloatRec record as follows:
+-
+-  Exponent - Contains the magnitude of the number, i.e. the number of
+-  significant digits to the right of the decimal point. The Exponent field
+-  is negative if the absolute value of the number is less than one. If the
+-  number is a NAN (not-a-number), Exponent is set to -32768. If the number
+-  is INF or -INF (positive or negative infinity), Exponent is set to 32767.
+-
+-  Negative - True if the number is negative, False if the number is zero
+-  or positive.
+-
+-  Digits - Contains up to 18 (for type Extended) or 19 (for type Currency)
+-  significant digits followed by a null terminator. The implied decimal
+-  point (if any) is not stored in Digits. Trailing zeros are removed, and
+-  if the resulting number is zero, NAN, or INF, Digits contains nothing but
+-  the null terminator. }
+-
+-procedure FloatToDecimal(var Result: TFloatRec; const Value;
+-  ValueType: TFloatValue; Precision, Decimals: Integer);
+-
+-{ Date/time support routines }
+-
+-function DateTimeToTimeStamp(DateTime: TDateTime): TTimeStamp;
+-
+-function TimeStampToDateTime(const TimeStamp: TTimeStamp): TDateTime;
+-function MSecsToTimeStamp(MSecs: Comp): TTimeStamp;
+-function TimeStampToMSecs(const TimeStamp: TTimeStamp): Comp;
+-
+-{ EncodeDate encodes the given year, month, and day into a TDateTime value.
+-  The year must be between 1 and 9999, the month must be between 1 and 12,
+-  and the day must be between 1 and N, where N is the number of days in the
+-  specified month. If the specified values are not within range, an
+-  EConvertError exception is raised. The resulting value is the number of
+-  days between 12/30/1899 and the given date. }
+-
+-function EncodeDate(Year, Month, Day: Word): TDateTime;
+-
+-{ EncodeTime encodes the given hour, minute, second, and millisecond into a
+-  TDateTime value. The hour must be between 0 and 23, the minute must be
+-  between 0 and 59, the second must be between 0 and 59, and the millisecond
+-  must be between 0 and 999. If the specified values are not within range, an
+-  EConvertError exception is raised. The resulting value is a number between
+-  0 (inclusive) and 1 (not inclusive) that indicates the fractional part of
+-  a day given by the specified time. The value 0 corresponds to midnight,
+-  0.5 corresponds to noon, 0.75 corresponds to 6:00 pm, etc. }
+-
+-function EncodeTime(Hour, Min, Sec, MSec: Word): TDateTime;
+-
+-{ DecodeDate decodes the integral (date) part of the given TDateTime value
+-  into its corresponding year, month, and day. If the given TDateTime value
+-  is less than or equal to zero, the year, month, and day return parameters
+-  are all set to zero. }
+-
+-procedure DecodeDate(Date: TDateTime; var Year, Month, Day: Word);
+-
+-{ DecodeTime decodes the fractional (time) part of the given TDateTime value
+-  into its corresponding hour, minute, second, and millisecond. }
+-
+-procedure DecodeTime(Time: TDateTime; var Hour, Min, Sec, MSec: Word);
+-
+-{ DayOfWeek returns the day of the week of the given date. The result is an
+-  integer between 1 and 7, corresponding to Sunday through Saturday. }
+-
+-function DayOfWeek(Date: TDateTime): Integer;
+-
+-{ Date returns the current date. }
+-
+-function Date: TDateTime;
+-
+-{ Time returns the current time. }
+-
+-function Time: TDateTime;
+-
+-{ Now returns the current date and time, corresponding to Date + Time. }
+-
+-function Now: TDateTime;
+-
+-{ DateToStr converts the date part of the given TDateTime value to a string.
+-  The conversion uses the format specified by the ShortDateFormat global
+-  variable. }
+-
+-{ IncMonth returns Date shifted by the specified number of months.
+-  NumberOfMonths parameter can be negative, to return a date N months ago.
+-  If the input day of month is greater than the last day of the resulting
+-  month, the day is set to the last day of the resulting month.
+-  Input time of day is copied to the DateTime result.  }
+-
+-function IncMonth(const Date: TDateTime; NumberOfMonths: Integer): TDateTime;
+-
+-{ IsLeapYear determines whether the given year is a leap year. }
+-
+-function IsLeapYear(Year: Word): Boolean;
+-
+-{ DateToStr converts the date part of the given TDateTime value to a string.
+-  The conversion uses the format specified by the ShortDateFormat global
+-  variable. }
+-
+-function DateToStr(Date: TDateTime): string;
+-
+-{ TimeToStr converts the time part of the given TDateTime value to a string.
+-  The conversion uses the format specified by the LongTimeFormat global
+-  variable. }
+-
+-function TimeToStr(Time: TDateTime): string;
+-
+-{ DateTimeToStr converts the given date and time to a string. The resulting
+-  string consists of a date and time formatted using the ShortDateFormat and
+-  LongTimeFormat global variables. Time information is included in the
+-  resulting string only if the fractional part of the given date and time
+-  value is non-zero. }
+-
+-function DateTimeToStr(DateTime: TDateTime): string;
+-
+-{ StrToDate converts the given string to a date value. The string must
+-  consist of two or three numbers, separated by the character defined by
+-  the DateSeparator global variable. The order for month, day, and year is
+-  determined by the ShortDateFormat global variable--possible combinations
+-  are m/d/y, d/m/y, and y/m/d. If the string contains only two numbers, it
+-  is interpreted as a date (m/d or d/m) in the current year. Year values
+-  between 0 and 99 are assumed to be in the current century. If the given
+-  string does not contain a valid date, an EConvertError exception is
+-  raised. }
+-
+-function StrToDate(const S: string): TDateTime;
+-
+-{ StrToTime converts the given string to a time value. The string must
+-  consist of two or three numbers, separated by the character defined by
+-  the TimeSeparator global variable, optionally followed by an AM or PM
+-  indicator. The numbers represent hour, minute, and (optionally) second,
+-  in that order. If the time is followed by AM or PM, it is assumed to be
+-  in 12-hour clock format. If no AM or PM indicator is included, the time
+-  is assumed to be in 24-hour clock format. If the given string does not
+-  contain a valid time, an EConvertError exception is raised. }
+-
+-function StrToTime(const S: string): TDateTime;
+-
+-{ StrToDateTime converts the given string to a date and time value. The
+-  string must contain a date optionally followed by a time. The date and
+-  time parts of the string must follow the formats described for the
+-  StrToDate and StrToTime functions. }
+-
+-function StrToDateTime(const S: string): TDateTime;
+-
+-{ FormatDateTime formats the date-and-time value given by DateTime using the
+-  format given by Format. The following format specifiers are supported:
+-
+-  c       Displays the date using the format given by the ShortDateFormat
+-          global variable, followed by the time using the format given by
+-          the LongTimeFormat global variable. The time is not displayed if
+-          the fractional part of the DateTime value is zero.
+-
+-  d       Displays the day as a number without a leading zero (1-31).
+-
+-  dd      Displays the day as a number with a leading zero (01-31).
+-
+-  ddd     Displays the day as an abbreviation (Sun-Sat) using the strings
+-          given by the ShortDayNames global variable.
+-
+-  dddd    Displays the day as a full name (Sunday-Saturday) using the strings
+-          given by the LongDayNames global variable.
+-
+-  ddddd   Displays the date using the format given by the ShortDateFormat
+-          global variable.
+-
+-  dddddd  Displays the date using the format given by the LongDateFormat
+-          global variable.
+-
+-  m       Displays the month as a number without a leading zero (1-12). If
+-          the m specifier immediately follows an h or hh specifier, the
+-          minute rather than the month is displayed.
+-
+-  mm      Displays the month as a number with a leading zero (01-12). If
+-          the mm specifier immediately follows an h or hh specifier, the
+-          minute rather than the month is displayed.
+-
+-  mmm     Displays the month as an abbreviation (Jan-Dec) using the strings
+-          given by the ShortMonthNames global variable.
+-
+-  mmmm    Displays the month as a full name (January-December) using the
+-          strings given by the LongMonthNames global variable.
+-
+-  yy      Displays the year as a two-digit number (00-99).
+-
+-  yyyy    Displays the year as a four-digit number (0000-9999).
+-
+-  h       Displays the hour without a leading zero (0-23).
+-
+-  hh      Displays the hour with a leading zero (00-23).
+-
+-  n       Displays the minute without a leading zero (0-59).
+-
+-  nn      Displays the minute with a leading zero (00-59).
+-
+-  s       Displays the second without a leading zero (0-59).
+-
+-  ss      Displays the second with a leading zero (00-59).
+-
+-  t       Displays the time using the format given by the ShortTimeFormat
+-          global variable.
+-
+-  tt      Displays the time using the format given by the LongTimeFormat
+-          global variable.
+-
+-  am/pm   Uses the 12-hour clock for the preceding h or hh specifier, and
+-          displays 'am' for any hour before noon, and 'pm' for any hour
+-          after noon. The am/pm specifier can use lower, upper, or mixed
+-          case, and the result is displayed accordingly.
+-
+-  a/p     Uses the 12-hour clock for the preceding h or hh specifier, and
+-          displays 'a' for any hour before noon, and 'p' for any hour after
+-          noon. The a/p specifier can use lower, upper, or mixed case, and
+-          the result is displayed accordingly.
+-
+-  ampm    Uses the 12-hour clock for the preceding h or hh specifier, and
+-          displays the contents of the TimeAMString global variable for any
+-          hour before noon, and the contents of the TimePMString global
+-          variable for any hour after noon.
+-
+-  /       Displays the date separator character given by the DateSeparator
+-          global variable.
+-
+-  :       Displays the time separator character given by the TimeSeparator
+-          global variable.
+-
+-  'xx'    Characters enclosed in single or double quotes are displayed as-is,
+-  "xx"    and do not affect formatting.
+-
+-  Format specifiers may be written in upper case as well as in lower case
+-  letters--both produce the same result.
+-
+-  If the string given by the Format parameter is empty, the date and time
+-  value is formatted as if a 'c' format specifier had been given.
+-
+-  The following example:
++constructor Exception.CreateRes(Ident: Longint);
++begin
++  FMessage := LoadStr(Ident);
++end;
+ 
+-    S := FormatDateTime('"The meeting is on" dddd, mmmm d, yyyy, ' +
+-      '"at" hh:mm AM/PM', StrToDateTime('2/15/95 10:30am'));
++constructor Exception.CreateResFmt(Ident: Longint;
++  const Args: array of const);
++begin
++  FMessage := Format(LoadStr(Ident), Args);
++end;
+ 
+-  assigns 'The meeting is on Wednesday, February 15, 1995 at 10:30 AM' to
+-  the string variable S. }
++{ EOutOfMemory class }
+ 
+-function FormatDateTime(const Format: string; DateTime: TDateTime): string;
++destructor EOutOfMemory.Destroy;
++begin
++end;
+ 
+-{ DateTimeToString converts the date and time value given by DateTime using
+-  the format string given by Format into the string variable given by Result.
+-  For further details, see the description of the FormatDateTime function. }
++procedure EOutOfMemory.FreeInstance;
++begin
++  if AllowFree then
++    inherited FreeInstance;
++end;
+ 
+-procedure DateTimeToString(var Result: string; const Format: string;
+-  DateTime: TDateTime);
++{ Create I/O exception }
+ 
+-{ System error messages }
++function CreateInOutError: EInOutError;
++type
++  TErrorRec = record
++    Code: Byte;
++    Ident: Word;
++  end;
++const
++  ErrorMap: array[0..6] of TErrorRec = (
++    (Code: 2; Ident: SFileNotFound),
++    (Code: 3; Ident: SInvalidFilename),
++    (Code: 4; Ident: STooManyOpenFiles),
++    (Code: 5; Ident: SAccessDenied),
++    (Code: 100; Ident: SEndOfFile),
++    (Code: 101; Ident: SDiskFull),
++    (Code: 106; Ident: SInvalidInput));
++var
++  I: Longint;
++begin
++  I := Low(ErrorMap);
++  while (I <= High(ErrorMap)) and (ErrorMap[I].Code <> InOutRes) do Inc(I);
++  if I <= High(ErrorMap) then
++    Result := EInOutError.CreateRes(ErrorMap[I].Ident) else
++    Result := EInOutError.CreateResFmt(SInOutError, [InOutRes]);
++  Result.ErrorCode := InOutRes;
++  InOutRes := 0;
++end;
+ 
+-function SysErrorMessage(ErrorCode: Integer): string;
++{ RTL error handler }
+ 
+-{ GetFormatSettings resets all date and number format variables to their
+-  default values. }
++type
++  TExceptRec = record
++    EClass: ExceptClass;
++    EIdent: Word;
++  end;
++const
++  ExceptMap: array[2..15] of TExceptRec = (
++    (EClass: EInvalidPointer; EIdent: SInvalidPointer),
++    (EClass: EDivByZero; EIdent: SDivByZero),
++    (EClass: ERangeError; EIdent: SRangeError),
++    (EClass: EIntOverflow; EIdent: SIntOverflow),
++    (EClass: EInvalidOp; EIdent: SInvalidOp),
++    (EClass: EZeroDivide; EIdent: SZeroDivide),
++    (EClass: EOverflow; EIdent: SOverflow),
++    (EClass: EUnderflow; EIdent: SUnderflow),
++    (EClass: EInvalidCast; EIdent: SInvalidCast),
++    (EClass: EAccessViolation; EIdent: SAccessViolation),
++    (EClass: EPrivilege; EIdent: SPrivilege),
++    (EClass: EControlC; EIdent: SControlC),
++    (EClass: EStackOverflow; EIdent: SStackOverflow),
++    (EClass: EExternalException; EIdent: SExternalException));
+ 
+-procedure GetFormatSettings;
++procedure ErrorHandler(ErrorCode: Longint; ErrorAddr: Pointer);
++var
++  E: Exception;
++begin
++  case ErrorCode of
++    1: E := OutOfMemory;
++    2..15: with ExceptMap[ErrorCode] do E := EClass.CreateRes(EIdent);
++  else
++    E := CreateInOutError;
++  end;
++  raise E at ErrorAddr;
++end;
+ 
+-{ FreeAndNil frees the given TObject instance and sets the variable reference
+-  to nil.  Be careful to only pass TObjects to this routine. }
++function MapException(P: POSExceptionRecord):Byte;
++begin
++  case P^.fExceptionNum of
++    xcpt_Integer_Divide_By_Zero:  Result := 3;
++    xcpt_Array_Bounds_Exceeded:   Result := 4;
++    xcpt_Integer_Overflow:        Result := 5;
++    xcpt_Float_Inexact_Result,
++    xcpt_Float_Invalid_Operation,
++    xcpt_Float_Stack_Check:       Result := 6;
++    xcpt_Float_Divide_By_Zero:    Result := 7;
++    xcpt_Float_Overflow:          Result := 8;
++    xcpt_Float_Underflow,
++    xcpt_Float_Denormal_Operand:  Result := 9;
++    {$IFDEF LINUX}
++    xcpt_In_Page_Error,
++    {$ENDIF}
++    {$IFDEF DPMI32} // Exception E
++    xcpt_In_Page_Error,
++    {$ENDIF}
++    xcpt_Access_Violation:        Result := 11;
++    xcpt_Privileged_Instruction:  Result := 12;
++    xcpt_Signal_Ctrl_C:           Result := 13;
++    xcpt_Unable_To_Grow_Stack:    Result := 14;
++  else                            Result := 15;
++  end;
++end;
+ 
+-procedure FreeAndNil(var Obj);
++function GetExceptionClass(P: POSExceptionRecord): ExceptClass;
++var
++  ErrorCode: Byte;
++begin
++  ErrorCode := MapException(P);
++  Result := ExceptMap[ErrorCode].EClass;
++end;
+ 
+-{ Exception handling routines }
++function GetExceptionObject(P: POSExceptionRecord): Exception;
++var
++  ErrorCode: Longint;
++  AccessOp: Longint; // string ID indicating the access type READ or WRITE
++  AccessAddress: Pointer;
++begin
++  ErrorCode := MapException(P);
++  case ErrorCode of
++    3..10,12..14:
++      with ExceptMap[ErrorCode] do Result := EClass.CreateRes(EIdent);
++    11:
++      begin
++        with P^ do
++        begin
++          {$IfDef Win32}
++          if fExceptionInfo[0] = 0 {xcpt_Read_Access} then
++          {$Else}
++          { OS/2, DPMI32 and Linux:
++            hardware 0:unknown 1:read 2:write 4:execute 8:space 16:limit }
++          if (fExceptionInfo[0] and $2) = 0 then
++          {$EndIf}
++            AccessOp := sReadAccess
++          else
++            AccessOp := sWriteAccess;
++          AccessAddress := Pointer(fExceptionInfo[1]);
++          Result := EAccessViolation.CreateResFmt(sAccessViolation,
++            [fExceptionAddress, LoadStr(AccessOp), AccessAddress]);
++        end;
++      end;
++  else
++    Result := EExternalException.CreateResFmt(SExternalException,
++      [P^.fExceptionNum]);
++    EExternalException(Result).ExceptionRecord := P;
++  end;
++end;
+ 
+-function ExceptObject: TObject;
+-function ExceptAddr: Pointer;
++{ RTL exception handler }
+ 
+ procedure ShowException(ExceptObject: TObject; ExceptAddr: Pointer);
++  var
++    LineNo: Longint;
++    FileName: ShortString;
++    s: ShortString;
++  begin
++  if ExceptObject is Exception then
++    writeln(Exception(ExceptObject).Message);
+ 
+-procedure Abort;
+-
+-procedure OutOfMemoryError;
+-
+-procedure Beep;
+-
+-{ For console applications only. Specifies whether error messages
+-  should be displayed in a popup window or not }
+-
+-const
+-  PopupErrors: Boolean = False;
+-  IsLibrary: Boolean = False;   // Delphi 32: Declared in the System unit
+-  InitProc: Pointer = nil;      // Delphi 32: Declared in the System unit
+-
+-{$R SYSUTILS.RES}
++  if GetLocationInfo(ExceptAddr, FileName, LineNo) <> nil then
++    writeln(Format('File: %s Line#: %d'#10, [FileName, LineNo]));
++  end;
+ 
+-implementation
++procedure ExceptHandler(ExceptObject: TObject; ExceptAddr: Pointer);
++begin
++  ShowException(ExceptObject, ExceptAddr);
++  Halt(1);
++end;
+ 
++procedure InitExceptions;
+ begin
++  OutOfMemory := EOutOfMemory.CreateRes(SOutOfMemory);
++  ErrorProc := @ErrorHandler;
++  ExceptProc := @ExceptHandler;
++  ExceptionClass := Exception;
++  ExceptClsProc := @GetExceptionClass;
++  ExceptObjProc := @GetExceptionObject;
++end;
++
++initialization
++  InitExceptions;
+ end.

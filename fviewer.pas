@@ -2108,12 +2108,6 @@ procedure TFileViewer.SeekBof;
   DrawView
   end;
 
-// added by unxed
-function ReturnAddr: Pointer; {&USES None} {&FRAME-}
-asm
-                mov     eax,[ebp+4]
-end;
-
 {AK155}
 { Выдача сообщения, закрытие окна и возбуждение исключения }
 function TFileViewer.BreakOnStreamReadError: Boolean;
