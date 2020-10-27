@@ -1,5 +1,4 @@
 #/bin/bash
-patch -N sysutils.pas sysutils.patch
 patch -N vpsyslnx.pas vpsyslnx.patch
 if [ ! -f version.inc ]; then
     ../vp/vpc -M -T -\$S- -\$I- -\$Zd+ -\$Asm+ -\$D+ -\$LocInfo+ version.pas
