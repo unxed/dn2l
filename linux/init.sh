@@ -31,7 +31,7 @@ cd artlsrc
 7z x artlsrc.rar
 rm -rf artlsrc.rar
 rename 'y/A-Z/a-z/' *
-cp dos.pas math.pas strings.pas use32.pas vpsyslnx.pas vpsyslow.pas vputils.pas windos.pas ../../dn2l
+cp dos.pas math.pas strings.pas sysutils.pas use32.pas vpsyslnx.pas vpsyslow.pas vputils.pas windos.pas ../../dn2l
 # system.pas system.vps
 cd sys
 rename 'y/A-Z/a-z/' *
