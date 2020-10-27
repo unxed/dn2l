@@ -51,6 +51,7 @@ unit DiskInfo;
 interface
 
 uses
+  vpsyslo2,
   Defines, Streams, Drivers, Views, Collect, TopView
   ;
 

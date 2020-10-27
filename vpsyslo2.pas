@@ -9,6 +9,7 @@ unit VPSysLo2;
 interface
 
 uses
+  Linux,
   VpSysLow
   {$IFDEF OS2}, Os2Def, Os2Base {$Undef KeyDll} {$ENDIF}
   {$IFDEF WIN32}, Windows, VpKbdW32 {$ENDIF}
@@ -50,7 +51,7 @@ type
     Size: Longint;
 {$ENDIF}
 *)
-    Size: TFileSize;
+    Size: Longint;
     Name: ShortString;
     Filler: array[0..3] of Char;
     {$IFDEF OS2}
@@ -119,6 +120,10 @@ procedure SysTVKbdDone;
 {$IFNDEF OS2} inline;
   begin
   end; {$ENDIF}
+
+function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
+function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
+function PhysMemAvail: Longint;
 
 implementation
 
@@ -371,5 +376,33 @@ procedure SysTVKbdDone;
   KbdSetStatus(Key^, 0);
   end;
 {$ENDIF}
+
+// by unxed, untested
+function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
+var
+  Buffer: TStatFS;
+begin
+  if LnxStatFS(Path, Buffer) = 0 then
+    Result := 1.0 * Buffer.f_BSize * Buffer.f_BAvail
+  else
+    Result := -1;
+end;
+
+// by unxed, untested
+function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
+var
+  Buffer: TStatFS;
+begin
+  if LnxStatFS(Path, Buffer) = 0 then
+    Result := 1.0 * Buffer.f_BSize * Buffer.f_Blocks
+  else
+    Result := -1;
+end;
+
+// by unxed, untested
+function PhysMemAvail: Longint;
+begin
+  Result := SysMemAvail;
+end;
 
 end.

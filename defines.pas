@@ -15,6 +15,8 @@ const
   MaxPtrs = MaxBytes div SizeOf(Pointer);
 
 type
+  TFileSize = Longint;
+  
   Str2 = String[2];
   Str3 = String[3];
   Str4 = String[4];
