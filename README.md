@@ -6,10 +6,10 @@ To build and run (very experimental) dn2l, use this one-liner:
 wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x init.sh && ./init.sh
 ```
 
-Current state:
+### Current state:
 ![](https://user-images.githubusercontent.com/1151423/97242979-4c113a80-1806-11eb-8b8a-b3419a738b48.png)
 
-How to build with IDE?
+### How to build with IDE?
 
 1. Copy vp*.* from dn2l_tryouts/vp directory (it should be created by init.sh) to dn2l_tryouts/dn2l directory (confirm overwriting existing files if asked)
 2. cd dn2l_tryouts/dn2l
@@ -22,3 +22,8 @@ How to build with IDE?
 9. Open "dn.pas", "compile"-"build"
 10. Run pe2elf from dn2l_tryouts/vp on dn2l_tryouts/dn2l/out.lnx/dn.exe to get executable ELF file for linux, don't forget to do chmod +x on it
 
+### Licensing and legal notices
+
+License: modified BSD with a separate exception prohibiting re-licensing under another license, including GPL. See LICENSE.txt for full text. 
+
+The original version of the source code taken in DN open source project (dnosp.com) contained some files from the RTL libraries of Free Pascal and Delphi. The main developer of dn2l is a programmer, not a lawyer, and therefore not sure if modified versions of those files can be redistributed or not. To avoid legal problems, all these files were removed from the source code tree, patches with the necessary changes over the original sources from RTL are used instead.
