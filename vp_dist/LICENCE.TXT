@@ -1,0 +1,91 @@
+  Virtual Pascal v2.1 Program Licence Agreement and Warranty
+  ----------------------------------------------------------
+
+  General
+
+    BEFORE USING THE VIRTUAL PASCAL PRODUCT (HEREINAFTER REFERRED TO AS THE
+    "SOFTWARE", YOU SHOULD CAREFULLY READ THE FOLLOWING TERMS AND CONDITIONS.
+    USING THE PROGRAM INDICATES YOUR ACCEPTANCE OF THESE TERMS AND CONDITIONS.
+
+
+  Grant of licence
+
+    The Software is provided free of charge. Provided you accept the terms
+    of this agreement, vpascal.com will grant you the personal and non-
+    exclusive right to install and use the software.
+
+    The right to use the software includes the right to compile and
+    distribute software written in and compiled with Virtual Pascal, but
+    does not include the right to distribute any binaries, source code
+    etc. that is part of Virtual Pascal itself except as described below.
+
+  Acknowledgement
+
+    You are permitted, but not required, to acknowledge the use of Virtual
+    Pascal in your software or documentation.  If you write a nice piece of
+    software, it would be appreciated if you send an e-mail to
+    vp@vpascal.com describing what your software does.  However, you are
+    not obliged to do so.
+
+
+  Distribution of the original archive
+
+    The software is distributed free of charge ("FreeWare").
+
+    The unmodified original distribution archives may be distributed by any
+    means, including through magazine cover disks, electronic transfer etc.
+    No charge for this may be charged, except for a reasonable fee for
+    duplication/media, and a shipping charge, where applicable.
+
+    When distributing the software, it must be done by distributing
+    the original distribution archive with all required files and
+    documentation present. You may not reverse engineer or
+    decompile the software in any way.
+
+    The software is Copyright (C) 2003 by vpascal.com and Allan Mertner.
+
+
+  Distribution of a modified version
+
+    Distribution of a modified version of Virtual Pascal is prohibited,
+    except with the express written permission of the publisher.
+
+    If you wish to distribute a modified version, for example for embedding
+    all or parts of the Software in another software package, please contact
+    the publisher.
+
+
+  Warranty and Limitations
+
+    vpascal.com gives no warranty and makes no representation either
+    express or implied with respect to the Software or the
+    Documentation, their quality, performance, fitness for a particular
+    purpose or merchantability and in particular but without limitation
+    vpascal.com does not warrant that the Software will meet your
+    requirements or that the operation of the Software will be
+    uninterrupted or error free or that defects in the Software will be
+    corrected.  Accordingly the Software and Documentation are licensed
+    "as is" and you shall load and use the Software at your own risk.
+
+    In no event will vpascal.com be liable to you for any loss or damage
+    of any kind, whether direct or indirect, special incidental,
+    consequential or otherwise, including but not limited to loss of
+    profits, business interruption or loss of information or any other
+    consequential loss arising from your use of or inability to use the
+    Software or the Documentation or from errors or deficiencies in it
+    whether caused by negligence or otherwise except as expressly
+    provided herein and whether or not vpascal.com has been advised of
+    such loss or damage.
+
+  Termination of licence
+
+    You may terminate your licence at any time.  vpascal.com may terminate
+    your licence if you fail to comply with the terms and conditions of
+    this licence.
+
+
+  Trademarks
+
+    Company names, brand names and product names are trademarks or
+    registered trademarks of their respective holders.
+
