@@ -1221,9 +1221,7 @@ procedure TSeparator.Draw;
   if Owner^.GetState(sfActive) and not Owner^.GetState(sfDragging) then
     begin
     B[0].C := #187;
-    //Ch := #186;
-    Ch := #42;
-    // temporary changing box drawing chars to "*"s - unxed
+    Ch := #186;
     B[Size.Y-1].C := #188;
     end
   else

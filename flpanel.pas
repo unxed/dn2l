@@ -824,8 +824,7 @@ Scroll:
   else
     for i := 1 to ttCust10 do
       HLC[i] := C1; {JO}
-  CS := 124+C2 shl 8; // temporary changing box drawing chars to "*"s - unxed
-  //CS := 179+C2 shl 8;
+  CS := 179+C2 shl 8;
   CW := 32+C2 shl 8;
 
   ColumnTitles := (Pansetup^.Show.MiscOptions and 2) <> 0;
