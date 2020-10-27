@@ -33,4 +33,4 @@ The original version of the source code taken from DN open source project (dnosp
 
 dn2l developer is not sure how to correctly interpret the licensing terms for the improvements that were introduced by the DN OSP team (including the listed patches). Some of them do not belong to the original DN source code files published by Ritlabs and do not contain any licensing information inside. He assumes the distribution terms for that code can be considered to be the same as for the entire project, since this code was written specifically for this project and was distributed in the same archive with it.
 
-Currently dn2l is built using freeware Virtual Pascal compiler obtained from old-dos.ru (big thanks, old-dos.ru team!). Original unmodified Virtual Pascal can be distributed as freeware, see vp_dist/LICENCE.TXT for more information.
+Currently dn2l is built using freeware Virtual Pascal compiler obtained from old-dos.ru (big thanks, old-dos.ru team!). See vp_dist/LICENCE.TXT for more information on Virtual Pascal distribution terms.
