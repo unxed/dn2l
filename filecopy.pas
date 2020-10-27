@@ -51,6 +51,7 @@ unit FileCopy;
 interface
 
 uses
+  vpsyslo2,
   Collect, FilesCol, Defines, Views
   ;
 

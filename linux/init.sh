@@ -31,17 +31,12 @@ cd artlsrc
 7z x artlsrc.rar
 rm -rf artlsrc.rar
 rename 'y/A-Z/a-z/' *
-#cp dos.pas math.pas strings.pas use32.pas vpsyslnx.pas vpsyslow.pas vputils.pas windos.pas ../../dn2l
-# dn has it's own vpsyslow.pas, should we overwrite it?
-# now we have our own use32.pas and vpsyslnx.pas 
-cp dos.pas math.pas strings.pas vputils.pas windos.pas ../../dn2l
-
+cp dos.pas math.pas strings.pas sysutils.pas use32.pas vpsyslnx.pas vpsyslow.pas vputils.pas windos.pas ../../dn2l
 # system.pas system.vps
 cd sys
 rename 'y/A-Z/a-z/' *
 cp system.pas system.vps ../../../dn2l
 cd ../..
-
 # linux.pas lnxres.pas 
 mkdir lrtlsrc
 cp lrtlsrc.rar lrtlsrc/
