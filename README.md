@@ -24,10 +24,14 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 
 ### Licensing and legal notices
 
-License: modified BSD with a separate exception prohibiting re-licensing under anyanother license, including, but not limited to, GPL. See LICENSE.txt for full text.
+License: modified BSD with a separate exception prohibiting re-licensing under another license, including, but not limited to, GPL. See LICENSE.txt for full text.
 
-The original version of the source code taken in DN open source project (dnosp.com) contained some files from the RTL libraries of Virtual Pascal and Delphi. The main developer of dn2l is a programmer, not a lawyer, and therefore not sure if modified versions of those files can be redistributed or not. To avoid legal problems, all these files were removed from the source code tree, patches with the necessary changes over the original sources from VP RTL are used instead. Those patches are:
+The original version of the source code taken from DN open source project (dnosp.com) contained some files from the RTL libraries of Virtual Pascal and Delphi. The main developer of dn2l is a programmer, not a lawyer, and therefore not sure if modified versions of those files can be redistributed or not. To avoid legal problems, all these files were removed from the source code tree, patches with the necessary changes over the original sources from VP RTL are used instead. Those patches are:
 1) sysutils.patch, applied upon sysutils.pas header file from VP. According to FSF, headers can not be copyrighted.
 2) vpsyslnx.patch, applied upon vpsyslnx.pas from VP RTL src. Contains only minimal required citations from original, so definitly a fair use.
 3) vpsyslow.patch, applied upon vpsyslow.pas from VP RTL src. Contains only minimal required citations from original, so definitly a fair use.
 4) vpsysd32.patch, vpsysos2.patch, vpsysw32.patch — not used by dn2l at all, provied for educational and historical purposes only, contain only minimal required citations from originals, so can be considered a fair use also.
+
+dn2l developer is not sure how to correctly interpret the licensing terms for the improvements that were introduced by the DN OSP team (including the listed patches). Some of them do not belong to the original DN source code files published by Ritlabs and do not contain any licensing information inside. He assumes the distribution terms for that code can be considered to be the same as for the entire project, since this code was written specifically for this project and was distributed in the same archive with it.
+
+Currently dn2l is built using VP compiler obtained from Wayback Machine (big thanks, Wayback Machine team and old-dos.ru team!). Original unmodified VP can be distributed as freeware, see LICENCE.TXT inside aidedoc.rar inside VP's distribution archive for more information.
