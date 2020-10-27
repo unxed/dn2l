@@ -1,0 +1,5139 @@
+--- vpsysd32.new	2003-10-18 04:11:00.000000000 +0400
++++ VPSYSD32.PAS	2020-10-27 23:32:11.490758835 +0300
+@@ -19,9 +19,6 @@
+ //€                                                       €
+ //ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ
+ 
+-const
+-  mausmaske=$ffff;
+-
+ Function Max( a,b : Longint ) : Longint; inline;
+   begin
+     if a > b then
+@@ -38,140 +35,179 @@
+       Min := b;
+   end;
+ 
+-// not implemented:
+-// do not know
+-//  * realmode or protected mode selector ?
+-//  * flat to what selector (probably DSeg)
+-// use dpmi32.dosseg_linear,protsel_linear
++// 16:16 real <-> 0:32 flat
+ procedure SysSysSelToFlat(var P: Pointer);
+-  begin
+-    //NOT_IMPLEMENTED
+-    asm int 3 end;
++  {&Frame-}{Uses eax,edx,esi}
++  asm
++    mov esi,P
++    movzx eax,SmallWord [esi+0]
++    movzx edx,SmallWord [esi+2]
++    shl edx,4
++    add eax,edx                         // assumes A20 enabled :)
++    mov [esi],eax
+   end;
+ 
+ procedure SysSysFlatToSel(var P: Pointer);
+-  begin
+-    //NOT_IMPLEMENTED
+-    asm int 3 end;
++  {&Frame-}{&Uses eax,edx,esi}
++  asm
++    mov esi,P
++    mov eax,[esi]
++    cmp eax,$ffff0+$ffff
++    jbe @valid
++    push 201                            // range check error..
++    call _RunError
++  @valid:
++    mov edx,eax                         // try to conbert to ssss:000o
++    and edx,$fffffff0
++    cmp edx,1 shr 20                    // > 1M?
++    jb @below_1MiB
++    mov edx,$ffff0                      // then use          FFFF:oooo
++  @below_1MiB:
++    sub eax,edx
++    shr edx,4
++    mov Smallword [esi+0],ax
++    mov Smallword [esi+2],dx
+   end;
+ 
+ 
++function SysGetTextVideoMode:Longint;
++  {&Frame-}{&Uses None}
++  asm
++    mov al,byte [Seg0040+$49]        // video mode 0..127, bit 7 is no-clear-screen
++    and eax,$7f
++  end;
+ 
+ // return linear address of video mem
+-function SysGetTextVideoMemBase:longint;(*&Frame-*)(*&Uses NONE*)
++function SysGetTextVideoMemBase:Longint;
++  {&Frame-}{&Uses None}
+   asm
++    call SysGetTextVideoMode
++    cmp al,$07                          // 7=mono
+     mov eax,SegB000
+-    cmp byte [Seg0040+$49],$07          // 7=mono
+     je @ret
+-
+     mov eax,SegB800
+   @ret:
+   end;
+ 
+-function SysGetTextVideoModus:longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    movzx eax,byte [Seg0040+$49]        // Bildschirmmodus 0..255
+-  end;
+ 
+-function SysGetTextVideoColumns:longint;(*&Frame-*)(*&Uses NONE*)
++function SysGetTextVideoColumns:Longint;
++  {&Frame-}{&Uses None}
+   asm
+-    movzx eax,smallword [Seg0040+$4a]   // Anzahl Bildschirmspalten
++    movzx eax,SmallWord [Seg0040+$4a]   // number of visible screen columns
+   end;
+ 
+-function SysGetTextVideoRows:longint;(*&Frame-*)(*&Uses NONE*)
++function SysGetTextVideoRows:Longint;
++  {&Frame-}{&Uses None}
+   asm
+-    movzx eax,byte [Seg0040+$84]        // Anzahl Zeilen -1 (EGA+)
++    mov eax,25
++    cmp video_adapter_found,ega_found   // error 3 means you have to set 'primary file' to VpSysLow.pas
++    jb @ret
++    movzx eax,byte [Seg0040+$84]        // number of visible lines-1 (EGA+)
+     inc eax
++  @ret:
+   end;
+ 
+-function SysGetTextFontHeight:longint;(*&Frame-*)(*&Uses NONE*)
++function SysGetTextFontHeight:Longint;
++  {&Frame-}{&Uses None}
+   asm
+-    movzx eax,smallword [Seg0040+$85]
++    mov eax,16
++    cmp video_adapter_found,mda_found
++    je @ret
++    mov eax,8
++    cmp video_adapter_found,ega_found
++    jb @ret
++    movzx eax,Byte [Seg0040+$85]        // documnetation says SmallWord
++  @ret:
+   end;
+ 
+-function berechnebildschirmspeicherposition(x,y:smallword):longint;(*&Frame-*)(*&Uses EBX,EDX*)
++function calculate_video_address(x,y:Longint):Longint;
++  {&Frame-}{&Uses edx}
+   asm
+-    call SysGetTextVideoColumns         // eax:=Anzahl Bildschirmspalten
+-    movzx ebx,y
+-    mul ebx                             // Zeilen*Spalten(80) -> eax
+-    movzx ebx,x
+-    add ebx,eax                         // -> ebx
+-    shl ebx,1                           // *2
++    call SysGetTextVideoColumns         // eax:=number of columns (80)
++    movzx edx,[y].SmallWord
++    mul edx                             // eax:=number of columns*y
++    movzx edx,[x].SmallWord
++    add edx,eax                         // edx:=number of columns*y+x
++    add edx,edx                         // edx:=2*(number of columns*y+x)
+     call SysGetTextVideoMemBase         // -> eax
+-    add eax,ebx                         // Basis+Offset
++    add eax,edx                         // SegB800+2*(number of columns*y+x)
+   end;
+ 
+-function SysFileStdIn: Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    sub eax,eax                         // 0
++function SysFileStdIn: Longint;
++  begin
++    SysFileStdIn := 0;
+   end;
+ 
+-function SysFileStdOut: Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,1                           // 1
++function SysFileStdOut: Longint;
++  begin
++    SysFileStdOut := 1;
+   end;
+ 
+-function SysFileStdErr: Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,2                           // 2
++function SysFileStdErr: Longint;
++  begin
++    SysFileStdErr := 2;
+   end;
+ 
+-function SysFileOpen(FileName: PChar; Mode: Longint; var Handle: Longint): Longint;(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++function SysFileOpen(FileName: PChar; Mode: Longint; var Handle: Longint): Longint;
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
+     sub eax,eax                         // Bit 31..16=0
+     mov ah,$3d                          // OPEN FILE
+-    mov al,byte [mode]
+-    mov edx,filename
++    mov al,byte [Mode]
++    mov edx,FileName
+     int $21
+     jc @ret
+ 
+-    mov edx,handle
++    mov edx,Handle
+     mov [edx],eax
+     sub eax,eax
+ 
+   @ret:
+   end;
+ 
+-function SysFileCreate(FileName: PChar; Mode,Attr: Longint; var Handle: Longint): Longint;(*&Frame-*)(*&Uses ECX,EDX*)
++function SysFileCreate(FileName: PChar; Mode,Attr: Longint; var Handle: Longint): Longint;
++  {&Frame-}{&Uses ecx,edx}
+   asm
+     sub eax,eax                         // Bit 31..16=0
+     mov ah,$3c                          // CREATE OR TRUNCATE
+-    mov ecx,attr
+-    mov edx,filename
++    mov ecx,Attr
++    mov edx,FileName
+     int $21
+     jc @ret
+ 
+-    mov edx,handle
++    mov edx,Handle
+     mov [edx],eax
+     sub eax,eax
+ 
+   @ret:
+   end;
+ 
+-function SysFileCreateNEW(FileName: PChar; Attr: Longint; var Handle: Longint): Longint;(*&Frame-*)(*&Uses ECX,EDX*)
++function SysFileCreateNEW(FileName: PChar; Attr: Longint; var Handle: Longint): Longint;
++  {&Frame-}{&Uses ecx,edx}
+   asm
+     sub eax,eax                         // Bit 31..16=0
+     mov ah,$5b                          // CREATE NEW FILE
+-    mov ecx,attr
+-    mov edx,filename
++    mov ecx,Attr
++    mov edx,FileName
+     int $21
+     jc @ret
+ 
+-    mov edx,handle
++    mov edx,Handle
+     mov [edx],eax
+     sub eax,eax
+ 
+   @ret:
+   end;
+ 
+-function SysFileSeek(Handle,Distance,Method: Longint; var Actual: Longint): Longint;(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++function SysFileSeek(Handle,Distance,Method: Longint; var Actual: Longint): Longint;
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
+     sub eax,eax                         // Bit 31..16=0
+     mov ah,$42                          // SET CURRENT FILE POSITION
+     mov al,byte [Method]
+     mov ebx,Handle
+-    mov dx,smallword [Distance+0]       // CX:DX
+-    mov cx,smallword [Distance+2]
++    mov dx,SmallWord [Distance+0]       // CX:DX
++    mov cx,SmallWord [Distance+2]
+     int $21
+     jc @ret
+ 
+@@ -184,80 +220,95 @@
+   @ret:
+   end;
+ 
+-function SysFileRead(Handle: Longint; var Buffer; Count: Longint; var Actual: Longint): Longint;(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++function SysFileRead(Handle: Longint; var Buffer; Count: Longint; var Actual: Longint): Longint;
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
+     sub eax,eax                         // Bit 31..16=0
+     mov ah,$3f
+-    mov ebx,handle
+-    mov ecx,count
+-    mov edx,buffer
++    mov ebx,Handle
++    mov ecx,Count
++    mov edx,Buffer
+     int $21
+-    jc @fehler
++    mov edx,Actual
++    jc @error
+ 
+-    // eax=gelesen
+-    mov edx,actual // Actual:=eax
+-    mov [edx],eax
++    // eax=actual read
++    mov [edx],eax  // Actual:=eax
+     sub eax,eax
+     jmp @ret
+ 
+-  @fehler:
+-    // eax=Fehler
++  @error:
++    // eax=error code
+     sub ecx,ecx    // Actual:=0
+-    mov edx,actual
+     mov [edx],ecx
+ 
+   @ret:
+-    call teste_strg_c
++    call Test_Ctrl_C_Sensed
+   end;
+ 
+-function SysFileWrite(Handle: Longint; const Buffer; Count: Longint; var Actual: Longint): Longint;(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++function SysFileWrite(Handle: Longint; const Buffer; Count: Longint; var Actual: Longint): Longint;
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
+     sub eax,eax                         // Bit 31..16=0
+     mov ah,$40
+-    mov ebx,handle
+-    mov ecx,count
+-    mov edx,buffer
++    mov ebx,Handle
++    mov ecx,Count
++    mov edx,Buffer
+     int $21
+-    jc @fehler
++    mov edx,Actual
++    jc @error
+ 
+-    mov edx,actual
+     mov [edx],eax
+     sub eax,eax
+     jmp @ret
+ 
+-  @fehler:
++  @error:
+     sub ecx,ecx
+-    mov edx,actual
+     mov [edx],ecx
+ 
+   @ret:
+-    call teste_strg_c
++    call Test_Ctrl_C_Sensed
+   end;
+ 
+ function SysFileSetSize(Handle,NewSize: Longint): Longint;assembler;
+-  (*&Frame+*)(*&Uses NONE*)
++  {&Frame+}{&Uses None}
+   var
+-    posi:longint;
++    current_position,
++    actual              :Longint;
+   asm
++    // remember file position
++    push Handle
++    push 0                      // +-0
++    push 1                      // from current position
++    lea eax,current_position
++    push eax
++    call SysFileSeek
++    test eax,eax
++    jnz @ret                    // error
++
+     // seek to
++    mov eax,NewSize
++    cmp eax,current_position
++    je @seek_NewSize_done
+     push Handle
+-    push NewSize                // offset
++    push eax                    // offset
+     push 0                      // from begin of file
+-    lea eax,posi
++    lea eax,actual
+     push eax
+     call SysFileSeek
+-    or eax,eax
+-    jnz @fehler
++    test eax,eax
++    jnz @restore_ret            // error
+ 
++  @seek_NewSize_done:
+     // write 0 Byte to truncate:
+     push Handle                 // Handle
+     push 0                      // Buffer (@nil^)
+     push 0                      // Count
+-    lea eax,posi                // @Actual
++    lea eax,actual              // @Actual
+     push eax
+     call SysFileWrite
+-    or eax,eax
+-    jnz @fehler
++    test eax,eax
++    jnz @restore_ret            // error
+ 
+     // null byte written can be an error...
+     // if filesize<>NewSize then error occured:
+@@ -265,31 +316,46 @@
+     push Handle
+     push 0                      // no offset
+     push 2                      // to end of file
+-    lea eax,posi
++    lea eax,actual
+     push eax
+     call SysFileSeek
+-    or eax,eax
+-    jnz @fehler
++    test eax,eax
++    jnz @restore_ret            // error
+ 
+-    mov eax,[posi]              // final SysFileSetSize check
++    mov eax,[actual]            // final SysFileSetSize check
+     cmp eax,[NewSize]
+-    jne @fehler
++    mov eax,0
++    setne al                    // eax=0=equal eax=1=error
+ 
+-    sub eax,eax
+-    jmp @ret
++  @restore_ret:
++    // restore old file position - ignore errors here!
++    push eax
+ 
+-  @fehler:
+-    or eax,-1
++    mov eax,current_position
++    cmp eax,NewSize
++    je @seek_current_position_done
++
++    push Handle
++    push eax                    // offset
++    push 0                      // from begin of file
++    lea eax,actual
++    push eax
++    call SysFileSeek
++
++  @seek_current_position_done:
++
++    pop eax
+ 
+   @ret:
+   end;
+ 
+-function SysFileClose(Handle: Longint): Longint;(*&Frame-*)(*&Uses EBX*)
++function SysFileClose(Handle: Longint): Longint;
++  {&Frame-}{&Uses ebx}
+   asm
+     sub eax,eax
+     mov ebx,Handle
+ 
+-    // if (Handle > 2) or (Handle < 0) then
++    // if (Handle > 2) or (Handle < 0) then Exit
+     cmp ebx,0
+     jl @1
+     cmp ebx,2
+@@ -305,11 +371,12 @@
+   @ret:
+   end;
+ 
+-function SysFileFlushBuffers(Handle: Longint): Longint;(*&Frame-*)(*&Uses EBX*)
++function SysFileFlushBuffers(Handle: Longint): Longint;
++  {&Frame-}{&Uses ebx}
+   asm
+     sub eax,eax
+     mov ah,$68
+-    mov ebx,handle
++    mov ebx,Handle
+     int $21
+     jc @ret
+ 
+@@ -318,7 +385,8 @@
+   @ret:
+   end;
+ 
+-function SysFileDelete(FileName: PChar): Longint;(*&Frame-*)(*&Uses EDX*)
++function SysFileDelete(FileName: PChar): Longint;
++  {&Frame-}{&Uses edx}
+   asm
+     sub eax,eax
+     mov ah,$41
+@@ -331,7 +399,8 @@
+   @ret:
+   end;
+ 
+-function SysFileMove(OldName,NewName: PChar): Longint;(*&Frame-*)(*&Uses EDX,EDI*)
++function SysFileMove(OldName,NewName: PChar): Longint;
++  {&Frame-}{&Uses edx,edi}
+   asm
+     sub eax,eax
+     mov ah,$56
+@@ -345,38 +414,41 @@
+   @ret:
+   end;
+ 
+-function SysFileIsDevice(Handle: Longint): longint;(*&Frame-*)(*&Uses EBX,EDX*)
++function SysFileIsDevice(Handle: Longint): Longint;
++  {&Frame-}{&Uses ebx,edx}
+   asm
+     mov eax,$4400
+     mov ebx,Handle
+     int $21
+ 
+-    jc @fehler
++    jc @error
+ 
+     sub eax,eax                         // 0 .. file
+     test dl,$80                         // Bit 7 = 1 -> Char/Block DEV
+     setnz al                            // 1 .. device
+     jmp @ret
+ 
+-   @fehler:
++  @error:
+     sub eax,eax
+ 
+   @ret:
+   end;
+ 
+-function SysDirGetCurrent(Drive: Longint; Path: PChar): Longint;(*&Frame-*)(*&Uses EDX,ESI,EDI*)
++function SysDirGetCurrent(Drive: Longint; Path: PChar): Longint;
++  {&Frame-}{&Uses edx,esi,edi}
+   asm
+     mov eax,Drive
+     mov edi,Path
+ 
+-    or eax,eax
+-    jnz @laufwerk_bestimmt
++    test eax,eax
++    jnz @drive_known
+ 
+     mov ah,$19
+     int $21       // -> AL: 0=A 1=B ..
+-    inc al
++    inc eax
+ 
+-  @laufwerk_bestimmt:
++  @drive_known:
++    cld
+     mov dl,al
+     add al,'A'-1
+     stosb
+@@ -386,29 +458,55 @@
+     mov esi,edi
+     sub eax,eax
+     stosd
++    // LFN extension by piwamoto
++(*
++INT 21 - Windows95 - LONG FILENAME - GET CURRENT DIRECTORY
++        AX = 7147h
++        DL = drive number (00h = current, 01h = A:, etc.)
++        DS:SI -> buffer for ASCIZ directory name
++Return: CF clear if successful
++        CF set on error
++            AX = error code (see #01680)
++                7100h if function not supported
++Notes:  the returned pathname does not include the drive letter, colon, or
++          leading backslash, and is not necessarily a long filename -- this
++          function returns whatever path was used when changing to the
++          current directory, and may include a mixture of long and short
++          components
++        the provided buffer must be at least as large as the value indicated
++          by AX=71A0h
++        for compatibility with DOS versions prior to v7.00, the carry flag
++          should be set on call to ensure that it is set on exit
++SeeAlso: AH=47h,AX=713Bh,AX=7160h,AX=71A0h
++*)
+     mov ah,$47    // get current directory -> ESI (without 'X:\')
+     int $21       // DL 1=A 2=B ..
+     jc @ret
++// LFN extension by piwamoto
++// we don't care if int21(ax=7147) is not supported by OS
++// buffer already filled with int21(ah=47)
++    mov ax,$7147  // get current directory -> ESI (without 'X:\')
++    int $21       // DL 1=A 2=B ..
+ 
+     sub eax,eax   // SysDirGetCurrent:=0
+ 
+   @ret:
+   end;
+ 
+-function SysDirSetCurrent(Path: PChar): Longint;(*&Frame-*)(*&Uses ECX,EDX,ESI*)
++function SysDirSetCurrent(Path: PChar): Longint;
++  {&Frame-}{&Uses ebx,edx,esi}
+   asm
+-    sub ecx,ecx                         // SysDirSetCurrent:=0
+-
+-    mov esi,path
+-    mov eax,[esi]
+-    cmp al,0                            // SysDirSetCurrent('')
+-    je @ret
++    mov esi,Path
++    mov edx,[esi]
++    sub eax,eax                         // SysDirSetCurrent:=0
++    cmp dl,0                            // Path=''?
++    je @ret                             // yes, success
+ 
+-    cmp ah,':'
+-    jne @ohne_laufwerk
++    cmp dh,':'                          // Path[1]=':'?
++    jne @no_drive
+ 
+     // drive change
+-    movzx eax,al                        // Drive:=UpCase(Path[1])
++    movzx eax,dl                        // Drive:=UpCase(Path[0])
+     push eax
+     call _upcase
+     lea edx,[eax-'A']                   // dl:=Ord(Drive)-Ord('A')
+@@ -420,39 +518,38 @@
+     int $21
+ 
+     cmp al,dl                           // success ?
+-    je @1                               // yes -> set path
++    mov eax,15                          // invalid drive
++    jne @ret                            // no -> exit
++                                        // yes -> set path
+ 
+-    mov ecx,15                          // invalid drive
+-    jmp @ret
+-
+-  @1:                                   // Length('A:')
+-    inc esi
++    inc esi                             // skip Length('A:')
+     inc esi
+ 
+-  @ohne_laufwerk:
+-
+-    // path change
+-    cmp byte [esi],0                    // SysDirSetCurrent('A:')
+-    je @ret
++  @no_drive:
+ 
++    // path change?
+     sub eax,eax
+-    mov ah,$3b
+-    mov edx,esi // DS:DX
++    cmp byte [esi],al                   // ('A:')
++    je @ret                             // no, success
++
++    mov ah,$3b                          // change current directory
++    mov edx,esi                         // DS:DX
+     int $21
+-    jnc @ret
++    jc @ret
+ 
+-    mov ecx,eax
++    sub eax,eax
+ 
+   @ret:
+-    mov eax,ecx
++
+   end;
+ 
+ 
+-function SysDirCreate(Path: PChar): Longint;(*&Frame-*)(*&Uses EDX*)
++function SysDirCreate(Path: PChar): Longint;
++  {&Frame-}{&Uses edx}
+   asm
+     sub eax,eax
+     mov ah,$39
+-    mov edx,path
++    mov edx,Path
+     int $21
+     jc @ret
+ 
+@@ -461,11 +558,12 @@
+   @ret:
+   end;
+ 
+-function SysDirDelete(Path: PChar): Longint;(*&Frame-*)(*&Uses EDX*)
++function SysDirDelete(Path: PChar): Longint;
++  {&Frame-}{&Uses edx}
+   asm
+     sub eax,eax
+     mov ah,$3a
+-    mov edx,path
++    mov edx,Path
+     int $21
+     jc @ret
+ 
+@@ -476,7 +574,7 @@
+ 
+ function SysMemAvail: Longint;
+   var
+-    dpmimeminfo:dpmimeminfo09_typ;
++    dpmimeminfo         :dpmimeminfo09_type;
+   begin
+     dpmi_getmeminfo09(dpmimeminfo);
+ 
+@@ -485,7 +583,7 @@
+         if (free_pages<>$ffffffff) then
+           begin
+             if free_pages>(500*1024) then
+-              SysMemAvail:=500*1024*4096 // ~~ max(longint)
++              SysMemAvail:=500*1024*4096 // ~~ max(Longint)
+             else
+               if free_pages>1 then
+                 SysMemAvail:=(free_pages-1)*4096
+@@ -495,7 +593,7 @@
+         else
+           begin
+             if largest_available_block_in_bytes=$ffffffff then
+-              SysMemAvail:=512*1024 // wird hoffentlich erstmal reichen
++              SysMemAvail:=512*1024 // no informations - guess 512K free
+             else
+               if largest_available_block_in_bytes>2000 then
+                 SysMemAvail:=largest_available_block_in_bytes-2000
+@@ -508,54 +606,51 @@
+ 
+ 
+ function SysMemAlloc(Size,Flags: Longint; var MemPtr: Pointer): Longint;
+-(*&Frame-*)(*&Uses EBX,ECX,ESI,EDI*)
++  {&Frame-}{&Uses ebx,ecx,esi,edi}
+   asm
+-    // Flags wird ignoriert
++    // Flags is ignored
+ 
+     mov eax,$0501       // DPMI 0.9+ ALLOCATE MEMORY BLOCK
+-    mov ecx,[size]      // BX:CX
+-    add ecx,(15+4)      // + auf 16 Byte ausgereichtet
+-                        // + 4 zum Speichern der Handhabe
++    mov ecx,[Size]      // BX:CX
++    add ecx,(15+4)      // + alignment to 16 bytes
++                        // + need 5 bytes to store handle
+ 
+     mov ebx,ecx
+     shr ebx,16
+     int $31
+-    jc @fehler
++    jc @error
+ 
+-    // BX:CX = Adresse
+-    // SI:DI = Handhabe
++    // BX:CX = Address
++    // SI:DI = Handle
+ 
+     shl ebx,16
+     mov bx,cx
+ 
+-    // auf 16 Byte ausrichten, mit Platz fÅr Handhabe
++    // align to 16 bytes, room for Handle
+     lea eax,[ebx+(15+4)]
+     and eax,$fffffff0
+ 
+-    // SI:DI Handhabe abspeichern
++    // remeber Handle SI:DI
+     mov [eax-4+2],si
+     mov [eax-4+0],di
+ 
+-    // MemPtr:=eax
+-    mov edi,MemPtr
++    mov edi,MemPtr                      // MemPtr:=eax
+     mov [edi],eax
+-    // Result:=0
+-    sub eax,eax
++    sub eax,eax                         // Result:=0
+     jmp @ret
+ 
+-  @fehler:
+-    // MemPtr :=nil
+-    mov edi,MemPtr
+-    and longint [edi],0
+-    // Result:=8
+-    mov eax,8
++  @error:
++    mov edi,MemPtr                      // MemPtr :=nil
++    and Longint [edi],0
++    mov eax,8                           // Result:=8
+ 
+   @ret:
+   end;
+ 
+-function SysMemFree(MemPtr: Pointer): Longint;(*&Frame-*)(*&Uses ESI,EDI*)
++function SysMemFree(MemPtr: Pointer): Longint;
++  {&Frame-}{&Uses esi,edi}
+   asm
+-    mov eax,[memptr]
++    mov eax,[MemPtr]
+ 
+     // get Handle (SI:DI)
+     mov esi,[eax-4+2]
+@@ -571,44 +666,47 @@
+   end;
+ 
+ 
+-function SysSysMsCount: Longint;(*&Frame-*)(*&Uses EDX*)
++function SysSysMsCount: Longint;
++  {&Frame-}{&Uses None}
+   asm
+-    // ungenau (nur 1/18 Sekunde)
+-    mov eax,[Seg0040+$6c]               // SysSysMsCount:=meml[seg0040+$6c]*55;
+-    mov edx,55                          // 1024/18.2
+-    mul edx
++    // SysSysMsCount:=MemL[seg0040+$6c]*55;
++    // 1024/18.2
++    imul eax,[Seg0040+$6c].Longint,55
+   end;
+ 
+-function SysFileOpen_Create(Open: Boolean;FileName: PChar; Mode,Attr,Action: Longint; var Handle: Longint): Longint;(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++function SysFileOpen_Create(Open: Boolean;FileName: PChar; Mode,Attr,Action: Longint; var Handle: Longint): Longint;
++  {&Frame+}{&Uses ebx,ecx,edx}
+   asm
+     sub eax,eax
+-    mov edx,filename
++    mov edx,FileName
+ 
+-    cmp open,true
+-    jne @open_false
++    cmp Open,false
++    je @open_false
++    cmp Open,true
++    jne @invalid_option
+ 
+-    cmp action,0
++    cmp Action,0
+     jne @1
+ 
+-    // open=true, action=0
++    // Open=true, Action=0
+     // SysFileOpen(FileName,Mode,Handle);
+     push edx
+     push Mode
+-    push handle
++    push Handle
+     call SysFileOpen
+     // SysFileOpen_Create:=eax
+     jmp @ret
+ 
+   @1:
+-    cmp action,open_CreateIfNew
++    cmp Action,open_CreateIfNew
+     jne @2
+-    // open=true, action=open_CreateIfNew
++    // Open=true, Action=open_CreateIfNew
+     // SysFileOpen(FileName,Mode,Handle);
+     push edx
+     push Mode
+-    push handle
++    push Handle
+     call SysFileOpen
+-    or eax,eax
++    test eax,eax
+     // SysFileOpen_Create:=eax (0)
+     jz @ret
+ 
+@@ -616,22 +714,25 @@
+     push edx
+     push Mode
+     push Attr
+-    push handle
++    push Handle
+     call SysFileCreate
+     jmp @ret
+ 
+   @2:
+-    // open=true, action=TruncateIfExist
++    cmp Action,open_TruncateIfExists
++    jne @invalid_option
++    // Open=true, Action=open_TruncateIfExist
++    // SysFileOpen(FileName,Mode,Handle);
+     push edx
+     push Mode
+-    push handle
++    push Handle
+     call SysFileOpen
+-    or eax,eax
+-    // SysFileOpen_Create:=error
+-    jnz @ret
++    test eax,eax
++    jnz @ret // does not exist? -> exit
++    // truncate
+     // SysFileSetSize(Handle,0)
+     mov eax,Handle
+-    push longint [eax] // Handle
++    push Longint [eax] // Handle
+     push 0
+     call SysFileSetSize
+     jmp @ret
+@@ -639,10 +740,11 @@
+     //*** open = false ***
+ 
+   @open_false:
+-    cmp action,0
++    cmp Action,0
+     jne @3
+-    // open=false, action=0
+-    // SysFileCreateNEW(FileName,Attr,Handle)
++
++    // Open=false, Action=0
++    // SysFileCreateNEW(FileName,Attr,Handle) ; fails for existing file
+     push edx
+     push Attr
+     push Handle
+@@ -650,27 +752,33 @@
+     jmp @ret
+ 
+   @3:
+-    // open=false, action=TruncateIfExist
++    cmp Action,create_TruncateIfExists
++    jne @invalid_option
++    // Open=false, Action=create_TruncateIfExist
+     // SysFileCreate(FileName,Mode,Attr,Handle)
+     push edx
+     push Mode
+     push Attr
+     push Handle
+     call SysFileCreate
+-    // jmp @ret
++    jmp @ret
++
++  @invalid_option:
++    mov eax,1 // function number invalid
++
+   @ret:
+   end;
+ 
+ function SysFileCopy(_Old, _New: PChar; _Overwrite: Boolean): Boolean;
+   var
+     d1,d2       :file;
+-    p           :array[0..4*1024-1] of byte;
+-    org_FileMode:longint;
+-    groesse,
++    p           :array[0..8*1024-1] of byte;
++    org_FileMode:Longint;
++    size,
+     pos,
+     block,
+-    wirklich    :longint;
+-    fehler      :longint;
++    actual      :Longint;
++    error       :Longint;
+   begin
+     SysFileCopy:=false;
+ 
+@@ -682,62 +790,62 @@
+ 
+     if _overwrite then
+       begin
+-        (*I-*)
++        {$I-}
+         Rewrite(d2,1);
+-        (*$I+*)
++        {$I+}
+         FileMode:=org_FileMode;
+         if IOResult<>0 then
+           Exit;
+       end
+     else
+       begin
+-        (*$I-*)
++        {$I-}
+         Reset(d2,1);
+-        (*$I+*)
++        {$I+}
+         if IOResult=0 then
+           begin
+             FileMode:=org_FileMode;
+             Exit;
+           end;
+ 
+-        (*$I-*)
++        {$I-}
+         Rewrite(d2,1);
+         FileMode:=org_FileMode;
+-        (*$I+*)
++        {$I+}
+         if IOResult<>0 then
+           Exit;
+       end;
+ 
+ 
+-    (*$I-*)
++    {$I-}
+     FileMode:=open_access_ReadOnly+open_share_DenyNone;
+     Reset(d1,1);
+     FileMode:=org_FileMode;
+-    (*$I+*)
++    {$I+}
+ 
+-    if InOutRes<>0 then
++    if IOResult<>0 then
+       begin
+         Close(d2);
+         Exit;
+       end;
+ 
+-    groesse:=FileSize(d1);
++    size:=FileSize(d1);
+     pos:=0;
+     repeat
+-      if pos=groesse then
++      if pos=size then
+         begin
+           SysFileCopy:=true;
+           Break;
+         end;
+ 
+-      block:=groesse-pos;
++      block:=size-pos;
+       if block>SizeOf(p) then
+         block:=SizeOf(p);
+ 
+-      BlockRead (d1,p,block,wirklich);
+-      if block<>wirklich then Break;
+-      BlockWrite(d2,p,block,wirklich);
+-      if block<>wirklich then Break;
++      BlockRead(d1,p,block,actual);
++      if block<>actual then Break;
++      BlockWrite(d2,p,block,actual);
++      if block<>actual then Break;
+ 
+       Inc(pos,block);
+     until false;
+@@ -746,85 +854,87 @@
+     Close(d2);
+   end;
+ 
+-function SysCtrlSelfAppType: Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,1 // Vollbild ... should be 0 (Online Help is wrong)
++function SysCtrlSelfAppType: Longint;
++  begin
++    // full-screen text mode ... should be 0 (Online Help is wrong)
++    SysCtrlSelfAppType := 1;
+   end;
+ 
+ function SysCtrlCreateThread(Attrs: Pointer; StackSize: Longint; Func,Param: Pointer; Flags: Longint; var Tid: Longint): Longint;
+   begin
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     dpmi32_install_thread_code;
+     SysCtrlCreateThread:=
+       Dpmi32CreateThread(tid,Func,Ofs(Param),Flags,StackSize);
+-    (*$ELSE*)
++    {$Else}
+     SysCtrlCreateThread:=-1;
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ function SysCtrlKillThread(Handle: Longint): Longint;
+   begin
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     SysCtrlKillThread:=
+       Dpmi32KillThread(Handle,0);
+-    (*$ELSE*)
++    {$Else}
+     SysCtrlKillThread:=-1;
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ function SysCtrlSuspendThread(Handle: Longint): Longint;
+   begin
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     SysCtrlSuspendThread:=
+       Dpmi32SuspendThread(Handle);
+-    (*$ELSE*)
++    {$Else}
+     SysCtrlSuspendThread:=-1;
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ function SysCtrlResumeThread(Handle: Longint): Longint;
+   begin
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     SysCtrlResumeThread:=
+       Dpmi32ResumeThread(Handle);
+-    (*$ELSE*)
++    {$Else}
+     SysCtrlResumeThread:=-1;
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ function SysGetThreadId: Longint;
+   begin
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     SysGetThreadId:=
+       Dpmi32GetThreadId;
+-    (*$ELSE*)
++    {$Else}
+     // -> GetThreadId
+     SysGetThreadId:=1;
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ procedure SysCtrlExitThread(ExitCode: Longint);
+   begin
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     Dpmi32KillThread(Dpmi32GetThreadId,ExitCode);
+-    (*$ELSE*)
+-    //NOT_IMPLEMENTED
+-    (*$ENDIF*)
++    {$Else}
++    // Not implemented
++    {$EndIf}
+   end;
+ 
+-procedure SysCtrlExitProcess(ExitCode: Longint);(*&Frame-*)(*&Uses NONE*)
++procedure SysCtrlExitProcess(ExitCode: Longint);
++  {&Frame-}{&Uses None}
+   asm
+     // debug support:  See  deb_link.pas
+     nop
+     mov ah,$4c
+-    mov al,byte [exitcode] // lo(ExitCode)
++    mov al,Byte [ExitCode] // lo(ExitCode)
+     int $21
+   end;
+ 
+-function SysCtrlGetModuleName(Handle: Longint; Buffer: PChar): Longint;(*&Frame-*)(*&Uses NONE*)
++function SysCtrlGetModuleName(Handle: Longint; Buffer: PChar): Longint;
++  {&Frame-}{&Uses None}
+   asm
+     // not used ?
+-    //NOT_IMPLEMENTED
+     @1:
+     mov eax,[Buffer]
+     push offset @1
+@@ -834,22 +944,24 @@
+     sub eax,eax
+   end;
+ 
+-procedure SysCtrlEnterCritSec;(*&Frame-*)(*&Uses NONE*)
++procedure SysCtrlEnterCritSec;
++  {&Frame-}{&Uses None}
+   asm
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     jmp Dpmi32EnterCritSec
+-    (*$ELSE*)
++    {$Else}
+     //cli
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+-procedure SysCtrlLeaveCritSec;(*&Frame-*)(*&Uses NONE*)
++procedure SysCtrlLeaveCritSec;
++  {&Frame-}{&Uses None}
+   asm
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     jmp Dpmi32LeaveCritSec
+-    (*$ELSE*)
++    {$Else}
+     //sti
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ 
+@@ -862,7 +974,7 @@
+   dpmi32_tlsmapmem      :array[0..SharedMemSize-1] of byte;
+ 
+ const
+-  tls1:integer=0;
++  tls1                  :integer=0;
+ 
+ function SysCtrlGetTlsMapMem: Pointer;
+ 
+@@ -879,54 +991,55 @@
+ 
+ 
+ var
+-  syscmdln_var          :array[0..512] of char;
+-  parax_length_array    :array[0..100] of longint;
+-  SysCmdlnCount_var     :longint;
++  syscmdln_var          :array[0..512] of Char;
++  parax_length_array    :array[0..100] of Longint;
++  SysCmdlnCount_var     :Longint;
+ 
+-function SysCmdln: PChar;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,offset syscmdln_var
++function SysCmdln: PChar;
++  begin
++    SysCmdln := @syscmdln_var;
+   end;
+ 
+-function SysCmdlnCount: Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,SysCmdlnCount_var
++function SysCmdlnCount: Longint;
++  begin
++    SysCmdlnCount := SysCmdlnCount_var;
+   end;
+ 
+-procedure SysCmdlnParam(Index: Longint; var Param: ShortString);(*&Frame-*)(*&Uses EAX,ECX,EDX,ESI,EDI*)
++procedure SysCmdlnParam(Index: Longint; var Param: ShortString);
++  {&Frame-}{&Uses eax,ecx,edx,esi,edi}
+   asm
+     // Param:=''
+-    mov edi,param
++    mov edi,Param
+     mov byte [edi],0
+ 
+-    mov edx,index
++    mov edx,Index
+     mov esi,offset parax_length_array
+     mov edi,offset syscmdln_var
+     sub ecx,ecx
+     cld
+ 
+-    @schleife:
++  @param_loop:
+     lodsd
+ 
+     // out of Paramstr ?
+-    or eax,eax // 0 ?
++    test eax,eax // 0 ?
+     jz @ret
+ 
+     // counter=index ?
+     cmp edx,ecx
+-    je @gefunden
++    je @found
+ 
+     // skip eax chars, increment counter
+     add edi,eax
+     inc edi     // length(' ')
+     inc ecx     // inc(counter)
+-    jmp @schleife
++    jmp @param_loop
+ 
+-    @gefunden:
++  @found:
+ 
+     // Parameter like "Demo"
+     cmp byte [edi],'"'
+-    jne @nicht_anf
++    jne @not_quote
+ 
+     // Length('"DEMO"')-2*Length('"')
+     dec eax
+@@ -934,7 +1047,7 @@
+     // skip leading '"'
+     inc edi
+ 
+-    @nicht_anf:
++  @not_quote:
+ 
+     mov esi,edi
+     mov ecx,eax
+@@ -947,56 +1060,55 @@
+     @ret:
+   end;
+ 
+-function SysGetEnvironment: PChar;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,Environment
++function SysGetEnvironment: PChar;
++  begin
++    SysGetEnvironment := Environment;
+   end;
+ 
+ procedure SysFreeEnvironment(_Env: PChar);
+-begin
+-  // Nothing - the environment does not need freeing
+-end;
++  begin
++    // Nothing - the environment does not need freeing
++  end;
+ 
+-procedure berechne_parameter;
++// pre-calculate command line
++procedure Setup_Commandline;
+   var
+-    quelle,
+-    ziel                :PChar;
+-    l1                  :longint;
++    source,
++    target              :PChar;
++    l1                  :Longint;
+   begin
+     FillChar(syscmdln_var      ,SizeOf(syscmdln_var      ),0);
+     FillChar(parax_length_array,SizeOf(parax_length_array),0);
+     SysCmdlnCount_var:=0;
+ 
+     // Paramstr(0)
+-    quelle:=Environment;
+-    while MemW[Ofs(quelle^)]<>0 do
+-      Inc(quelle);
+-
+-    Inc(quelle,4); // skip byte $00 $00 $01 $00
+-
+-    l1:=0;
+-    while quelle[l1]<>#0 do
+-      Inc(l1);
+-
+-    Move(quelle^,syscmdln_var,l1);
+-    ziel:=@syscmdln_var[l1+1];  // Cmdline=Paramstr(0)+#0+Paramstr(1)+' '...
+-                                //                       ^
++    source:=Environment;
++    while MemW[Ofs(source^)]<>0 do
++      Inc(source);
++
++    Inc(source,4); // skip byte $00 $00 $01 $00
++
++    l1:=StrEnd(source)-source;
++
++    Move(source^,syscmdln_var,l1);
++    target:=@syscmdln_var[l1+1];  // Cmdline=Paramstr(0)+#0+Paramstr(1)+' '...
++                                  //                       ^
+     parax_length_array[SysCmdlnCount_var]:=l1;
+ 
+     // ParamStr(1+)
+-    quelle:=Ptr(seg_psp+$81);
+-    while quelle[0] in [#9,' '] do
+-      Inc(quelle);
++    source:=Ptr(seg_psp+$81);
++    while source[0] in [#9,' '] do
++      Inc(source);
+ 
+     repeat
+-      // End of Parameters ?
+-      if quelle[0] in [#0,#10,#13] then
++      // End of Parameters?
++      if source[0] in [#0,#10,#13] then
+         Break;
+ 
+-      // skip spaces ?
+-      if quelle[0] in [#9,' '] then
++      // skip spaces
++      if source[0] in [#9,' '] then
+         begin
+-          Inc(quelle);
++          Inc(source);
+           Continue;
+         end;
+ 
+@@ -1006,47 +1118,47 @@
+       if SysCmdlnCount_var>1 then
+         begin
+           // separate : ' '
+-          ziel[0]:=' ';
+-          Inc(ziel);
++          target[0]:=' ';
++          Inc(target);
+         end;
+ 
+-      if quelle[0]='"' then
++      if source[0]='"' then
+         begin
+           // search terminating '"'
+           l1:=1;
+-          while not (quelle[l1] in [#0,#10,#13,'"']) do
++          while not (source[l1] in [#0,#10,#13,'"']) do
+             Inc(l1);
+           // not including '"'
+ 
+           // copy calculated para ('"DEMO')
+-          Move(quelle^,ziel^,l1);
+-          Inc(ziel,l1);
++          Move(source^,target^,l1);
++          Inc(target,l1);
+           // move start
+-          Inc(quelle,l1);
++          Inc(source,l1);
+ 
+           // trailing '"'
+-          ziel[0]:='"';
+-          Inc(ziel);
++          target[0]:='"';
++          Inc(target);
+ 
+           // store length('"DEMO"')
+           parax_length_array[SysCmdlnCount_var]:=l1+1;
+ 
+           // skip trailing '"'
+-          if quelle[0]='"' then
+-            Inc(quelle);
++          if source[0]='"' then
++            Inc(source);
+         end
+       else
+         begin
+           // search terminating ' '
+           l1:=0;
+-          while not (quelle[l1] in [#0,#9,#10,#13,' ']) do
++          while not (source[l1] in [#0,#9,#10,#13,' ']) do
+             Inc(l1);
+ 
+           // copy calculated para
+-          Move(quelle^,ziel^,l1);
+-          Inc(ziel,l1);
++          Move(source^,target^,l1);
++          Inc(target,l1);
+           // move start
+-          Inc(quelle,l1);
++          Inc(source,l1);
+ 
+           parax_length_array[SysCmdlnCount_var]:=l1;
+         end;
+@@ -1056,64 +1168,63 @@
+   end;
+ 
+ 
+-function SysOsVersion: Longint;(*&Frame-*)(*&Uses EBX,ECX*)
++function SysOsVersion: Longint;
++  {&Frame-}{&Uses ebx,ecx}
+   asm
+     sub eax,eax
+     mov ah,$30
+     int $21
+   end;
+ 
+-procedure schreibe_edi;
+-(*&Frame-*)(*&Uses NONE*)
++procedure write_value_edi;
++  {&Frame-}{&Uses None}
+   asm
+-    or edi,edi // if Assigned(edi)
++    test edi,edi                        // if Assigned(edi) then
+     jz @ret
+-
+-    mov [edi],eax
+-
++    mov [edi],eax                       // MemL[edi]:=value(eax)
+   @ret:
+   end;
+ 
+ procedure SysGetDateTime(Year,Month,Day,DayOfWeek,Hour,Minute,Second,MSec: PLongint);assembler;
+-(*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+   asm
+-    mov ebp,offset schreibe_edi
++    mov ebp,Offset write_value_edi
+ 
+     mov ah,$2a // get system date
+     int $21
+ 
+-    mov edi,dayofweek
++    mov edi,DayOfWeek
+     movzx eax,al
+     call ebp
+ 
+-    mov edi,year
++    mov edi,Year
+     movzx eax,cx
+     call ebp
+ 
+-    mov edi,month
++    mov edi,Month
+     movzx eax,dh
+     call ebp
+ 
+-    mov edi,day
++    mov edi,Day
+     movzx eax,dl
+     call ebp
+ 
+     mov ah,$2c // get system time
+     int $21
+ 
+-    mov edi,hour
++    mov edi,Hour
+     movzx eax,ch
+     call ebp
+ 
+-    mov edi,minute
++    mov edi,Minute
+     movzx eax,cl
+     call ebp
+ 
+-    mov edi,second
++    mov edi,Second
+     movzx eax,dh
+     call ebp
+ 
+-    mov edi,msec
++    mov edi,MSec
+     movzx eax,dl        // eax=h
+     shl eax,1           // eax=2*h
+     lea eax,[eax+eax*4] // eax=10*h
+@@ -1122,27 +1233,27 @@
+   end;
+ 
+ procedure SysSetDateTime(Year,Month,Day,Hour,Minute,Second,MSec: PLongint);
+-(*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+   asm
+     mov ah,$2a // get system date
+     int $21
+ 
+-    mov esi,year
+-    or esi,esi
++    mov esi,Year
++    test esi,esi
+     jz @1
+-    mov cx,smallword [esi]
++    mov cx,SmallWord [esi]
+   @1:
+ 
+-    mov esi,month
+-    or esi,esi
++    mov esi,Month
++    test esi,esi
+     jz @2
+-    mov dh,byte [esi]
++    mov dh,Byte [esi]
+   @2:
+ 
+-    mov esi,day
+-    or esi,esi
++    mov esi,Day
++    test esi,esi
+     jz @3
+-    mov dl,byte [esi]
++    mov dl,Byte [esi]
+   @3:
+ 
+     mov ah,$2b // set system date
+@@ -1152,25 +1263,25 @@
+     mov ah,$2c // get system time
+     int $21
+ 
+-    mov esi,hour
+-    or esi,esi
++    mov esi,Hour
++    test esi,esi
+     jz @4
+-    mov ch,byte [esi]
++    mov ch,Byte [esi]
+   @4:
+ 
+-    mov esi,minute
+-    or esi,esi
++    mov esi,Minute
++    test esi,esi
+     jz @5
+-    mov cl,byte [esi]
++    mov cl,Byte [esi]
+   @5:
+ 
+-    mov esi,second
+-    or esi,esi
++    mov esi,Second
++    test esi,esi
+     jz @6
+-    mov dh,byte [esi]
++    mov dh,Byte [esi]
+   @6:
+ 
+-    mov esi,msec
++    mov esi,MSec
+     or esi,esi
+     jz @7
+ 
+@@ -1182,7 +1293,7 @@
+         div ecx
+       pop edx
+     pop ecx
+-    mov al,al
++    mov dl,al
+   @7:
+ 
+     mov ah,$2d // set system time
+@@ -1190,10 +1301,11 @@
+ 
+   end;
+ 
+-function SysVerify(SetValue: Boolean; Value: Boolean): Boolean;(*&Frame-*)(*&Uses EDX*)
++function SysVerify(SetValue: Boolean; Value: Boolean): Boolean;
++  {&Frame-}{&Uses edx}
+   asm
+     cmp setvalue,true
+-    jne @verify_lesen
++    jne @verify_read
+ 
+     sub eax,eax // off
+     cmp value,true
+@@ -1203,7 +1315,7 @@
+     mov dl,0
+     int $21
+ 
+-  @verify_lesen:
++  @verify_read:
+ 
+     mov ah,$54
+     int $21
+@@ -1214,16 +1326,16 @@
+   end;
+ 
+ function SysDiskFreeLong(Drive: Byte): TQuad;assembler;
+-  (*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+   var
+-    q4:comp;
++    DiskFree            :comp;
+   asm
+     mov ah,$36
+     mov dl,drive
+     int $21
+ 
+     cmp ax,$ffff
+-    je @fehler
++    je @error
+ 
+     movzx eax,ax
+     movzx ebx,bx
+@@ -1234,32 +1346,32 @@
+ 
+     jmp @ret
+ 
+-  @fehler:
++  @error:
+     // return -1
+     or eax,-1
+     mov edx,eax
+ 
+   @ret:
+     // return edx:eax
+-    mov longint [q4+0],eax
+-    mov longint [q4+4],edx
++    mov Longint [DiskFree+0],eax
++    mov Longint [DiskFree+4],edx
+ 
+-    // SysDiskFreeLong:=q4;
+-    fild qword ptr [q4]
++    // SysDiskFreeLong:=DiskFree;
++    fild qword ptr [DiskFree]
+     fwait
+   end;
+ 
+ function SysDiskSizeLong(Drive: Byte): TQuad;assembler;
+-  (*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+   var
+-    q4:comp;
++    DiskSize            :comp;
+   asm
+     mov ah,$36
+     mov dl,drive
+     int $21
+ 
+     cmp ax,$ffff
+-    je @fehler
++    je @error
+ 
+     movzx eax,ax
+     movzx edx,dx
+@@ -1270,31 +1382,81 @@
+ 
+     jmp @ret
+ 
+-  @fehler:
++  @error:
+     // return -1
+     or eax,-1
+     mov edx,eax
+ 
+   @ret:
+     // return edx:eax
+-    mov longint [q4+0],eax
+-    mov longint [q4+4],edx
++    mov Longint [DiskSize+0],eax
++    mov Longint [DiskSize+4],edx
+ 
+     // SysDiskSizeLong:=q4;
+-    fild qword ptr [q4]
++    fild qword ptr [DiskSize]
+     fwait
+   end;
+ 
++{Cat: ØÆ™† Á‚Æ Ø‡Æ·‚Æ ß†£´„Ë™®, ØÆ‚Æ¨ ≠†§Æ Ø•‡•§•´†‚Ï §´Ô ØÆ§§•‡¶™® ·•‚•¢ÎÂ Ø„‚•©}
++function SysDiskFreeLongX(Path: PChar): TQuad;
++var
++  Regs: real_mode_call_structure_typ;
++begin
++  fillchar(Mem[segdossyslow32],
++           SizeOf(DriveData) + SizeOf(Path) + 1{#0}, #0);
++  move(Path^, Mem[segdossyslow32 + SizeOf(DriveData)], SizeOf(Path));
++  init_register(regs);
++  regs.ax_ := $7303;
++  regs.ds_ := segdossyslow16;
++  regs.dx_ := SizeOf(DriveData); //ds:dx=path
++  regs.es_ := segdossyslow16;
++//  regs.di_ := 0;
++  regs.cx_ := SizeOf(DriveData);
++  intr_realmode(Regs, $21);
++  move(Mem[segdossyslow32], DriveData.RecSize, SizeOf(DriveData));
++  if DriveData.RecSize <> 0
++  then begin
++       Result := DriveData.SectorsPerCluster * DriveData.BytesPerSector;
++       Result := Result * DriveData.AvailClusters;
++       end
++  else Result := SysDiskFreeLong(Byte(UpCase(Path^))-Byte('A')+1);
++end;
++
++function SysDiskSizeLongX(Path: PChar): TQuad;
++var
++  Regs: real_mode_call_structure_typ;
++begin
++  fillchar(Mem[segdossyslow32],
++           SizeOf(DriveData) + SizeOf(Path) + 1{#0}, #0);
++  move(Path^, Mem[segdossyslow32 + SizeOf(DriveData)], SizeOf(Path));
++  init_register(regs);
++  regs.ax_ := $7303;
++  regs.ds_ := segdossyslow16;
++  regs.dx_ := SizeOf(DriveData); //ds:dx=path
++  regs.es_ := segdossyslow16;
++//  regs.di_ := 0;
++  regs.cx_ := SizeOf(DriveData);
++  intr_realmode(Regs, $21);
++  move(Mem[segdossyslow32], DriveData.RecSize, SizeOf(DriveData));
++  if DriveData.RecSize <> 0
++  then begin
++       Result := DriveData.SectorsPerCluster * DriveData.BytesPerSector;
++       Result := Result * DriveData.TotalClusters;
++       end
++  else Result := SysDiskSizeLong(Byte(UpCase(Path^))-Byte('A')+1);
++end;
++{/Cat}
++
+ function SysGetFileAttr(FileName: PChar; var Attr: Longint): Longint;
+-(*&Frame-*)(*&Uses ECX,EDX*)
++  {&Frame-}{&Uses ecx,edx}
+   asm
+     mov eax,$00004300
+-    mov edx,filename
++    mov edx,FileName
+     sub ecx,ecx
+     int $21
+     jc @ret
+ 
+-    mov edx,attr
++    mov edx,Attr
+     mov [edx],ecx
+     sub eax,eax
+ 
+@@ -1302,11 +1464,11 @@
+   end;
+ 
+ function SysSetFileAttr(FileName: PChar; Attr: Longint): Longint;
+-(*&Frame-*)(*&Uses ECX,EDX*)
++  {&Frame-}{&Uses ecx,edx}
+   asm
+     mov eax,$00004301
+-    mov ecx,attr
+-    mov edx,filename
++    mov ecx,Attr
++    mov edx,FileName
+     int $21
+     jc @ret
+ 
+@@ -1316,13 +1478,13 @@
+   end;
+ 
+ function SysGetFileTime(Handle: Longint; var Time: Longint): Longint;
+-(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
+     sub ecx,ecx
+     sub edx,edx
+ 
+     mov eax,$00005700
+-    mov ebx,handle
++    mov ebx,Handle
+     int $21
+     jc @ret
+ 
+@@ -1333,29 +1495,29 @@
+     mov [edx],ecx
+     sub eax,eax
+ 
+-    @ret:
++  @ret:
+   end;
+ 
+ function SysSetFileTime(Handle: Longint; Time: Longint): Longint;
+-(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
+     mov eax,$00005701
+-    mov ebx,handle
++    mov ebx,Handle
+ 
+-    mov cx,smallword [time+0]
+-    mov dx,smallword [time+2]
++    mov cx,SmallWord [Time+0]
++    mov dx,SmallWord [Time+2]
+     int $21
+     jc @ret
+ 
+     sub eax,eax
+ 
+-    @ret:
++  @ret:
+   end;
+ 
+-procedure sichere_DTA(var org_dta:real_mode_ptr_typ);assembler;
+-(*&Frame-*)(*&Uses EAX,ESI,EDI*)
++procedure get_DTA(var org_dta: real_mode_ptr_type);assembler;
++  {&Frame-}{&Uses eax,esi,edi}
+   var
+-    regs:real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+     mov [regs.ah_],$2f  // GET DTA
+     lea eax,regs
+@@ -1365,21 +1527,21 @@
+ 
+     mov edi,org_dta
+     mov ax,[regs.ds_]   // -> ES:BX
+-    mov [edi+real_mode_ptr_typ.seg_],ax
++    mov [edi+real_mode_ptr_type.seg_],ax
+     mov eax,[regs.ebx_]
+-    mov [edi+real_mode_ptr_typ.ofs_],ax
++    mov [edi+real_mode_ptr_type.ofs_],ax
+   end;
+ 
+-procedure setze_DTA(var dta:real_mode_ptr_typ);assembler;
+-(*&Frame-*)(*&Uses EAX,ESI,EDI*)
++procedure set_DTA(var dta: real_mode_ptr_type);assembler;
++  {&Frame-}{&Uses eax,esi,edi}
+   var
+-    regs:real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+     mov edi,dta
+     mov [regs.ah_],$1a  // SET DTA DS:DX
+-    mov ax,[edi+real_mode_ptr_typ.seg_]
++    mov ax,[edi+real_mode_ptr_type.seg_]
+     mov [regs.ds_],ax
+-    mov ax,[edi+real_mode_ptr_typ.ofs_]
++    mov ax,[edi+real_mode_ptr_type.ofs_]
+     mov [regs.edx_],eax
+     lea eax,regs
+     push eax
+@@ -1388,7 +1550,7 @@
+   end;
+ 
+ 
+-procedure bearbeite_sr(var F: TOSSearchRec; IsPChar: Boolean);
++procedure process_search_record(var F: TOSSearchRec; IsPChar: Boolean);
+   begin
+     with F do
+       begin
+@@ -1404,99 +1566,99 @@
+   end;
+ 
+ const
+-  ofs_suchmaske=$200; // genug Platz fÅr TOSSearchRec
++  ofs_searchmask=$200; // room in segdossyslow32 reserved for TOSSearchRec
+ 
+ function SysFindFirst(Path: PChar; Attr: Longint; var F: TOSSearchRec; IsPChar: Boolean): Longint;
+   var
+-    reg                 :real_mode_call_structure_typ;
+-    org_dta             :real_mode_ptr_typ;
++    reg                 :real_mode_call_structure_type;
++    org_dta             :real_mode_ptr_type;
+   begin
+     init_register(reg);
+-    f.attr_must:=attr shr 8;
++    F.attr_must:=Attr shr 8;
+ 
+     // copy '*.*'#0
+-    StrCopy(PChar(@Mem[segdossyslow32+ofs_suchmaske]),Path);
++    StrCopy(Ptr(segdossyslow32+ofs_searchmask),Path);
+ 
+-    sichere_DTA(org_dta);
+-    setze_DTA(arbeits_dta);
+-    FillChar(Mem[segdossyslow32],SizeOf(f.dos_dta),0);
++    get_DTA(org_dta);
++    set_DTA(work_dta);
++    FillChar(Mem[segdossyslow32],SizeOf(F.dos_dta),0);
+ 
+     with reg do
+       begin
+         ah_:=$4e;            // FINDFIRST
+         ds_:=segdossyslow16; // DS:DX
+-        dx_:=ofs_suchmaske;
++        dx_:=ofs_searchmask;
+         cx_:=attr;
+         intr_realmode(reg,$21);
+       end;
+ 
+-    setze_DTA(org_dta);
++    set_DTA(org_dta);
+ 
+-    // copy arbeits_dta -> F
++    // copy work_dta -> F
+ 
+-    Move(Mem[segdossyslow32],f.dos_dta,SizeOf(f.dos_dta));
+-    bearbeite_sr(f,IsPChar);
++    Move(Mem[segdossyslow32],F.dos_dta,SizeOf(F.dos_dta));
++    process_search_record(F,IsPChar);
+ 
+-    // Error on FindFirst ?
++    // Error on FindFirst?
+     if (reg.flags_ and flags_carry)<>0 then
+       begin
+         SysFindFirst:=reg.ax_;
+         Exit;
+       end;
+ 
+-    // success ... but matches attr ?
+-    if (f.attr and f.attr_must)=f.attr_must then
++    // success ... but matches attr?
++    if (F.attr and F.attr_must)=F.attr_must then
+       begin
+-        SysFindFirst:=0; // success !
++        SysFindFirst:=0; // success!
+         Exit;
+       end;
+ 
+-    // let findnext do the work ...
+-    SysFindFirst:=SysFindNext(f,ispchar);
++    // let FindNext do the work ...
++    SysFindFirst:=SysFindNext(F,ispchar);
+   end;
+ 
+ function SysFindNext(var F: TOSSearchRec; IsPChar: Boolean): Longint;
+   var
+-    reg                 :real_mode_call_structure_typ;
+-    org_dta             :real_mode_ptr_typ;
++    reg                 :real_mode_call_structure_type;
++    org_dta             :real_mode_ptr_type;
+   begin
+-    Move(f.dos_dta,Mem[segdossyslow32],SizeOf(f.dos_dta));
++    Move(F.dos_dta,Mem[segdossyslow32],SizeOf(F.dos_dta));
+     init_register(reg);
+ 
+     repeat
+ 
+-      sichere_DTA(org_dta);
+-      setze_DTA(arbeits_dta);
++      get_DTA(org_dta);
++      set_DTA(work_dta);
+ 
+       reg.ah_:=$4f;            // FINDNEXT
+       intr_realmode(reg,$21);
+ 
+-      setze_DTA(org_dta);
++      set_DTA(org_dta);
+ 
+       // copy arbeits_dta -> F
+-      Move(Mem[segdossyslow32],f.dos_dta,SizeOf(f.dos_dta));
+-      bearbeite_sr(f,IsPChar);
++      Move(Mem[segdossyslow32],F.dos_dta,SizeOf(F.dos_dta));
++      process_search_record(F,IsPChar);
+ 
+-      // found ?
++      // found?
+       if (reg.flags_ and flags_carry)<>0 then
+         begin
+           SysFindNext:=reg.ax_;
+           Exit;
+         end;
+ 
+-      // success ... but matches attr ?
+-      if (f.attr and f.attr_must)=f.attr_must then
++      // success ... but matches attr?
++      if (F.attr and F.attr_must)=F.attr_must then
+         begin
+-          SysFindNext:=0; // success !
++          SysFindNext:=0; // success!
+           Exit;
+         end;
+ 
+     until false;
+   end;
+ 
+-function SysFindClose(var F: TOSSearchRec): Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    sub eax,eax
++function SysFindClose(var F: TOSSearchRec): Longint;
++  begin
++    SysFindClose := 0;
+   end;
+ 
+ // Check if file exists; if it does, update FileName parameter
+@@ -1528,72 +1690,79 @@
+ function SysFileSearch(Dest,Name,List: PChar): PChar;
+   var
+     sr                  :TOSSearchRec;
+-    posi,
+-    ende,
+-    arbeit              :PChar;
+-    tmp                 :array[0..260-1] of char;
+-    pfad                :array[0..260-1] of char;
+-    verzeichnis,
+-    gefunden            :boolean;
++    ListPos,
++    ListLimit           :PChar;
++    FileNameTest        :array[0..260] of Char;
++    IsDirectory,
++    found               :boolean;
+ 
+   begin
+-    FillChar(Dest^,{260}255,#0);
+-    SysFileSearch:=Dest;
++    Result := Dest;
++    Result [0] := #0;
+ 
+-    if Name[0]=#0 then // Name='' ?
++    if Name[0] = #0 then // Name='' ?
+       Exit;
+ 
+-    SysFileExpand(tmp,Name);
+-    arbeit:=StrEnd(tmp)-1;
+-    if not (arbeit[0] in ['\','/']) then
+-      StrCat(tmp,'\');
+-    StrCat(tmp,'*.*');
+-
+-    // Verzeichnis oder Datei ?
+-    // $10** weil OS/2 sonst Åberall den DatentrÑgername findet
+-    verzeichnis:=(SysFindFirst(tmp,$10ff,sr,true)=0); // true=(sr.name=pchar)
++    // Directory or File?
++    // $10** - else OS/2 will find volume labels everywhere..
++    IsDirectory:=SysFindFirst(Name, $10ff, sr, true) = 0; // true=(sr.name=pchar)
+     SysFindClose(sr);
+ 
+-    if verzeichnis then
+-      SysFileExpand(Dest,Name)
++    if IsDirectory then
++      SysFileExpand(Result, Name)
+     else
+       begin
+-
+-        StrCopy(tmp,'.\;');
+-        StrCat(tmp,List);
+-
+-        arbeit:=StrEnd(tmp)-1;
+-
+-        // make sure there is trailing ';'
+-        if arbeit[0]<>';' then
+-          StrCat(tmp,';');
+-
+-        posi:=@tmp;
++        // first test: in current directory
++        StrCopy(FileNameTest, '.\');
++        ListPos := List;
+         repeat
+-          ende:=StrPos(posi,';');
++          StrCat(FileNameTest, Name);
+ 
+-          ende[0]:=#0;
+-          Inc(ende);
++          found:=SysFindFirst(FileNameTest, $ff and (not $10), sr, true)=0;
++          SysFindClose(sr);
++          if found then
++            begin
++              SysFileExpand(Result, FileNameTest);
++              Break;
++            end;
+ 
+-          StrCopy(pfad,posi);
+-          arbeit:=StrEnd(pfad)-1;
+-          if not (arbeit[0] in ['\','/']) then
+-            StrCat(pfad,'\');
+-          StrCat(pfad,Name);
++          while ListPos[0] = ';' do Inc(ListPos);
+ 
+-          gefunden:=(SysFindFirst(pfad,$ff,sr,true)=0);
+-          SysFindClose(sr);
++          if ListPos[0] = #0 then
++            begin
++              Result[0] := #0;
++              Break;
++            end;
+ 
+-          if gefunden then
++          if ListPos[0] = '"' then
+             begin
+-              SysFileExpand(Dest,Pfad);
+-              Exit;
++              FileNameTest[0] := #0;
++              Inc(ListPos);                     // Length('"');
++              ListLimit := StrPos(ListPos, '"');
++              if ListLimit = nil then
++                ListLimit := StrEnd(ListPos);
++              StrLCopy(FileNameTest, ListPos, ListLimit-ListPos);
++              ListPos := ListLimit;
++              if ListPos[0] = '"' then
++                 Inc(ListPos);                  // Length('"');
++            end
++          else
++            begin
++              ListLimit := StrPos(ListPos, ';');
++              if ListLimit = nil then
++                ListLimit := StrEnd(ListPos);
++
++              StrLCopy(FileNameTest, ListPos, ListLimit-ListPos);
++              ListPos := ListLimit;
+             end;
+ 
+-          posi:=ende;
++          if FileNameTest[0] <> #0 then
++            if not (PChar(StrEnd(FileNameTest)-1)[0] in [':','\','/']) then
++              StrCat(FileNameTest, '\');
+ 
+-        until posi[0]=#0;
++        until false;
+       end;
++
+   end;
+ 
+ // aus VpSysOs2.PAS
+@@ -1670,62 +1839,62 @@
+     Result := Dest;
+   end;
+ 
+-// wird ignoriert:
+-// * Env (Async=true)
+-// * PID (Async=true or Async=false)
+-// * StdIn,StdOut,StdErr (Async=true)
++// will be ignored:
++// * Env (when Async=true)
++// * PID (when Async=true or Async=false)
++// * StdIn,StdOut,StdErr (when Async=true)
+ 
+ threadvar
+   LastAsync             :Boolean;
+-  last_exitcode         :longint;
++  last_exitcode         :Longint;
+ 
+ function SysExecute(Path,CmdLine,Env: PChar; Async: Boolean; PID: PLongint; StdIn,StdOut,StdErr: Longint): Longint;
+   type
+-    dos_exe_parablock_typ=
++    dos_exe_parablock_type=
+       packed record
+-        env_seg         :smallword;
+-        cmdline_ptr     :real_mode_ptr_typ;
+-        fcb5c           :real_mode_ptr_typ;
+-        fcb6c           :real_mode_ptr_typ;
+-        res_sssp        :real_mode_ptr_typ;
+-        res_csip        :real_mode_ptr_typ;
++        env_seg         :SmallWord;
++        cmdline_ptr     :real_mode_ptr_type;
++        fcb5c           :real_mode_ptr_type;
++        fcb6c           :real_mode_ptr_type;
++        res_sssp        :real_mode_ptr_type;
++        res_csip        :real_mode_ptr_type;
+       end;
+ 
+-    os2_startdata_typ=
++    os2_startdata_type=
+       packed record
+-        cb              :smallword;             // length of structure (must be 0018h,001Eh,0020h,0032h,or 003Ch)
+-        relation        :smallword;             // relation of new process to caller (00h independent, 01h child)
+-        foreback        :smallword;             // fore/background (00h foreground, 01h background)
+-        trace           :smallword;             // trace options (00h-02h, 00h = no trace)
+-        title           :real_mode_ptr_typ;     // pointer to ASCIZ program title (max 62 chars) or 0000h:0000h
+-        name            :real_mode_ptr_typ;     // pointer to ASCIZ program name (max 128 chars) or 0000h:0000h
+-        args            :real_mode_ptr_typ;     // pointer to ASCIZ program args (max 144 chars) or 0000h:0000h
+-        termq           :longint;               // "TermQ" (currently reserved, must be 00000000h)
++        cb              :SmallWord;             // length of structure (must be 0018h,001Eh,0020h,0032h,or 003Ch)
++        relation        :SmallWord;             // relation of new process to caller (00h independent, 01h child)
++        foreback        :SmallWord;             // fore/background (00h foreground, 01h background)
++        trace           :SmallWord;             // trace options (00h-02h, 00h = no trace)
++        title           :real_mode_ptr_type;    // pointer to ASCIZ program title (max 62 chars) or 0000h:0000h
++        name            :real_mode_ptr_type;    // pointer to ASCIZ program name (max 128 chars) or 0000h:0000h
++        args            :real_mode_ptr_type;    // pointer to ASCIZ program args (max 144 chars) or 0000h:0000h
++        termq           :Longint;               // "TermQ" (currently reserved, must be 00000000h)
+         // $18
+-        env             :real_mode_ptr_typ;     // pointer to environment (max 486 bytes) or 0000h:0000h
+-        inheritance     :smallword;             // inheritance (00h or 01h)
++        env             :real_mode_ptr_type;    // pointer to environment (max 486 bytes) or 0000h:0000h
++        inheritance     :SmallWord;             // inheritance (00h or 01h)
+         // $1e
+-        session_type    :smallword;             // session type 0,1,2,3,4,7
++        session_type    :SmallWord;             // session type 0,1,2,3,4,7
+         // $20
+-        icon            :real_mode_ptr_typ;     // pointer to ASCIZ icon filename (max 128 chars) or 0000h:0000h
+-        pgmhandle       :longint;
+-        pgmcontrol      :smallword;
+-        initial_column  :smallword;
+-        initial_row     :smallword;
+-        initial_with    :smallword;
+-        initial_height  :smallword;
++        icon            :real_mode_ptr_type;    // pointer to ASCIZ icon filename (max 128 chars) or 0000h:0000h
++        pgmhandle       :Longint;
++        pgmcontrol      :SmallWord;
++        initial_column  :SmallWord;
++        initial_row     :SmallWord;
++        initial_with    :SmallWord;
++        initial_height  :SmallWord;
+         // $32
+-        reserved1       :smallword;
+-        objectbuffer    :longint;
+-        objectbufferlen :longint;
++        reserved1       :SmallWord;
++        objectbuffer    :Longint;
++        objectbufferlen :Longint;
+       end;
+ 
+   var
+-    l1                  :longint;
+-    regs                :real_mode_call_structure_typ;
+-    env_laenge          :longint;
+-    env_low16           :smallword;
+-    env_low32           :longint;
++    l1                  :Longint;
++    regs                :real_mode_call_structure_type;
++    env_laenge          :Longint;
++    env_low16           :SmallWord;
++    env_low32           :Longint;
+     StdHandles          :array[0..2] of Longint;
+     NewHandles          :array[0..2] of Longint;
+     OldHandles          :array[0..2] of Longint;
+@@ -1744,8 +1913,8 @@
+     Mem[segdossyslow32+$102+l1  ]:=$0d;
+     Mem[segdossyslow32+$102+l1+1]:=$00;
+ 
+-    FillChar(dos_exe_parablock_typ(Mem[segdossyslow32+$200]),SizeOf(dos_exe_parablock_typ),0);
+-    with     dos_exe_parablock_typ(Mem[segdossyslow32+$200]) do
++    FillChar(dos_exe_parablock_type(Mem[segdossyslow32+$200]),SizeOf(dos_exe_parablock_type),0);
++    with     dos_exe_parablock_type(Mem[segdossyslow32+$200]) do
+       begin
+         cmdline_ptr.seg_:=segdossyslow16;
+         cmdline_ptr.ofs_:=$100;
+@@ -1767,12 +1936,12 @@
+               end;
+             intr_realmode(regs,$2f);
+             SysExecute:=0;
+-            last_exitcode:=0; // unbekannt
++            last_exitcode:=0; // unknown
+           end
+         else if os2 then (*** OS/2 VDM/VMB ***)
+           begin
+-            FillChar(os2_startdata_typ(Mem[segdossyslow32+$200]),SizeOf(os2_startdata_typ),0);
+-            with     os2_startdata_typ(Mem[segdossyslow32+$200]) do
++            FillChar(os2_startdata_type(Mem[segdossyslow32+$200]),SizeOf(os2_startdata_type),0);
++            with     os2_startdata_type(Mem[segdossyslow32+$200]) do
+               begin
+                 cb:=$18;
+                 name.seg_:=segdossyslow16;
+@@ -1792,7 +1961,7 @@
+             intr_realmode(regs,$21);
+ 
+             SysExecute:=regs.ax_;
+-            last_exitcode:=0; // unbekannt
++            last_exitcode:=0; // unknown
+           end
+         else (*** no support for async ***)
+           begin
+@@ -1802,14 +1971,14 @@
+       end
+     else (*** async =false -> DOS 2.x+ ***)
+       begin
+-        // Umgebung > 1MB kopieren
+-        // 1. LÑnge berechnen
++        // copy environment to <1 MB
++        // 1: calculate length
+         if Env=nil then env:=Environment;
+         env_laenge:=0;
+         while MemW[ofs(Env^)+env_laenge]<>0 do
+           Inc(env_laenge);
+         Inc(env_laenge,2);
+-        // 2. Speicher anfordern
++        // 2: allocate memory
+         if getdosmem(env_low16,env_laenge)<>0 then
+           begin
+             SysExecute:=8; // Mem ...
+@@ -1817,10 +1986,10 @@
+           end
+         else
+           begin
+-            // 3. Umgebung kopieren
++            // 3: copy environment
+             env_low32:=dosseg_linear(env_low16);
+             Move(Env^,Mem[env_low32],env_laenge);
+-            dos_exe_parablock_typ(Mem[segdossyslow32+$200]).env_seg:=env_low16;
++            dos_exe_parablock_type(Mem[segdossyslow32+$200]).env_seg:=env_low16;
+ 
+ 
+             with regs do
+@@ -1847,11 +2016,11 @@
+                 end;
+ 
+             // swapvectors
+-            entferne_exception_behandlungen;
++            RemoveDpmi32Exceptionhandlers;
+             // exec
+             intr_realmode(regs,$21);
+             // swapvectors
+-            installiere_exception_behandlungen;
++            InstallDpmi32Exceptionhandlers;
+ 
+             for I := 0 to 2 do
+               if StdHandles[I] <> -1 then
+@@ -1871,8 +2040,8 @@
+             else
+               begin
+                 SysExecute:=0;
+-                // Exitcode ermittlen
+-                (*$Alters EAX,ECX*)
++                // determine exitcode
++                {$Alters eax,ecx}
+                 asm
+                   mov ah,$4d
+                   int $21
+@@ -1888,7 +2057,7 @@
+ 
+ function SysExitCode: Longint;
+   begin
+-    SysExitCode:=last_exitcode;
++    SysExitCode := last_exitcode;
+   end;
+ 
+ const
+@@ -1906,22 +2075,22 @@
+ type
+   sem_types             =(sem_type_unused,sem_type_mutex,sem_type_event);
+ 
+-  mutexsem_typ=
++  mutexsem_type=
+     packed record
+-      sig               :longint;
+-      status            :longint;
+-      eigentuemer       :longint;
++      sig               :Longint;
++      status            :Longint;
++      eigentuemer       :Longint;
+     end;
+ 
+-  eventsem_typ=
++  eventsem_type=
+     packed record
+-      sig               :longint;
+-      status            :longint;
++      sig               :Longint;
++      status            :Longint;
+     end;
+ 
+ 
+-  mutexsem_z_typ        =^mutexsem_typ;
+-  eventsem_z_typ        =^eventsem_typ;
++  mutexsem_z_type       =^mutexsem_type;
++  eventsem_z_type       =^eventsem_type;
+ 
+ 
+ var
+@@ -1929,11 +2098,11 @@
+     array[1..max_sem] of
+       record
+         sem_name                :array[0..max_sem_namelen] of Char;
+-        opencount               :longint;
++        opencount               :Longint;
+         case used:sem_types of
+-          sem_type_unused       :(private_data:byte );
+-          sem_type_mutex        :(mutex:mutexsem_typ);
+-          sem_type_event        :(event:eventsem_typ);
++          sem_type_unused       :(private_data:byte  );
++          sem_type_mutex        :(mutex:mutexsem_type);
++          sem_type_event        :(event:eventsem_type);
+         end;
+ 
+ const
+@@ -1949,9 +2118,9 @@
+ 
+ 
+ 
+-function Search_MutexSem(_Name:pChar):longint;
++function Search_MutexSem(_Name:pChar):Longint;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=0;
+     if StrLen(_Name)=0 then Exit;
+@@ -1966,9 +2135,9 @@
+             end;
+   end;
+ 
+-function Search_EventSem(_Name:pChar):longint;
++function Search_EventSem(_Name:pChar):Longint;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=0;
+ 
+@@ -1985,9 +2154,9 @@
+             end;
+   end;
+ 
+-function Search_Unused_Sem:longint;
++function Search_Unused_Sem:Longint;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=0;
+     for i:=Low(sem_array) to High(sem_array) do
+@@ -1999,9 +2168,9 @@
+   end;
+ 
+ 
+-function Search_Used_Sem(const _Handle: TSemhandle):longint;
++function Search_Used_Sem(const _Handle: TSemhandle):Longint;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=0;
+     for i:=Low(sem_array) to High(sem_array) do
+@@ -2012,7 +2181,7 @@
+         end;
+   end;
+ 
+-procedure Free_Sem(const i:longint);
++procedure Free_Sem(const i:Longint);
+   begin
+     FillChar(sem_array[i],SizeOf(sem_array[i]),0);
+   end;
+@@ -2022,11 +2191,11 @@
+ 
+ function SemCreateEvent(_Name: pChar; _Shared, _State: Boolean): TSemHandle;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=-1;
+ 
+-    // allready exist ?
++    // already exist ?
+     if Search_EventSem(_Name)<>0 then Exit;
+ 
+     // get free entry
+@@ -2048,11 +2217,11 @@
+ 
+ function SemAccessEvent(_Name: pChar): TSemHandle;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=-1;
+ 
+-    // allready exist ?
++    // already exist ?
+     i:=Search_EventSem(_Name);
+     if i=0 then Exit;
+ 
+@@ -2068,7 +2237,7 @@
+ 
+ function SemPostEvent(_Handle: TSemhandle): Boolean;
+   begin
+-    with eventsem_z_typ(_Handle)^ do
++    with eventsem_z_type(_Handle)^ do
+       begin
+         if sig<>eventsem_sig then
+           RunError(204);
+@@ -2085,9 +2254,9 @@
+ 
+ function SemWaitEvent(_Handle: TSemHandle; _TimeOut: Longint): Boolean;
+   var
+-    t0,t1:longint;
++    t0,t1:Longint;
+   begin
+-    with eventsem_z_typ(_Handle)^ do
++    with eventsem_z_type(_Handle)^ do
+       begin
+         if sig<>eventsem_sig then
+           RunError(204);
+@@ -2128,13 +2297,13 @@
+ 
+ procedure SemCloseEvent(_Handle: TSemHandle);
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     i:=Search_Used_Sem(_Handle);
+     if i=0 then
+       RunError(204);
+ 
+-    with eventsem_z_typ(_Handle)^ do
++    with eventsem_z_type(_Handle)^ do
+       begin
+         if sig<>eventsem_sig then
+           RunError(204);
+@@ -2156,11 +2325,11 @@
+ 
+ function SemCreateMutex(_Name: PChar; _Shared, _State: Boolean): TSemHandle;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     Result:=-1;
+ 
+-    // allready exist ?
++    // already exist ?
+     if Search_MutexSem(_Name)<>0 then Exit;
+ 
+     // get free entry
+@@ -2183,13 +2352,13 @@
+ 
+ function SemAccessMutex(_Name: PChar): TSemHandle;
+   var
+-    i:longint;
++    i:Longint;
+   begin
+     init_semaphore_table; // called by init_exe...
+ 
+     Result:=-1;
+ 
+-    // allready exist ?
++    // already exist ?
+     i:=Search_MutexSem(_Name);
+     if i=0 then Exit;
+ 
+@@ -2205,9 +2374,9 @@
+ 
+ function SemRequestMutex(_Handle: TSemHandle; _TimeOut: Longint): Boolean;
+   var
+-    t0,t1:longint;
++    t0,t1:Longint;
+   begin
+-    with mutexsem_z_typ(_Handle)^ do
++    with mutexsem_z_type(_Handle)^ do
+       begin
+         if sig<>mutexsem_sig then
+           RunError(204);
+@@ -2242,7 +2411,7 @@
+ 
+ function SemReleaseMutex(_Handle: TSemHandle): Boolean;
+   begin
+-    with mutexsem_z_typ(_Handle)^ do
++    with mutexsem_z_type(_Handle)^ do
+       begin
+         if sig<>mutexsem_sig then
+           RunError(204);
+@@ -2269,7 +2438,7 @@
+     if i=0 then
+       RunError(204);
+ 
+-    with mutexsem_z_typ(_Handle)^ do
++    with mutexsem_z_type(_Handle)^ do
+       begin
+         if sig<>mutexsem_sig then
+           RunError(204);
+@@ -2289,19 +2458,19 @@
+ 
+ function SysMemInfo(_Base: Pointer; _Size: Longint; var _Flags: Longint): Boolean;
+   begin
+-    //NOT_IMPLEMENTED
+-    SysMemInfo:=false;
++    // not implemented
++    SysMemInfo := false;
+   end;
+ 
+ function SysSetMemProtection(_Base: Pointer; _Size: Longint; _Flags: Longint): Boolean;
+   begin
+-    //NOT_IMPLEMENTED
+-    SysSetMemProtection:=false;
++    // not implemented
++    SysSetMemProtection := false;
+   end;
+ 
+ procedure SysMessageBox(_Msg, _Title: PChar; _Error: Boolean);
+   begin
+-    SysDisplayConsoleError(true,_Title,_Msg);
++    SysDisplayConsoleError(true, _Title, _Msg);
+   end;
+ 
+ function SysGetVolumeLabel(Drive: Char): ShortString;
+@@ -2311,7 +2480,10 @@
+   const
+     suchmaske=$0800  // must  volume
+              +$0008  // allow volume
+-             +$0020; // allow archive
++//             +$0020  // allow archive
++// 'allow archive' commented by piwamoto
++// it fixes searching on network drives
++             ;
+   begin
+     root:='@:\*.*'#0;
+     root[0]:=drive;
+@@ -2331,8 +2503,8 @@
+   var
+     OrgDir              :string;        // current directory of <Drive>
+     OrgDrive            :string;        // current drive and diretory
+-    rc                  :longint;
+-    regs                :real_mode_call_structure_typ;
++    rc                  :Longint;
++    regs                :real_mode_call_structure_type;
+ 
+   type
+     extended_fcb=
+@@ -2406,11 +2578,12 @@
+ 
+ function SysGetForegroundProcessId: Longint;
+   begin
+-    //NOT_IMPLEMENTED
+-    SysGetForegroundProcessId:=-1;
++    // not implemented
++    SysGetForegroundProcessId := -1;
+   end;
+ 
+-function SysGetBootDrive: Char;(*&Frame-*)(*&Uses EDX*)
++function SysGetBootDrive: Char;
++  {&Frame-}{&Uses edx}
+   asm
+     mov eax,$3305
+     mov dl,1
+@@ -2420,64 +2593,77 @@
+   end;
+ 
+ 
+-// TDriveType = ( dtFloppy, dtHDFAT, dtHDHPFS, dtInvalid,
+-//               dtNovellNet, dtCDRom, dtLAN, dtHDNTFS, dtUnknown,
+-//               dtTVFS, dtHDExt2 );
++//  TDriveType = ( dtFloppy, dtHDFAT, dtHDHPFS, dtInvalid,
++//                 dtNovellNet, dtCDRom, dtLAN, dtHDNTFS, dtUnknown,
++//                 dtTVFS, dtHDExt2, dtJFS );
+ 
+ function SysGetDriveType(Drive: Char): TDriveType;assembler;
+-(*&Frame-*)(*&Uses ECX,ESI*)
++  {&Frame-}{&Uses ecx,esi,edi,edx}
+   var
+-    regs                :real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+-    push longint [Drive]
++    push Longint [Drive]
+     call _upcase
+     sub al,'A'
+     movzx esi,al        // esi=drive0 ( // 0=A: ... )
+ 
++    lea edi,regs        // edi=@regs
++
+     // ******************************* Valid Drive ?
+-    call SysGetValidDrives
+-    mov ecx,esi         // drive0
+-    shr eax,cl
+-    and al,1            // Bit 0
+-    cmp al,1
+-    je @gueltig
++    mov ah,$19  // Get Current Default Drive -> al
++    int $21
++    push eax
++
++    mov ah,$0e  // Select Disk
++    mov edx,esi // dl:=Drive
++    int $21
++
++    mov ah,$19  // Get Current Default Drive
++    int $21
++    cmp al,dl   // result is in flags.ZF
+ 
++    pop edx     // restore current drive..
++    pushf       // but remember compare result
++
++    mov ah,$0e  // Select Disk
++  //mov edx,edx // dl:=Drive
++    int $21
++
++    popf        // restore compare result again
+     mov eax,dtInvalid
+-    jmp @ret
++    jne @ret    // not selectable -- return dtInvalid
+ 
+-  @gueltig:
++    // drive letter is valid.
+     // ******************************* CD-ROM ?
+     // INT $2F,AX=$150b
+     mov [regs.ax_],$150b
+     mov [regs.bx_],$eeee
+     mov [regs.ecx_],esi // drive0
+ 
+-    lea eax,regs
+-    push eax
++    push edi
+     push $2f
+     call intr_realmode
+ 
+     cmp [regs.bx_],$eeee
+-    je @kein_cdrom
++    je @not_cdrom
+ 
+     cmp [regs.ax_],0    // 0=unsupported
+-    je @kein_cdrom
++    je @not_cdrom
+ 
+     mov eax,dtCDRom
+     jmp @ret
+ 
+-  @kein_cdrom:
++  @not_cdrom:
+     // ******************************* NOVELL NETWARE
+     // INT $21,AX=$EF01 .. Novell NetWare - WORKSTATION - GET DRIVE FLAG TABLE
+     mov [regs.ax_],$ef01
+ 
+-    lea eax,regs
+-    push eax
++    push edi
+     push $21
+     call intr_realmode
+ 
+     cmp [regs.ax_],0
+-    jne @kein_novellnet
++    jne @not_novell_netware
+ 
+     // ES:SI -> network shell's 32-byte drive flag table
+     movzx eax,[regs.ds_]
+@@ -2486,49 +2672,54 @@
+     add ecx,eax
+     add ecx,esi         // drive0
+     cmp byte [ecx],$00  // drive is not mapped
+-    je @kein_novellnet
++    je @not_novell_netware
+     cmp byte [ecx],$80  // mapped to local drive
+-    je @kein_novellnet
++    je @not_novell_netware
+ 
+     mov eax,dtNovellNet
+     jmp @ret
+ 
+-  @kein_novellnet:
++  @not_novell_netware:
+     // ******************************* GENERIC NETWORK
+     // INT $21,AX=$4409
+     mov [regs.ax_],$4409 // CHECK IF BLOCK DEVICE REMOTE
+-    mov eax,esi         // drive0
+-    inc al
+-    mov [regs.bl_],al   // drive: A:=1 ..
++    lea eax,[esi+1]
++    mov [regs.bl_],al    // drive: A:=1 ..
+     and [regs.edx_],0
+ 
+-    lea eax,regs
+-    push eax
++    push edi
+     push $21
+     call intr_realmode
+-    mov eax,[regs.edx_]
+-    test eax,(1 shl 12) // Bit 12 =1  -> removable
+-    jz @kein_netzwerk
++    test [regs.flags_],(1 shl 0) // Carry
++    jnz @not_remote_drive
++    test [regs.edx_],(1 shl 12) // Bit 12 =1  -> remote
++    jz @not_remote_drive
+ 
+     mov eax,dtLAN
+     jmp @ret
+ 
+-  @kein_netzwerk:
+-    cmp esi,1           // drive0  A:(0) / B:(1)
+-    ja @kein_floppy
+-
++  @not_remote_drive:
++    // ************************* check removable drive
++    mov [regs.ax_],$4408 // CHECK IF BLOCK DEVICE REMOVABLE
++    lea eax,[esi+1]
++    mov [regs.bl_],al   // drive: A:=1 ..
++    and [regs.edx_],0
++    push edi
++    push $21
++    call intr_realmode
+     mov eax,dtFloppy
+-    jmp @ret
++    test [regs.flags_],(1 shl 0) // Carry
++    jnz @ret
++    cmp [regs.ax_],1    // ax=1: fixed
++    jne @ret
+ 
+-  @kein_floppy:
+-    // FAT ? HPFS ? ..
+-    // mov eax,dtUnknown
+-    mov eax,dtHDFAT
++    mov eax,dtHDFAT     // anything that is local, harddisk
+ 
+   @ret:
+   end;
+ 
+-function SysGetSystemSettings: Longint;(*&Frame-*)(*&Uses NONE*)
++function SysGetSystemSettings: Longint;
++  {&Frame-}{&Uses None}
+   asm
+     mov ah,$09 // GET KEYBOARD FUNCTIONALITY
+     int $16    // al Bit 5
+@@ -2539,12 +2730,13 @@
+ const
+   CrtScanCode: Byte = 0;
+ 
+-function SysKeyPressed: Boolean;(*&Frame-*)(*&Uses EDX*)
++function SysKeyPressed: Boolean;
++  {&Frame-}{&Uses edx}
+   asm
+-    call teste_strg_c
+-    (*$IFDEF THREAD_SUPPORT*)
++    call Test_Ctrl_C_Sensed
++    {$IfDef THREAD_SUPPORT}
+     call Dpmi32MultiThread
+-    (*$ENDIF*)
++    {$EndIf}
+ 
+     mov dl,true
+     cmp CrtScanCode,0
+@@ -2560,22 +2752,23 @@
+     mov al,dl
+   end;
+ 
+-procedure SysFlushKeyBuf;(*&Frame-*)(*&Uses EAX*)
++procedure SysFlushKeyBuf;
++  {&Frame-}{&Uses eax}
+   asm
+-  @schleife:
++  @loop_flush:
+ 
+-    call teste_strg_c
++    call Test_Ctrl_C_Sensed
+     call SysKeyPressed
+     cmp al,false
+     je @ret
+ 
+     call SysReadKey
+-    jmp @schleife
++    jmp @loop_flush
+ 
+   @ret:
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     call Dpmi32MultiThread
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+ function SysReadKey: Char;
+@@ -2583,7 +2776,7 @@
+     scan                :byte;
+     ascii               :char;
+   begin
+-    teste_strg_c;
++    Test_Ctrl_C_Sensed;
+ 
+     If CrtScanCode <> 0 then
+       begin
+@@ -2592,26 +2785,26 @@
+       end
+     else
+       begin
+-        (*$IFDEF THREAD_SUPPORT*)
++        {$IfDef THREAD_SUPPORT}
+         if IsMultiThread then
+           while not SysKeyPressed do
+             Dpmi32MultiThread;
+-        (*$ENDIF*)
++        {$EndIf}
+ 
+-        asm (*$Alters EAX*)
+-        @nochmal:
++        asm {$Alters EAX}
++        @again:
+           mov ah,$10
+           int $16
+           mov scan,ah
+           mov ascii,al
+           cmp ax,$2e03 // ^C
+-          jne @kein_strg_c
++          jne @not_ctrl_c
+ 
+-          mov strg_c_gefunden,true
+-          call teste_strg_c
+-          jmp @nochmal
++          mov Ctrl_C_Sensed,true
++          call Test_Ctrl_C_Sensed
++          jmp @again
+ 
+-        @kein_strg_c:
++        @not_ctrl_c:
+         end;
+ 
+         case ascii of
+@@ -2632,14 +2825,14 @@
+   var
+     scan                :byte;
+     ascii               :char;
+-    taste_vorhanden     :boolean;
++    keypress_avail      :boolean;
+   begin
+-    teste_strg_c;
+-    (*$IFDEF THREAD_SUPPORT*)
++    Test_Ctrl_C_Sensed;
++    {$IfDef THREAD_SUPPORT}
+     Dpmi32MultiThread;
+-    (*$ENDIF*)
++    {$EndIf}
+ 
+-    // 2*readkey for "F1"
++    // 2*ReadKey for "F1"
+     if CrtScanCode<>0 then
+       begin
+         Ch:=chr(CrtScanCode);
+@@ -2647,20 +2840,15 @@
+         Exit;
+       end;
+ 
+-    asm (*$Alters EAX*)
+-      mov taste_vorhanden,false
++    asm {$Alters EAX}
+       mov ah,$11
+       int $16
+-      jz @unveraendert
+-
++      setnz keypress_avail
+       mov scan,ah
+       mov ascii,al
+-      mov taste_vorhanden,true
+-
+-    @unveraendert:
+     end;
+ 
+-    if not taste_vorhanden then
++    if not keypress_avail then
+       begin
+         SysPeekKey:=false;
+         Exit;
+@@ -2678,120 +2866,123 @@
+   end;
+ 
+ const
+-  video_seite_0=0;
++  video_page_0=0;
+ 
+ procedure SysGetCurPos(var X, Y: SmallWord);
+-  (*&Frame-*)(*&Uses EAX,ESI*)
++  {&Frame-}{&Uses eax,esi}
+   asm
+-    movzx eax,byte [Seg0040+$50]
++    movzx eax,byte [Seg0040+$50+2*video_page_0]
+     mov esi,[x]
+     mov [esi],ax
+-    movzx eax,byte [Seg0040+$51]
++    movzx eax,byte [Seg0040+$51+2*video_page_0]
+     mov esi,[y]
+     mov [esi],ax
+   end;
+ 
+-procedure SysSetCurPos(X,Y: SmallWord);(*&Frame-*)(*&Uses EAX,EBX,EDX*)
++procedure SysSetCurPos(X,Y: SmallWord);
++  {&Frame-}{&Uses eax,ebx,edx}
+   asm
+     mov ah,$02
+-    mov bh,video_seite_0
++    mov bh,video_page_0
+     mov dh,byte [x]
+     mov dl,byte [y]
+     int $10
+   end;
+ 
+-procedure SysWrtCharStrAtt(CharStr: Pointer; Len,X,Y: SmallWord; var Attr: Byte);(*&Frame-*)(*&Uses ALL*)
++procedure SysWrtCharStrAtt(CharStr: Pointer; Len,X,Y: SmallWord; var Attr: Byte);
++  {&Frame-}{&Uses All}
+   asm
+-    call teste_strg_c
++    call Test_Ctrl_C_Sensed
+ 
+-    movzx ecx,[len]
++    movzx ecx,[Len]
+     jecxz @ret
+ 
+-    push [x+0].longint
+-      push [y+4].longint
+-        call berechnebildschirmspeicherposition
++    push [X+0].Longint
++      push [Y+4].Longint
++        call calculate_video_address
+     mov edi,eax
+-    mov esi,[attr]
++    mov esi,[Attr]
+     mov ah,[esi]
+-    mov esi,[charstr]
++    mov esi,[CharStr]
+     cld
+ 
+-    @l1:
++  @l1:
+ 
+     lodsb
+     stosw
+     loop @l1
+ 
+-    @ret:
++  @ret:
+ 
+   end;
+ 
+-procedure SysScrollUp(X1,Y1,X2,Y2,Lines,Cell: SmallWord);(*&Frame-*)(*&Uses ALL*)
++procedure SysScrollUp(X1,Y1,X2,Y2,Lines,Cell: SmallWord);
++  {&Frame-}{&Uses All}
+   asm
+     movzx eax,[Lines]
+-    // nichts zu tun ?
+-    or eax,eax
++    // nothing to do?
++    test eax,eax
+     jz @ret
+-    // 32 Bit Lines
+-    mov [Lines].longint,eax
++    // 32 Bit-expand Lines
++    mov [Lines].Longint,eax
+ 
+-    // Anzahl Byte pro Bildschimzeile im Speicher
++    // size(bytes) of a screen line in video memory
+     call SysGetTextVideoColumns
+     shl eax,1 // *2
+     mov ebp,eax
+ 
+-    // Zielzeile
+-    push [X1].longint
+-      push [Y1+4].longint
+-        call berechnebildschirmspeicherposition
++    // target row
++    push [X1].Longint
++      push [Y1+4].Longint
++        call calculate_video_address
+     mov edi,eax
+ 
+-    // Anzahl 16 Bit Worte pro Zeile
+-    mov eax,[X2].longint
+-    sub eax,[X1].longint
++    // count 16 Bit words per line
++    mov eax,[X2].Longint
++    sub eax,[X1].Longint
+     inc eax
+     movzx ecx,ax
+ 
+-    // Anzahl Zeilen des Fensters
+-    mov eax,[Y2].longint
+-    sub eax,[Y1].longint
++    // number of lines of window
++    mov eax,[Y2].Longint
++    sub eax,[Y1].Longint
+     inc eax
+     movzx ebx,ax
+ 
+-    // mehr als vorhandene Zeilen rollen ?
+-    mov eax,[Lines].longint
++    // scroll more than avilable lines?
++    mov eax,[Lines].Longint
+     cmp ebx,eax
+-    jae @keine_korrektur
++    jae @no_correcture
+     mov eax,ebx
+-    mov [Lines].longint,eax
++    mov [Lines].Longint,eax
+ 
+-  @keine_korrektur:
++  @no_correcture:
+ 
+-    // Leseposition
++    // read position
+     // eax=[Lines]
+     mul ebp
+     lea esi,[edi+eax]
+ 
+-    // Rollen notwendig ?
++    // scroll needed?
+     mov eax,ebx
+-    sub eax,[Lines].longint     // eax:=Anzahl Zeilen zu verschieben ( wenn <0 dann 0)
++    sub eax,[Lines].Longint     // eax:=number of lines to move (if <0 then 0)
+ 
+ 
+ 
+-    // eax = Anzahl zu verschiebende Zeilen
+-    // ecx = Anzahl zu verschiebende SmallWord pro Zeile
+-    // esi/edi = Quelle/Ziel der Verschiebung
+-    // ebx = Anzahl Zeilen des Bildschirmfensters
++    // eax = number of lines to move
++    // ecx = number of SmallWord to move per line
++    // esi/edi = source/target of move
++    // ebx = size of video window
+ 
+-    // ebp = Anzahl Byte bis zum nÑchsten Anfang im Fenster
++    // ebp = number of byte until next start of window
+     sub ebp,ecx
+     sub ebp,ecx
+ 
+     cld
+ 
+-  @verschiebe_schleife:
++  @move_loop:
+     cmp eax,0           // <=0 ?
+-    jle @fuellen
++    jle @do_fill
+ 
+     push ecx
+       push ecx
+@@ -2805,16 +2996,16 @@
+     add edi,ebp
+     dec eax             // Anzahl Zeilen zu verschieben
+     dec ebx             // Anzahl Zeilen Åbrig zu fÅllen
+-    jmp @verschiebe_schleife
++    jmp @move_loop
+ 
+-  @fuellen:
++  @do_fill:
+     mov ax,[Cell]
+     shl eax,16
+     mov ax,[Cell]
+ 
+-  @fuellen_schleife:
++  @fill_loop:
+     cmp ebx,0
+-    jle @fuellen_schleife_ende
++    jle @break_fill_loop
+ 
+     push ecx
+       push ecx
+@@ -2826,79 +3017,80 @@
+     pop ecx
+     add edi,ebp
+     dec ebx
+-    jmp @fuellen_schleife
++    jmp @fill_loop
+ 
+-  @fuellen_schleife_ende:
++  @break_fill_loop:
+   @ret:
+ end;
+ 
+-procedure SysScrollDn(X1,Y1,X2,Y2,Lines,Cell: SmallWord);(*&Frame-*)(*&Uses ALL*)
++procedure SysScrollDn(X1,Y1,X2,Y2,Lines,Cell: SmallWord);
++  {&Frame-}{&Uses All}
+   asm
+     movzx eax,[Lines]
+-    // nichts zu tun ?
+-    or eax,eax
++   // nothing to do?
++    test eax,eax
+     jz @ret
+-    // 32 Bit Lines
+-    mov [Lines].longint,eax
++    // 32 Bit-expand Lines
++    mov [Lines].Longint,eax
+ 
+-    // Anzahl Byte pro Bildschimzeile im Speicher
++    // size(bytes) of a screen line in video memory
+     call SysGetTextVideoColumns
+     shl eax,1 // *2
+     mov ebp,eax
+ 
+-    // Zielzeile
+-    push [X1].longint
+-      push [Y2+4].longint
+-        call berechnebildschirmspeicherposition
++    // target row
++    push [X1].Longint
++      push [Y2+4].Longint
++        call calculate_video_address
+     mov edi,eax
+ 
+-    // Anzahl 16 Bit Worte pro Zeile
+-    mov eax,[X2].longint
+-    sub eax,[X1].longint
++    // count 16 Bit words per line
++    mov eax,[X2].Longint
++    sub eax,[X1].Longint
+     inc eax
+     movzx ecx,ax
+ 
+-    // Anzahl Zeilen des Fensters
+-    mov eax,[Y2].longint
+-    sub eax,[Y1].longint
++    // number of lines of window
++    mov eax,[Y2].Longint
++    sub eax,[Y1].Longint
+     inc eax
+     movzx ebx,ax
+ 
+-    // mehr als vorhandene Zeilen rollen ?
+-    mov eax,[Lines].longint
++    // scroll more than avilable lines?
++    mov eax,[Lines].Longint
+     cmp ebx,eax
+-    jae @keine_korrektur
++    jae @no_correcture
+     mov eax,ebx
+-    mov [Lines].longint,eax
++    mov [Lines].Longint,eax
+ 
+-  @keine_korrektur:
++  @no_correcture:
+ 
+-    // Leseposition
++    // read position
+     // eax=[Lines]
+     mul ebp
+     mov esi,edi
+     sub esi,eax
+ 
+-    // Rollen notwendig ?
++    // scroll needed?
+     mov eax,ebx
+-    sub eax,[Lines].longint     // eax:=Anzahl Zeilen zu verschieben ( wenn <0 dann 0)
++    sub eax,[Lines].Longint     // eax:=number of lines to move (if <0 then 0)
+ 
+ 
+ 
+-    // eax = Anzahl zu verschiebende Zeilen
+-    // ecx = Anzahl zu verschiebende SmallWord pro Zeile
+-    // esi/edi = Quelle/Ziel der Verschiebung
+-    // ebx = Anzahl Zeilen des Bildschirmfensters
++    // eax = number of lines to move
++    // ecx = number of SmallWord to move per line
++    // esi/edi = source/target of move
++    // ebx = size of video window
+ 
+-    // ebp = Anzahl Byte bis zum nÑchsten Anfang im Fenster
++    // ebp = number of byte until next start of window
+     add ebp,ecx
+     add ebp,ecx
+ 
+     cld
+ 
+-  @verschiebe_schleife:
++  @move_loop:
+     cmp eax,0           // <=0 ?
+-    jle @fuellen
++    jle @do_fill
+ 
+     push ecx
+       push ecx
+@@ -2912,16 +3104,16 @@
+     sub edi,ebp
+     dec eax             // Anzahl Zeilen zu verschieben
+     dec ebx             // Anzahl Zeilen Åbrig zu fÅllen
+-    jmp @verschiebe_schleife
++    jmp @move_loop
+ 
+-  @fuellen:
++  @do_fill:
+     mov ax,[Cell]
+     shl eax,16
+     mov ax,[Cell]
+ 
+-  @fuellen_schleife:
++  @fill_loop:
+     cmp ebx,0
+-    jle @fuellen_schleife_ende
++    jle @break_fill_loop
+ 
+     push ecx
+       push ecx
+@@ -2933,9 +3125,9 @@
+     pop ecx
+     sub edi,ebp
+     dec ebx
+-    jmp @fuellen_schleife
++    jmp @fill_loop
+ 
+-  @fuellen_schleife_ende:
++  @break_fill_loop:
+   @ret:
+ 
+   end;
+@@ -2950,6 +3142,7 @@
+   AnsiUpperCaseTable: TCharCaseTable;
+   AnsiLowerCaseTable: TCharCaseTable;
+   WeightTable: TCharCaseTable;
++
+ const
+   CaseTablesInitialized: Boolean = False;
+ 
+@@ -2979,7 +3172,8 @@
+   CaseTablesInitialized := True;
+ end;
+ 
+-procedure ConvertCase(S1,S2: PChar; Count: Integer; var Table: TCharCaseTable); {&USES esi,edi} {&FRAME-}
++procedure ConvertCase(S1,S2: PChar; Count: Integer; var Table: TCharCaseTable);
++{&USES esi,edi} {&FRAME-}
+ asm
+                 cmp     CaseTablesInitialized,0
+                 jne     @@1
+@@ -3022,7 +3216,8 @@
+   Result := s;
+ end;
+ 
+-function MemComp(P1,P2: Pointer; L1,L2: Integer; T1,T2: PChar): Integer; {&USES ebx,esi,edi,ebp} {&FRAME-}
++function MemComp(P1,P2: Pointer; L1,L2: Integer; T1,T2: PChar): Integer;
++  {&USES ebx,esi,edi,ebp} {&FRAME-}
+ asm
+                 cmp     CaseTablesInitialized,0
+                 jne     @@0
+@@ -3074,9 +3269,9 @@
+ end;
+ 
+ procedure SysGetCaseMap(TblLen: Longint; Tbl: PChar );assembler;
+-(*&Frame-*)(*&Uses EAX,ECX,ESI,EDI*)
++  {&Frame-}{&Uses eax,ecx,esi,edi}
+   var
+-    regs:real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+     // DOS 3.3+
+     mov [regs.ax_],$6502        // get pointer to uppercase table
+@@ -3101,13 +3296,13 @@
+     //  00  word        table size ($80)
+     //  02  128 byte    upper case equivalents
+ 
+-    movzx eax,smallword [edi+1+2]
++    movzx eax,SmallWord [edi+1+2]
+     // 16:16->32 Bit
+     shl eax,4
+-    movzx esi,smallword [edi+1+0]
++    movzx esi,SmallWord [edi+1+0]
+     lea esi,[eax+esi+2]
+ 
+-    // Tbl bearbeiten ..
++    // process Tbl ..
+     mov ecx,TblLen
+     mov edi,Tbl
+     sub eax,eax
+@@ -3116,7 +3311,7 @@
+ 
+     cld
+ 
+-  @schleife:
++  @Tbl_loop:
+ 
+     mov al,[edi]
+     cmp al,$80
+@@ -3124,28 +3319,28 @@
+ 
+     mov al,[esi+eax]
+     mov [edi],al
+-    jmp @weiter
++    jmp @continue
+ 
+   @ascii:
+     cmp al,'a'
+-    jb @weiter
++    jb @continue
+ 
+     cmp al,'z'
+-    ja @weiter
++    ja @continue
+ 
+     sub al,'a'-'A'
+ 
+-  @weiter:
++  @continue:
+     stosb
+-    loop @schleife
++    loop @Tbl_loop
+ 
+   @ret:
+   end;
+ 
+ procedure SysGetWeightTable(TblLen: Longint; WeightTable: PChar);assembler;
+-(*&Frame-*)(*&Uses EAX,ECX,ESI,EDI*)
++  {&Frame-}{&Uses eax,ecx,esi,edi}
+   var
+-    regs:real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+     // DOS 3.3+
+     mov [regs.ax_],$6506        // get pointer to collating sequence table
+@@ -3163,15 +3358,15 @@
+     call intr_realmode
+ 
+     mov edi,[segdossyslow32]
+-    movzx eax,smallword [edi+1+2]  //   01h    DWORD   pointer to collating table
++    movzx eax,SmallWord [edi+1+2]  //   01h    DWORD   pointer to collating table
+ 
+     // 16:16->32 Bit
+     shl eax,4
+-    // kopieren
+-    movzx esi,smallword [edi+1+0]
++    // copy
++    movzx esi,SmallWord [edi+1+0]
+     lea esi,[eax+esi+2]
+     mov edi,WeightTable
+-    mov ecx,TblLen // 256 !
++    mov ecx,TblLen
+     cld
+     rep movsb
+   end;
+@@ -3203,8 +3398,8 @@
+ 
+ 
+ const
+-  big_jft16             :smallword=0;
+-  big_jft32             :longint  =0;
++  big_jft16             :SmallWord=0;
++  big_jft32             :Longint  =0;
+ 
+ function SysFileIncHandleCount(Count: Longint): Longint;
+   const
+@@ -3241,7 +3436,8 @@
+       Result:=1;                // 2. Call
+   end;
+ 
+-function SysGetCodePage: Longint;assembler;(*&Frame-*)(*&Uses EBX,EDX*)
++function SysGetCodePage: Longint;assembler;
++  {&Frame-}{&Uses ebx,edx}
+   asm
+     sub ebx,ebx
+ 
+@@ -3251,102 +3447,105 @@
+     mov eax,ebx
+   end;
+ 
+-function SysReadAttributesAt(x,y: SmallWord): Byte;(*&Frame-*)(*&Uses EBX*)
++function SysReadAttributesAt(x,y: SmallWord): Byte;
++  {&Frame-}{&Uses None}
+   asm
+-    movzx eax,x
+-    movzx ebx,y
+-    push eax
+-    push ebx
+-    call berechnebildschirmspeicherposition
++    push [x+0].Longint
++    push [y+4].Longint
++    call calculate_video_address
+     mov al,[eax+1]
+   end;
+ 
+-function SysReadCharAt(x,y: SmallWord): Char;(*&Frame-*)(*&Uses EBX*)
++function SysReadCharAt(x,y: SmallWord): Char;
++  {&Frame-}{&Uses None}
+   asm
+-    movzx eax,x
+-    movzx ebx,y
+-    push eax
+-    push ebx
+-    call berechnebildschirmspeicherposition
++    push [x+0].Longint
++    push [y+4].Longint
++    call calculate_video_address
+     mov al,[eax]
+   end;
+ 
+ 
+-procedure SysSound(freq:longint);(*&Frame-*)(*&Uses EAX,EDX*)
++procedure SysSound(freq:Longint);
++  {&Frame-}{&Uses eax,edx}
+   asm
+     mov eax,$001234dd // $ffff * 18.2 -> 1.19318 Mhz
+     sub edx,edx
+     cmp [freq],edx
+-    jne @nicht_null
++    jne @not_zero
+ 
+     inc [freq]
+ 
+-  @nicht_null:
++  @not_zero:
+     div [freq]
+ 
+     push eax
+ 
+-      in al,$61
++      in al,$61                 // timer 2 speaker enable
+       test al,$03
+-      jnz @schon_an
++      jnz @already_enabled
+ 
+       or al,$03
+       out $61,al
+ 
+-  @schon_an:
++  @already_enabled:
+ 
+-      mov al,$b6
+-      out $43,al // Timer
++      // set counter 2,both low+high byte,sqare wave generator, 16 bit counter
++      mov al,(2 shl 6)+(3 shl 4)+(3 shl 1)+(0 shl 0)
++      out $43,al
+ 
+     pop eax
+ 
++    // counter low, high
+     out $42,al
+     mov al,ah
+     out $42,al
+ 
+   end;
+ 
+-procedure SysNoSound;(*&Frame-*)(*&Uses EAX*)
++procedure SysNoSound;
++  {&Frame-}{&Uses eax}
+   asm
+     in al,$61
+-    and al,(not $03)
++    and al,(not $03)            // timer 2 speaker disable
+     out $61,al
+   end;
+ 
+-procedure delay_loop;(*&Frame-*)(*&Uses NONE*) // EAX,EDI,EBX
++procedure delay_loop;
++  {&Frame-}{&Uses None}                 // EAX,EDI,EBX
+   asm
+-  @schleife:
++  @delay_loop_2:
+ 
+-    out $ed,al // Zeit verbrauchen
++    out $ed,al                          // waste time
+     dec eax
+-    jz @ende
++    jz @exit
+ 
+-    cmp ebx,[edi]
+-    je @schleife
++    cmp ebx,[edi]                       // system clock change?
++    je @delay_loop_2                    // no, wait
+ 
+-    @ende:
++  @exit:
+   end;
+ 
+ const // initialised because can be called before SysLowInit
+-  tausendstel_durchleaufe:longint=1;
++  thousandth_part_loop  :Longint=1;
+ 
+ procedure SysCtrlSleep(Delay: Integer);assembler;
+-  (*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+   const
+     half_day=$1800b0 div 2;
+   asm
+-    (*$IFDEF THREAD_SUPPORT*)
++    {$IfDef THREAD_SUPPORT}
+     cmp IsMultiThread,true
+     jne @singe_thread_code
+ 
+-    mov eax,[delay]
++    mov eax,[Delay]
+     cdq
+     mov ebx,55                          // 1/1000 s = 55 * 1/18 s
+     div ebx
+     mov esi,Seg0040+$006c               // MEML[$40:$6c]= 1/18 timer tick
+     add eax,[esi]
+ 
+-  @noch_warten:
++  @still_wait:
+     call Dpmi32MultiThread
+ 
+     mov edx,[esi]
+@@ -3356,16 +3555,16 @@
+ 
+     cmp edx,-half_day                   // more ticks than a half day ? missing
+ 
+-    ja @noch_warten                     // no overflow
++    ja @still_wait                      // no overflow
+     jmp @ret
+ 
+     //***************************************************************
+ 
+   @singe_thread_code:
+-    (*$ENDIF*)
++    {$EndIf}
+     (*
+     mov ah,$86
+-    mov ecx,[delay]
++    mov ecx,[Delay]
+     shl ecx,10                          //milli->mikro
+     mov edx,ecx
+     shr ecx,16
+@@ -3373,22 +3572,22 @@
+     int $15
+     jmp @ret*)
+ 
+-    mov edi,Seg0040                     // [edi] Ñndert sich nicht
++    mov edi,Seg0040                     // [edi] does not change
+     mov ebx,[edi]
+-    mov ecx,[delay]                     // Millisekunden
++    mov ecx,[Delay]                     // Milliseconds
+     jecxz @ret
+ 
+-  @schleife:
+-    cmp strg_c_gefunden,true
++  @loop_milli:
++    cmp Ctrl_C_Sensed,true
+     je @ret
+ 
+-    mov eax,tausendstel_durchleaufe
++    mov eax,thousandth_part_loop
+     call delay_loop
+-    loop @schleife
++    loop @loop_milli
+ 
+   @ret:
+ 
+-    cmp [Seg0040+$0070].longint,0
++    cmp [Seg0040+$0070].Longint,0
+     je @no_day_update
+ 
+     sub eax,eax                         // ask BIOS to fix the time
+@@ -3397,18 +3596,19 @@
+   @no_day_update:
+   end;
+ 
+-procedure calibrate_delayloop;(*&Frame-*)(*&Uses ALL*)
++procedure Calibrate_Delayloop;
++  {&Frame-}{&Uses All}
+   asm
+     mov eax,1
+-    mov edi,Seg0040+$6c
++    mov edi,Seg0040+$6c                 // 1/18s timer ticker
+     mov edx,[edi]
+-    // AnwÑrmen
++    // warm up..
+     call delay_loop
+ 
+-  @warte_auf_wechsel:
++  @wait_for_change:
+     mov ebx,[edi]
+     cmp ebx,edx
+-    je @warte_auf_wechsel
++    je @wait_for_change
+ 
+     sub eax,eax
+     call delay_loop
+@@ -3417,163 +3617,182 @@
+     mov ecx,55 // 1000 / 18.2
+   //        56 // 1024 / 18.2
+     div ecx
+-    or eax,eax
++    test eax,eax
+     jnz @g0
+     inc eax
+   @g0:
+-    mov tausendstel_durchleaufe,eax
++    mov thousandth_part_loop,eax
+   end;
+ 
+ 
+-procedure SysBeepEx(Freq,Dur: LongInt);(*&Frame-*)(*&Uses NONE*)
++procedure SysBeepEx(Freq,Dur: Longint);
++  {&Frame-}{&Uses None}
+   asm
+     push Freq
+     call SysSound
+     push Dur
+     call SysCtrlSleep
+     call SysNoSound
+-    call teste_strg_c
++    call Test_Ctrl_C_Sensed
+   end;
+ 
+-function SysGetVideoModeInfo( Var Cols, Rows, Colours : Word ): Boolean;(*&Frame-*)(*&Uses ESI,EDI*)
++function SysGetVideoModeInfo( Var Cols, Rows, Colours : Word ): Boolean;
++  {&Frame-}{&Uses esi,edi}
+   asm
+-    call SysGetTextVideoColumns // Anzahl Bildschirmspalten
+-    mov edi,cols
++    call SysGetTextVideoColumns // Cols:=SysGetTextVideoColumns
++    mov edi,Cols
+     mov [edi],eax
+ 
+-    call SysGetTextVideoRows    // Anzahl Zeilen
+-    mov edi,rows
++    call SysGetTextVideoRows    // Rows:=SysGetTextVideoRows
++    mov edi,Rows
+     mov [edi],eax
+ 
+-    mov edi,colours
+-    mov [edi].longint,16        // Co80 -> 16 colours
++    mov edi,Colours             // Colours:=16
++    mov [edi].Longint,16        // Co80 -> 16 colours
+                                 // Bw80 -> 2 colours but blink/underline/inverse
+     mov al,true
+   end;
+ 
+ 
+-function SysGetVisibleLines( var Top, Bottom: Longint ): Boolean;(*&Frame-*)(*&Uses EDI*)
++function SysGetVisibleLines( var Top, Bottom: Longint ): Boolean;
++  {&Frame-}{&Uses edi}
+   asm
+     mov edi,Top
+-    sub eax,eax;inc eax         // 1
++    sub eax,eax;inc eax         // Top:=1
+     mov [edi],eax
++
+     mov edi,Bottom
+-    call SysGetTextVideoRows    // Anzahl Zeilen
++    call SysGetTextVideoRows    // Bottom:=number of rows
+     mov [edi],eax
+-    mov al,true
++
++    mov al,True                 // never fails
+   end;
+ 
+ 
+ function SysSetVideoMode(Cols, Rows: Word): Boolean;
+ 
+- procedure setvesa(nummer:smallword);
+-   var
+-     erfolg:boolean;
+-   begin
+-     asm (*&Alters EAX,EBX*)
+-       mov erfolg,false
+-       mov ax,$4f02
+-       mov bx,nummer
+-       int $10
+-       cmp ah,$00 // erfolgreich
+-       jne @1
+-       mov erfolg,true
+-       @1:
+-     end;
+-     SysSetVideoMode:=erfolg;
+-   end;
+-
+- procedure setze_modus(nummer,font:byte);
+-   begin
+-     SysSetVideoMode:=true;
+-     asm (*$Alters EAX*)
+-       mov ah,$00
+-       mov al,nummer
+-       int $10
+-     end;
+-
+-     case font of
+-       0:;
+-       8:
+-         asm (*$Alters EAX,EBX*)
+-           mov ax,$1112
+-           mov bl,0
+-           int $10
+-         end;
+-      14:
+-         asm (*$Alters EAX,EBX*)
+-           mov ax,$1111
+-           mov bl,0
+-           int $10
+-         end;
+-(*      16:
+-         asm ( *$Alters EAX,EBX * )
+-           mov ax,$1114
+-           mov bl,0
+-           int $10
+-         end;     *)
+-     else
+-       SysSetVideoMode:=false;
+-     end;
+-   end;
+- begin
+-   SysSetVideoMode:=false;
+-
+-   if cols=40 then
+-     case rows of
+-       25:
+-         case video_adapter_found of
+-           cga_found,
+-           ega_found,
+-           vga_found:setze_modus($01,0);
+-         end;
+-       28:
+-         if video_adapter_found=vga_found then
+-           setze_modus($01,14); // 400 div 28
+-       43:
+-         if video_adapter_found=ega_found then
+-           setze_modus($01, 8); // 350 div 43
+-       50:
+-         if video_adapter_found=vga_found then
+-           setze_modus($01, 8); // 400 div 50
+-     end;
+-
+-   if cols=80 then
+-     case rows of
+-       25:
+-         case video_adapter_found of
+-           mda_found:setze_modus($07,0);
+-           cga_found,
+-           ega_found,
+-           vga_found:setze_modus($03,0);
+-         end;
+-       28:
+-         if video_adapter_found=vga_found then
+-           setze_modus($03,14); // 400 div 28
+-       43:
+-         if video_adapter_found=ega_found then
+-           setze_modus($03, 8); // 350 div 43
+-       50:
+-         if video_adapter_found=vga_found then
+-           setze_modus($03, 8); // 400 div 50
+-       60:
+-         setvesa($108);
+-     end;
+-
+-   if cols=132 then
+-     case rows of
+-       25:setvesa($109);
+-       43:setvesa($10a);
+-       50:setvesa($10b);
+-       60:setvesa($10c);
+-     end;
++  function SetVesaMode(ModeNumber, Rows: Longint ): Boolean;
++    {&Frame+}{&Uses None}
++    asm
++      mov eax,ModeNumber
++
++      pushad
++
++      cmp ah,0                          // Mode 0..3/7?
++      je @use_int10_00
++
++      mov ebx,eax                       // bx:=ModeNumber (VESA)
++      mov ax,$4f02
++      mov ebx,ModeNumber
++      int $10
++
++      cmp ax,$004f                      // success+supported?
++      jmp @done_mode
++
++   @use_int10_00:
++
++      // 350/400 scan lines...
++      push eax
++
++      // EGA 80x43 hack: Set 350 lines mode...
++      cmp al,3
++      jne @not_ega43
++      cmp Rows,43
++      jne @not_ega43
++      mov ax,$1201                      // select 350 scan lines for next mode
++      jmp @set_scanlines
++
++   @not_ega43:
++      mov ax,$1202                      // select 400 scan lines for next mode
++
++   @set_scanlines:
++      mov bl,$30
++      int $10
++
++      pop eax
++
++
++    //mov ah,ah                         // ah=0 (set mode) al=mode number/bit7=0(clear screen)
++      int $10
++      call SysGetTextVideoMode          // check set mode result
++      cmp al,Byte [ModeNumber]
++
++   @done_mode:
++      jnz @done_font                    // skip if mode failed
+ 
+- end;
++      call SysGetTextVideoRows          // already have correct Row count?
++      cmp Rows, eax
++      je @done_font                     // yes, no font loading needed.
++
++      mov edx,eax                       // current Rows
++      call SysGetTextFontHeight
++      mul edx                           // => vertical resolution
++      div Rows                          // => needed font size
++
++      mov bl,-1                         // invalid
++      cmp eax,8
++      jne @not_set_RomFont8
++      mov bl,$12
++      jmp @set_font
++
++   @not_set_RomFont8:
++      cmp eax,14
++      jne @not_set_RomFont14
++      mov bl,$11
++      jmp @set_font
++
++   @not_set_RomFont14:
++      cmp eax,16
++      jne @done_font                    // no matching font size, exit with ZF=0
++      mov bl,$14
++
++   @set_font:
++      mov ah,$11                        // char gen
++      mov al,bl                         // subfunction
++      mov bl,0                          // table to load into
++      int $10
++
++      call SysGetTextVideoRows          // correct Row count?
++      cmp Rows, eax
++
++   @done_font:
++
++      popad
++
++      sete al
++    end;
++
++  begin
++    SysSetVideoMode:=false;
++
++    if Cols=40 then
++      SysSetVideoMode:=SetVesaMode($01,Rows)
++    else
++    if (Cols=80) and (Rows=25) and (video_adapter_found=mda_found) then
++      SysSetVideoMode:=SetVesaMode($07,Rows)
++    else
++    if (Cols=80) and (Rows=60) then
++      SysSetVideoMode:=SetVesaMode($108,Rows)
++    else
++    if Cols=80 then
++      SysSetVideoMode:=SetVesaMode($03,Rows)
++    else
++    if Cols=132 then
++      case Rows of
++        25:SysSetVideoMode:=SetVesaMode($109,Rows);
++        43:SysSetVideoMode:=SetVesaMode($10a,Rows);
++        50:SysSetVideoMode:=SetVesaMode($10b,Rows);
++        60:SysSetVideoMode:=SetVesaMode($10c,Rows);
++      end;
+ 
+-procedure detect_mdacgaegavga;(*&Frame-*)(*&Uses ALL*)
++  end;
++
++procedure Detect_MdaCgaEgaVga;
++  {&Frame-}{&Uses All}
+   asm
+     sub edx,edx                         // mda_found
+-    cmp byte [Seg0040+$49],7            // 7=MDA/Hercules
++    call SysGetTextVideoMode
++    cmp al,7                            // 7=MDA/Hercules
+     je @ret
+ 
+     inc edx                             // cga_found
+@@ -3597,16 +3816,31 @@
+ 
+     inc edx                             // vga_found
+ 
+-    @ret:
+-    (*$IFOPT Z+*)
++  @ret:
++    {$IfOpt Z+}
+     mov video_adapter_found,edx
+-    (*$ELSE*)
++    {$Else}
+     mov video_adapter_found, dl
+-    (*$ENDIF*)
++    {$EndIf}
+   end;
+ 
+-function SysTVDetectMouse: Longint;(*&Frame-*)(*&Uses EBX*)
++const
++  wheel_supported: Boolean = false;
++
++function SysTVDetectMouse: Longint;
++  {&Frame-}{&Uses ebx}
+   asm
++
++    // test ctmouse driver wheel support presence
++    mov ax,$0011
++    int $33
++    cmp ax,'WM'
++    jne @end_test_wm
++    test cx,1
++    jz @end_test_wm
++    mov wheel_supported,true
++@end_test_wm:
++
+     mov ax,$0021 // Software Reset
+     sub ebx,ebx
+     int $33
+@@ -3615,26 +3849,25 @@
+ 
+     mov ebx,2
+ 
+-    @1:
+-    mov eax,ebx // SysTVDetectMouse:=eax
++  @1:
++    mov eax,ebx // SysTVDetectMouse:=ebx
+   end;
+ 
+ 
+-var
+-  maus_rmcbs            :real_mode_call_structure_typ;
+-  maus_rm_ptr           :real_mode_ptr_typ;
+-
+ const
+   // not implemented as an qeue: only one element
+-  maus_event_vorhanden  :boolean=false;
++  mouse_event_avail     :boolean=false;
+ 
+ var
+-  maus_event            :TSysMouseEvent;
++  mouse_event           :TSysMouseEvent;
++  mouse_rmcbs           :real_mode_call_structure_type;
++  mouse_rm_ptr          :real_mode_ptr_type;
+ 
+-procedure maus_eventhandler;(*&Frame-*)(*&Uses NONE*)
++procedure mouse_eventhandler;
++  {&Frame-}{&Uses None}
+   asm
+     // DS:ESI = DOS SS:SP
+-    // ES:EDI = maus_rmcbs
++    // ES:EDI = mouse_rmcbs
+ 
+     push eax
+       push ds
+@@ -3652,52 +3885,61 @@
+ 
+         mov ds,cs:[seldata]
+ 
+-        // Bearbeiten
+-        cmp maus_event_vorhanden,false
++        // process it
++        cmp mouse_event_avail,false
+         jne @1
+ 
+-        mov maus_event_vorhanden,true
++        cmp wheel_supported,false
++        je @end_wheel
++        movsx eax,es:[edi+real_mode_call_structure_type.bh_]
++        imul eax,3 // 3 lines scroll
++        add wheel_counter,eax
++@end_wheel:
++
++        mov mouse_event_avail,true
+ 
+         call SysSysMsCount
+-        mov [maus_event.smeTime   ],eax
++        mov [mouse_event.smeTime   ],eax
+ 
+         // Y
+-        mov eax,es:[edi+real_mode_call_structure_typ.edx_]
++        mov eax,es:[edi+real_mode_call_structure_type.edx_]
+         shl eax,16
+         // X
+-        mov  ax,es:[edi+real_mode_call_structure_typ.cx_]
++        mov  ax,es:[edi+real_mode_call_structure_type.cx_]
+         // y/8, x/8
+         shr eax,3
+-        mov [maus_event.smePos],eax
++        mov [mouse_event.smePos],eax
+ 
+         // BUTTONS
+-        mov al,es:[edi+real_mode_call_structure_typ.bl_]
+-        mov [maus_event.smeButtons],al
++        mov al,es:[edi+real_mode_call_structure_type.bl_]
++        mov [mouse_event.smeButtons],al
+ 
+       @1:
+ 
+       pop ds
+     pop eax
+ 
+-    // RETF simulieren
++    // simulate RETF
+     cld
+     lodsw  // RETF:IP
+-    mov es:[edi+real_mode_call_structure_typ.ip_],ax
++    mov es:[edi+real_mode_call_structure_type.ip_],ax
+     lodsw  // RETF:CS
+-    mov es:[edi+real_mode_call_structure_typ.cs_],ax
++    mov es:[edi+real_mode_call_structure_type.cs_],ax
+ 
+-    add es:[edi+real_mode_call_structure_typ.sp_],2*2
++    add es:[edi+real_mode_call_structure_type.sp_],2*2
+ 
+     // REAL MODE
+     iretd
+   end;
+ 
+ procedure SysTVInitMouse(var X,Y: Integer);assembler;
+-(*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
++  const
++    mousemask           =$ffff;
+   var
+-    regs                :real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+-    mov maus_event_vorhanden,false
++    mov mouse_event_avail,false
+ 
+     // mouse_goto(0,0)
+     mov ax,$0004
+@@ -3705,12 +3947,12 @@
+     sub edx,edx
+     int $33
+ 
+-    // maus_rm_ptr initialisieren
+-    and maus_rm_ptr,0
++    // initialize mouse_rm_ptr
++    and mouse_rm_ptr,0
+ 
+     mov eax,$0303 // ALLOCATE REAL MODE CALLBACK ADDRESS
+-    mov esi,offset maus_eventhandler // DS:ESI
+-    mov edi,offset maus_rmcbs        // ES:EDI
++    mov esi,offset mouse_eventhandler // DS:ESI
++    mov edi,offset mouse_rmcbs        // ES:EDI
+     push ds
+       push cs
+       pop ds
+@@ -3719,13 +3961,13 @@
+     jc @dpmi_err
+ 
+     // -> CX:DX
+-    mov [maus_rm_ptr.ofs_],dx
+-    mov [maus_rm_ptr.seg_],cx
++    mov [mouse_rm_ptr.ofs_],dx
++    mov [mouse_rm_ptr.seg_],cx
+ 
+     mov [regs.ax_],$000c        // SET ALTERNATE MOUSE USER HANDLER
+     mov [regs.es_],cx
+     mov [regs.edx_],edx
+-    mov [regs.cx_],mausmaske    // call mask .. Bit 0..5
++    mov [regs.cx_],mousemask    // call mask .. Bit 0..5
+ 
+     lea eax,regs
+     push eax
+@@ -3748,81 +3990,86 @@
+   end;
+ 
+ procedure SysTVDoneMouse(Close: Boolean);assembler;
+-(*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+   var
+-    regs                :real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+-    cmp maus_rm_ptr,0
+-    je @ohne
++    cmp mouse_rm_ptr,0
++    je @no_mouse
+ 
+     mov [regs.ax_],$0021        // Software Reset
+ 
+     lea eax,regs
+     push eax
+-    push $33                    // Maus
++    push $33                    // Mouse driver
+     call intr_realmode
+ 
+-    mov dx,[maus_rm_ptr.ofs_]
+-    mov cx,[maus_rm_ptr.seg_]
++    mov dx,[mouse_rm_ptr.ofs_]
++    mov cx,[mouse_rm_ptr.seg_]
+     mov eax,$0304 // FREE REAL MODE CALLBACK ADDRESS CX:DX
+     int $31
+ 
+-    and maus_rm_ptr,0
++    and mouse_rm_ptr,0
+ 
+-    @ohne:
++  @no_mouse:
+   end;
+ 
+-procedure SysTVShowMouse;(*&Frame-*)(*&Uses EAX*)
++procedure SysTVShowMouse;
++  {&Frame-}{&Uses eax}
+   asm
+     sub eax,eax    // mov ax,$0001
+     inc eax
+     int $33
+   end;
+ 
+-procedure SysTVHideMouse;(*&Frame-*)(*&Uses EAX*)
++procedure SysTVHideMouse;
++  {&Frame-}{&Uses eax}
+   asm
+     mov ax,$0002
+     int $33
+   end;
+ 
+-procedure SysTVUpdateMouseWhere(var X,Y: Integer);(*&Frame-*)(*&Uses ALL*)
++procedure SysTVUpdateMouseWhere(var X,Y: Integer);
++  {&Frame-}{&Uses All}
+   asm
+     sub ecx,ecx // x
+     sub edx,edx // y
+     mov ax,$0003
+     int $33
+-    mov edi,x
++    mov edi,X
+     shr ecx,3
+     mov [edi],ecx
+-    mov edi,y
++    mov edi,Y
+     shr edx,3
+     mov [edi],edx
+   end;
+ 
+-function SysTVGetMouseEvent(var Event: TSysMouseEvent): Boolean;(*&Frame-*)(*&Uses ESI,EDI*)
++function SysTVGetMouseEvent(var Event: TSysMouseEvent): Boolean;
++  {&Frame-}{&Uses esi,edi}
+   asm
+     mov al,false
+-    cmp maus_event_vorhanden,false
++    cmp mouse_event_avail,false
+     je @ret
+ 
+-    mov maus_event_vorhanden,false
+-
+-    mov esi,offset maus_event
++    mov esi,Offset mouse_event
+     mov edi,Event
+     cld
+     movsd // TSysMouseEvent.smeTime
+     movsd // TSysMouseEvent.smePos
+     movsb // TSysMouseEvent.smeButtons
++
++    mov mouse_event_avail,false
+     mov al,true
+ 
+-    @ret:
++  @ret:
+   end;
+ 
+-procedure SysTVKbdInit;(*&Frame-*)(*&Uses NONE*)
+-  asm
++procedure SysTVKbdInit;
++  begin
+   end;
+ 
+-function SysTVGetKeyEvent(var Event: TSysKeyEvent): Boolean;(*&Frame-*)(*&Uses EDI*)
++function SysTVGetKeyEvent(var Event: TSysKeyEvent): Boolean;
++  {&Frame-}{&Uses edi}
+   asm
+     mov dl,false
+ 
+@@ -3835,18 +4082,19 @@
+ 
+     mov ah,$11
+     int $16
+-    jz @unveraendert
++    jz @no_update
+ 
+     mov ah,$10
+     int $16
+     mov [edi+TSysKeyEvent.skeKeyCode],ax
+     mov dl,true
+ 
+-    @unveraendert:
++  @no_update:
+     mov al,dl
+   end;
+ 
+-function SysTVPeekKeyEvent(var Event: TSysKeyEvent): Boolean;(*&Frame-*)(*&Uses EDX,EDI*)
++function SysTVPeekKeyEvent(var Event: TSysKeyEvent): Boolean;
++  {&Frame-}{&Uses edx,edi}
+   asm
+     mov dl,false
+     mov edi,Event
+@@ -3858,89 +4106,84 @@
+ 
+     mov ah,$11
+     int $16
+-    jz @unveraendert
++    jz @no_update
+ 
+     mov [edi+TSysKeyEvent.skeKeyCode],ax
+     mov dl,true
+ 
+-    @unveraendert:
++  @no_update:
+     mov al,dl
+   end;
+ 
+-function SysTVGetShiftState: Byte;(*&Frame-*)(*&Uses NONE*)
++function SysTVGetShiftState: Byte;
++  {&Frame-}{&Uses None}
+   asm
+     mov ah,$02
+     int $16
+   end;
+ 
+-procedure SysTVSetCurPos(X,Y: Integer);(*&Frame-*)(*&Uses EAX,EBX,EDX*)
++procedure SysTVSetCurPos(X,Y: Integer);
++  {&Frame-}{&Uses eax,ebx,edx}
+   asm
+     mov ah,$02
+-    mov bh,video_seite_0
+-    mov dh,byte [y]
+-    mov dl,byte [x]
++    mov bh,video_page_0
++    mov dh,byte [Y]
++    mov dl,byte [X]
+     int $10
+   end;
+ 
+ procedure SysTVSetCurType(Y1,Y2: Integer; Show: Boolean);
+   begin
+-    if (y1<0) or (y2<0) then
+-      begin
+-        y1:=(-y1*(SysGetTextFontHeight-1)) div 100; // 0040:0085=Font Hîhe
+-        y2:=(-y2*(SysGetTextFontHeight-1)) div 100;
+-      end;
+ 
+-    asm (*$Alters EAX,ECX*)
++    if Y1<0 then Y1:=(-Y1*(SysGetTextFontHeight-1)) div 100;
++    if Y2<0 then Y2:=(-Y2*(SysGetTextFontHeight-1)) div 100;
++
++    asm {$Alters eax,ecx}
+       mov ah,$01
+-      mov ch,byte [y1]
+-      mov cl,byte [y2]
+-      cmp show,true
++      mov ch,byte [Y1]
++      mov cl,byte [Y2]
++      cmp Show,true
+       je @1
+       or ch,$20 // or cx,$2000
+-      @1:
++    @1:
+       int $10
+     end;
+   end;
+ 
+-procedure SysTVGetCurType(var Y1,Y2: Integer; var Visible: Boolean);(*&Frame-*)(*&Uses EAX,EBX,ECX,EDX,EDI*)
++procedure SysTVGetCurType(var Y1,Y2: Integer; var Visible: Boolean);
++  {&Frame-}{&Uses All}
+   asm
+     mov ah,$03
+-    mov bh,video_seite_0
++    mov bh,video_page_0
+     int $10
+ 
+-    mov edi,y1
++    mov edi,Y1
+     movzx eax,ch
+     and eax,$1f  // Bit 4..0
+     mov [edi],eax
+ 
+-    mov edi,y2
++    mov edi,Y2
+     movzx eax,cl
+     and eax,$1f  // Bit 4..0
+     mov [edi],eax
+ 
+-    mov al,true
+-    and ch,$20   // Bit 5(13) invisible
+-    cmp ch,0
+-    je @sichtbar
+-
+-    mov al,false
+-
+-    @sichtbar:
+-
++    test ch,$20   // Bit 5(13) invisible
++    setz al
+     mov edi,Visible
+     mov [edi],al
+   end;
+ 
+-procedure SysTVShowBuf(Pos,Size: Integer);(*&Frame-*)(*&Uses NONE*)
+-  asm
++procedure SysTVShowBuf(Pos,Size: Integer);
++  begin
+   end;
+ 
+-procedure SysTVClrScr;(*&Frame-*)(*&Uses EAX,ECX,EDI*)
++procedure SysTVClrScr;
++  {&Frame-}{&Uses eax,ecx,edi}
+   asm
+     call SysGetTextVideoMemBase
+     mov edi,eax
+ 
+-    movzx ecx,smallword [Seg0040+$4c]   // Size Video MEM
++    movzx ecx,SmallWord [Seg0040+$4c]   // Size Video MEM
+     shr ecx,1                           // div 2
+     cld
+     mov ax,$0720                        // Space character, white on black
+@@ -3949,28 +4192,29 @@
+ 
+ function SysTVGetScrMode(_Size: PSysPoint; _Align: Boolean): Integer;
+   begin
+-    if _size <> nil then
+-      with _size do
++    if _Size <> nil then
++      with _Size do
+         begin
+-          x:=SysGetTextVideoColumns;
+-          y:=SysGetTextVideoRows;
++          X:=SysGetTextVideoColumns;
++          Y:=SysGetTextVideoRows;
+         end;
+ 
+-    if (SysGetTextVideoModus in [$00,$01,$02,$03,$07]) then
++    if (SysGetTextVideoMode in [$00,$01,$02,$03,$07]) then
+       begin
+-       if SysGetTextVideoRows=25 then          // Zeilen
+-         SysTVGetScrMode:=SysGetTextVideoModus
+-       else
+-         SysTVGetScrMode:=SysGetTextVideoModus+$100;
++       if SysGetTextVideoRows=25 then           // default row count?
++         SysTVGetScrMode:=SysGetTextVideoMode
++       else                                     // changed font
++         SysTVGetScrMode:=SysGetTextVideoMode+$100;
+       end
+     else
+       SysTVGetScrMode:=$00ff; // Non-standard
+ 
+   end;
+ 
+-procedure SysTVSetScrMode(Mode: Integer);(*&Frame-*)(*&Uses EAX,EBX*)
++procedure SysTVSetScrMode(Mode: Integer);
++  {&Frame-}{&Uses eax,ebx}
+   asm
+-    mov eax,mode
++    mov eax,Mode
+     push eax
+       mov ah,$00
+       int $10
+@@ -3985,42 +4229,53 @@
+     @ret:
+   end;
+ 
+-function SysTVGetSrcBuf: Pointer;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    call SysGetTextVideoMemBase
++function SysTVGetSrcBuf: Pointer;
++  begin
++    SysTVGetSrcBuf := Pointer(SysGetTextVideoMemBase);
+   end;
+ 
+-procedure SysTVInitCursor;(*&Frame-*)(*&Uses NONE*)
+-  asm
++procedure SysTVInitCursor;
++  begin
+   end;
+ 
+ procedure SysTvDoneCursor;
+-begin
+-end;
++  begin
++  end;
+ 
+-function SysPlatformID: Longint;(*&Frame-*)(*&Uses NONE*)
+-  asm
+-    mov eax,-2
++function SysPlatformID: Longint;
++  begin
++    SysPlatformID := -2; // "DPMI32"
+   end;
+ 
+-procedure SysBeep;(*&Frame-*)(*&Uses EAX*)
++procedure SysBeep;
++  {&Frame-}{&Uses eax}
+   asm
+     mov al,$07
+     int $29
+   end;
+ 
+-function SysGetValidDrives: Longint;(*&Frame-*)(*&Uses EBX,ECX,EDX*)
++function SysGetValidDrives: Longint;
++  {&Frame-}{&Uses ebx,ecx,edx}
+   asm
++    sub ebx,ebx  // Bits
++
++    movzx eax,SmallWord [Seg0040+$10] // Equipment list
++    test al, 1
++    jz  @CountCtoZ
++    mov ebx,$C0000000 //2 floppies maximum
++    and al, $40       //mask out 'A' and 'B' floppies
++    jnz @CountCtoZ
++    shr ebx,1         //only 'A' floppy present
++
++   @CountCtoZ:
++
+     mov ah,$19   // Get Current Default Drive -> al
+     int $21
+     mov cl,al    // -> cl
++    mov edx,2    //drive counter == 'C'
+ 
+-    sub edx,edx  // ZÑhler
+-    sub ebx,ebx  // Bits
+-
+-    @0:
++  @0:
+     mov ah,$0e   // Select Disk
+-    //mov dl,dl
+     int $21
+ 
+     mov ah,$19   // Get Current Default Drive
+@@ -4030,12 +4285,14 @@
+ 
+     inc ebx
+ 
+-    @1:
++  @1:
+     ror ebx,1
+     inc edx
+-    cmp edx,32
++    cmp edx,26 //don't call int21 for nonexisting drives, i.e. > 'Z'
+     jne @0
+ 
++    ror ebx,6  //correct bitmask
++
+     mov ah,$0e   // Select Disk
+     mov dl,cl
+     int $21
+@@ -4043,63 +4300,63 @@
+     mov eax,ebx
+   end;
+ 
+-(*$IFDEF CLIP_SUPPORT*)
++{$IfDef CLIP_SUPPORT}
+ const
+-  clip_puffer_groesse   =64*1024-1;             // max transfer size
+-  clip_puffer_16        :smallword=0;           // realmode segment
+-  clip_puffer_32        :longint=0;             // protmode offset
+-  clip_typ              =7;                     // OEM text
+-(*$ENDIF*)
++  clip_buffer_size      =64*1024-1;             // max transfer size
++  clip_buffer_16        :SmallWord=0;           // realmode segment
++  clip_buffer_32        :Longint=0;             // protmode offset
++  clip_type             =7;                     // OEM text
++{$EndIf}
+ 
+ 
+ function SysClipCanPaste: Boolean;
+-  (*$IFDEF CLIP_SUPPORT*)
+-  (*&Frame-*)(*&Uses ESI,EDI*)
++  {$IfDef CLIP_SUPPORT}
++  {&Frame-}{&Uses esi}
+   asm
+-    sub edi,edi                         // false
++    cmp [clip_buffer_32],0              // already assigned ?
++    mov al,True
++    jne @ret
++
+     mov esi,$00001700                   // MS Windows "WINOLDAP"
+     mov eax,esi
+     int $2f
+     cmp eax,esi
+-    je @ret                             // nicht installiert
++    mov al,False
++    je @ret                             // not installed
+ 
+-    cmp [clip_puffer_32],edi            // already Assigned ?
+-    jne @erfolg
+-
+-    lea eax,clip_puffer_16
++    lea eax,clip_buffer_16
+     push eax
+-    push clip_puffer_groesse
++    push clip_buffer_size
+     call GetDosMem
+-    or eax,eax
++    test eax,eax
++    mov al,False
+     jnz @ret
+ 
+-    push [clip_puffer_16].longint
++    push [clip_buffer_16].Longint
+     call dosseg_linear
+-    mov [clip_puffer_32],eax
++    mov [clip_buffer_32],eax
+ 
+-  @erfolg:
+-    inc edi                             // true
++    mov al,True
+   @ret:
+-    mov eax,edi
+   end;
+-  (*$ELSE*)
++  {$Else}
+   begin
+-    SysClipCanPaste:=false;
++    SysClipCanPaste := false;
+   end;
+-  (*$ENDIF*)
++  {$EndIf}
+ 
+ function SysClipCopy(P: PChar; Size: Longint): Boolean;
+-  (*$IFDEF CLIP_SUPPORT*)
++  {$IfDef CLIP_SUPPORT}
+   var
+-    r:real_mode_call_structure_typ;
++    r                   :real_mode_call_structure_type;
+   begin
+     SysClipCopy:=false;
+-    if SysClipCanPaste                  // installiert ?
+-    and (Size<clip_puffer_groesse)      // Size zu gro· ?
+-     then
++
++    if  SysClipCanPaste                 // installed?
++    and (Size<clip_buffer_size) then    // Size not to large?
+       with r do
+         begin
+-          Move(P^,Mem[clip_puffer_32],Size); // -> 1. MB
++          Move(P^,Mem[clip_buffer_32],Size); // -> 1. MB
+ 
+           init_register(r);
+ 
+@@ -4107,8 +4364,8 @@
+           intr_realmode(r,$2f);
+ 
+           eax_:=$1703;                  // SET CLIPBOARD DATA
+-          edx_:=clip_typ;
+-          es_:=clip_puffer_16;          // ES:BX
++          edx_:=clip_type;
++          es_:=clip_buffer_16;          // ES:BX
+           ebx_:=0;
+           esi_:=0;                      // SI shl 16+CX
+           ecx_:=Size;
+@@ -4122,23 +4379,23 @@
+ 
+         end;
+   end;
+-  (*$ELSE*)
++  {$Else}
+   begin
+-    SysClipCopy:=false;
++    SysClipCopy := false;
+   end;
+-  (*$ENDIF*)
++  {$EndIf}
+ 
+ function SysClipPaste(var Size: Integer): Pointer;
+-  (*$IFDEF CLIP_SUPPORT*)
++  {$IfDef CLIP_SUPPORT}
+   var
+-    r:real_mode_call_structure_typ;
+-    s:longint;
+-    p:PChar;
++    r                   :real_mode_call_structure_type;
++    s                   :Longint;
++    p                   :PChar;
+   begin
+     SysClipPaste:=nil;
+     Size:=0;
+ 
+-    if SysClipCanPaste then             // installiert ?
++    if SysClipCanPaste then             // installed?
+       with r do
+         begin
+           init_register(r);
+@@ -4147,16 +4404,16 @@
+           intr_realmode(r,$2f);
+ 
+           eax_:=$1704;
+-          edx_:=clip_typ;
++          edx_:=clip_type;
+           intr_realmode(r,$2f);         // GET CLIPBOARD DATA SIZE
+           s:=r.ax_+r.dx_ shl 16;
+ 
+-          if (s>0) and (s<=clip_puffer_groesse) then
++          if (s>0) and (s<=clip_buffer_size) then
+             begin
+ 
+               eax_:=$1705;                  // GET CLIPBOARD DATA
+-              edx_:=clip_typ;
+-              es_:=clip_puffer_16;          // ES:BX
++              edx_:=clip_type;
++              es_:=clip_buffer_16;          // ES:BX
+               ebx_:=0;
+               intr_realmode(r,$2f);
+ 
+@@ -4164,7 +4421,7 @@
+                 Exit;
+ 
+               GetMem(p,s+1);
+-              Move(Mem[clip_puffer_32],p^,s);
++              Move(Mem[clip_buffer_32],p^,s);
+               p[s]:=#0;
+               Size:=StrLen(p)+1;
+               SysClipPaste:=p;
+@@ -4174,14 +4431,15 @@
+           intr_realmode(r,$2f);
+         end;
+   end;
+-  (*$ELSE*)
++  {$Else}
+   begin
+-    Size:=0;
+-    SysClipPaste:=nil;
++    Size := 0;
++    SysClipPaste := nil;
+   end;
+-  (*$ENDIF*)
++  {$EndIf}
+ 
+-function SysLoadResourceString(ID: Longint; Buffer: PChar; BufSize: Longint): PChar;(*&Frame+*)(*&Uses ECX*)
++function SysLoadResourceString(ID: Longint; Buffer: PChar; BufSize: Longint): PChar;
++  {&Frame+}{&Uses ecx}
+   asm
+     // Buffer^:=#0
+     mov eax,[Buffer]
+@@ -4193,7 +4451,7 @@
+     je @ret
+ 
+ 
+-    movzx ecx,smallword [eax]
++    movzx ecx,SmallWord [eax]
+     inc eax                     // skip .len
+     inc eax
+ 
+@@ -4253,13 +4511,13 @@
+ 
+ function SysGetModuleName(var Address: Pointer; Buffer: PChar; BufSize: Longint): PChar;
+   begin
+-    (* ParamStr(0) *)
+-    SysGetModuleName:=StrLCopy(Buffer,CmdLine,BufSize);
++    // ParamStr(0) - until we support DLLs
++    SysGetModuleName := StrLCopy(Buffer,CmdLine,BufSize);
+   end;
+ 
+ function SysFileUNCExpand(Dest,Name: PChar): PChar;
+   var
+-    regs                :real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+     tmp                 :array[0..260] of char;
+   begin
+     SysFileExpand(tmp,Name);
+@@ -4281,18 +4539,18 @@
+   end;
+ 
+ type
+-  country_info_typ=
++  country_info_type=
+     packed record
+-      date_format               :smallword;
++      date_format               :SmallWord;
+         //        0 = USA    mm dd yy
+         //        1 = Europe dd mm yy
+         //        2 = Japan  yy mm dd
+-      currency_symbol           :array[0..5-1] of char;
+-      thousands_separator       :array[0..2-1] of char;
+-      decimal_separator         :array[0..2-1] of char;
+-      date_separator            :array[0..2-1] of char;
+-      time_separator            :array[0..2-1] of char;
+-      currency_format           :byte;
++      currency_symbol           :array[0..5-1] of Char;
++      thousands_separator       :array[0..2-1] of Char;
++      decimal_separator         :array[0..2-1] of Char;
++      date_separator            :array[0..2-1] of Char;
++      time_separator            :array[0..2-1] of Char;
++      currency_format           :Byte;
+         //        bit 2 = set if currency symbol replaces decimal point
+         //        bit 1 = number of spaces between value and currency symbol
+         //        bit 0 = 0 if currency symbol precedes value
+@@ -4301,19 +4559,19 @@
+       time_format               :byte;
+         //        bit 0 = 0 if 12-hour clock
+         //                1 if 24-hour clock
+-      address_of_case_map_routine:real_mode_ptr_typ;
++      address_of_case_map_routine:real_mode_ptr_type;
+       data_list_separator       :array[0..1] of char;
+       reserved                  :array[1..10] of byte;
+     end;
+ 
+ var
+-  country_info          :country_info_typ;
++  country_info          :country_info_type;
+ 
+-procedure hole_country_info;
++procedure get_country_info;
+   var
+-    regs                :real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   begin
+-    FillChar(Mem[segdossyslow32],SizeOf(country_info_typ),0);
++    FillChar(Mem[segdossyslow32],SizeOf(country_info_type),0);
+     with regs do
+       begin
+         ax_:=$3800;
+@@ -4321,19 +4579,19 @@
+         dx_:=0;
+         intr_realmode(regs,$21);
+       end;
+-    Move(Mem[segdossyslow32],country_info,SizeOf(country_info_typ));
++    Move(Mem[segdossyslow32],country_info,SizeOf(country_info_type));
+   end;
+ 
+ procedure SysGetCurrencyFormat(CString: PChar; var CFormat, CNegFormat, CDecimals: Byte; var CThousandSep, CDecimalSep: Char);
+   begin
+-    hole_country_info;
++    get_country_info;
+     StrCopy(CString,country_info.currency_symbol);
+     CFormat             :=country_info.currency_format and $3;
+                               // '$1'
+                               // '1$'
+                               // '$ 1'
+                               // '1 $'
+-    case country_info.currency_format and $3 of // nicht vorhanden
++    case country_info.currency_format and $3 of // not available
+       0:CNegFormat      := 3; //  '$1-'
+       1:CNegFormat      := 5; //  '-1$'
+       2:CNegFormat      :=11; //  '$ 1-'
+@@ -4356,7 +4614,7 @@
+ 
+ procedure SysGetDateFormat(var DateSeparator: Char; ShortDateFormat,LongDateFormat: PChar);
+   begin
+-    hole_country_info;
++    get_country_info;
+     DateSeparator:=country_info.date_separator[0];
+     if country_info.date_format>2 then
+       country_info.date_format:=0;
+@@ -4366,7 +4624,7 @@
+ 
+ procedure SysGetTimeFormat(var TimeSeparator: Char; TimeAMString,TimePMString,ShortTimeFormat,LongTimeFormat: PChar);
+   begin
+-    hole_country_info;
++    get_country_info;
+     TimeSeparator:=country_info.time_separator[0];
+     StrCopy(TimeAMString    ,'am');
+     StrCopy(TimePMString    ,'pm');
+@@ -4375,9 +4633,10 @@
+   end;
+ 
+ procedure SysDisplayConsoleError(PopupErrors: Boolean; Title, Msg: PChar);assembler;
+-(*&Frame-*)(*&Uses ALL*)
++  {&Frame-}{&Uses All}
+ 
+-  procedure newline;(*&Frame-*)(*&Uses NONE*)
++  procedure NewLine;
++    {&Frame-}{&Uses None}
+     asm
+       mov al,13
+       int $29
+@@ -4385,7 +4644,8 @@
+       int $29
+     end;
+ 
+-  procedure display_pchar;(*&Frame-*)(*&Uses NONE*)
++  procedure DisplayPChar;
++    {&Frame-}{&Uses None}
+     asm
+     @1:
+       lodsb
+@@ -4399,24 +4659,24 @@
+   asm
+     // could be impoved : PopupErrors is ignored
+ 
+-    call newline
+-    mov esi,title
++    call NewLine
++    mov esi,Title
+     cld
+ 
+-    call display_pchar
+-    call newline
++    call DisplayPChar
++    call NewLine
+     // length of title+1
+     mov ecx,esi
+-    sub ecx,title
++    sub ecx,Title
+     mov al,'='
+   @3:
+     int $29
+     loop @3
+ 
+-    call newline
+-    mov esi,msg
+-    call display_pchar
+-    call newline
++    call NewLine
++    mov esi,Msg
++    call DisplayPChar
++    call NewLine
+   end;
+ 
+ procedure SysDisableHardErrors;
+@@ -4426,7 +4686,7 @@
+ 
+ function SysKillProcess(Process: Longint): Longint;
+   begin
+-    //NOT_IMPLEMENTED
++    // Not Implemented
+     SysKillProcess:=-1;
+   end;
+ 
+@@ -4449,70 +4709,57 @@
+ 
+ function SysAllocSharedMem(Size: Longint; var MemPtr: Pointer): Longint;
+   begin
+-    //NOT_IMPLEMENTED       DPMI 1.0 has shared memory...
++    // Not implemented          DPMI 1.0 has shared memory...
+     SysAllocSharedMem:=-1;
+   end;
+ 
+ function SysGiveSharedMem(MemPtr: Pointer): Longint;
+   begin
+-    //NOT_IMPLEMENTED
++    // Not implemented
+     SysGiveSharedMem:=-1;
+   end;
+ 
+ function SysPipeCreate(var ReadHandle,WriteHandle: Longint; Size: Longint): Longint;
+-  (*$IFDEF PIPE_SUPPORT*)
+-  !
+-  (*$ELSE*)
+   begin
+-    //NOT_IMPLEMENTED
++    // Not implemented
+     SysPipeCreate:=-1;
+   end;
+-  (*$ENDIF*)
+ 
+ function SysPipePeek(Pipe: Longint; Buffer: Pointer; BufSize: Longint; var BytesRead: Longint; var IsClosing: Boolean): Longint;
+-  (*$IFDEF PIPE_SUPPORT*)
+-  !
+-  (*$ELSE*)
+   begin
+-    //NOT_IMPLEMENTED
++    // Not implemented
+     SysPipePeek:=-1;
+   end;
+-  (*$ENDIF*)
+ 
+ function SysPipeClose(Pipe: Longint): Longint;
+-  (*$IFDEF PIPE_SUPPORT*)
+   begin
+-    SysPipeClose:=SysFileClose(Pipe);
+-  end;
+-  (*$ELSE*)
+-  begin
+-    //NOT_IMPLEMENTED
++    // Not implemented
+     SysPipeClose:=-1;
+   end;
+-  (*$ENDIF*)
+ 
+ procedure SysDisplayGUIError(Title, Msg: PChar);
+   begin
+     SysDisplayConsoleError(true,Title,Msg);
+   end;
+ 
+-
+-procedure getdosstack_und_fs;(*&Frame-*)(*&Uses EAX,EBX,EDX*)
++// allocate memory for doing 16:16 real mode things, and for FS:0 Tib emulation
++procedure GetDosStack_and_FS;
++  {&Frame-}{&Uses eax,ebx,edx}
+   asm
+     mov eax,$0100               // DPMI 0.9+ ALLOCATE DOS MEMORY BLOCK
+     mov bx,(4096+100)/16        // in 16 Byte Blocks
+     int $31
+     jnc @1
+ 
+-  @fehler:
++  @error:
+     push 8
+     call _RunError
+     //************
+ 
+   @1:
+     mov segdossyslow16,ax
+-    mov arbeits_dta.seg_,ax
+-    mov arbeits_dta.ofs_,0
++    mov work_dta.seg_,ax
++    mov work_dta.ofs_,0
+ 
+     movzx eax,ax
+     shl eax,4                   // dosseg_linear
+@@ -4523,7 +4770,7 @@
+     mov eax,$0100               // DPMI 0.9+ ALLOCATE DOS MEMORY BLOCK
+     mov bx,2048/16
+     int $31
+-    jc @fehler
++    jc @error
+ 
+     mov real_mode_stack.seg_,ax
+     mov real_mode_stack.ofs_,2048-4
+@@ -4531,16 +4778,17 @@
+ 
+     // Allocate Memory for TIB-Emulation (FS:[0]..)
+     mov eax,$0100
+-    mov bx,4                    // 4*16 Byte sind mehr als genug
++    mov bx,4                    // 4*16 Byte is more than sufficient
+     int $31
+-    jc @fehler
++    jc @error
+ 
+     // -> Selector DX
+     mov sel_fs,dx
+     mov fs,dx
+   end;
+ 
+-procedure untersuche_dos;(*&Frame-*)(*&Uses ALL*)
++procedure Detect_Multitaskers;
++  {&Frame-}{&Uses All}
+   asm
+     mov ax,$2700 // NW/DR-DOS Taskmgr
+     int $2f      // 00->false
+@@ -4554,10 +4802,10 @@
+ 
+   end;
+ 
+-procedure berechne_segmente;assembler;
+-  (*&Frame-*)(*&Uses ALL*)
++procedure Calculate_Segments;assembler;
++  {&Frame-}{&Uses All}
+   var
+-    regs:real_mode_call_structure_typ;
++    regs                :real_mode_call_structure_type;
+   asm
+ 
+ //--    movzx eax,sel_psp   // PSP: SEL->OFS
+@@ -4565,7 +4813,7 @@
+ //--    call protsel_linear
+ //--    mov seg_psp,eax
+ //--
+-//--    movzx eax,smallword [eax+$2c] // ENV= PSP:002c
++//--    movzx eax,SmallWord [eax+$2c] // ENV= PSP:002c
+ //--    push eax
+ //--    call protsel_linear
+ //--    cmp eax,-1
+@@ -4591,7 +4839,7 @@
+ 
+     mov eax,[regs.ebx_]
+     shl eax,4
+-    cmp [eax].smallword,$20cd
++    cmp [eax].SmallWord,$20cd
+     je @valid_psp
+ 
+     push 216                            // RTE_Access_Violation
+@@ -4600,7 +4848,7 @@
+   @valid_psp:
+     mov [seg_psp],eax
+ 
+-    movzx eax,smallword [eax+$2c]       // environment selector= PSP:$002c
++    movzx eax,SmallWord [eax+$2c]       // environment selector= PSP:$002c
+     push eax
+     call protsel_linear
+ 
+@@ -4615,7 +4863,7 @@
+   @invalid_env_sel:                     // causeway+dos+himem.sys ...
+ 
+     mov eax,[seg_psp]
+-    movzx eax,smallword [eax+$2c]       // environment segement = PSP:$002c
++    movzx eax,SmallWord [eax+$2c]       // environment segement = PSP:$002c
+     shl eax,4
+ 
+   @valid_env:
+@@ -4623,7 +4871,8 @@
+ 
+   end;
+ 
+-procedure bestimme_dpmi_version;(*&Frame-*)(*&Uses ALL*)
++procedure Determine_DPMI_Version;
++  {&Frame-}{&Uses All}
+   asm
+     mov eax,$0400
+     int $31
+@@ -4642,11 +4891,12 @@
+   end;
+ 
+ procedure SysLowInitPreTLS;
+-begin
+-  // Nothing
+-end;
++  begin
++    // Nothing
++  end;
+ 
+-procedure SysLowInitPostTLS;assembler;(*&Frame-*)(*&Uses NONE*)
++procedure SysLowInitPostTLS;assembler;
++  {&Frame-}{&Uses None}
+   const
+     stack_push= 4 // push esi
+               + 4 // push eax
+@@ -4655,11 +4905,11 @@
+               + 4;// call System.Initexe
+   asm
+     // query DPMI version and 386/486.. processor
+-    call bestimme_dpmi_version
++    call Determine_DPMI_Version
+ 
+     // get memory in first megabyte for FS:[0] Tib emulation
+     // and for real mode DOS API calls
+-    call getdosstack_und_fs
++    call GetDosStack_and_FS
+ 
+     // initialize TIB-Emulation
+     push eax
+@@ -4689,19 +4939,19 @@
+     pop eax
+ 
+     // calculate some real mode memory locations
+-    call berechne_segmente
++    call Calculate_Segments
+     // prepare SysCmdln,SysCmdlnCount
+-    call berechne_parameter
++    call Setup_Commandline
+     // detect video adapter type
+-    call detect_mdacgaegavga
++    call Detect_MdaCgaEgaVga
+     // for SysCtrlSleep
+-    call calibrate_delayloop
++    call Calibrate_Delayloop
+     // check for Multitaskers
+-    call untersuche_dos
++    call Detect_Multitaskers
+     // install handlers for exceptions and ^C
+-    call installiere_exception_behandlungen
++    call InstallDpmi32Exceptionhandlers
+ 
+-    (*$IFDEF PE2LE_P2*)
++    {$IfDef PE2LE_P2}
+     jmp @ret
+ 
+     //*****************************************************************
+@@ -4722,37 +4972,37 @@
+ 
+       mov esi,'RELO'
+       add esi,edx
+-      push esi          // Ab hier wird spÑter der Speicher gelîscht
++      push esi          // remember starting address of memory area to clean
+ 
+         cld
+         lodsd
+         lea edi,[eax+edx]
+-  @schleife:
++  @relocation_loop:
+         add [edi],edx
+         add edi,4
+ 
+         sub eax,eax
+         lodsb
+ 
+-        // mehr als 253 Byte Unterschied ?
++        // more than 253 bytes difference?
+         cmp al,254
+-        jb @klein
+-        // Ende der RELO-Daten ?
++        jb @small_delta
++        // end of relocation data?
+         // (al=255)
+-        ja  @ende
++        ja @relocations_done
+ 
+         // >253
+         lodsd
+-  @klein:
++  @small_delta:
+         add edi,eax
+-        jmp @schleife
++        jmp @relocation_loop
+ 
+-  @ende:
++  @relocations_done:
+ 
+       pop edi           // FillChar(Mem[edi],ecx,0)
+-      push es           // ES (PSP) sichern
++      push es           // ES (PSP) store
+         push ds
+-        pop es          // ES:=Datenbereich
++        pop es          // ES:=data area
+ 
+         sub eax,eax
+         mov ecx,'VAR0'
+@@ -4764,15 +5014,24 @@
+         rep stosb
+       pop es
+ 
+-      ret               // zum Programmstart
++      ret               // to program entry point
+ 
+-    db '****'           // hier wird eine Fixup auf [1:0] verweisen
+-    db '****'           // mehr Platz damit niemals Åber Seitengrenzen
++    db '****'           // supply a save place for a fixup that points to [1:0]
++    db '****'           // some more space to avoid fixups on a page break.
+ 
+     //
+     //*****************************************************************
+ 
+     @ret:
+-    (*$ENDIF*)
++    {$EndIf PE2LE_P2}
++  end; (* SysLowInitPostTLS *)
++
++function PhysMemAvail: Longint;
++  begin
++  Result := SysMemAvail;
+   end;
+ 
++procedure SysLowInit;
++  begin
++  // Nothing
++  end;

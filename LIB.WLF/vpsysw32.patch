@@ -1,0 +1,1102 @@
+--- vpsysw32.pas	2004-05-07 20:02:38.000000000 +0400
++++ vpsysw32.new	2020-10-27 23:25:17.691933980 +0300
+@@ -7,6 +7,56 @@
+ // |                                                         |
+ // |---------------------------------------------------------|
+ {$DEFINE RouteConsoleToStdInOut}  // !!.kg
++{.$DEFINE AutoKbdUpdateEventQueues}  // Cat:экспериментальный
++{.$DEFINE LazyCurTypeUpdate}  // Cat:экспериментальный
++{Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
++{AK155 = Alexey Korop, 2:261/155@fidonet}
++
++{Cat
++   18-10-2001 - изменил функции работы с Clipboard-ом, теперь
++   вместо описателя данных cf_Text и перекодировок Ansi-Oem
++   используется описатель cf_OemText
++
++   19-10-2001 - теперь используется собственный RecodeCyrillicNames,
++   который должен быть проинициализирован в модуле DnIni
++
++   09-12-2001 - окончательно вычистил загрузку VPKBDW32.DLL;
++   убрал вызовы InitialiseKeyboardHandler из всех мест, кроме
++   InitialiseConsole, вызов которой происходит при инициализации
++   модуля
++
++   10-12-2001 - раньше установка позиции курсора происходила в
++   отдельной нитке, теперь в эту же нитку добавил ещё и изменение
++   вида курсора (SetCurType, GetCurType); идея такая: после запроса
++   на изменение ждём 0.1 секунды перед тем, как на самом деле
++   изменить вид курсора, а если за это время произойдёт ещё один
++   запрос на изменение - старый запрос игнорируем
++}
++{AK155
++   10-01-2002 - изменил функции работы с Clipboard-ом, теперь
++   под WinNT вместо описателя cf_OemText используется cf_UnicodeText
++   и выполняются соответствующие перекодировки. Без этого не удается
++   получить одновременно корректную работу с русскими буквами и
++   с псевдографикой, притом, чтобы взятое в буфер в DN нормально
++   вставлялось и в консоль, и в GUI.
++}
++{Cat
++   20-03-2002 - теперь для получения размера диска и размера
++   свободного места на диске там, где это возможно, используется
++   функция GetDiskFreeSpaceExA. Это нужно для устранения проблемы
++   с неправильным показом этих параметров под Win9x (раньше если
++   размер диска или размер свободного места на диске превышал 2Г,
++   то он показывался равным 2Г)
++
++   13-11-2002 - теперь нараяду с функциями
++      function SysDiskFreeLong(Drive: Byte): TQuad;
++      function SysDiskSizeLong(Drive: Byte): TQuad;
++   существуют их аналоги, работающие не с буквой диска, а с полным путём:
++      function SysDiskFreeLongX(Path: PChar): TQuad;
++      function SysDiskSizeLongX(Path: PChar): TQuad;
++   Это нужно для получения размеров для сетевых путей, а также в случаях,
++   когда один диск подмонтирован в какой-то каталог другого
++}
+ 
+ var
+   SysBufInfo: TConsoleScreenBufferInfo;
+@@ -34,7 +84,20 @@
+   CurXPos:     Longint = -1;  // Internally maintained cursor position
+   CurYPos:     Longint = -1;
+   SysPlatform: Longint = -1;  // Platform ID, from SysPlatformID
+-  SysSpecialKeys: set of Byte = [0, $e0];
++ {SysSpecialKeys: Set of Byte = [0, $e0];}
++  SysSpecialKeys: Set of Byte = [0]; {JO}
++  LastX:       Longint = -1;
++  LastY:       Longint = -1;
++
++
++{$IFDEF LazyCurTypeUpdate}
++  CurTypeY1:   Integer = -1; {Cat}
++  CurTypeY2:   Integer = -1; {Cat}
++  CurTypeShow: Boolean = False; {Cat}
++{$ENDIF}
++{$IFDEF AutoKbdUpdateEventQueues}
++  tidKbdUpdateEventQueues: Longint = -1; {Cat}
++{$ENDIF}
+ 
+ type
+   PStandardCell = ^TStandardCell;
+@@ -47,6 +110,7 @@
+   TKbdUpdateEventQueues = procedure;
+ 
+ const
++(*
+   KbdDllName     = 'VpKbdW32.Dll'; // Name of keyboard handler DLL
+   hKbdDll        : Longint = -1;   // Handle of keyboard DLL
+   name_KbdInit             = 'KbdInit';
+@@ -54,6 +118,9 @@
+ 
+   pKbdInit : TKbdInit = nil;
+   pKbdUpdateEventQueues : TKbdUpdateEventQueues = nil;
++*)
++  pKbdInit : TKbdInit = VpKbdW32.KbdInit; {Cat}
++  pKbdUpdateEventQueues : TKbdUpdateEventQueues = VpKbdW32.KbdUpdateEventQueues; {Cat}
+ 
+ {&StdCall+}
+ const
+@@ -61,7 +128,7 @@
+   // later versions of Win95 and working for 2GB+ disks
+   pGetDiskFreeSpaceEx : function( RootPathName: PChar;
+     var FreeBytesAvailableToCaller, TotalNumberOfBytes: TQuad;
+-    pTotalNumberOfFreeBytes: PQuad ): Bool = nil; // Win95 OSR2+, WinNT40+
++    pTotalNumberOfFreeBytes: PQuad ): Bool = nil;
+ 
+   // Other dynamically loaded Windows APIs.  These are not supported by
+   // OS extenders emulating the Windows API and are loaded dynamically
+@@ -104,6 +171,8 @@
+       @pExitThread := QueryProcAddr('ExitThread', True);
+       @pInitializeCriticalSectionAndSpinCount := QueryProcAddr('InitializeCriticalSectionAndSpinCount', True);
+       @pGetKBCodePage := QueryProcAddr('GetKBCodePage', False);
++      @pIsClipboardFormatAvailable :=
++        QueryProcAddr('IsClipboardFormatAvailable', False);
+       @pOpenClipboard := QueryProcAddr('OpenClipboard', False);
+       @pEmptyClipboard := QueryProcAddr('EmptyClipboard', False);
+       @pCloseClipboard := QueryProcAddr('CloseClipboard', False);
+@@ -119,6 +188,11 @@
+     generic_Read, generic_Write, generic_Read or generic_Write);
+   ShareMode: array[0..4] of Integer = (
+     0, 0, file_share_Read, file_share_Write, file_share_Read or file_share_Write);
++  CacheMode: array[0..3] of Integer = (
++    file_attribute_Normal,      // 0
++    file_Flag_Sequential_Scan,  // open_flags_Sequential
++    file_Flag_Random_Access,    // open_flags_Random
++    file_attribute_Normal);     // open_flags_RandomSequential
+ 
+ function SetResult(Success: Boolean): Longint;
+ begin
+@@ -164,7 +238,7 @@
+   SA.lpSecurityDescriptor := nil;
+   SA.bInheritHandle := True;
+   Handle := CreateFile(FileName, AccessMode[Mode and 3], ShareMode[(Mode and $F0) shr 4],
+-      @SA, APIFlags, file_attribute_Normal, 0);
++      @SA, APIFlags, CacheMode[(Mode and $300) shr 8], 0);
+   Result := SetResult(Handle <> invalid_Handle_Value);
+ end;
+ 
+@@ -176,7 +250,7 @@
+   SA.lpSecurityDescriptor := nil;
+   SA.bInheritHandle := True;
+   Handle := CreateFile(FileName, AccessMode[Mode and 3], ShareMode[(Mode and $F0) shr 4],
+-    @SA, open_Existing, file_attribute_Normal, 0);
++    @SA, open_Existing, CacheMode[(Mode and $300) shr 8], 0);
+   Result := SetResult(Handle <> invalid_Handle_Value);
+ end;
+ 
+@@ -188,7 +262,7 @@
+   SA.lpSecurityDescriptor := nil;
+   SA.bInheritHandle := True;
+   Handle := CreateFile(FileName, AccessMode[Mode and 3], ShareMode[(Mode and $F0) shr 4],
+-    @SA, create_Always, file_attribute_Normal, 0);
++    @SA, create_Always, CacheMode[(Mode and $300) shr 8], 0);
+   Result := SetResult(Handle <> invalid_Handle_Value);
+ end;
+ 
+@@ -197,10 +271,16 @@
+   Result := CopyFile(_Old, _New, not _Overwrite);
+ end;
+ 
+-function SysFileSeek(Handle,Distance,Method: Longint; var Actual: Longint): Longint;
++function SysFileSeek(Handle: Longint;Distance: TFileSize;Method: Longint; var Actual: TFileSize): Longint;
+ begin
++  {$IfDef LargeFileSupport}
++  Actual := Distance;
++  TFileSizeRec(Actual).lo32 := SetFilePointer(Handle, TFileSizeRec(Actual).lo32, @TFileSizeRec(Actual).hi32, Method);
++  Result := SetResult(TFileSizeRec(Actual).lo32 <> $FFFFFFFF);
++  {$Else LargeFileSupport}
+   Actual := SetFilePointer(Handle, Distance, nil, Method);
+   Result := SetResult(Actual <> $FFFFFFFF);
++  {$EndIf LargeFileSupport}
+ end;
+ 
+ function SysFileRead(Handle: Longint; var Buffer; Count: Longint; var Actual: Longint): Longint;
+@@ -229,15 +309,34 @@
+     end;
+ end;
+ 
+-function SysFileSetSize(Handle,NewSize: Longint): Longint;
+-var
+-  CurPos: Longint;
+-begin
+-  CurPos := SetFilePointer(Handle, 0, nil, file_Current);
+-  Result := SetResult((CurPos <> $FFFFFFFF) and
+-    (SetFilePointer(Handle, NewSize, nil, file_Begin) <> $FFFFFFFF) and
+-    SetEndOfFile(Handle) or
+-    (SetFilePointer(Handle, CurPos, nil, file_Begin) <> $FFFFFFFF));
++function SysFileSetSize(Handle: Longint; NewSize: TFileSize): Longint;
++ var
++  CurPos: TFileSize;
++  Actual: TFileSize;
++  rc    : Longint;
++begin
++  // get current position
++  Result := SysFileSeek(Handle, 0, file_Current, CurPos);
++  if Result=0 then
++    begin
++
++      // seek to new size
++      if CurPos <> NewSize then
++        Result := SysFileSeek(Handle, NewSize, file_Begin, Actual);
++
++      // when successful, truncate and update result
++      if Result = 0 then
++        Result := SetResult(SetEndOfFile(Handle));
++
++      // try to restore old file position
++      if CurPos <> NewSize then
++        begin
++          rc := SysFileSeek(Handle, CurPos, file_Begin, Actual);
++          // only when evering else was successful, contribute to result
++          if Result = 0 then
++            Result := rc;
++        end;
++    end;
+ end;
+ 
+ function SysFileClose(Handle: Longint): Longint;
+@@ -277,15 +376,16 @@
+   DriveName: array[0..3] of Char;
+   Buffer: array[0..259] of Char;
+ begin
++  // !! Compiler problem? Result is set by GetCurrentDirectory call!
+   Result := 0;
+   if Drive <> 0 then
+-    begin
+-      DriveName[0] := Chr(Drive + (Ord('A') - 1));
+-      DriveName[1] := ':';
+-      DriveName[2] := #0;
+-      GetCurrentDirectory(SizeOf(Buffer), Buffer);
+-      SetCurrentDirectory(DriveName);
+-    end;
++  begin
++    DriveName[0] := Chr(Drive + (Ord('A') - 1));
++    DriveName[1] := ':';
++    DriveName[2] := #0;
++    GetCurrentDirectory(SizeOf(Buffer), Buffer);
++    SetCurrentDirectory(DriveName);
++  end;
+   GetCurrentDirectory(260, Path);
+   if Drive <> 0 then
+     SetCurrentDirectory(Buffer);
+@@ -316,11 +416,20 @@
+   Status.dwLength := SizeOf(TMemoryStatus);
+   GlobalMemoryStatus(Status);
+   with Status do
+-    begin
+-      Result := dwAvailPhys + dwAvailPageFile;
+-      if Result > dwAvailVirtual then
+-        Result := dwAvailVirtual;
+-    end;
++  begin
++    Result := dwAvailPhys + dwAvailPageFile;
++    if Result > dwAvailVirtual then
++      Result := dwAvailVirtual;
++  end;
++end;
++
++function PhysMemAvail: Longint;  {AK155 20-08-2003}
++var
++  Status: TMemoryStatus;
++begin
++  Status.dwLength := SizeOf(TMemoryStatus);
++  GlobalMemoryStatus(Status);
++  Result := Status.dwAvailPhys;
+ end;
+ 
+ function SysMemAlloc(Size,Flags: Longint; var MemPtr: Pointer): Longint;
+@@ -501,8 +610,9 @@
+   cSysCmdLn: PChar = nil;
+   cSysCmdLnCount: Longint = -1;
+ 
++
+ // Set this define to use the UniCode version for SysCmdln
+-{!$DEFINE SysCmdlnUniCode}
++{$DEFINE SysCmdlnUniCode}
+ 
+ function SysCmdln: PChar;
+ var
+@@ -665,6 +775,8 @@
+   Result := SmallWord(GetVersion);
+ end;
+ 
++{Cat: SysPlatformID хранится в переменной, а содержимое этой функции перенесено в раздел инициализации}
++(*
+ function SysPlatformID: Longint;
+ var
+   OSVersionInfo: TOSVersionInfo;
+@@ -673,6 +785,12 @@
+   GetVersionEx(OSVersionInfo);
+   Result := OSVersionInfo.dwPlatformId;
+ end;
++*)
++function SysPlatformID: Longint;
++begin
++  SysPlatformID := SysPlatform;
++end;
++{/Cat}
+ 
+ procedure SysGetDateTime(Year,Month,Day,DayOfWeek,Hour,Minute,Second,MSec: PLongint);
+ var
+@@ -727,15 +845,13 @@
+   end;
+   LoadWindowsFunctions;
+   if Assigned(pGetDiskFreeSpaceEx) then
+-    begin
+-      if not pGetDiskFreeSpaceEx(RootPtr, Result, TotalAvail, nil ) then
+-        Result := -1
+-    end
++    if pGetDiskFreeSpaceEx(RootPtr, Result, TotalAvail, nil ) then
++      Exit; // Success!
++
++  if GetDiskFreeSpace(RootPtr, SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters) then
++    Result := 1.0 * SectorsPerCluster * BytesPerSector * FreeClusters
+   else
+-    if GetDiskFreeSpace(RootPtr, SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters) then
+-      Result := 1.0 * SectorsPerCluster * BytesPerSector * FreeClusters
+-    else
+-      Result := -1;
++    Result := -1;
+ end;
+ 
+ function SysDiskSizeLong(Drive: Byte): TQuad;
+@@ -756,14 +872,53 @@
+   end;
+   LoadWindowsFunctions;
+   if Assigned(pGetDiskFreeSpaceEx) then
+-    pGetDiskFreeSpaceEx(RootPtr, FreeBytes, Result, nil )
++    if pGetDiskFreeSpaceEx(RootPtr, FreeBytes, Result, nil ) then
++      Exit; // Success!
++
++  if GetDiskFreeSpace(RootPtr, SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters) then
++    Result := 1.0 *SectorsPerCluster * BytesPerSector * TotalClusters
+   else
+-    if GetDiskFreeSpace(RootPtr, SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters) then
+-      Result := 1.0 *SectorsPerCluster * BytesPerSector * TotalClusters
++    Result := -1;
++end;
++
++{Cat}
++function SysDiskFreeLongX(Path: PChar): TQuad;
++var
++  SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters: DWord;
++  AvailableForCaller, Total, Free: TQuad;
++begin
++  LoadWindowsFunctions;
++  if Assigned(pGetDiskFreeSpaceEx) then
++     if pGetDiskFreeSpaceEx(Path, AvailableForCaller, Total, @Free) then
++       Result := Free
++     else
++       Result := -1
++  else
++    if GetDiskFreeSpace(Path, SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters) then
++      Result := 1.0 * SectorsPerCluster * BytesPerSector * FreeClusters
+     else
+       Result := -1;
+ end;
+ 
++function SysDiskSizeLongX(Path: PChar): TQuad;
++var
++  SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters: DWord;
++  AvailableForCaller, Total, Free: TQuad;
++begin
++  LoadWindowsFunctions;
++  if Assigned(pGetDiskFreeSpaceEx) then
++     if pGetDiskFreeSpaceEx(Path, AvailableForCaller, Total, @Free) then
++       Result := Total
++     else
++       Result := -1
++  else
++    if GetDiskFreeSpace(Path, SectorsPerCluster, BytesPerSector, FreeClusters, TotalClusters) then
++      Result := 1.0 * SectorsPerCluster * BytesPerSector * TotalClusters
++    else
++      Result := -1;
++end;
++{/Cat}
++
+ function SysGetFileAttr(FileName: PChar; var Attr: Longint): Longint;
+ begin
+   Attr := GetFileAttributes(FileName);
+@@ -820,7 +975,15 @@
+       end;
+     FileTimeToLocalFileTime(FindData.ftLastWriteTime, LocalFileTime);
+     FileTimeToDosDateTime(LocalFileTime, TDateTimeRec(Time).FDate, TDateTimeRec(Time).FTime);
++    {$IfDef LargeFileSupport}
++    with TFileSizeRec(Size) do
++      begin
++        lo32 := FindData.nFileSizeLow;
++        hi32 := FindData.nFileSizeHigh;
++      end;
++    {$Else LargeFileSupport}
+     Size := FindData.nFileSizeLow;
++    {$EndIf LargeFileSupport}
+     Attr := FindData.dwFileAttributes;
+     if IsPChar then
+       StrCopy(PChar(@Name), FindData.cFileName)
+@@ -898,6 +1061,7 @@
+   I, P, L: Integer;
+   Buffer: array[0..259] of Char;
+ begin
++  // note: check for directory is missing?
+   Result := Dest;
+   StrCopy(Buffer, Name);
+   P := 0;
+@@ -914,11 +1078,26 @@
+     if P >= L then
+       Break;
+     I := P;
+-    while (P < L) and (List[P] <> ';') do
+-      Inc(P);
+-    StrLCopy(Buffer, List + I, P - I);
+-    if not (List[P-1] in [':', '\']) then
+-      StrLCat(Buffer, '\', 259);
++    if (P < l) and (List[P] = '"') then
++      begin
++        Inc(I);
++        Inc(P);
++        Buffer[0] := #0;
++        while (P < L) and (List[P] <> '"') do
++          Inc(P);
++        StrLCopy(Buffer, List + I, P - I);
++        if not (List[P-1] in [':', '\']) then
++          StrLCat(Buffer, '\', 259);
++        Inc(P);
++      end
++    else
++      begin
++        while (P < L) and (List[P] <> ';') do
++          Inc(P);
++        StrLCopy(Buffer, List + I, P - I);
++        if not (List[P-1] in [':', '\']) then
++          StrLCat(Buffer, '\', 259);
++      end;
+     StrLCat(Buffer, Name, 259);
+   end;
+   Dest^ := #0;
+@@ -1001,7 +1180,10 @@
+           PID^ := ProcessInfo.hProcess;
+       end
+     else
+-      WaitForSingleObject(ProcessInfo.hProcess, Infinite);
++      begin
++      hExtCmd := ProcessInfo.hProcess; {AK155: для Killer}
++      WaitForSingleObject(hExtCmd, Infinite);
++      end;
+ end;
+ 
+ function SysExitCode: Longint;
+@@ -1140,20 +1322,48 @@
+   SetConsoleCursorPosition(SysConOut, CurPos);
+ end;
+ 
++{$IFDEF LazyCurTypeUpdate}
++procedure DoSetCurType(Y1,Y2: Integer; Show: Boolean); forward; {Cat}
++{$ENDIF}
++
+ function CursorThreadFunc(P: Pointer): Longint;
++//AK155  LastX, LastY: Longint;
++  {$IFDEF LazyCurTypeUpdate}
+ var
+-  LastX, LastY: Longint;
++  LastCurTypeY1, LastCurTypeY2: Integer;
++  LastCurTypeShow: Boolean;
++  {$ENDIF}
+ begin
+   LastX := -1;
+   LastY := -1;
+   repeat
+-    SemWaitEvent(semCursor, 300);
++    {$IFNDEF LazyCurTypeUpdate}
++    SemWaitEvent(semCursor, {300}Infinite); {AK155
++  С таймаутом 300 при вызове внешней консольной программы курсор
++продолжал управляться этой ниткой, что неправильно и приводило к
++установке курсора в начало строки, даже если вызванная программа
++сделала вывод без перевода строки (например, задала вопрос и ждет
++ответа в той же строке).
++   А зачем нужно 300 - я понять не смог. }
++    {$ENDIF}
+     if (CurXPos <> LastX) or (CurYPos <> LastY) then
+       begin
+         DoSetCursorPosition;
+         LastX := CurXPos;
+         LastY := CurYPos;
+       end;
++    {Cat}
++    {$IFDEF LazyCurTypeUpdate}
++    if not SemWaitEvent(semCursor, 100) then
++      if (CurTypeY1 <> LastCurTypeY1) or (CurTypeY2 <> LastCurTypeY2) or (CurTypeShow <> LastCurTypeShow) then
++        begin
++          DoSetCurType(CurTypeY1, CurTypeY2, CurTypeShow);
++          LastCurTypeY1 := CurTypeY1;
++          LastCurTypeY2 := CurTypeY2;
++          LastCurTypeShow := CurTypeShow;
++        end;
++    {$ENDIF}
++    {/Cat}
+   until tidCursor = -2;
+   tidCursor := -1;
+ end;
+@@ -1165,10 +1375,29 @@
+   SemPostEvent(semCursor);
+   // Update cursor position
+   DoSetCursorPosition;
++
++{$IFDEF AutoKbdUpdateEventQueues}
++  tidKbdUpdateEventQueues := -2; {Cat}
++{$ENDIF}
+ end;
+ 
++{Cat}
++{$IFDEF AutoKbdUpdateEventQueues}
++function KbdUpdateEventQueuesThreadFunc(P: Pointer): Longint;
++begin
++  repeat
++    WaitForSingleObject(SysFileStdIn,10000);
++    pKbdUpdateEventQueues;
++  until tidCursor = -2;
++  tidCursor := -1;
++end;
++{$ENDIF}
++{/Cat}
++
+ procedure InitialiseKeyboardHandler;
+ begin
++{AK155,Cat: ни к чему загружать неизвестно какую VpKbdW32.dll}
++(*
+   if hKbdDll = -1 then // First try - attempt load
+     begin
+       hKbdDll := LoadLibrary(KbdDllName);
+@@ -1179,7 +1408,7 @@
+         end;
+       // If any of the entry points were not found in the DLL, point them
+       // to statically linked default handlers
+-      if not Assigned(pKbdInit) or not Assigned(pKbdUpdateEventQueues) then
++      if not assigned(pKbdInit) or not assigned(pKbdUpdateEventQueues) then
+         begin
+           @pKbdInit := @VpKbdW32.KbdInit;
+           @pKbdUpdateEventQueues := @VpKbdW32.KbdUpdateEventQueues;
+@@ -1188,11 +1417,18 @@
+ 
+       // Check if we're in Russia, cp 866.  If we are, allow key $E0 to be
+       // interpreted as a character
+-      if SysGetCodePage = 866 then
++     {if SysGetCodePage = 866 then}
+         SysSpecialKeys := [0]
+-      else
+-        SysSpecialKeys := [0, $E0];
++     {else
++        SysSpecialKeys := [0, $E0]};
+     end;
++*)
++  pKbdInit(pSysKeyCount, pSysKeyQue, pSysShiftState, pSysMouCount, pSysMouQue);
++
++  {$IFDEF AutoKbdUpdateEventQueues}
++  BeginThread(nil, 16384, KbdUpdateEventQueuesThreadFunc, nil, 0, tidKbdUpdateEventQueues);
++  {$ENDIF}
++{/Cat}
+ end;
+ 
+ procedure InitialiseConsole;
+@@ -1217,21 +1453,25 @@
+     Result := True
+   else
+     begin
+-      InitialiseKeyboardHandler;
++      {InitialiseKeyboardHandler;}
++      {$IFNDEF AutoKbdUpdateEventQueues}
+       pKbdUpdateEventQueues;
++      {$ENDIF}
+       Result := pSysKeyCount^ <> 0;
+     end;
+ end;
+ 
+ function SysPeekKey(Var Ch: Char): Boolean;
+ begin
++  {$IFNDEF AutoKbdUpdateEventQueues}
+   pKbdUpdateEventQueues;
+-  if pSysKeyCount^ > 0 then
++  {$ENDIF}
++  if pSysKeyCount^ = 0 then { Kirill: Change ">" -> "=" }
+     Result := False
+   else
+     begin
+       Result := True;
+-      if Lo(pSysKeyQue^[0].skeKeyCode) in SysSpecialKeys then
++      if Lo(pSysKeyQue^[0].skeKeyCode) in [0{,$E0}] then {JO}
+         Ch := #0
+       else
+         Ch := Chr(Lo(pSysKeyQue^[0].skeKeyCode));
+@@ -1250,14 +1490,16 @@
+     end
+   else
+     begin
+-      InitialiseKeyboardHandler;
++      {InitialiseKeyboardHandler;}
+       repeat
++        {$IFNDEF AutoKbdUpdateEventQueues}
+         pKbdUpdateEventQueues;
++        {$ENDIF}
+         if pSysKeyCount^ = 0 then
+           WaitForSingleObject(SysConIn, infinite);
+       until pSysKeyCount^ <> 0;
+       Dec(pSysKeyCount^);
+-      if Lo(pSysKeyQue^[0].skeKeyCode) in SysSpecialKeys then
++      if Lo(pSysKeyQue^[0].skeKeyCode) in [0{,$E0}] then {JO}
+         begin
+           CrtScanCode := Hi(pSysKeyQue^[0].skeKeyCode);
+           Result := #0;
+@@ -1270,7 +1512,7 @@
+ 
+ procedure SysFlushKeyBuf;
+ begin
+-  InitialiseKeyboardHandler;
++  {InitialiseKeyboardHandler;}
+   CrtScanCode := 0;
+   pSysKeyCount^ := 0;
+   FlushConsoleInputBuffer(SysConIn);
+@@ -1366,8 +1608,8 @@
+   Fill: TWin32Cell;
+   i: Integer;
+ begin
+-  if SysPlatform = -1 then
+-    SysPlatform := SysPlatformID;
++  {if SysPlatform = -1 then
++    SysPlatform := SysPlatformID;}
+   Fill.ch := Lo(Cell);
+   Fill.Attr := Hi( Cell );
+   ScrollRect.Left := X1;
+@@ -1453,8 +1695,10 @@
+ 
+ function SysTVGetMouseEvent(var Event: TSysMouseEvent): Boolean;
+ begin
+-  InitialiseKeyboardHandler;
++  {InitialiseKeyboardHandler;}
++  {$IFNDEF AutoKbdUpdateEventQueues}
+   pKbdUpdateEventQueues;
++  {$ENDIF}
+   if pSysMouCount^ = 0 then
+     Result := False
+   else
+@@ -1473,8 +1717,10 @@
+ 
+ function SysTVGetKeyEvent(var Event: TSysKeyEvent): Boolean;
+ begin
+-  InitialiseKeyboardHandler;
++  {InitialiseKeyboardHandler;}
++  {$IFNDEF AutoKbdUpdateEventQueues}
+   pKbdUpdateEventQueues;
++  {$ENDIF}
+   if pSysKeyCount^ = 0 then
+     Result := False
+   else
+@@ -1488,8 +1734,10 @@
+ 
+ function SysTVPeekKeyEvent(var Event: TSysKeyEvent): Boolean;
+ begin
+-  InitialiseKeyboardHandler;
++  {InitialiseKeyboardHandler;}
++  {$IFNDEF AutoKbdUpdateEventQueues}
+   pKbdUpdateEventQueues;
++  {$ENDIF}
+   if pSysKeyCount^ = 0 then
+     Result := False
+   else
+@@ -1501,7 +1749,7 @@
+ 
+ function SysTVGetShiftState: Byte;
+ begin
+-  InitialiseKeyboardHandler;
++  {InitialiseKeyboardHandler;}
+   Result := pSysShiftState^;
+ end;
+ 
+@@ -1509,6 +1757,7 @@
+ var
+   CurPos: TCoord;
+ begin
++  if (CurXPos = X) and (CurYPos = Y) then Exit; {KV}
+   CurXPos := X;
+   CurYPos := Y;
+   {$IFDEF RouteConsoleToStdInOut}
+@@ -1521,9 +1770,58 @@
+     // Record cursor position; tell cursor thread to update
+     SemPostEvent(semCursor);
+   {$ENDIF}
++  WaitForSingleObjectEx(SysConOut,16,true); {KV}
++end;
++
++{Cat}
++{$IFDEF LazyCurTypeUpdate}
++procedure DoSetCurType(Y1,Y2: Integer; Show: Boolean);
++var
++  Info: TConsoleCursorInfo;
++begin
++  Info.bVisible := Show;
++  if Abs(Y1 - Y2) <= 1 then
++    Info.dwSize := 15
++  else
++    Info.dwSize := 99;
++  SetConsoleCursorInfo(SysConOut, Info);
++end;
++
++procedure DoGetCurType(var Y1,Y2: Integer; var Visible: Boolean);
++var
++  Info: TConsoleCursorInfo;
++begin
++  GetConsoleCursorInfo(SysConOut, Info);
++  Visible := Info.bVisible;
++  if Info.dwSize <= 25 then
++    begin
++      Y1 := 6;
++      Y2 := 7;
++    end
++  else
++    begin
++      Y1 := 1;
++      Y2 := 7;
++    end;
+ end;
+ 
+ procedure SysTVSetCurType(Y1,Y2: Integer; Show: Boolean);
++begin
++  CurTypeY1 := Y1;
++  CurTypeY2 := Y2;
++  CurTypeShow := Show;
++  SemPostEvent(semCursor);
++end;
++
++procedure SysTVGetCurType(var Y1,Y2: Integer; var Visible: Boolean);
++begin
++  Y1 := CurTypeY1;
++  Y2 := CurTypeY2;
++  Visible := CurTypeShow;
++end;
++{$ELSE}
++{/Cat}
++procedure SysTVSetCurType(Y1,Y2: Integer; Show: Boolean);
+ var
+   Info: TConsoleCursorInfo;
+ begin
+@@ -1552,6 +1850,7 @@
+       Y2 := 7;
+     end;
+ end;
++{$ENDIF}
+ 
+ procedure WriteConsoleLine(X,Y: Integer; Len: Integer);
+ var
+@@ -1722,10 +2021,28 @@
+     end;
+ end;
+ 
++{AK155 После вызова внешней программы реальное положение курсора
++может не соответствовать LastX, LastX, которые занесены ниткой
++курсора. Поэтому осторожнее будет запросить положение курсора у
++системы и привести переменные в соответствие с реезультатом.
++Прямой или косвенный вызов SysTVInitCursor должен быть после
++любого вызова внешней программы.  }
+ procedure SysTVInitCursor;
++var
++  b: boolean;
++  sbi: TConsoleScreenBufferInfo;
+ begin
++if GetConsoleScreenBufferInfo(SysConOut, sbi) then
++  begin
++  CurXPos := sbi.dwCursorPosition.x;
++  LastX := CurXPos;
++  CurYPos := sbi.dwCursorPosition.y;
++  LastY := CurYPos;
++  end;
++(*
+   if SysConIn = -1 then
+     InitialiseConsole;
++*)
+ end;
+ 
+ procedure SysTvDoneCursor;
+@@ -1883,8 +2200,8 @@
+   end;
+ 
+ begin
+-  if SysPlatform = -1 then
+-    SysPlatform := SysPlatformID;
++  {if SysPlatform = -1 then
++    SysPlatform := SysPlatformID;}
+   SysFileExpand(Dest, Name);
+   if (UpCase(Dest[0]) in ['A'..'Z']) and (Dest[1] = ':') and (Dest[2] = '\') then
+     GetUNCPath(Dest);
+@@ -2054,6 +2371,11 @@
+   Result := 'C';
+ end;
+ 
++//JO: 24-06-2004 - the function is changed to determine
++//    the drive type without access to this drive (using DosDevIOCtl)
++//JO: не рекомендуется использовать функцию SysGetDriveType
++//    в исходниках DN/2; желательно использовать вместо неё
++//    функцию GetDriveTypeNew из модуля FlTl
+ function SysGetDriveType(Drive: Char): TDriveType;
+ const
+   Root: Array[0..4] of char = 'C:\'#0;
+@@ -2064,35 +2386,42 @@
+ begin
+   Root[0] := Drive;
+   Result := dtInvalid;
+-  if GetVolumeInformation(Root, nil, 0, nil, MaxLength, FSFlags, FSName, sizeof(FSName)) then
+-    begin
+-      if StrLComp(FSName, 'FAT', 3) = 0 then
+-        Result := dtHDFAT
+-      else if StrComp(FSName, 'HPFS') = 0 then
+-        Result := dtHDHPFS
+-      else if StrComp(FSName, 'NTFS') = 0 then
+-        Result := dtHDNTFS
+-      else if StrLComp(FSName, 'CD', 2) = 0 then
+-        Result := dtCDROM
+-      else if StrComp(FSName, 'LAN') = 0 then
+-        Result := dtLan
+-      else if StrComp(FSName, 'NOVELL') = 0 then
+-        Result := dtNovellNet;
+-    end;
++{JO: сначала проверяем тип устройства через GetDriveType, и только после }
++{    этого, если оказалось что оно не Removable, есть смысл проверять ФС }
++  case GetDriveType(Root) of
++    Drive_Fixed     : Result := dtHDFAT;
++    Drive_Removable : Result := dtFloppy;
++    Drive_CDRom     : Result := dtCDROM;
++    Drive_Remote    : Result := dtLAN;
++    0, 1            : Result := dtInvalid;
++  else                Result := dtUnknown;
++  end;
++  if (Result <> dtFloppy) and (Result <> dtCDRom) and (Result <> dtLan) then
++    {KV: Если диск сетевой и в данный момент не подключен - будет задержка }
++    {    при вызове GetVolumeInformation. Поэтому добавил Result <> tLan  }
++    if GetVolumeInformation(Root, nil, 0, nil, MaxLength, FSFlags, FSName, sizeof(FSName)) then
++      begin
++        if StrLComp(FSName, 'FAT', 3) = 0 then
++          Result := dtHDFAT
++        else if StrComp(FSName, 'HPFS') = 0 then
++          Result := dtHDHPFS
++        else if StrComp(FSName, 'NTFS') = 0 then
++          Result := dtHDNTFS
++        else if StrLComp(FSName, 'CD', 2) = 0 then
++          Result := dtCDROM
++        else if StrComp(FSName, 'LAN') = 0 then
++          Result := dtLan
++        else if StrComp(FSName, 'NOVELL') = 0 then
++          Result := dtNovellNet
++        else Result := dtUnknown;
++      end;
+ 
++  {KV: Данная проверка больше не нужна, так как для сетевых дисков
++       теперь не вызывается GetVolumeInformation
+   if Result = dtHDNTFS then // Fix network drive detection in Win2k/XP
+     if GetDriveType(Root) = Drive_Remote then
+       Result := dtLAN;
+-
+-  if Result = dtInvalid then
+-    case GetDriveType(Root) of
+-      Drive_Fixed     : Result := dtHDFAT;
+-      Drive_Removable : Result := dtFloppy;
+-      Drive_CDRom     : Result := dtCDROM;
+-      Drive_Remote    : Result := dtLAN;
+-      0, 1            : Result := dtInvalid;
+-    else                Result := dtUnknown;
+-    end;
++  }
+ end;
+ 
+ function SysGetVideoModeInfo( Var Cols, Rows, Colours : Word ): Boolean;
+@@ -2122,16 +2451,35 @@
+ var
+   Size: TCoord;
+   R: TSmallRect;
++  Res1: boolean;
++  SrcSize: TSysPoint;
+ begin
++  SysTVGetScrMode(@SrcSize, true);
+   SysTVInitCursor;
+   Size.X := Cols;
+   Size.Y := Rows;
+-  Result := SetConsoleScreenBufferSize(SysConOut, Size);
++  Res1 := SetConsoleScreenBufferSize(SysConOut, Size);
++    {Этот вызов может быть неудачным, если текущий экран не
++     помещается в новый буфер (при уменьшении размера экрана).
++     В этом случае надо будет еще раз сделать установку размера
++     буфера после установки размера экрана.}
+   R.Left   := 0;
+   R.Top    := 0;
+   R.Right  := Size.X - 1;
+   R.Bottom := Size.Y - 1;
+   Result := SetConsoleWindowInfo(SysConOut, True, R);
++  if Result and not Res1 then
++   begin
++    Result := SetConsoleScreenBufferSize(SysConOut, Size);
++    if not Result then
++      begin
++        R.Left   := 0;
++        R.Top    := 0;
++        R.Right  := SrcSize.X - 1;
++        R.Bottom := SrcSize.Y - 1;
++        SetConsoleWindowInfo(SysConOut, True, R);
++      end;
++   end;
+ end;
+ 
+ function SemCreateEvent(_Name: pChar; _Shared, _State: Boolean): TSemHandle;
+@@ -2291,17 +2639,21 @@
+   MessageBox( 0, _Msg, _Title, Flag or mb_ApplModal);
+ end;
+ 
++var
++  ClipFormat: longint;
++
+ function SysClipCanPaste: Boolean;
+ begin
+   LoadWindowsFunctions;
+   Result := Assigned(pIsClipboardFormatAvailable);
+   if Result then
+-    Result := pIsClipboardFormatAvailable(cf_Text);
++    Result := IsClipboardFormatAvailable(ClipFormat)
+ end;
+ 
+ function SysClipCopy(P: PChar; Size: Longint): Boolean;
+ var
+-  Q: pChar;
++  Q: pChar; {Под NT - LPWSTR}
++  MSize: longint;
+   MemHandle: HGlobal;
+ begin
+   LoadWindowsFunctions;
+@@ -2314,45 +2666,113 @@
+         begin
+           pEmptyClipboard;
+           // Allocate a shared block of memory
+-          MemHandle := GlobalAlloc(gmem_Moveable or gmem_DDEShare, Size+1);
++          MSize := Size+1;
++          if SysPlatform <> 1{Win 9x} then
++            MSize := 2*MSize; {for unicode string}
++          MemHandle := GlobalAlloc(gmem_Moveable or gmem_DDEShare, MSize);
+           Q := GlobalLock(MemHandle);
+-          // Copy clipboard data across and translate to ANSI charset
+-          if not AreFileApisANSI then
+-            Result := OemToCharBuff(P, Q, Size);
+-          Q[Size]:=#0;
++          Result := Q <> nil;
++          if Result then
++            begin // Copy clipboard data across
++            if SysPlatform = 1{Win 9x} then
++              move(P^, Q^, MSize)
++            else
++              begin // Copy clipboard data across and translate to unicode
++              MSize := MultiByteToWideChar(CP_OEMCP, 0,
++                 P, -1,    LPWSTR(Q), Size+1);
++              Result := MSize <> 0;
++              end;
++            end;
+           GlobalUnlock(MemHandle);
+           // Insert data into clipboard
+           if Result then
+-            Result := pSetClipboardData(cf_Text, MemHandle) <> 0;
++            Result := pSetClipboardData(ClipFormat, MemHandle) <> 0;
+           // Do not free memory: Windows does this!
+           // GlobalFree(MemHandle);
+-          pCloseClipboard;
++
++    {AK155 14/05/2002
++    Без нижеследующего заклинания русские буквы превращаются в вопросики
++    при вставке в Delphi или MS VC или в написанной на них программе.
++    Интересно, какая локаль им мерещится вместо LOCALE_SYSTEM_DEFAULT?
++    }
++          if Result and (SysPlatform <> 1) then
++            begin
++            MemHandle := GlobalAlloc(gmem_Moveable or gmem_DDEShare, 8);
++            Q := GlobalLock(MemHandle);
++            Result := Q <> nil;
++            if Result then
++              begin
++              PDWORD(Q)^ := LOCALE_SYSTEM_DEFAULT;
++              GlobalUnlock(MemHandle);
++              Result := pSetClipboardData(CF_LOCALE, MemHandle) <> 0;
++              end;
++            end;
+         end;
+-    end;
++    pCloseClipboard;
++  end;
+ end;
+ 
+ function SysClipPaste(var Size: Integer): Pointer;
+ var
+   P: Pointer;
++  ActualClipFormat: UINT;
+   MemHandle: HGlobal;
+ begin
+   Result := nil;
+-  LoadWindowsFunctions;
+-  if Assigned(pOpenClipboard) and Assigned(pCloseClipboard) and Assigned(pGetClipboardData) then
++  if Assigned(pOpenClipboard) and Assigned(pCloseClipboard)
++    and Assigned(pGetClipboardData) then
+   begin
+     if pOpenClipboard(0) then
+     begin
+-      MemHandle := pGetClipboardData(cf_Text);
++{AK155 14/05/2002
++  Оказалось, что некоторые символы (например, номер) криво перекодируются
++из ANSI хоть в OEM, хоть в юникод, если в буфер данные клал Delphi или
++MS VC или написанная на них программа. Но, к счастью они кладут в буфер
++первым пакетом прямо текст ANSI, так что если, как положено, использовать
++первый же текстовый формат, то получается нормально. Цикл перебора
++форматов нужен для пропуска CF_LOCALE.
++}
++      ActualClipFormat := 0;
++      while true do
++      begin
++        ActualClipFormat := EnumClipboardFormats(ActualClipFormat);
++        case ActualClipFormat of
++         CF_UNICODETEXT:
++          break;
++         CF_OEMTEXT:
++          break;
++         CF_TEXT:
++          break;
++        end {case};
++      end;
++      MemHandle := pGetClipboardData(ActualClipFormat);
+       P := GlobalLock(MemHandle);
+       if Assigned(P) then
+       begin
+-        Size := StrLen(P) + 1;
+-        GetMem(Result, Size);
+-        // Copy clipboard data across and translate to OEM charset
+-        if not AreFileApisANSI then
+-          CharToOemBuff(P, Result, Size)
+-        else
++        case ActualClipFormat of
++         CF_UNICODETEXT:
++          begin
++          Size := WideCharToMultiByte(
++              CP_OEMCP, 0, P, -1, nil, 0, nil, nil);
++          GetMem(Result, Size);
++          WideCharToMultiByte(
++              CP_OEMCP, 0, P, -1, Result, Size, nil, nil);
++          end;
++         CF_OEMTEXT:
++          begin
++          Size := StrLen(P) + 1;
++          GetMem(Result, Size);
+           Move(P^, Result^, Size);
++          end;
++         CF_TEXT:
++          begin
++          Size := StrLen(P) + 1;
++          GetMem(Result, Size);
++          CharToOem(P, Result);
++          end;
++        end {case};
++
++
+       end;
+       GlobalUnlock(MemHandle);
+       pCloseClipBoard;
+@@ -2438,13 +2858,37 @@
+ 
+ end; // procedure SetConsoleOEMState
+ 
+-procedure SysLowInitPreTLS;
++procedure SysLowInit;
++var
++  OSVersionInfo: TOSVersionInfo;
+ begin
+-  // Nothing
++  {Cat}
++  OSVersionInfo.dwOSVersionInfoSize := SizeOf(OSVersionInfo);
++  GetVersionEx(OSVersionInfo);
++  SysPlatform := OSVersionInfo.dwPlatformId;
++
++  {WriteLn('Platform Id = ',OSVersionInfo.dwPlatformId,',  Build Number = ',OSVersionInfo.dwBuildNumber,',  GetDiskFreeSpaceExA loaded = ',Assigned(GetDiskFreeSpaceEx));}
++  {/Cat}
++
++  InitialiseConsole; {Cat}
++  SysPlatform := SysPlatformID; {AK155 делаем это безусловно и в одном месте}
++  if SysPlatform = 1{Win 9x} then
++    ClipFormat := cf_OemText
++  else
++    ClipFormat := cf_UnicodeText;
++  if IsConsole then
++    SetFileApisToOEM
++  else
++    SetFileApisToAnsi;
+ end;
+ 
+-procedure SysLowInitPostTLS;
++procedure SysLowInitPreTLS;
+ begin
+-  SetConsoleOEMState;
++  // Nothing
+ end;
+ 
++procedure SysLowInitPostTLS; {for 2.1 build 279 and later}
++  begin
++  SetConsoleOEMState;
++  SysLowInit;
++  end;
