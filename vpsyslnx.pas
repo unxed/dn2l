@@ -22,7 +22,7 @@ procedure TrmDone;    forward;
 procedure SuspendTrm; forward;
 procedure ResumeTrm;  forward;
 
-//±±±±±±±±±±±±±±[ DATE/TIME CONVERSION FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±
+//--------------[ DATE/TIME CONVERSION FUNCTIONS ]--------------------
 
 const
   // The number of seconds in a day.
@@ -235,7 +235,7 @@ begin
   end;
 end;
 
-//±±±±±±±±±±±±±±[ FILENAME CONVERSION FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±
+//--------------[ FILENAME CONVERSION FUNCTIONS ]---------------------
 
 
 type
@@ -311,7 +311,7 @@ begin
   Result := True;
 end;
 
-//±±±±±±±±±±±±±±[ OTHER HELPER FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ OTHER HELPER FUNCTIONS ]----------------------------
 
 procedure Unimplemented(const S: string);
   var
@@ -334,7 +334,7 @@ procedure Internal_Error(const S: string);
   end;
 
 
-//±±±±±±±±±±±±±±[ BASIC FILE FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ BASIC FILE FUNCTIONS ]------------------------------
 
 // Please refer to the online help for VpSysLow for details
 
@@ -724,7 +724,7 @@ begin
   Result := LnxRmDir(Path);
 end;
 
-//±±±±±±±±±±±±±±[ MEMORY MANAGEMENT ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ MEMORY MANAGEMENT ]---------------------------------
 
 // Memory management stuff. Since the Linux munmap call needs to
 // know the size of the block to be disposed, but Virtual Pascal
@@ -909,7 +909,7 @@ begin
   Result := 2;
 end;
 
-//±±±±±±±±±±±±±±[ THREAD MANAGEMENT ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ THREAD MANAGEMENT ]---------------------------------
 
 // Since Linux does not have thread IDs starting from 1, but
 // assigns each thread a unique process ID instead, we need
@@ -1294,7 +1294,7 @@ begin
   Unimplemented('SysCtrlLeaveCritSec');
 end;
 
-//±±±±±±±±±±±±±±[ ENVIRONMENT ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ ENVIRONMENT ]---------------------------------------
 
 type
   TPCharArray = array[0..1023] of PChar;
@@ -1447,7 +1447,7 @@ begin
   LnxSetTimeOfDay(TimeVal, TimeZone);
 end;
 
-//±±±±±±±±±±±±±±[ DISK FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ DISK FUNCTIONS ]------------------------------------
 
 const
   VerifyFlag: Boolean = False;
@@ -2158,7 +2158,7 @@ begin
   Result := (ExecResult shr 8) or (Lo(ExecResult) shl 24)
 end;
 
-//±±±±±±±±±±±±±±[ STRING HANDLING ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ STRING HANDLING ]-----------------------------------
 
 type
   TCharCaseTable = array[0..255] of Char;
@@ -2319,7 +2319,7 @@ begin
   Result := 0;
 end;
 
-//±±±±±±±±±±±±±±[ SCREEN AND KEYBOARD ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ SCREEN AND KEYBOARD ]-------------------------------
 
 var
   // Terminal in/out handle
@@ -4323,7 +4323,7 @@ begin
   SysSetVideoMode:=(Cols=ScrWidth) and (Rows=ScrHeight);
 end;
 
-//±±±±±±±±±±±±±±[ SEMPAHORE FUNCTIONS ]±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//--------------[ SEMPAHORE FUNCTIONS ]-------------------------------
 
 type
   sem_types             =(sem_mutex,sem_event);
