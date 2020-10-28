@@ -11,7 +11,7 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 
 ### How to build with IDE?
 
-1. Copy vp*.* from dn2l_tryouts/vp directory (it should be created by init.sh) to dn2l_tryouts/dn2l directory (confirm overwriting existing files if asked)
+1. Copy vp*.* from dn2l_tryouts/vp folder (it should be created by init.sh) to dn2l_tryouts/dn2l folder (confirm overwriting existing files if asked)
 2. cd dn2l_tryouts/dn2l
 3. chmod +x vp
 4. mkdir out.lnx
