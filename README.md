@@ -16,7 +16,7 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 3. `chmod +x dn2l_tryouts/dn2l/vp`
 4. `mkdir -p dn2l_tryouts/dn2l/out.lnx/units`
 5. `cd dn2l_tryouts/dn2l`
-6. run `./vp`
+6. Run `./vp`
 7. Go to `Options`-`Compiler`-`Unit aliases` and remove `;Messages=Windows`
 8. Go to `Options`-`Directories` and replace `{BASEDIR}` with `.` in `Output directory` and `Exe output directory`
 9. Open `dn.pas`, `Compile`-`Build` (it generates .exe, don't be surprised, it has linux binary code inside)
