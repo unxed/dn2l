@@ -30,7 +30,7 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 
 ### Licensing and legal notices
 
-License: modified BSD with a separate exception prohibiting re-licensing under another license, including, but not limited to, GPL. See LICENSE.txt for full text.
+License: modified BSD with an exception prohibiting re-licensing under another license, including, but not limited to, GPL. See LICENSE.txt for full text.
 
 Currently dn2l is built using freeware Virtual Pascal compiler obtained from old-dos.ru (big thanks, old-dos.ru team!). It is redistributed with dn2l in it's original unmodified form as permitted by license agreement. See vp_dist/LICENCE.TXT for more information on Virtual Pascal distribution terms.
 
