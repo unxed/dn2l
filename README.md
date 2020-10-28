@@ -41,7 +41,7 @@ The original version of the source code taken from DN open source project (dnosp
 
 The main developer of dn2 is not sure about exact licensing terms for the DN code changes that were made by the DN OSP team (including the listed patches). Some of them do not belong to the original DN source code files published by Ritlabs and do not contain any licensing information inside. He assumes the distribution terms for that code can be considered to be the same as for the entire project, since this code was written specifically for this project and was distributed in the same archive with it.
 
-dn2l also contains "English.DLG" and "English.LNG " resouce files. Those files should be generated using rcp.pas from config files in RESOURCE folder, but rcp.pas is currently broken, so ready to use resource files are taken from DN binary distribution. The source scripts for those files are licensed under the same condition as entire DN.
+dn2l also contains "English.DLG" and "English.LNG " resouce files. Those files should be generated using rcp.pas from config files in RESOURCE folder, but rcp.pas is currently broken, so ready to use resource files are taken from DN binary distribution. The source scripts for those files are licensed under the same conditions as entire DN.
 
 ### Acknowledgments
 
