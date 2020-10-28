@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 patch -N sysutils.pas sysutils.patch
 patch -N vpsyslnx.pas vpsyslnx.patch
 if [ ! -f version.inc ]; then
