@@ -33,6 +33,7 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 - Some parts that are failing are commented out for now. You can search code by string "by unxed" to find out such disabled code paths if whishing to fix some of them.
 - If you plan to try building dn2l with Free Pascal Compiler, don't forget to use -Sd switch and to add {$asmMode intel} directive to all files with assembly code. Also FPC does not supports "inline" functions having body before "implementation" part of a unit, AFAIK.
 - dn2l internal screen rendering code currently supports only one-byte-per-character charsets (it is hardcoded cp866 for now, see vpsyslnx.patch). To switch to UTF-8 we possibly should move from "Char" to "array[0..3] of Char" in TScrCell structure defined in vpsyslnx.pas, change PScrBuffer/TScrBuffer (and other screen buffer arrays, you can search for "TAWordArray(" to find some) definitions also, and rewrite all code that works with such buffers as arrays of Words (don't forget about assembly code inside views.vp and drivers.vp; we probably should consider rewriting all such assembly parts in Pascal as it also simplifies porting to FPC).
+- Avoid removing currently unused code. Code paths for Win32/OS2/DPMI support may be commented out if they prevent linux port from working, but should stay in code base for someone wanting to make dn2l cross platform someday.
 
 ### Licensing and legal notices
 
