@@ -17,9 +17,9 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 4. `mkdir -p dn2l_tryouts/dn2l/out.lnx/units`
 5. `cd dn2l_tryouts/dn2l`
 6. run `./vp`
-7. Go to "`Options`"-"`Compiler`"-"`Unit aliases`" and remove "`;Messages=Windows`"
-8. Go to "`Options`"-"`Directories`" and replace "`{BASEDIR}`" with "`.`" in "`Output directory`" and "`Exe output directory`"
-9. Open "`dn.pas`", "`Compile`"-"`Build`"
+7. Go to `Options`-`Compiler`-`Unit aliases` and remove `;Messages=Windows`
+8. Go to `Options`-`Directories` and replace `{BASEDIR}` with `.` in `Output directory` and `Exe output directory`
+9. Open `dn.pas`, `Compile`-`Build`
 10. You will need to run `pe2elf` from `dn2l_tryouts/vp` on `dn2l_tryouts/dn2l/out.lnx/dn.exe` to get executable ELF file for linux, don't forget to do `chmod +x` on it
 
 ### Possible further improvements (no concrete plans on it all, though)
