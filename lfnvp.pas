@@ -188,36 +188,11 @@ procedure lResetFile(var F: lFile; RecSize: Word);
 procedure lResetFileReadOnly(var F: lFile; RecSize: Word);
 procedure lReWriteFile(var F: lFile; RecSize: Word);
 procedure lResetText(var F: lText);
-  inline;
-  begin
-  Reset(F.T)
-  end;
 procedure lResetTextReadOnly(var F: lText);
 procedure lRewriteText(var F: lText);
 procedure lAppendText(var T: lText);
-  inline;
-  begin
-  Append(T.T);
-  end;
 procedure lEraseFile(var F: lFile);
-{$IFNDEF DPMI32}
-  inline;
-  begin
-  Erase(F.F);
-  if IOResult <> 0 then
-    begin
-      // fixme?
-      // writeln('can not delete file, see lEraseFile');
-    end;
-  end;
-{$ENDIF}
 procedure lEraseText(var T: lText);
-{$IFNDEF DPMI32}
-  inline;
-  begin
-  Erase(T.T);
-  end;
-{$ENDIF}
 procedure lRenameFile(var F: lFile; const NewName: String);
 procedure lRenameText(var T: lText; const NewName: String);
 procedure lChangeFileName(const Name, NewName: String);
@@ -286,6 +261,30 @@ uses
   {$IFDEF DPMI32} ,Startup ,Dpmi32 ,Dpmi32df {$ENDIF}
   , fnotify
   ;
+
+procedure lResetText(var F: lText);
+  begin
+  Reset(F.T)
+  end;
+procedure lAppendText(var T: lText);
+  begin
+  Append(T.T);
+  end;
+{$IFNDEF DPMI32}
+procedure lEraseFile(var F: lFile);
+  begin
+  Erase(F.F);
+  if IOResult <> 0 then
+    begin
+      // fixme?
+      // writeln('can not delete file, see lEraseFile');
+    end;
+  end;
+procedure lEraseText(var T: lText);
+  begin
+  Erase(T.T);
+  end;
+{$ENDIF}
 
 function StrPas_(S: array of Char): String;
   var
