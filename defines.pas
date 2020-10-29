@@ -5,6 +5,7 @@ unit Defines;
 interface
 
 uses
+  use32,
   VpSysLow
   ;
 

@@ -1,3 +1,6 @@
+{$asmMode intel}
+{$MODE DELPHI}
+
 {VPSysLow extension unit by Jaroslaw Osadtchiy (JO) <2:5030/1082.53>}
 {Modified for compatibility with DPMI32 by Aleksej Kozlov (Cat) <2:5030/1326.13>}
 {Contribution to Dos Navigator /2 OSP project}
@@ -9,13 +12,53 @@ unit VPSysLo2;
 interface
 
 uses
+  BaseUnix,Unix,UnixType,
+  use32,
   Linux,
   VpSysLow
   {$IFDEF OS2}, Os2Def, Os2Base {$Undef KeyDll} {$ENDIF}
   {$IFDEF WIN32}, Windows, VpKbdW32 {$ENDIF}
   ;
 
+// by unxed
+type
+  TQuad = Comp;
+  PQuad = ^TQuad;
+  TSemHandle = Longint;
+
 function SysTVGetShiftState2: Byte;
+
+// by unxed
+type
+  TOSSearchRec = packed record
+    Handle: Longint;
+    NameLStr: Pointer;
+    Attr: Byte;
+    Time: Longint;
+    Size: Longint;
+    Name: ShortString;
+    Filler: array[0..3] of Char;
+{$IFDEF WIN32}
+    ExcludeAttr: Longint;
+    FindData:    TWin32FindData;
+{$ENDIF}
+{$IFDEF DPMI32}
+    attr_must:byte;
+    dos_dta:
+      record
+        Fill: array[1..21] of Byte;
+        Attr: Byte;
+        Time: Longint;
+        Size: Longint;
+        Name: array[0..12] of Char;
+      end;
+{$ENDIF}
+{$IFDEF LINUX}
+    FindDir:  array[0..255] of Char;
+    FindName: ShortString;
+    FindAttr: LongInt;
+{$ENDIF}
+  end;
 
 type
   POSSearchRec = ^TOSSearchRec;
@@ -100,20 +143,20 @@ function SysFindFirstNew(Path: PChar; Attr: LongInt;
 // fixme: stub by unxed (non-dpmi)
 {-$IFDEF DPMI32}
   begin
-  SysFindFirstNew := SysFindFirst(Path, Attr, POSSearchRec(@F)^, IsPChar)
+//  SysFindFirstNew := SysFindFirst(Path, Attr, POSSearchRec(@F)^, IsPChar)
     ;
   end; {-$ENDIF}
 function SysFindNextNew(var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
 // fixme: stub by unxed (non-dpmi)
 {-$IFDEF DPMI32}
   begin
-  SysFindNextNew := SysFindNext(POSSearchRec(@F)^, IsPChar);
+//  SysFindNextNew := SysFindNext(POSSearchRec(@F)^, IsPChar);
   end; {-$ENDIF}
 function SysFindCloseNew(var F: TOSSearchRecNew): LongInt;
 // fixme: stub by unxed (non-dpmi)
 {-$IFDEF DPMI32}
   begin
-  SysFindCloseNew := SysFindClose(POSSearchRec(@F)^);
+//  SysFindCloseNew := SysFindClose(POSSearchRec(@F)^);
   end; {-$ENDIF}
 
 procedure SysTVKbdDone;
@@ -384,15 +427,21 @@ procedure SysTVKbdDone;
   end;
 {$ENDIF}
 
+// see
+// https://www.freepascal.org/docs-html/rtl/unix/tstatfs.html
+// https://www.freepascal.org/docs-html/rtl/unix/fpfstatfs.html
+
 // by unxed, untested
 function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
 var
   Buffer: TStatFS;
 begin
+  {
   if LnxStatFS(Path, Buffer) = 0 then
-    Result := 1.0 * Buffer.f_BSize * Buffer.f_BAvail
+    Result := 1.0 * Buffer.BSize * Buffer.BAvail
   else
     Result := -1;
+  }
 end;
 
 // by unxed, untested
@@ -400,16 +449,18 @@ function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
 var
   Buffer: TStatFS;
 begin
+  {
   if LnxStatFS(Path, Buffer) = 0 then
-    Result := 1.0 * Buffer.f_BSize * Buffer.f_Blocks
+    Result := 1.0 * Buffer.BSize * Buffer.Blocks
   else
     Result := -1;
+  }
 end;
 
 // by unxed, untested
 function PhysMemAvail: Longint;
 begin
-  Result := SysMemAvail;
+  //Result := SysMemAvail;
 end;
 
 end.

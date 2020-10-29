@@ -17,7 +17,7 @@ function GetCurMSec: Longint;
 var
   ms: longint;
 begin
-  SysGetDateTime(nil, nil, nil, nil, nil, nil, nil, @ms);
+//  SysGetDateTime(nil, nil, nil, nil, nil, nil, nil, @ms);
   GetCurMSec := ms;
 end;
 

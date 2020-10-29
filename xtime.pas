@@ -304,7 +304,8 @@ procedure xIncDateTime(var DT1, DT2: DateTimeRec; Days: Integer;
   DT2 := DT1;
 
   {date first}
-  Inc(Integer(DT2.D), Days);
+  // by unxed
+  Inc(DT2.D, Days);
 
   if Secs < 0 then
     begin
@@ -345,6 +346,7 @@ function xYMTimeStampToPack(YMTime: LongInt): LongInt;
     DTR: DateTimeRec;
     Ptime: LongInt;
     H, M, S: Byte;
+    d2, m2, y2: LongInt;
   begin
   {Add the time stamp to StartDate}
   xIncDateTime(StartDate, DTR, 0, YMTime);
@@ -355,7 +357,11 @@ function xYMTimeStampToPack(YMTime: LongInt): LongInt;
   {Convert to DT format}
   with DT do
     begin
-    DateToDMY(DTR.D, Integer(Day), Integer(Month), Integer(Year));
+    // by unxed
+    d2 := day;
+    m2 := month;
+    y2 := year;
+    DateToDMY(DTR.D, d2, m2, y2);
     TimeToHMS(DTR.T, H, M, S);
     Hour := H;
     Min := M;
