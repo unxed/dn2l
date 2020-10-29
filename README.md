@@ -66,7 +66,9 @@ Opening the NDN code would be great, but we shouldn't expect that we could gain 
 
 Conclusions: NDN seems to have been created without concern for license clarity. It looks like it have code borrowings from both Borland and Virtual Pascal. In a public project, in any case, such code would have to be cut with transition to free licensed analogs, and this is almost equivalent in time costs to reworking a project from scratch from DN OSP sources.
 
-So, perhaps you shouldn't pester NDN developers with a proposal to open the code: most likely, dn2l will not be able to get so much benefit from it, because we are striving for 100% license purity. Some components, maybe, could be reused, but one should not expect that NDN will open the code, we will merge it, and get completely FOSS DN with no legal problems. The main work to be done is TV->FV transition, whitch is both relevant to NDN and dn2l (btw, this applies to ANSI->UTF8 transition also).
+So, perhaps you shouldn't pester NDN developers with a proposal to open the code: most likely, dn2l will not be able to get so much benefit from it, because we are striving for 100% license purity. Some components, maybe, could be reused, but one should not expect that NDN will open the code, we will merge it, and get completely FOSS DN with no legal problems.
+
+The main work to be done is TV->FV transition, whitch is both relevant to NDN and dn2l code bases (btw, this applies to ANSI->UTF8 transition also).
 
 Anyway we should thank NDN devs for usable Linux DN version and for proofing that such port is even possbile. Guys, you are great!
 
