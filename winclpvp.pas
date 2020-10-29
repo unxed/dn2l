@@ -65,35 +65,13 @@ uses
   ;
 
 function SetWinClip(PC: PLineCollection): Boolean; {$IFDEF DPMI32}
-  inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
-  : Boolean; {$IFDEF DPMI32}
-  inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 function GetWinClipSize: Boolean; {$IFDEF DPMI32}
-  inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 procedure SyncClipIn; {$IFDEF DPMI32}
-  inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 procedure SyncClipOut {(NeedStream: boolean)}; {$IFDEF DPMI32}
-  inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 
 procedure CopyLines2Stream(PC: PCollection; var PCS: PStream);
-{$IFDEF DPMI32} inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 procedure CopyStream2Lines(PCS: PStream; var PC: PCollection);
-{$IFDEF DPMI32} inline;
-  begin {Cat:todo DPMI32}
-  end; {$ENDIF}
 
 implementation
 
@@ -103,6 +81,32 @@ uses
   {$IFDEF OS2}Os2Base, Dn2PmApi, {$ELSE}VpSysLow, {$ENDIF}
   Microed, Advance, Advance1, DnIni
   ;
+
+function SetWinClip(PC: PLineCollection): Boolean; {$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
+function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
+  : Boolean; {$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
+function GetWinClipSize: Boolean; {$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
+procedure SyncClipIn; {$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
+procedure SyncClipOut {(NeedStream: boolean)}; {$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
+
+procedure CopyLines2Stream(PC: PCollection; var PCS: PStream);
+{$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
+procedure CopyStream2Lines(PCS: PStream; var PC: PCollection);
+{$IFDEF DPMI32}
+  begin {Cat:todo DPMI32}
+  end; {$ENDIF}
 
 procedure SyncClipIn;
   begin

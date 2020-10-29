@@ -50,10 +50,7 @@ unit Commands;
 
 interface
 
-function Bit(N: Word): Word; inline;
-  begin
-  Result := Word(1) shl N;
-  end;
+function Bit(N: Word): Word;
 
 const
   MaxStringLength = 255;
@@ -3174,5 +3171,11 @@ type
     );
 
 implementation
+
+function Bit(N: Word): Word;
+  begin
+  Result := Word(1) shl N;
+  end;
+
 end.
 

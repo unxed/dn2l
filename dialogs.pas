@@ -778,7 +778,6 @@ function NewSItem(const Str: String; ANext: PSItem): PSItem;
   end;
 
 function Max(A, B: Integer): Integer;
-  inline;
   begin
   if A > B then
     Max := A

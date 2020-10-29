@@ -22,7 +22,6 @@ uses
   ;
 
 function UnlockMemory(Base: Pointer; Size: LongInt): Boolean;
-  inline;
   begin
   UnlockMemory := (DosSetMem(Base, Size, pag_Execute+pag_Read+pag_Write) =
        0);
@@ -35,7 +34,6 @@ uses
   ;
 
 function UnlockMemory(Base: Pointer; Size: LongInt): Boolean;
-  inline;
   var
     OldProtect: LongInt;
   begin

@@ -125,7 +125,6 @@ function UpdateCrc32(CurByte: Byte;
   UpdateCrc32 := Crc_Table^[Byte(CurCrc xor LongInt(CurByte))] xor
                  ((CurCrc shr 8) and $00FFFFFF);
   *)
-  inline;
   begin
   UpdateCrc32 := Crc_Table^[Byte(CurCrc xor LongInt(CurByte))] xor
       ( (CurCrc shr 8) and $00FFFFFF);

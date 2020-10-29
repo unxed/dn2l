@@ -16,25 +16,6 @@ uses
   ;
 
 function SysTVGetShiftState2: Byte;
-{$IFDEF Win32}
-  inline;
-  begin
-  Result := VpKbdW32.GetWinShiftState2;
-  end;
-{$ENDIF}
-{$IFDEF DPMI32}
-  inline;
-  begin
-  Result := 0;
-  end;
-{$ENDIF}
-{$IFDEF LINUX}
-  // fixme: stub by unxed
-  inline;
-  begin
-  Result := 0;
-  end;
-{$ENDIF}
 
 type
   POSSearchRec = ^TOSSearchRec;
@@ -97,29 +78,10 @@ type
 
 function SysFindFirstNew(Path: PChar; Attr: LongInt;
      var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
-// fixme: stub by unxed (non-dpmi)
-{-$IFDEF DPMI32} inline;
-  begin
-  SysFindFirstNew := SysFindFirst(Path, Attr, POSSearchRec(@F)^, IsPChar)
-    ;
-  end; {-$ENDIF}
 function SysFindNextNew(var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
-// fixme: stub by unxed (non-dpmi)
-{-$IFDEF DPMI32} inline;
-  begin
-  SysFindNextNew := SysFindNext(POSSearchRec(@F)^, IsPChar);
-  end; {-$ENDIF}
 function SysFindCloseNew(var F: TOSSearchRecNew): LongInt;
-// fixme: stub by unxed (non-dpmi)
-{-$IFDEF DPMI32} inline;
-  begin
-  SysFindCloseNew := SysFindClose(POSSearchRec(@F)^);
-  end; {-$ENDIF}
 
 procedure SysTVKbdDone;
-{$IFNDEF OS2} inline;
-  begin
-  end; {$ENDIF}
 
 function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
 function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
@@ -133,6 +95,51 @@ uses
   Strings
   ;
 
+function SysFindFirstNew(Path: PChar; Attr: LongInt;
+     var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
+// fixme: stub by unxed (non-dpmi)
+{-$IFDEF DPMI32}
+  begin
+  SysFindFirstNew := SysFindFirst(Path, Attr, POSSearchRec(@F)^, IsPChar)
+    ;
+  end; {-$ENDIF}
+function SysFindNextNew(var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
+// fixme: stub by unxed (non-dpmi)
+{-$IFDEF DPMI32}
+  begin
+  SysFindNextNew := SysFindNext(POSSearchRec(@F)^, IsPChar);
+  end; {-$ENDIF}
+function SysFindCloseNew(var F: TOSSearchRecNew): LongInt;
+// fixme: stub by unxed (non-dpmi)
+{-$IFDEF DPMI32}
+  begin
+  SysFindCloseNew := SysFindClose(POSSearchRec(@F)^);
+  end; {-$ENDIF}
+
+procedure SysTVKbdDone;
+{$IFNDEF OS2}
+  begin
+  end; {$ENDIF}
+
+{$IFDEF Win32}
+function SysTVGetShiftState2: Byte;
+  begin
+  Result := VpKbdW32.GetWinShiftState2;
+  end;
+{$ENDIF}
+{$IFDEF DPMI32}
+function SysTVGetShiftState2: Byte;
+  begin
+  Result := 0;
+  end;
+{$ENDIF}
+{$IFDEF LINUX}
+function SysTVGetShiftState2: Byte;
+  // fixme: stub by unxed
+  begin
+  Result := 0;
+  end;
+{$ENDIF}
 {$IFDEF OS2}
 function SysTVGetShiftState2: Byte;
   var

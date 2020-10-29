@@ -105,12 +105,14 @@ type
      соответствующий элемент - символ в новой кодировке `}
 
 procedure Beep(Freq, Dur: LongInt);
-  inline;
-  begin
-  VpSysLow.SysBeepEx(Freq, Dur);
-  end;
 
 implementation
+
+procedure Beep(Freq, Dur: LongInt);
+  begin
+// fixme: commented by unxed
+//  VpSysLow.SysBeepEx(Freq, Dur);
+  end;
 
 procedure CheckEmpty(var Rect: TRect);
   begin

@@ -89,10 +89,6 @@ function Percent(AMax, ACur: TSize): String;
   {` Построение строки вида 57%; длина - как получится. `}
 procedure Hex8Lo(L: LongInt; var HexLo);
 procedure AddStr(var S: String; C: Char);
-  inline;
-  begin
-  S := S+C
-  end; {Cat}
 {procedure DelFC(var s:String);}
 
 {---  ' '-related string functions }
@@ -120,21 +116,10 @@ function LongStrg(C: Char; Num: LongInt): LongString;
 
 {case functions}
 function UpCase(c: Char): Char;
-{AK155}
-  inline;
-  begin
-  UpCase := UpCaseArray[C]
-  end;
-
 procedure UpStr(var s: String);
 function UpStrg(s: String): String;
 
 function LowCase(c: Char): Char;
-{AK155}
-  inline;
-  begin
-  LowCase := LowCaseArray[C]
-  end;
 procedure LowStr(var s: String);
 function LowStrg(s: String): String;
 
@@ -273,24 +258,12 @@ function Positive(x: TFileSize): TFileSize;
 
 function i32(x: TFileSize): LongInt;
   {` TFileSize -> LongInt `}
-{$ifndef LargeFileSupport}
-  inline;
-  begin
-  Result := x;
-  end;
-{$endif}
 
 function CompToFSize(x: Comp): TFileSize;
   {` Comp -> TFileSize `}
 
 function FSizeMod(x: TFileSize; y: LongInt): LongInt;
   {` Остаток от деления x на y `}
-{$ifndef LargeFileSupport}
-  inline;
-  begin
-  Result := x mod y;
-  end;
-{$endif}
 
 function Str2Comp(const s: String): Comp;
 
@@ -299,6 +272,21 @@ implementation
 uses
   DnIni, Startup, Commands, Advance, UKeyMap
   ;
+
+procedure AddStr(var S: String; C: Char);
+  begin
+  S := S+C
+  end; {Cat}
+function UpCase(c: Char): Char;
+{AK155}
+  begin
+  UpCase := UpCaseArray[C]
+  end;
+function LowCase(c: Char): Char;
+{AK155}
+  begin
+  LowCase := LowCaseArray[C]
+  end;
 
 function Dec2(w: Word): Str2;
   begin
@@ -2017,6 +2005,20 @@ function Positive(x: TFileSize): TFileSize;
   if x > 0 then
     Result := x;
   end;
+
+{$ifndef LargeFileSupport}
+function i32(x: TFileSize): LongInt;
+  {` TFileSize -> LongInt `}
+  begin
+  Result := x;
+  end;
+
+function FSizeMod(x: TFileSize; y: LongInt): LongInt;
+  {` Остаток от деления x на y `}
+  begin
+  Result := x mod y;
+  end;
+{$endif}
 
 {$ifdef LargeFileSupport}
 function i32(x: TFileSize): LongInt;
