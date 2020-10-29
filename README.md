@@ -70,7 +70,7 @@ Opening the NDN code would be great, but we shouldn't expect that we could gain 
 
 1) ndn.dbg contains both the line "Free Pascal 3.2.0 2020/10/18" and the line "VPSYSLOW.PP", so it seems to be built by Free Pascal Compiler, but on the top of Virtual Pascal RTL. VPSYSLOW module originates from the Virtual Pascal distribution (its modified version is present in DN OSP sources also). That is, NDN is still somethat based on the VP, which dn2l plans to get rid of over time.
 
-2) The ndn.dbg contains the line "COLLECT.PAS", which indicates the continued use of the custom version of Turbo Vision from DN (the corresponding file from the Free Vision kit is called differently: objects.pp), and DN's TV, as we now know, is based on code from Turbo Pascal, the possibility of using which in the FOSS project is still not unambiguous.
+2) ndn.dbg contains the line "COLLECT.PAS", which indicates the continued use of the custom version of Turbo Vision from DN (the corresponding file from the Free Vision kit is called differently: objects.pp), and DN's TV, as we now know, is based on code from Turbo Pascal, the possibility of using which in the FOSS project is still not unambiguous.
 
 Conclusions: NDN seems to have been created without concern for license clarity. It looks like it have code borrowings from both Borland and Virtual Pascal. In a public project, in any case, such code would have to be cut with transition to free licensed analogs, and this is almost equivalent in time costs to reworking a project from DN OSP sources.
 
