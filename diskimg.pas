@@ -252,7 +252,7 @@ function UnpackImage(const FName, DestDir: String; PInfo: PWhileView)
       begin { WriteFile }
       if Error then
         Exit;
-      Dir := FmtStr2(ADir, VolumeLabel);
+      Dir := FmtStrDN(ADir, VolumeLabel);
       FName := MakeNormName(Dir, ANm);
       PInfo^.Write(3, LowStrg(GetName(FName)));
       TryInit;

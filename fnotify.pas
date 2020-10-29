@@ -98,7 +98,9 @@ procedure NotifyInit;
   else
     AddExitProc(NotifyDone);
 
-  NotifierCollection := New(PNotifierCollection, Init(16, 16, False));
+//  NotifierCollection := New(PNotifierCollection, Init(16, 16, False));
+  // fixme: by unxed
+  NotifierCollection := New(PNotifierCollection, Init(16, 16));
   NotifierCollection^.Duplicates := False;
 
   {$IFDEF DEBUGLOG}

@@ -51,7 +51,7 @@ unit Eraser;
 interface
 
 uses
-  Objects
+  Objects, Objects2
   ;
 
 procedure EraseFiles(Files: PCollection);

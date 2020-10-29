@@ -51,7 +51,7 @@ unit Filediz;
 interface
 
 uses
-  FilesCol, Defines, Objects2,
+  sysutils, FilesCol, Defines, Objects2,
   Commands
   ;
 
@@ -321,6 +321,7 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
       {имя в кавычках - ищем вторую кавычку }
       begin
       NameEnd := 0;
+      (*
       for j := 2 to LS do
         if LastDizLine[j] = '"' then
           begin
@@ -328,6 +329,8 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
           Inc(j);
           Break;
           end;
+      *)
+      //fixme: commented by unxed
       if NameEnd <= 2 then
         goto ReadNextLine;
       if NameEnd = LS then
@@ -446,7 +449,8 @@ procedure GetDiz(FR: PFileRec);
   if GetDizText <> '' then
     begin
     New(FR^.DIZ);
-    FR^.DIZ^.Container := NewStr(Container);
+    // fixme: commented by unxed
+    //FR^.DIZ^.Container := NewStrDN(Container);
     FR^.DIZ^.DIZText := GetDizText;
     GetDizText := '';
     end;

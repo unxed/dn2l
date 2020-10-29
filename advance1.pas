@@ -76,9 +76,9 @@ var
   LowCaseArray: TXlat;
     {` Перевод на нижний регистр в ASCII`}
 
-function NewStr(const S: String): PString;
+function NewStrDN(const S: String): PString;
 function NewLongStr(const S: LongString): PLongString;
-procedure DisposeStr(var P: PString);
+procedure DisposeStrDN(var P: PString);
 procedure DisposeLongStr(var P: PLongString);
 procedure ReplaceP(var P: PString; S: String);
 function CnvString(P: PString): String; {conversion: PString to String}
@@ -1616,7 +1616,7 @@ function BackSearchForAllCP(S: String; var B; l: LongInt;
   end { BackSearchForAllCP };
 {/Cat}
 
-function NewStr(const S: String): PString;
+function NewStrDN(const S: String): PString;
   var
     P: PString;
   begin
@@ -1625,7 +1625,7 @@ function NewStr(const S: String): PString;
   if (P <> nil) then
     P^:=S else
     FatalError('No memory for new string');
-  NewStr:=P;
+  NewStrDN:=P;
   *)
   if S = '' then
     P := nil
@@ -1634,10 +1634,10 @@ function NewStr(const S: String): PString;
     GetMem(P, Length(S)+1);
     P^:= S;
     end;
-  NewStr := P;
+  NewStrDN := P;
   end;
 
-procedure DisposeStr(var P: PString);
+procedure DisposeStrDN(var P: PString);
   begin
   if P <> nil then
     FreeMem(P, Length(P^)+1);
@@ -1650,13 +1650,13 @@ procedure ReplaceP(var P: PString; S: String);
   if P = nil then
     begin
     if S <> '' then
-      P := NewStr(S);
+      P := NewStrDN(S);
     end
   else if Length(S) = Length(P^) then
     P^:= S
   else
     begin
-    DisposeStr(P);
+    DisposeStrDN(P);
     P := NewStr(S);
     end;
   end;

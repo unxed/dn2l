@@ -136,7 +136,7 @@ procedure CantWrite(const FName: String);
 
 function FmtFile(const Fmt: String; const FName: String; len: Integer)
   : String;
-function FmtStr2(const Fmt: String; const S: String): String;
+function FmtStrDN(const Fmt: String; const S: String): String;
 function FmtStrId(Id: TStrIdx; const S: String): String;
 function FmtFileId(Id: TStrIdx; const FName: String): String;
 
@@ -602,14 +602,14 @@ function FmtFile;
   FmtFile := s;
   end;
 
-function FmtStr2(const Fmt: String; const S: String): String;
+function FmtStrDN(const Fmt: String; const S: String): String;
   begin
-  FmtStr2 := FmtFile(Fmt, S, MaxInt);
+  FmtStrDN := FmtFile(Fmt, S, MaxInt);
   end;
 
 function FmtStrId(Id: TStrIdx; const S: String): String;
   begin
-  FmtStrId := FmtStr2(GetString(Id), S);
+  FmtStrId := FmtStrDN(GetString(Id), S);
   end;
 
 function FmtFileId;

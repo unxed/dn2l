@@ -53,6 +53,13 @@ type
     function GetItem(var S: TStream): Pointer; virtual;
     end;
 
+  {-DataCompBoy-}
+  PDirCol = ^TDirCol;
+  TDirCol = object(TStringCollection)
+    function Compare(Key1, Key2: Pointer): Integer; virtual;
+    end;
+  {-DataCompBoy-}
+
 implementation
 
 const
@@ -161,7 +168,7 @@ procedure TLineCollection.FreeItem(P: Pointer);
   if LongStrings then
     DisposeLongStr(PLongString(P))
   else
-    DisposeStr(PString(P));
+    DisposeStrDN(PString(P));
   end;
 
 procedure TLineCollection.PutItem;
@@ -180,5 +187,25 @@ function TLineCollection.GetItem;
   else
     GetItem := S.ReadStr;
   end;
+
+  function TDirCol.Compare;
+  var
+    a, b, c: Byte;
+  begin
+  Compare := 0;
+  a := 0;
+  for c := 1 to Length(PString(Key1)^) do
+    if PString(Key1)^[c] in ['/', '\'] then
+      Inc(a);
+  b := 0;
+  for c := 1 to Length(PString(Key2)^) do
+    if PString(Key2)^[c] in ['/', '\'] then
+      Inc(b);
+  if a > b then
+    Compare := -1
+  else
+    Compare := +1
+  end;
+
 
 end.

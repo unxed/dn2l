@@ -52,7 +52,8 @@ interface
 
 uses
   Math, Advance, Defines, Objects2, Views, Objects,
-  Microed, highlite, Strings
+  Microed, highlite, Strings,
+  dnctrls
   ;
 
 type
@@ -520,7 +521,8 @@ type
     PrevFocused: Integer;
     SText: PView;
     procedure FocusItem(Item: LongInt); virtual;
-    function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
+    //function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
+    function GetText(Item: LongInt; MaxLen: Longint): ShortString; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
     end;
 
@@ -579,9 +581,10 @@ function TVarList.GetText;
     P: PDOSVar;
   begin
   P := List^.At(Item);
-  if P <> nil then
-    GetText := CnvString(P^.Name)
-  else
+// fixme: commented by unxed
+//  if P <> nil then
+//    GetText := CnvString(P^.Name)
+//  else
     GetText := '';
   end;
 
@@ -630,8 +633,9 @@ procedure TVarList.HandleEvent;
     ClearEvent(Event);
     if  (P = nil) then
       Exit;
-    S := CnvString(P^.Name);
-    FormatStr(FreeStr, GetString(dlEnvRenVar), P^.Name);
+// fixme: commented by unxed
+//    S := CnvString(P^.Name);
+//    FormatStr(FreeStr, GetString(dlEnvRenVar), P^.Name);
     if InputBox(FreeStr, GetString(dlFCRenameNew), S, 255, hsNewVariable)
        <> cmOK
     then
