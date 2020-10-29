@@ -29,6 +29,14 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 - Switch to Free Pascal Compiler
 - Add Unicode support
 
+### Roadmap (WIP)
+
+1) Add directives required by fp to stdefine.inc
+2) Rename collect.pas to objects.pas (so that the names of all tv units matchs fv ones)
+3) Move all inline functions to the implementation blocks
+4) In a separate branch, remove everything from vp and tp at all and try to build with fp and fv. Write shims for all VP RTL specific functions.
+5) Switch fv to utf8 the same way it is done here: github.com/magiblot/tvision
+
 ### Playing with the code
 
 - Some parts that are failing are commented out for now. You can search code by string "by unxed" to find out such disabled code paths if whishing to fix some of them.
