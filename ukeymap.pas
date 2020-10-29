@@ -44,6 +44,8 @@
 //  (including the GNU Public Licence).
 //
 //////////////////////////////////////////////////////////////////////////}
+{$MODE DELPHI}
+{$asmMode intel}
 
 unit UKeyMap;
 {<U_KeyMap.001>}

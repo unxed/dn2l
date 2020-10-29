@@ -1,5 +1,6 @@
 // copied from LIBWLF/country_.pas by unxed
 { Win32-specific country tools unit by A.Korop (AK155)}
+{$MODE DELPHI}
 unit Country;
 
 interface
