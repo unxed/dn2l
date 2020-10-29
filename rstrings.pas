@@ -52,7 +52,7 @@ unit RStrings;
 interface
 
 uses
-  Defines, Objects2, Streams, Advance6, Commands
+  Defines, objects, Objects2, Streams, Advance6, Commands
   ;
 
 type

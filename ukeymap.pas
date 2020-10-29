@@ -53,6 +53,7 @@ unit UKeyMap;
 interface
 
 uses
+  objects,
   Objects2, Defines, Advance1
   ;
 

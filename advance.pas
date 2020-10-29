@@ -55,6 +55,7 @@ interface
 uses
   Dos,
   Strings,
+  objects,
   Objects2, Lfnvp {DataCompBoy}
   , Defines, Streams
   ;

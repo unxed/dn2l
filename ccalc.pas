@@ -51,6 +51,7 @@ unit CCalc;
 interface
 
 uses
+  Objects,
   Defines, Streams, Dialogs, Views, Drivers, Calculat
   ;
 

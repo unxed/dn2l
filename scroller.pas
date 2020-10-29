@@ -52,7 +52,7 @@ Scroller;
 interface
 
 uses
-  Views, Defines, Streams, Drivers
+  Objects, Views, Defines, Streams, Drivers
   ;
 
 type
@@ -72,7 +72,7 @@ type
     constructor Init(var Bounds: TRect;
          AHScrollBar, AVScrollBar: PScrollBar);
     constructor Load(var S: TStream);
-    procedure ChangeBounds(var Bounds: TRect); virtual;
+    procedure ChangeBounds(var Bounds: TRect);
     function GetPalette: PPalette; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
     procedure ScrollDraw; virtual;
@@ -107,7 +107,7 @@ type
     constructor Init(var Bounds: TRect; ANumCols: LongInt;
         AHScrollBar, AVScrollBar: PScrollBar);
     constructor Load(var S: TStream);
-    procedure ChangeBounds(var Bounds: TRect); virtual;
+    procedure ChangeBounds(var Bounds: TRect);
     procedure Draw; virtual;
     procedure FocusItem(Item: LongInt); virtual;
     function GetPalette: PPalette; virtual;
@@ -513,9 +513,9 @@ procedure TListViewer.HandleEvent(var Event: TEvent);
       end
     else
       case {CtrlToArrow}(Event.KeyCode) of
-        kbUp, kbShiftUp:
+        kbUp://, kbShiftUp: // fixme: commented by unxed
           NewItem := Focused-1;
-        kbDown, kbShiftDown:
+        kbDown://, kbShiftDown: // fixme: commented by unxed
           NewItem := Focused+1;
         kbRight:
           if NumCols > 1 then

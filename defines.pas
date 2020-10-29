@@ -5,6 +5,7 @@ unit Defines;
 interface
 
 uses
+  objects,
   use32,
   VpSysLow
   ;
@@ -45,6 +46,7 @@ type
   TCharSet = set of Char;
   PCharSet = ^TCharSet;
 
+  (*
   WordRec = record
     Lo, Hi: Byte;
     end;
@@ -52,6 +54,7 @@ type
   LongRec = record
     Lo, Hi: SmallWord;
     end;
+  *)
 
   SW_Word = LongInt;
   Sw_Integer = LongInt;
@@ -75,6 +78,7 @@ type
   AsciiZ = array[0..255] of Char;
   THandle = Integer;
 
+  (*
   PPoint = ^TPoint;
   TPoint = object
     X, Y: LongInt;
@@ -97,6 +101,7 @@ type
     function Equals(R: TRect): Boolean;
     function Empty: Boolean;
     end;
+  *)
 
   TSize = Comp; {64 bit integer type for file sizes}
 
@@ -127,6 +132,7 @@ procedure CheckEmpty(var Rect: TRect);
       end;
   end;
 
+(*
 function TPoint.Equals(P: TPoint): Boolean;
   begin
   Equals := (X = P.X) and (Y = P.Y);
@@ -229,5 +235,6 @@ function TRect.Empty: Boolean;
   begin
   Empty := (A.X >= B.X) or (A.Y >= B.Y);
   end;
+*)
 
 end.
