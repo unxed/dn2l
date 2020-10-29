@@ -76,7 +76,7 @@ Conclusions: NDN seems to have been created without concern for license clarity.
 
 So, perhaps you shouldn't pester NDN developers with a proposal to open the code: most likely, dn2l will not be able to get so much benefit from it, because we are striving for 100% license purity. Some components, maybe, could be reused, but one should not expect that NDN will open the code, we will merge it, and get completely FOSS DN with no legal problems.
 
-**The main work to be done is TV->FV transition, and this has to be done regardless of whether we will develop our own sources or switch to hypothetical open sources of NBN. By the way, this also applies to the ANSI->UTF8 transition, which is definitely unpromising for the DN TV code (what is the point of investing in code inherited from proprietary software and licensed under incomprehensible conditions?), but quite promising for FV (the entire open source community could benefit from it).**
+**The main work to be done is TV->FV transition, and this has to be done regardless of whether we will develop our own sources or switch to hypothetical open sources of NDN. By the way, this also applies to the ANSI->UTF8 transition, which is definitely unpromising for the DN TV code (what is the point of investing in code inherited from proprietary software and licensed under incomprehensible conditions?), but quite promising for FV (the entire open source community could benefit from it).**
 
 And, if we are talking about transition to Unicode, I want to note that there is a successful example of switching Turbo Vision to UTF-8, and, although it's a version for the C++17 language, this proves that the transition with moderate time costs is possible: github.com/magiblot/tvision
 
