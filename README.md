@@ -64,7 +64,7 @@ Opening the NDN code would be great, but we shouldn't expect that we could gain 
 
 2) The ndn.dbg contains the line "COLLECT.PAS", which indicates the continued use of the custom version of Turbo Vision from DN (the corresponding file from the Free Vision kit is called differently: objects.pp), and DN's TV, as we now know, is based on code from Turbo Pascal, the possibility of using which in the FOSS project is still not unambiguous.
 
-Conclusions: NDN seems to have been created without concern for license clarity. It looks like it have code borrowings from both Borland and Virtual Pascal. In a public project, in any case, such code would have to be cut with transition to free licensed analogs, and this is almost equivalent in time costs to reworking a project from scratch from DN OSP sources.
+Conclusions: NDN seems to have been created without concern for license clarity. It looks like it have code borrowings from both Borland and Virtual Pascal. In a public project, in any case, such code would have to be cut with transition to free licensed analogs, and this is almost equivalent in time costs to reworking a project from DN OSP sources.
 
 So, perhaps you shouldn't pester NDN developers with a proposal to open the code: most likely, dn2l will not be able to get so much benefit from it, because we are striving for 100% license purity. Some components, maybe, could be reused, but one should not expect that NDN will open the code, we will merge it, and get completely FOSS DN with no legal problems.
 
