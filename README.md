@@ -68,6 +68,8 @@ Conclusions: NDN seems to have been created without concern for license clarity.
 
 So, perhaps you shouldn't pester NDN developers with a proposal to open the code: most likely, dn2l will not be able to get so much benefit from it, because we are striving for 100% license purity. Some components, maybe, could be reused, but one should not expect that NDN will open the code, we will merge it, and get completely FOSS DN with no legal problems. The main work to be done is TV->FV transition, whitch is both relevant to NDN and dn2l (btw, this applies to ANSI->UTF8 transition also).
 
+Anyway we should thank NDN devs for usable Linux DN version and for proofing that such port is even possbile. Guys, you are great!
+
 ### Acknowledgments
 
 Based on Dos Navigator by RIT Research Labs, with many thanks for opening the code. Also many thanks to DN OSP team for making old style DOS source code 32-bit and multi-platform friendly. Thanks to old-dos.ru team for hosting Virtual Pascal distribution — dn2l, perhaps, would never have been born without the ability to find and download VP. Thanks to VP developers for making their product available as freeware — without permission to use their compiler, dn2l might never have been built. And also thanks to habr.com community for inspiration!
