@@ -59,7 +59,7 @@ var
   ResBuf: array[0..7] of char; // результат GetInfoElement, ASCIIZ
 
 type
-	LCTYPE = ^char;
+    LCTYPE = ^char;
 
 procedure GetInfoElement(ElType: LCTYPE);
   var
@@ -121,7 +121,7 @@ function QueryToAscii(CP: word; var ToAscii: TXLat): Boolean;
     i: Integer;
     l: Longint;
   begin
-  {
+(*
   NullXlat(ToAscii);
   l := MultiByteToWideChar(CP, 0,
     @ToAscii, LT,
@@ -147,7 +147,7 @@ WC_NO_BEST_FIT_CHARS, но он работает только под NT 5. Вот и приходится
 безопасно, так как его код достаточно маленький, а построение обратной
 таблицы идёт от больших кодов к меньшим.
 }
-{
+
   l := MultiByteToWideChar(CP_OEMCP, 0,
     @ToAscii, LT,
     @UniStringBack, LT);
@@ -156,7 +156,7 @@ WC_NO_BEST_FIT_CHARS, но он работает только под NT 5. Вот и приходится
   for i := 0 to LT-1 do
     if UniString[i] <> UniStringBack[i] then
       ToAscii[Char(i)] := '?';
-      }
+*)
   end;
 
 function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
