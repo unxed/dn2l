@@ -31,9 +31,9 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 
 ### Roadmap (WIP)
 
-1) Add directives required by fp to stdefine.inc (inside fp-only conditional compilation block)
-2) Rename collect.pas to objects.pas (so that the names of all tv units matchs fv ones — needed for step 4)
-3) Move all inline functions to the implementation blocks
+1) ~~Add directives required by fp to stdefine.inc (inside fp-only conditional compilation block)~~
+2) ~~Rename collect.pas to objects.pas (so that the names of all tv units matchs fv ones — needed for step 4)~~
+3) ~~Move all inline functions to the implementation blocks~~
 4) In a separate branch, remove everything from vp and tp at all and try to build with fp and fv. Write shims for all VP RTL specific functions. Use code from DN TV to add DN extensions to the FV only if that code does not originates from the TP RTL sources, but is written by DN people and, therefore, is licensed under DN license. Mark all such code with a clear comment.
 5) Switch fv to utf8 the same way it is done here: github.com/magiblot/tvision
 
