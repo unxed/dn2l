@@ -2,8 +2,14 @@
 *.ERR
 *.vpi
 *.lib
+*.o
+*.ppu
 dn
 dn.123
+DN.CFG
+DN.HIS
+dnhgl.grp
+dnini.in_
 dn.asm
 dn.exe
 dn.lnk
@@ -25,3 +31,5 @@ version.lnk
 version.obj
 vputils.pas
 windos.pas
+sysutils.pas.orig
+vpsyslnx.pas.orig
