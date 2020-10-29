@@ -80,7 +80,7 @@ function ReadIniCache(INItime, INIsize: LongInt): Boolean;
 
 implementation
 uses
-  Dos, Lfnvp, profile, Advance, Advance1, Collect, Messages, DNApp,
+  Dos, Lfnvp, profile, Advance, Advance1, Objects, Messages, DNApp,
   {$IFDEF WIN32}VpSysLow, {$ENDIF}
   UKeyMap, Country,
   Strings, Streams, Advance2

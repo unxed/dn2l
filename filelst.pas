@@ -50,7 +50,7 @@ unit Filelst;
 interface
 
 uses
-  Collect
+  Objects
   ;
 
 procedure MakeListFile(APP: Pointer; Files: PCollection);

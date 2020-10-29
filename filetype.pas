@@ -68,7 +68,7 @@ implementation
 
 uses
   Commands, Dos, Advance1
-  , Collect
+  , Objects
   ;
 
   {-DataCompBoy-} {piwamoto} {JO}

@@ -51,7 +51,7 @@ unit Tree;
 interface
 
 uses
-  Collect, Drivers, Defines, Streams,
+  Objects, Drivers, Defines, Streams,
   Dialogs, Views, FilesCol
   ;
 

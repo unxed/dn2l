@@ -53,7 +53,7 @@ interface
 {$IFDEF PrintManager}
 uses
   Streams, Defines, Views, Drivers,
-  Dialogs, Commands, Collect
+  Dialogs, Commands, Objects
   ;
 
 type

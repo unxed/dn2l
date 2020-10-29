@@ -52,7 +52,7 @@ IniFiles;
 interface
 
 uses
-  Defines, Streams, Collect
+  Defines, Streams, Objects
   ;
 
 type

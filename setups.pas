@@ -51,7 +51,7 @@ unit Setups;
 interface
 
 uses
-  Defines, Drivers, Views, Dialogs, Collect,
+  Defines, Drivers, Views, Dialogs, Objects,
   Commands, Startup, Startupp
   ;
 

@@ -51,7 +51,7 @@ unit Colors;
 interface
 
 uses
-  Dialogs, Collect
+  Dialogs, Objects
   ;
 
 procedure ChangeColors;

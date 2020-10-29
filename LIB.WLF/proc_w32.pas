@@ -15,7 +15,7 @@ Copyright (C) 2002 Aleksej Kozlov (Cat)
 interface
 
 uses
-  Defines, Objects2, Collect
+  Defines, Objects2, Objects
   ;
 
 type

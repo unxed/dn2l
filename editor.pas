@@ -64,7 +64,7 @@ type
 implementation
 
 uses
-  Lfnvp, Views, Defines, Streams, UKeyMap, Collect, ed2,
+  Lfnvp, Views, Defines, Streams, UKeyMap, Objects, ed2,
   Advance, Advance1, Advance2, Dos, Dialogs, DNApp,
   {SBlocks,}Memory, Gauge, Startup, {WinClp, // commented by unxed} Messages, Commands, Macro,
   EdWin, xTime, DnIni, DNUtil, Advance6, Calculat, FViewer {AK155}

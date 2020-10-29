@@ -65,7 +65,7 @@ program RCP;
 {file                                                                 }
 
 uses
-  Lfnvp, Collect, Drivers, Dos, Defines, Objects2, Streams, Advance,
+  Lfnvp, Objects, Drivers, Dos, Defines, Objects2, Streams, Advance,
   Advance1, Advance2,
   RStrings, GetConst, Menus, Commands, Setups, DNHelp, Views, DNApp,
    Startup,

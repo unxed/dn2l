@@ -51,7 +51,7 @@ interface
 
 uses
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime,
-  Collect
+  Objects
   ;
 
 type

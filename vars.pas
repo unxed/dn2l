@@ -12,7 +12,7 @@ Written by Cat 2:5030/1326.13
 interface
 
 uses
-  Dos, Objects, Collect, FilesCol, Advance, Views, Dialogs,
+  Dos, Objects, Objects, FilesCol, Advance, Views, Dialogs,
    Menus,
   DNApp, Archiver, XDblWnd, DnIni, Startup, Calculat, Plugin
   ;

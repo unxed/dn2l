@@ -52,7 +52,7 @@ interface
 
 uses
   Files,
-  Views, Defines, Objects2, Streams, Collect
+  Views, Defines, Objects2, Streams, Objects
   ;
 
 const

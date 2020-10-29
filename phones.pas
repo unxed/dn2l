@@ -53,7 +53,7 @@ interface
 
 uses
   Defines, Objects2, Streams, Drivers, Dialogs, Menus,
-  Views, DNStdDlg, Collect, StrView
+  Views, DNStdDlg, Objects, StrView
   ;
 
 type

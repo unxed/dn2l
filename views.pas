@@ -58,7 +58,7 @@ unit Views;
 interface
 
 uses
-  Collect, Defines, Objects2, Streams, Drivers, Memory, xTime, Commands
+  Objects, Defines, Objects2, Streams, Drivers, Memory, xTime, Commands
   ;
 
 const

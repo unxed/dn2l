@@ -53,7 +53,7 @@ interface
 
 uses
   Defines, Objects2, Streams, Strings, FViewer, Dialogs, Views, Drivers,
-  Messages, Dos, Collect, Advance1, Advance, Lfn,
+  Messages, Dos, Objects, Advance1, Advance, Lfn,
   Scroller
   , use16
   ;

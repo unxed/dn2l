@@ -52,7 +52,7 @@ unit CellsCol;
 interface
 
 uses
-  Defines, Streams, Collect, Calculat
+  Defines, Streams, Objects, Calculat
   ;
 
 type

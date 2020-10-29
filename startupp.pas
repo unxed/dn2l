@@ -55,7 +55,7 @@ unit Startupp;
 interface
 
 uses
-  Defines, Startup, Collect, CCalc
+  Defines, Startup, Objects, CCalc
   ;
 
 type

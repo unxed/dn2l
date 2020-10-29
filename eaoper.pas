@@ -12,7 +12,7 @@ unit EAOper;
 interface
 
 uses
-  Collect, Os2Def, Advance1
+  Objects, Os2Def, Advance1
   ;
 
 type

@@ -52,7 +52,7 @@ interface
 
 uses
   vpsyslo2,
-  Collect, FilesCol, Defines, Views
+  Objects, FilesCol, Defines, Views
   ;
 
 type

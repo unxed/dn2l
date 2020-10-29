@@ -56,7 +56,7 @@ unit Dialogs;
 interface
 
 uses
-  Collect, Defines, Streams, Drivers, Views,
+  Objects, Defines, Streams, Drivers, Views,
   Scroller, Validate, Menus
   ;
 

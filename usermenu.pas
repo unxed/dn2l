@@ -92,7 +92,7 @@ uses
   Lfnvp, {DataCompBoy}
   DNApp, Advance, Advance1, Advance2, Startup, Messages, Menus,
   Commands, Microed, {WinClp, // commented by unxed} DNHelp, Dos, Memory, Dialogs, Tree
-  , filediz, Collect, VPUtils
+  , filediz, Objects, VPUtils
   ;
 
 type

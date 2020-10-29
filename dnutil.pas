@@ -274,7 +274,7 @@ uses
   {$IFDEF Tasklist}
   TaskLst,
   {$ENDIF}
-  CCalc, Collect, {-$VIV}
+  CCalc, Objects, {-$VIV}
   DnExec,
   Setups, RegAll, XDblWnd,
   Idlers, FlPanelX, {WinClp, // commented by unxed}

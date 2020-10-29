@@ -1,3 +1,8 @@
+{$ifdef fpc}
+{$asmMode intel}
+{$MODE DELPHI}
+{$endif} // by unxed
+
 {$DEFINE DNPRG} // by unxed
 
 {$IFDEF WIN32}

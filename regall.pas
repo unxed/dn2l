@@ -64,7 +64,7 @@ uses
   {$IFDEF ARVID}
   Arvid,
   {$ENDIF}
-  Archiver, ArcView, ASCIITab, CCalc, Collect, DiskInfo, DNApp,
+  Archiver, ArcView, ASCIITab, CCalc, Objects, DiskInfo, DNApp,
   DNStdDlg, DNUtil, Drives, ed2, Editor, FileFind, FilesCol,
   FlPanel, FStorage, FViewer, Gauges, Histries, Microed, Startup,
   Tree, UniWin, UserMenu, XDblWnd, HelpKern,
@@ -388,28 +388,28 @@ RIndicator : TStreamRec = (
     { Collect }
 RCollection : TStreamRec = (
       ObjType: otCollection;
-      VmtLink: (TypeOf(Collect.TCollection));
-      Load: @Collect.TCollection.Load;
-      Store: @Collect.TCollection.Store);
+      VmtLink: (TypeOf(Objects.TCollection));
+      Load: @Objects.TCollection.Load;
+      Store: @Objects.TCollection.Store);
 RLineCollection : TStreamRec = (
       ObjType: otLineCollection;
-      VmtLink: (TypeOf(Collect.TLineCollection));
-      Load: @Collect.TLineCollection.Load;
-      Store: @Collect.TLineCollection.Store);
+      VmtLink: (TypeOf(Objects.TLineCollection));
+      Load: @Objects.TLineCollection.Load;
+      Store: @Objects.TLineCollection.Store);
 RStringCollection : TStreamRec = (
       ObjType: otStringCollection;
-      VmtLink: (TypeOf(Collect.TStringCollection));
-      Load: @Collect.TStringCollection.Load;
-      Store: @Collect.TStringCollection.Store);
+      VmtLink: (TypeOf(Objects.TStringCollection));
+      Load: @Objects.TStringCollection.Load;
+      Store: @Objects.TStringCollection.Store);
 RStrCollection : TStreamRec = (
       ObjType: otStrCollection;
-      VmtLink: (TypeOf(Collect.TStrCollection));
-      Load: @Collect.TStrCollection.Load;
-      Store: @Collect.TStrCollection.Store);
+      VmtLink: (TypeOf(Objects.TStrCollection));
+      Load: @Objects.TStrCollection.Load;
+      Store: @Objects.TStrCollection.Store);
 RStringList : TStreamRec = (
       ObjType: otStringList;
-      VmtLink: (TypeOf(Collect.TStringList));
-      Load: @Collect.TStringList.Load;
+      VmtLink: (TypeOf(Objects.TStringList));
+      Load: @Objects.TStringList.Load;
       Store: nil);
     {$ENDIF !RCP}
     { ColorSel }

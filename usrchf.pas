@@ -58,7 +58,7 @@ function FindFileWithSPF(pFileName: String; Info: PWhileView): String;
 implementation
 
 uses
-  Lfnvp, Objects2, Collect,
+  Lfnvp, Objects2, Objects,
   Commands, DNApp,
   Dos, Advance, Advance1, Advance2, Messages, DnIni
   ;

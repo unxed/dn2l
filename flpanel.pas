@@ -53,7 +53,7 @@ interface
 
 uses
   Defines, Streams, Views, Drivers, FilesCol,
-  FlPanelX, Collect, TopView
+  FlPanelX, Objects, TopView
   ;
 
 type

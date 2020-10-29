@@ -71,7 +71,7 @@ interface
 uses
   Defines
   {$IFDEF UUDECODE}
-  , Collect
+  , Objects
   {$ENDIF}
   {$IFDEF UUENCODE}
 //  , Uue2Inc

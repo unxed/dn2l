@@ -52,7 +52,7 @@ interface
 
 uses
   Defines, Objects2, Streams, Drivers, Memory, Views, Menus,
-  Dialogs, RStrings, Commands, xTime, Collect
+  Dialogs, RStrings, Commands, xTime, Objects
   , Startup, Startupp
   ;
 

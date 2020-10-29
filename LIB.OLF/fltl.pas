@@ -74,7 +74,7 @@ implementation
 
 uses
   Os2Def, Os2Base, Strings
-  {для CopyEAs}, Collect, Messages, EAOper, Advance1, Commands, DNApp
+  {для CopyEAs}, Objects, Messages, EAOper, Advance1, Commands, DNApp
   ;
 
 var

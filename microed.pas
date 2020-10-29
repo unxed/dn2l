@@ -72,7 +72,7 @@ interface
 uses
   Defines, Streams, Drivers, Views,
   Advance, Menus,
-  Commands, {SBlocks,}ObjType, UKeyMap, Collect,
+  Commands, {SBlocks,}ObjType, UKeyMap, Objects,
   {$IFDEF REGEXP}RegExp, {$ENDIF}
   ed2, highlite
   ;

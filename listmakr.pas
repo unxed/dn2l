@@ -50,7 +50,7 @@ unit ListMakr;
 interface
 
 uses
-  Defines, Objects2, Streams, Collect, ObjType
+  Defines, Objects2, Streams, Objects, ObjType
   ;
 
 type

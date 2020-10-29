@@ -53,7 +53,7 @@ interface
 
 uses
   Dos, Defines, Objects2, Streams, Views, Drivers,
-  Collect, xTime
+  Objects, xTime
   ;
 
 type

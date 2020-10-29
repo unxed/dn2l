@@ -69,7 +69,7 @@ uses
   FilesCol, UserMenu, Colors, Microed, Editor, Macro,
   ArcView, HelpFile, Validate, ASCIITab, xTime, Drives, Archiver,
   ArchSet, ArchDet, Setups, DNUtil, XDblWnd, Histries, CCalc,
-  DnIni, Collect, Objects2, Views, Scroller, Calculat,
+  DnIni, Objects, Objects2, Views, Scroller, Calculat,
   HelpKern, VideoMan
   {$IFDEF SpreadSheet}, Calc, CellsCol {$ENDIF}
   {$IFDEF DBView}, DBView, DBWatch {$ENDIF}

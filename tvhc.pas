@@ -134,7 +134,7 @@ program TVHC;
 uses
   Lfnvp, {DataCompBoy}
   Drivers, Defines, Streams, Objects2, Dos, Strings,
-  HelpKern, Advance, Advance1, Advance2, Collect, ObjType
+  HelpKern, Advance, Advance1, Advance2, Objects, ObjType
   , Commands {Cat}
   ;
 {$I Version.Inc}

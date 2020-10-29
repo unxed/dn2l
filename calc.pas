@@ -154,7 +154,7 @@ implementation
 
 uses
   Advance, Lfnvp, Messages, HistList, VPUtils,
-  Collect, Strings, ErrMess,
+  Objects, Strings, ErrMess,
   Memory, Dos, DNApp, DNStdDlg, Advance1, Advance2,
   MicroEd2, Histries
   ;

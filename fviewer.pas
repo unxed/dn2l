@@ -55,7 +55,7 @@ uses
   SysUtils,
   Defines, Streams, Views, Drivers,
   Advance, highlite, xTime,
-  Collect, FilesCol, XCode
+  Objects, FilesCol, XCode
   ;
 
 const

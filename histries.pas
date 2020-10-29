@@ -52,7 +52,7 @@ unit Histries;
 interface
 
 uses
-  Collect, Drivers, Defines, Objects2, Streams, Views,
+  Objects, Drivers, Defines, Objects2, Streams, Views,
   Drives, Advance, UKeyMap
   {$IFDEF DBView}, DBView {$ENDIF}
   ;

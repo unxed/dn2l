@@ -52,7 +52,7 @@ GetConst;
 interface
 
 uses
-  Collect, Objects2
+  Objects, Objects2
   ;
 
 type

@@ -51,7 +51,7 @@ unit ed2;
 interface
 
 uses
-  Commands, UKeyMap, Collect, Views, Drivers, Defines, Streams,
+  Commands, UKeyMap, Objects, Views, Drivers, Defines, Streams,
   Lfnvp {, SBlocks}
   ;
 

@@ -52,7 +52,7 @@ interface
 
 uses
   Defines, Dos, Commands,
-  Drivers, Collect
+  Drivers, Objects
   ;
 
 procedure FatalError(const S: String);

@@ -21,7 +21,7 @@ interface
 uses
   {$IFDEF OS2}Proc_Os2, {$ENDIF}
   {$IFDEF WIN32}Proc_W32, {$ENDIF}
-  Defines, Collect, Views, Drivers, Dialogs
+  Defines, Objects, Views, Drivers, Dialogs
   ;
 
 const

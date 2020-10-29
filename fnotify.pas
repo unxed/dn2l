@@ -33,7 +33,7 @@ implementation
 
 uses
   //Windows,  // by unxed
-  Defines, Objects2, Collect, Advance1
+  Defines, Objects2, Objects, Advance1
   ;
 
 type

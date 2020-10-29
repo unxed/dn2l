@@ -61,7 +61,7 @@ unit WinClpVp;
 interface
 
 uses
-  Defines, Streams, Collect
+  Defines, Streams, Objects
   ;
 
 function SetWinClip(PC: PLineCollection): Boolean; {$IFDEF DPMI32}

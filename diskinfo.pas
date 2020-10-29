@@ -52,7 +52,7 @@ interface
 
 uses
   vpsyslo2,
-  Defines, Streams, Drivers, Views, Collect, TopView
+  Defines, Streams, Drivers, Views, Objects, TopView
   ;
 
 type

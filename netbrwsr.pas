@@ -12,7 +12,7 @@ unit NetBrwsr;
 interface
 
 uses
-  Drives, Objects2, Streams, Collect, Views, FilesCol, Windows, Messages,
+  Drives, Objects2, Streams, Objects, Views, FilesCol, Windows, Messages,
   Defines, DiskInfo;
 
 type

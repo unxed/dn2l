@@ -53,7 +53,7 @@ unit DNStdDlg;
 interface
 
 uses
-  FilesCol, Collect, Defines, Streams, Drivers, Views, Dialogs
+  FilesCol, Objects, Defines, Streams, Drivers, Views, Dialogs
   ;
 
 const

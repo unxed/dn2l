@@ -52,7 +52,7 @@ interface
 
 uses
   Defines, Objects2, Streams, Views, Drivers,
-  FilesCol, DiskInfo, Collect
+  FilesCol, DiskInfo, Objects
   , PDSetup
   ;
 

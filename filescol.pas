@@ -53,7 +53,7 @@ interface
 
 uses
   Files, Defines, Streams,
-  Collect, Drivers, Hash
+  Objects, Drivers, Hash
   ;
 
 type

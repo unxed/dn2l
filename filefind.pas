@@ -53,7 +53,7 @@ interface
 
 uses
   Defines, Objects2, Streams, Views, Dialogs, Drivers,
-  FilesCol, Drives, Gauge, DiskInfo, Collect
+  FilesCol, Drives, Gauge, DiskInfo, Objects
   ;
 
 type

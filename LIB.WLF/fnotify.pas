@@ -32,7 +32,7 @@ procedure NotifyDone;
 implementation
 
 uses
-  Windows, Defines, Objects2, Collect, Advance1
+  Windows, Defines, Objects2, Objects, Advance1
   ;
 
 type

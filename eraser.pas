@@ -51,7 +51,7 @@ unit Eraser;
 interface
 
 uses
-  Collect
+  Objects
   ;
 
 procedure EraseFiles(Files: PCollection);
