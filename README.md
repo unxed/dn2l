@@ -29,6 +29,14 @@ wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x
 - Switch to Free Pascal Compiler
 - Add Unicode support
 
+### Roadmap (WIP)
+
+1) Add directives required by fp to stdefine.inc (inside fp-only conditional compilation block)
+2) Rename collect.pas to objects.pas (so that the names of all tv units matchs fv ones — needed for step 4)
+3) Move all inline functions to the implementation blocks
+4) In a separate branch, remove everything from vp and tp at all and try to build with fp and fv. Write shims for all VP RTL specific functions. Use code from DN TV to add DN extensions to the FV only if that code does not originates from the TP RTL sources, but is written by DN people and, therefore, is licensed under DN license. Mark all such code with a clear comment.
+5) Switch fv to utf8 the same way it is done here: github.com/magiblot/tvision
+
 ### Playing with the code
 
 - Some parts that are failing are commented out for now. You can search code by string "by unxed" to find out such disabled code paths if whishing to fix some of them.
@@ -62,15 +70,15 @@ Opening the NDN code would be great, but we shouldn't expect that we could gain 
 
 1) ndn.dbg contains both the line "Free Pascal 3.2.0 2020/10/18" and the line "VPSYSLOW.PP", so it seems to be built by Free Pascal Compiler, but on the top of Virtual Pascal RTL. VPSYSLOW module originates from the Virtual Pascal distribution (its modified version is present in DN OSP sources also). That is, NDN is still somethat based on the VP, which dn2l plans to get rid of over time.
 
-2) The ndn.dbg contains the line "COLLECT.PAS", which indicates the continued use of the custom version of Turbo Vision from DN (the corresponding file from the Free Vision kit is called differently: objects.pp), and DN's TV, as we now know, is based on code from Turbo Pascal, the possibility of using which in the FOSS project is still not unambiguous.
+2) ndn.dbg contains the line "COLLECT.PAS", which indicates the continued use of the custom version of Turbo Vision from DN (the corresponding file from the Free Vision kit is called differently: objects.pp), and DN's TV, as we now know, is based on code from Turbo Pascal, the possibility of using which in the FOSS project is still not unambiguous.
 
-Conclusions: NDN seems to have been created without concern for license clarity. It looks like it have code borrowings from both Borland and Virtual Pascal. In a public project, in any case, such code would have to be cut with transition to free licensed analogs, and this is almost equivalent in time costs to reworking a project from scratch from DN OSP sources.
+Conclusions: NDN seems to have been created without concern for license clarity. It looks like it have code borrowings from both Borland and Virtual Pascal. In a public project, in any case, such code would have to be cut with transition to free licensed analogs, and this is almost equivalent in time costs to reworking a project from DN OSP sources.
 
 So, perhaps you shouldn't pester NDN developers with a proposal to open the code: most likely, dn2l will not be able to get so much benefit from it, because we are striving for 100% license purity. Some components, maybe, could be reused, but one should not expect that NDN will open the code, we will merge it, and get completely FOSS DN with no legal problems.
 
-**The main work to be done is TV->FV transition, and this has to be done regardless of whether we will develop our own sources or switch to hypothetical open sources of NBN. By the way, this also applies to the ANSI->UTF8 transition, which is definitely unpromising for the DN TV code (what is the point of investing in code inherited from proprietary software and licensed under incomprehensible conditions?), but quite promising for FV (the entire open source community could benefit from it).**
+**The main work to be done is TV->FV transition, and this has to be done regardless of whether we will develop our own sources or switch to hypothetical open sources of NDN. By the way, this also applies to the ANSI->UTF8 transition, which is definitely unpromising for the DN TV code (what is the point of investing in code inherited from proprietary software and licensed under incomprehensible conditions?), but quite promising for FV (the entire open source community could benefit from it).**
 
-And, if we are talking about transition to Unicode, I want to note that there is a successful example of switching Turbo Vision to UTF-8, and, although it's a version for the C language, this proves that the transition with moderate time costs is possible: github.com/magiblot/tvision
+And, if we are talking about transition to Unicode, I want to note that there is a successful example of switching Turbo Vision to UTF-8, and, although it's a version for the C++17 language, this proves that the transition with moderate time costs is possible: github.com/magiblot/tvision
 
 Anyway we should thank NDN devs for usable Linux DN version and for proofing that such port is even possbile. Guys, you are great!
 
