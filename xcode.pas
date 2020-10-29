@@ -3,7 +3,7 @@ unit XCode;
 interface
 
 uses
-  Defines, Objects2, Streams, UKeyMap
+  Defines, Objects, Objects2, Streams, UKeyMap
   ;
 
 type
@@ -42,7 +42,8 @@ uses
   Advance, Advance1, Lfnvp, DNStdDlg, DnApp, Commands, DnIni
   ;
 
-constructor TXCoder.Init;
+constructor TXCoder.Init(AMaxCodeTagLen: Byte);
+//constructor TXCoder.Init;
   begin
   inherited Init;
   KeyMap := kmAscii;
@@ -52,7 +53,8 @@ constructor TXCoder.Init;
   MaxCodeTagLen := AMaxCodeTagLen;
   end;
 
-procedure TXCoder.Store;
+procedure TXCoder.Store(var S: TStream);
+//procedure TXCoder.Store;
   begin
   S.Write(KeyMap, SizeOf(KeyMap));
   S.Write(MaxCodeTagLen, SizeOf(MaxCodeTagLen));
@@ -61,7 +63,7 @@ procedure TXCoder.Store;
     S.Write(XLatCP[ToAscii], SizeOf(TXLat));
   end;
 
-constructor TXCoder.Load;
+constructor TXCoder.Load(var S: TStream);
   var
     FName: PString;
   begin
@@ -91,12 +93,12 @@ procedure TXCoder.UseKeyMap;
 
 procedure TXCoder.LoadXlatTable; {JO}
   var
-    FN: String;
+    FN: AnsiString;
     More: Boolean;
     None: Boolean;
-    Dr: String;
-    Nm: String;
-    Xt: String;
+    Dr: AnsiString;
+    Nm: AnsiString;
+    Xt: AnsiString;
   label
     SkipMenu;
   begin
@@ -104,7 +106,8 @@ procedure TXCoder.LoadXlatTable; {JO}
   None := KeyMap = kmXlat;
    if SkipXLatMenu then
      goto SkipMenu;
-  FN := GetFileNameMenu(SourceDir+'XLT\', '*.XLT', FN, True, More, None);
+// fixme: commented by unxed
+//  FN := GetFileNameMenu(SourceDir+'XLT\', '*.XLT', FN, True, More, None);
   if None then
     begin
     UseKeyMap;
@@ -112,11 +115,14 @@ procedure TXCoder.LoadXlatTable; {JO}
     end;
   if More then
 SkipMenu:
+  // fixme: commented by unxed
+  {
     FN := GetFileNameDialog(SourceDir+'XLT\*.XLT',
         GetString(dlSelectXLT),
         GetString(dlOpenFileName),
         fdOKButton+fdHelpButton,
         hsOpenXLT);
+  }
   if BuildCodeTable(FN, XLatCP) then
     begin
     lFSplit(FN, Dr, Nm, Xt);

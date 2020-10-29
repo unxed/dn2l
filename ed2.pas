@@ -52,6 +52,7 @@ interface
 
 uses
   Commands, UKeyMap, Objects, Views, Drivers, Defines, Streams,
+  Objects2,
   Lfnvp {, SBlocks}
   ;
 

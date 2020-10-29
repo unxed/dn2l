@@ -53,7 +53,7 @@ unit Gauge;
 interface
 
 uses
-  Drivers, Defines, Views, Dialogs, Objects
+  Drivers, Defines, Views, Dialogs, Objects, Objects2
   ;
 
 const

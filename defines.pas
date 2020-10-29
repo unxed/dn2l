@@ -10,6 +10,14 @@ uses
   VpSysLow
   ;
 
+// by unxed
+// maybe not the best place for it
+const
+  { TDialog palette entires }
+  dpRedDialog = 1;
+  dpCyanDialog = 2;
+  dpGrayDialog = 3;
+  
 const
   MaxLongStringLength = 1048575;
   MaxBytes = 128*1024*1024;

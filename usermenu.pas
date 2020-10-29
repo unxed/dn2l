@@ -52,7 +52,7 @@ unit UserMenu;
 interface
 
 uses
-  Defines, Views, Scroller, Drivers, FilesCol
+  Objects, Defines, Views, Scroller, Drivers, FilesCol
   ;
 
 var
@@ -92,7 +92,7 @@ uses
   Lfnvp, {DataCompBoy}
   DNApp, Advance, Advance1, Advance2, Startup, Messages, Menus,
   Commands, Microed, {WinClp, // commented by unxed} DNHelp, Dos, Memory, Dialogs, Tree
-  , filediz, Objects, VPUtils
+  , filediz, VPUtils
   ;
 
 type

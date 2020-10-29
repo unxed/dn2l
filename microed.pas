@@ -74,6 +74,7 @@ uses
   Advance, Menus,
   Commands, {SBlocks,}ObjType, UKeyMap, Objects,
   {$IFDEF REGEXP}RegExp, {$ENDIF}
+  Objects2,
   ed2, highlite
   ;
 

@@ -52,7 +52,7 @@ unit Messages;
 interface
 
 uses
-  Defines, Commands, Drivers
+  Math, Objects, Defines, Commands, Drivers
   ;
 
 const
@@ -136,7 +136,7 @@ procedure CantWrite(const FName: String);
 
 function FmtFile(const Fmt: String; const FName: String; len: Integer)
   : String;
-function FmtStr(const Fmt: String; const S: String): String;
+function FmtStr2(const Fmt: String; const S: String): String;
 function FmtStrId(Id: TStrIdx; const S: String): String;
 function FmtFileId(Id: TStrIdx; const FName: String): String;
 
@@ -272,7 +272,7 @@ function MessageBoxRect;
     Control: PView;
     T: TRect;
     ButtonList: array[0..4] of PView;
-    S: String;
+    S: ShortString;
     PP: TPoint;
     Event: TEvent;
 
@@ -358,7 +358,7 @@ function MessageBox2Rect;
     Control: PView;
     T: TRect;
     ButtonList: array[0..4] of PView;
-    S: String;
+    S: ShortString;
     PP: TPoint;
     Event: TEvent;
   begin
@@ -590,7 +590,7 @@ function InputBoxRect;
 
 function FmtFile;
   var
-    s, f: String;
+    s, f: ShortString;
     P: PString;
   begin
   if len = MaxInt then
@@ -602,14 +602,14 @@ function FmtFile;
   FmtFile := s;
   end;
 
-function FmtStr(const Fmt: String; const S: String): String;
+function FmtStr2(const Fmt: String; const S: String): String;
   begin
-  FmtStr := FmtFile(Fmt, S, MaxInt);
+  FmtStr2 := FmtFile(Fmt, S, MaxInt);
   end;
 
 function FmtStrId(Id: TStrIdx; const S: String): String;
   begin
-  FmtStrId := FmtStr(GetString(Id), S);
+  FmtStrId := FmtStr2(GetString(Id), S);
   end;
 
 function FmtFileId;

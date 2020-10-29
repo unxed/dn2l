@@ -10,6 +10,8 @@
 unit FlTl;
 interface
 
+uses use32;
+
 type
   DWord = Longint; // by unxed
   Handle = Longint; // by unxed

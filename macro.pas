@@ -51,7 +51,7 @@ unit Macro;
 interface
 
 uses
-  Advance, Defines, Objects2, Views, Objects,
+  Math, Advance, Defines, Objects2, Views, Objects,
   Microed, highlite, Strings
   ;
 

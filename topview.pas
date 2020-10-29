@@ -3,7 +3,7 @@ unit TopView;
 interface
 
 uses
-  Views, Streams, Drivers
+  Objects, Views, Streams, Drivers
   ;
 
 type
