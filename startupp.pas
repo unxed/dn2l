@@ -55,13 +55,14 @@ unit Startupp;
 interface
 
 uses
-  Defines, Startup, Objects, CCalc
+  Dos,
+  Defines, Startup, Objects, Objects2, CCalc
   ;
 
 type
 
   {Cat: выкинул, т.к. TTextCollection = TLineCollection}
-  (*
+(*
   PTextCollection =^TTextCollection;
   TTextCollection = Object( TCollection )
     procedure FreeItem( Item: Pointer ); virtual;
@@ -156,7 +157,8 @@ TempDir := lfGetLongFileName(TempDir);
 TempFile := lfGetLongFileName(TempFile);
 {$ENDIF}
 
-if  (SysPlatformId <> -1) and (SysPlatformId <> 2) then
-  CmdExt := '.BAT'
+//if  (SysPlatformId <> -1) and (SysPlatformId <> 2) then
+//  CmdExt := '.BAT'
+CmdExt := '.sh'; // fixme: hardcode by unxed
 end.
 
