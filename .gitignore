@@ -2,6 +2,8 @@
 *.ERR
 *.vpi
 *.lib
+*.o
+*.ppu
 dn
 dn.123
 dn.asm
