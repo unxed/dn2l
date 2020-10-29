@@ -60,7 +60,7 @@ It turned out that some of the source code files originally published by Ritlabs
 
 Opening the NDN code would be great, but we shouldn't expect that we could gain so much from opening its source. The author of dn2l examined the NDN debug symbols (they are published with the freeware binary distribution), and found the following:
 
-1) ndn.dbg contains both the line "Free Pascal 3.2.0 2020/10/18" and the line "VPSYSLOW.PP", so it seems to be build by Free Pascal Compiler, but on the top of Virtual Pascal RTL. VPSYSLOW module originates from the Virtual Pascal distribution (its modified version is present in DN OSP sources also). That is, the VP remains in the NDN, which dn2l plans to get rid of over time.
+1) ndn.dbg contains both the line "Free Pascal 3.2.0 2020/10/18" and the line "VPSYSLOW.PP", so it seems to be build by Free Pascal Compiler, but on the top of Virtual Pascal RTL. VPSYSLOW module originates from the Virtual Pascal distribution (its modified version is present in DN OSP sources also). That is, NDN is still somethat based on the VP, which dn2l plans to get rid of over time.
 
 2) The ndn.dbg contains the line "COLLECT.PAS", which indicates the continued use of the custom version of Turbo Vision from DN (the corresponding file from the Free Vision kit is called differently: objects.pp), and DN's TV, as we now know, is based on code from Turbo Pascal, the possibility of using which in the FOSS project is still not unambiguous.
 
