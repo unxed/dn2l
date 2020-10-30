@@ -51,7 +51,7 @@ unit DblWnd;
 interface
 
 uses
-  Views, Defines, Streams, Drivers, FlPanelX, FlPanel
+  Objects, drivers2, math, dnctrls, Views, Defines, Streams, Drivers, FlPanelX, FlPanel
   ;
 
 type

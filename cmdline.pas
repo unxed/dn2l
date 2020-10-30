@@ -52,7 +52,7 @@ unit CmdLine;
 interface
 
 uses
-  Drivers, Defines, Views
+  objects, Drivers, Defines, Views
   ;
 
 type
@@ -70,7 +70,7 @@ type
     procedure GetDir;
     procedure GetData(var S); virtual;
     procedure SetData(var S); virtual;
-    function DataSize: Word; virtual;
+    //function DataSize: Word; virtual;
     procedure SetDirShape;
     procedure QueryCursorVisible; {AK155}
     end;

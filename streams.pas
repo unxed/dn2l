@@ -1,7 +1,8 @@
 unit streams;
 interface
-uses classes;
+uses objects;
 type
   PStream = ^TStream;
+
 implementation
 end.

@@ -645,22 +645,22 @@ constructor THelpFile.Init(S: PStream);
     Magic: LongInt;
   begin
   Magic := 0;
-  S^.Seek(0, soFromBeginning); // by unxed
-  if S^.Size > SizeOf(Magic) then
+  S^.Seek(0);
+  if S^.GetSize > SizeOf(Magic) then
     S^.Read(Magic, SizeOf(Magic));
   if Magic <> MagicHeader then
     begin
     IndexPos := 12;
-    S^.Seek(IndexPos, soFromBeginning); // by unxed
+    S^.Seek(IndexPos);
     Index := New(PHelpIndex, Init);
     Modified := True;
     end
   else
     begin
-    S^.Seek(8, soFromBeginning); // by unxed
+    S^.Seek(8);
     S^.Read(IndexPos, SizeOf(IndexPos));
-    S^.Seek(IndexPos, soFromBeginning); // by unxed
-    Index := PHelpIndex(S^.ReadComponent); // by unxed, possible fixme
+    S^.Seek(IndexPos);
+    Index := PHelpIndex(S^.Get);
     Modified := False;
     end;
   Stream := S;
@@ -672,11 +672,12 @@ destructor THelpFile.Done;
   begin
   if Modified then
     begin
-    Stream^.Seek(IndexPos, soFromBeginning); // by unxed
-    Stream^.WriteComponent(TComponent(Index)); // by unxed, possible fixme
-    Stream^.Seek(0, soFromBeginning); // by unxed
+    Stream^.Seek(IndexPos);
+    // fixme: commented by unxed
+    //Stream^.Put(Index);
+    Stream^.Seek(0);
     Magic := MagicHeader;
-    Size := i32(Stream^.Size-8);
+    Size := i32(Stream^.GetSize-8);
     Stream^.Write(Magic, SizeOf(Magic));
     Stream^.Write(Size, SizeOf(Size));
     Stream^.Write(IndexPos, SizeOf(IndexPos));
@@ -696,8 +697,8 @@ function THelpFile.GetTopic(I: AWord): PHelpTopic;
   Pos := Index^.Position(I);
   if Pos > 0 then
     begin
-    Stream^.Seek(Pos, soFromBeginning); // by unxed
-    GetTopic := PHelpTopic(Stream^.ReadComponent); // by unxed, possible fixme
+    Stream^.Seek(Pos);
+    GetTopic := PHelpTopic(Stream^.Get);
     end
   else
     GetTopic := InvalidTopic;
@@ -729,8 +730,9 @@ procedure THelpFile.RecordPositionInIndex(I: AInt);
 
 procedure THelpFile.PutTopic(Topic: PHelpTopic);
   begin
-  Stream^.Seek(IndexPos, soFromBeginning); // by unxed
-  Stream^.WriteComponent(TComponent(Topic)); // by unxed, possible fixme
+  Stream^.Seek(IndexPos);
+  //fixme: commented by unxed
+  //Stream^.Put(Topic);
   IndexPos := i32(Stream^.Position){!!s};
   Modified := True;
   end;

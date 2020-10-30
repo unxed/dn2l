@@ -51,7 +51,7 @@ unit FStorage;
 interface
 
 uses
-  Objects, Objects2, Streams, Defines, FilesCol
+  dnsys, math, Objects, Objects2, Streams, Defines, FilesCol
   ;
 
 type
@@ -185,13 +185,15 @@ LLL:
     Stream^.Write(Buffer, N);
     if Stream^.Status <> stOK then
       begin
-      Dispose(Stream, Done);
+      //Dispose(Stream, Done);
+      Dispose(Stream); // by unxed, possible fixme
       Stream := nil;
       goto LLL
       end;
     Dec(Count, N);
     end;
-  Dispose(OldStream, Done);
+  //Dispose(OldStream, Done);
+  Dispose(OldStream); // by unxed, possible fixme
   Stream^.Seek(vSavePos);
   end { TDirStorage.FixError };
 
@@ -206,7 +208,8 @@ procedure TDirStorage.InitStream;
       Stream := New(PMemoryStream, Init(M, 2048));
       if Stream^.Status <> stOK then
         begin
-        Dispose(Stream, Done);
+        //Dispose(Stream, Done);
+        Dispose(Stream); // by unxed, possible fixme
         Stream := nil
         end;
       end;
@@ -216,7 +219,8 @@ procedure TDirStorage.InitStream;
 destructor TDirStorage.Done;
   begin
   if Stream <> nil then
-    Dispose(Stream, Done);
+    //Dispose(Stream, Done);
+    Dispose(Stream); // by unxed, possible fixme
   Stream := nil;
   end;
 
@@ -369,7 +373,7 @@ constructor TDirStorage.Load;
   S.Read(L, SizeOf(L));
   vSize := L;
   TryStream(L);
-  P := i32(S.GetPos);
+  P := i32(S.Position);
   repeat
     Stream^.CopyFrom(S, L);
     if Stream^.Status = stOK then
@@ -503,11 +507,11 @@ procedure TDirStorage.vSeek;
 
 procedure TDirStorage.vTruncate;
   begin
-  Stream^.Truncate;
+  Stream^.Flush;
   if Stream^.Status = stOK
   then
     begin
-    vSize := i32(Stream^.GetPos);
+    vSize := i32(Stream^.Position);
     vSavePos := vSize
     end
   else

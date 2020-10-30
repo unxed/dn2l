@@ -58,6 +58,8 @@ interface
 
 const
   SkyEnabled: Integer = 0;
+  ShiftState: Byte = 0;
+  ShiftState2: Byte = 0;
 
 procedure DoDump;
 
