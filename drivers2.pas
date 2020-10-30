@@ -60,6 +60,12 @@ const
   SkyEnabled: Integer = 0;
   ShiftState: Byte = 0;
   ShiftState2: Byte = 0;
+  MouseVisible: Boolean = True;
+  CurrentBlink: Boolean = False;
+
+var
+  MouseX: Word;
+  MouseY: Word;
 
 procedure DoDump;
 

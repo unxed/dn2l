@@ -1,3 +1,4 @@
+{$MODE DELPHI}
 unit dnctrls;
 
 // by unxed
@@ -7,7 +8,7 @@ unit dnctrls;
 
 interface
 
-uses Startup, Commands, views, dialogs;
+uses Objects, Startup, Commands, views, dialogs;
 
 type
   PLongInputline = ^TLongInputLine;
@@ -30,6 +31,8 @@ type
   private
     procedure DrawPos(Pos: LongInt);
     end;
+
+function TPoint_EqualsXY(Point: TPoint; AX, AY: LongInt): boolean;
 
 implementation
 
@@ -108,5 +111,10 @@ procedure TMyScrollBar.DrawPos(Pos: LongInt);
   WriteBuf(0, 0, Size.X, Size.Y, B);
 }  end { TMyScrollBar.DrawPos };
 
+
+function TPoint_EqualsXY(Point: TPoint; AX, AY: LongInt): boolean;
+begin
+    Result := (Point.X = AX) and (Point.Y = AY);
+end;
 
 end.

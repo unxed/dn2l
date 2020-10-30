@@ -58,6 +58,30 @@ const
   MaxLongStringLength = 1048575;
 
 const
+    kbCtrlShiftLeft = $f0; //stubs
+    kbCtrlShiftRight = $f1;
+    kbAltShiftLeft = $f2;
+    kbAltShiftRight = $f3;
+    kbAltCtrlSqBracketL = $f4;
+    kbCtrlSqBracketL = $f5;
+    kbAltCtrlSqBracketR = $f6;
+    kbCtrlSqBracketR = $f7;
+    kbCtrl1 = $f8;
+    kbCtrl2 = $f9;
+    kbCtrl3 = $fa;
+    kbCtrl4 = $fb;
+    kbCtrl5 = $fc;
+    kbCtrl6 = $fd;
+    kbCtrl7 = $fe;
+    kbCtrl8 = $ff;
+    kbCtrl9 = $e0;
+    kbCtrl0 = $e1;
+    kbCtrlAltZ = $e2;
+
+
+// use FV constans instead; by unxed
+(*
+const
   {Cat: переделал все коды клавиш по следующему единому принципу:
         kbNNNN = $XXYYZZ
         XX - флажки сдвигов: 3 - Shift, 4 - Ctrl, 8 - Alt
@@ -690,7 +714,7 @@ const
   kbCtrlAltGAst = kbCtrlAltGrayAst;
   kbCtrlAltGSlash = kbCtrlAltGraySlash;
   {/Cat}
-
+*)
 const
 
   { Event codes }

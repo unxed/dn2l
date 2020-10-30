@@ -51,7 +51,7 @@ unit Idlers;
 interface
 
 uses
-  Views, Drivers, Defines, xTime
+  Objects, Drivers2, dnsys, Views, Drivers, Defines, xTime
   ;
 
 type
@@ -519,7 +519,8 @@ procedure CallExternalSaver(const FN: String);
   HideMouse;
   DoneEvents;
   {JO}
-  SM := ScreenMode;
+// fixme: commented by unxed
+//  SM := ScreenMode;
   DoneVideo;
   {/JO}
   DoneDOSMem;

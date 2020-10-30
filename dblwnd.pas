@@ -286,17 +286,20 @@ procedure TDoubleWindow.ChangeBounds(var Bounds: TRect);
   GetExtent(R);
   R.Grow(-1, 0);
   R.A.X := (R.B.X*Separator^.OldX) div Separator^.OldW;
-  if D.EqualsXY(0, 0) and (R.A.X = Separator^.Origin.X) then
+  //if D.EqualsXY(0, 0) and (R.A.X = Separator^.Origin.X) then
+  if TPoint_EqualsXY(D, 0, 0) and (R.A.X = Separator^.Origin.X) then
     begin
     SetBounds(Bounds);
     DrawView;
     end
   else
     begin
-    FreeBuffer;
+    //fixme: commented by unxed
+    //FreeBuffer;
     SetBounds(Bounds);
-    GetExtent(Clip);
-    GetBuffer;
+    //fixme: commented by unxed
+    //GetExtent(Clip);
+    //GetBuffer;
     Lock;
     GetExtent(R);
     Frame^.ChangeBounds(R);
@@ -450,7 +453,9 @@ function ValidVP(var P: PView; S: PView {скроллбар}): Boolean;
 procedure InsertView(var P: PView; S: PView; Manager: PDoubleWindow);
   begin
   if ValidVP(P, S) then
-    with Manager do
+    // dblwnd.pas(456,18) Error: Expression type must be class or record type, got ^TDoubleWindow
+    // fixme: ^ added by unxed
+    with Manager^ do
       begin
       Insert(P);
       Insert(S);
@@ -499,7 +504,8 @@ function InsertTree(R1: TRect;
     Inc(R1.B.Y, 2);
     P := New(PTreeInfoView, Init(R1, PHTreeView(Result)));
     PHTreeView(Result)^.Info := P;
-    with Manager do
+    // fixme: ^ added by unxed
+    with Manager^ do
       begin
       Insert(P);
       Insert(Result);
@@ -708,7 +714,8 @@ procedure TDoubleWindow.ChangeDrv(N: TPanelNum);
   GetBounds(R);
   if not PanelVisible or (Panel[N].PanelType <> dtPanel) then
     begin
-    with ThisPanel do
+    // fixme: ^ added by unxed
+    with ThisPanel^ do
       P.X := Origin.X + Size.X div 2 - 8;
     P.Y := Origin.Y+3;
     S := SelectDrive(P.X, P.Y,

@@ -52,7 +52,7 @@ unit CmdLine;
 interface
 
 uses
-  objects, Drivers, Defines, Views
+  objects, dnsys, drivers2, Drivers, Defines, Views
   ;
 
 type
