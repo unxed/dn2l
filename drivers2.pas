@@ -56,12 +56,15 @@ unit Drivers2;
 
 interface
 
+const
+  SkyEnabled: Integer = 0;
+
 procedure DoDump;
 
 implementation
 
 uses
-  Defines, Dos, Advance, Lfnvp, Advance1, Drivers
+  dnsys, Defines, Dos, Advance, Lfnvp, Advance1, Drivers
   {, SysUtils}, VpSysLow
   ;
 
@@ -72,7 +75,8 @@ procedure DoDump;
     PByteArray = ^TByteArray;
     TByteArray = array[0..65528] of Byte;
   var
-    C, AC, PP, FH: Word;
+    C, AC, PP: Word;
+    FH: LongInt;
     PPP: TByteArray absolute FreeStr;
     PhysAddr: Pointer;
     I: Byte;
@@ -81,8 +85,11 @@ procedure DoDump;
     {FileName: String;}
 
   function StoreBuffer(var Buf; Size: Word; FH: Word): Word;
+    var
+        sz: longint;
     begin
-    StoreBuffer := SysFileWrite(FH, Buf, Size, Size);
+    sz := Size; // by unxed
+    StoreBuffer := SysFileWrite(FH, Buf, sz, sz);
     end;
 
   {$ENDIF DNPRG}
@@ -122,7 +129,7 @@ procedure DoDump;
       'CS  :'+Hex4(CSeg)+^M^J+
       'DS  :'+Hex4(DSeg)+^M^J+
       'SS  :'+Hex4(SSeg)+^M^J+
-      'SP  :'+Hex4(SPtr)+^M^J+
+      'SP  :'+Hex8(LongInt(SPtr))+^M^J+
       'MEMm:'+Hex8(MaxAvail)+^M^J+
       'MEMa:'+Hex8(MemAvail)+^M^J+
       '';

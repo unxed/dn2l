@@ -51,7 +51,7 @@ unit Eraser;
 interface
 
 uses
-  Objects, Objects2
+  dnsys, Objects, Objects2
   ;
 
 procedure EraseFiles(Files: PCollection);
@@ -62,7 +62,7 @@ implementation
 uses
   Defines, Files, Filediz,
   Dos, Lfnvp {DataCompBoy}, FilesCol, Commands, Advance, Advance1, Advance2,
-  Startup, Messages, xTime, Drivers, Tree, Memory,
+  Startup, Messages, xTime, Drivers, Drivers2, Tree, Memory,
   DNApp, Gauge, Views, Dialogs, Drives, FileCopy
   , fnotify, Events
   {JO} {$IFDEF OS2}, VPUtils {$ENDIF}, FlTl
@@ -189,8 +189,11 @@ procedure EraseFiles;
     DosDelDir := False;
     Abort := False;
     Params.RC := 0;
-    New(DC, Init($10, $10, False));
-    New(TD, Init($10, $10, False));
+//    New(DC, Init($10, $10, False));
+//    New(TD, Init($10, $10, False));
+// fixme: removed constructor params by unxed
+    New(DC);
+    New(TD);
     DC^.Insert(NewStr(FreeStr));
 
     while (DC^.Count>0) and (not EraseCancel) and (not Abort) do
@@ -551,14 +554,16 @@ DeleteDirDIZ:
         RereadDirectory(S);
       end;
 *)
-  RereadCollection := New(PStringCollection, Init(32, 32, False));
+  //RereadCollection := New(PStringCollection, Init(32, 32, False));
+  // fixme: by unxed
+  RereadCollection := New(PStringCollection);
   {сортированная, без повторов}
   for I := 0 to Files^.Count-1 do
     begin
     RereadCollection^.Insert(PFileRec(Files^.At(I))^.Owner);
     if PFileRec(Files^.At(I))^.Attr and Directory <> 0 then
       begin
-      PStr1 := NewStr('>'+MakeNormName(PFileRec(Files^.At(I))^.Owner^,
+      PStr1 := NewStrDN('>'+MakeNormName(PFileRec(Files^.At(I))^.Owner^,
             PFileRec(Files^.At(I))^.FlName[True])+'/'); // slash change by unxed
       RereadCollection^.Insert(PStr1);
       end;

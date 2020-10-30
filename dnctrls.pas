@@ -7,7 +7,7 @@ unit dnctrls;
 
 interface
 
-uses dialogs;
+uses Startup, Commands, views, dialogs;
 
 type
   PLongInputline = ^TLongInputLine;
@@ -23,6 +23,13 @@ type
     procedure SetData(var Rec); virtual;
     end;
     {`}
+
+  PMyScrollBar = ^TMyScrollBar;
+  TMyScrollBar = object(TScrollBar)
+    procedure Draw; virtual;
+  private
+    procedure DrawPos(Pos: LongInt);
+    end;
 
 implementation
 
@@ -49,6 +56,52 @@ procedure TLongInputLine.SetData(var Rec);
   SelectAll(True);
   *)
   end;
+
+procedure TMyScrollBar.Draw;
+  var
+    chrs: TScrollChars;
+  begin
+  if Startup.FMSetup.Show and fmsShowScrollBar <> 0 then
+    DrawPos(GetPos)
+  else
+    begin
+    chrs := Chars;
+    Chars := #186#186#186#186#186;
+    DrawPos(GetPos);
+    Chars := chrs;
+    end;
+  end;
+
+procedure TMyScrollBar.DrawPos(Pos: LongInt);
+  var
+    S: LongInt;
+    B: TDrawBuffer;
+    col1, col2, col3: Byte;
+  begin
+  S := GetSize-1;
+  if Startup.FMSetup.Show and fmsShowScrollBar <> 0 then
+    begin
+    col1 := GetColor(1);
+    col2 := GetColor(2);
+    col3 := GetColor(3);
+    end
+  else
+    begin
+    col1 := GetColor(1);
+    col2 := col1;
+    col3 := col2;
+    end;
+  MoveChar(B[0], Chars[0], col2, 1);
+  if Max = Min then
+    MoveChar(B[1], Chars[4], col1, S-1)
+  else
+    begin
+    MoveChar(B[1], Chars[2], col1, S-1);
+    MoveChar(B[Pos], Chars[3], col3, 1);
+    end;
+  MoveChar(B[S], Chars[1], col2, 1);
+  WriteBuf(0, 0, Size.X, Size.Y, B);
+  end { TMyScrollBar.DrawPos };
 
 
 end.

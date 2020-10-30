@@ -82,7 +82,7 @@ procedure CloseProfile;
 implementation
 
 uses
-  Strings, Streams, Advance1
+  Objects, Strings, Streams, Advance1
   ;
 
 { The most expensive operation with buffered streams is seeking --

@@ -633,6 +633,16 @@ procedure Loader(Group, Parameter: PChar; Kind: TIniItemKind;
     b: Byte;
   begin
   s := IniVarToStr(Kind, Size, PVar)+#0;
+  setlength(s, Ord(Chr(GetPrivateProfileString(
+        Group,
+        Parameter,
+        @s[1],
+        @s[1],
+        255,
+        @FreeStr[1]
+        ))));
+  // fixme? change by unxed
+  {
   s[0] := Chr(GetPrivateProfileString(
         Group,
         Parameter,
@@ -641,6 +651,7 @@ procedure Loader(Group, Parameter: PChar; Kind: TIniItemKind;
         255,
         @FreeStr[1]
         ));
+  }
   if not IniStrToVar(s, Kind, Size, PVar) then
     begin
     b := 0;

@@ -56,6 +56,8 @@ unit DNUtil;
 interface
 
 uses
+  dnctrls,
+  Objects,
   Defines, Objects2,
    {SBlocks,}Drivers, Streams,
   Views, Scroller, DNApp,
@@ -214,12 +216,12 @@ const
   #13#3'http://www.dnosp.com/'#13+
   #13#3'Based on: '+
   'Dos Navigator Open Source 1.51.08'#13+
-  {$IFDEF LITE}+#3'Light version'#13+ {$ENDIF}
-  +#3'http://www.dnosp.com'+
-  +#13+
-  +#13#3'Thanks to fPrint (UK) Ltd for copy of VP'+
-  +#13#3'http://www.vpascal.com'#13
-  +#13#13
+  {$IFDEF LITE}#3'Light version'#13+ {$ENDIF}
+  #3'http://www.dnosp.com'+
+  #13+
+  #13#3'Thanks to fPrint (UK) Ltd for copy of VP'+
+  #13#3'http://www.vpascal.com'#13 +
+  #13#13
   {#3'Based on Dos Navigator' +
      +#13#3'Copyright (C) 1991-99 RIT Research Labs'#13#13};
 

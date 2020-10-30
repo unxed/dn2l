@@ -51,7 +51,7 @@ unit HelpFile;
 interface
 
 uses
-  Defines, Drivers, Views, Scroller, HelpKern
+  Objects, Defines, Drivers, Views, Scroller, HelpKern
   ;
 
 const

@@ -54,7 +54,7 @@ FlPanelX;
 interface
 
 uses
-  Defines, Streams,
+  Objects, Defines, Streams,
   Views, Drivers, FilesCol, PDSetup, Drives, xTime
   ;
 
