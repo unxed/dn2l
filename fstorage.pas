@@ -51,7 +51,7 @@ unit FStorage;
 interface
 
 uses
-  Objects2, Streams, Defines, FilesCol
+  Objects, Objects2, Streams, Defines, FilesCol
   ;
 
 type

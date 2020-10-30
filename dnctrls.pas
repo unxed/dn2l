@@ -61,6 +61,8 @@ procedure TMyScrollBar.Draw;
   var
     chrs: TScrollChars;
   begin
+  // fixme: commented by unxed
+  {
   if Startup.FMSetup.Show and fmsShowScrollBar <> 0 then
     DrawPos(GetPos)
   else
@@ -70,6 +72,7 @@ procedure TMyScrollBar.Draw;
     DrawPos(GetPos);
     Chars := chrs;
     end;
+    }
   end;
 
 procedure TMyScrollBar.DrawPos(Pos: LongInt);
@@ -78,6 +81,8 @@ procedure TMyScrollBar.DrawPos(Pos: LongInt);
     B: TDrawBuffer;
     col1, col2, col3: Byte;
   begin
+  // fixme: commented by unxed
+{
   S := GetSize-1;
   if Startup.FMSetup.Show and fmsShowScrollBar <> 0 then
     begin
@@ -101,7 +106,7 @@ procedure TMyScrollBar.DrawPos(Pos: LongInt);
     end;
   MoveChar(B[S], Chars[1], col2, 1);
   WriteBuf(0, 0, Size.X, Size.Y, B);
-  end { TMyScrollBar.DrawPos };
+}  end { TMyScrollBar.DrawPos };
 
 
 end.

@@ -54,7 +54,7 @@ procedure LongCopy(Fn1: String);
 
 implementation
 uses
-  Lfnvp, Dos, Tree, VPSysLow, Advance, Advance1, Advance2, FileCopy, DNApp,
+  dnsys, Objects, Math, Strings, drivers2, Lfnvp, Dos, Tree, VPSysLow, Advance, Advance1, Advance2, FileCopy, DNApp,
   Messages, Views, Defines, Dialogs, Commands, Drivers, Memory, HistList,
   Gauge, Startup, xTime, ErrMess, VPUtils, vpsyslo2
   ;
@@ -303,6 +303,10 @@ procedure LongCopy(Fn1: String);
     end { RequireNew };
 
   procedure MaxWrite;
+  begin
+    // fixme: commented by unxed
+  end;
+  (*
     label Rep, 1, 2, 33;
     var
       i: Byte;
@@ -393,6 +397,7 @@ Rep:
           Dec(i);
         end;
     end { MaxWrite };
+  *)
 
   function CheckSvoi: Byte;
     var
