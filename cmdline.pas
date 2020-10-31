@@ -52,7 +52,7 @@ unit CmdLine;
 interface
 
 uses
-  objects, dnsys, drivers2, Drivers, Defines, Views
+  use32, math, objects, dnsys, drivers2, Drivers, Defines, Views
   ;
 
 type
@@ -70,7 +70,7 @@ type
     procedure GetDir;
     procedure GetData(var S); virtual;
     procedure SetData(var S); virtual;
-    //function DataSize: Word; virtual;
+    function DataSize: DWord; virtual;
     procedure SetDirShape;
     procedure QueryCursorVisible; {AK155}
     end;
@@ -152,7 +152,7 @@ procedure TCommandLine.GetDir;
     MM: record
       case Byte of
         //1: (l: LongInt; S: String[1]);
-        1: (l: LongInt; S: String); // fixme: removed [1] to fix build by unxed
+        1: (l: LongInt; S: Char); // fixme: String[1]->Char by unxed
         2: (C: Char);
       end;
     D: PDialog;
@@ -176,8 +176,9 @@ procedure TCommandLine.GetDir;
           D^.GetData(MM);
           Dispose(D, Done);
           end;
-        UpStr(MM.S);
-        if ValidDrive(MM.S[1]) then
+        //fixme: commented by unxed
+        //UpStr(MM.S);
+        if ValidDrive(MM.S) then
           Break;
       until False;
       Abort := True;
@@ -242,6 +243,7 @@ procedure TCommandLine.Update;
   if not CursorMustBeVisible then
     Exit;
 
+  (*
   { А теперь делаем, чтобы курсор действиельно имел нужный вид }
   SysGetCurPos(A1, A2);
   SysTVGetCurType(CursorStartScanLine, CursorEndScanLine, CursorVisible);
@@ -275,6 +277,9 @@ procedure TCommandLine.Update;
   if  (A1 <> P.X) or (A2 <> Origin.Y) then
     SysTVSetCurPos(P.X, Origin.Y);
   {/AK155}
+
+  // fixme: commented by unxed
+  *)
   end { TCommandLine.Update };
 
 procedure TCommandLine.SetState;

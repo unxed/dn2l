@@ -2,6 +2,7 @@
 {$asmMode intel}
 {$MODE DELPHI}
 {.$DEFINE USE32} // not sure if we need this for fpc. unxed
+{$DEFINE MINARCH}
 {$endif} // by unxed
 
 {$DEFINE DNPRG} // by unxed

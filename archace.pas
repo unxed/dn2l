@@ -50,7 +50,7 @@ unit archACE; {ACE}
 interface
 
 uses
-  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
+  dnsys, Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
 type
@@ -108,47 +108,47 @@ constructor TACEArchive.Init;
   FreeStr := SourceDir+DNARC;
   TObject.Init;
   {$IFNDEF OS2}
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ACE'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'ACE'));
+  Packer := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ACE'));
+  UnPacker := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'ACE'));
   {$ELSE}
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ACE2'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'ACE2'));
+  Packer := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ACE2'));
+  UnPacker := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'ACE2'));
   {$ENDIF}
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, 'm'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-p'));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
-  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
+  Extract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
+  ExtractWP := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
+  Add := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a'));
+  Move := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PMove, 'm'));
+  Delete := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
+  Test := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
+  Garble := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PGarble, '-p'));
+  IncludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
+  ExcludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
          '-ep'));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
-  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec,
+  ForceMode := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  RecoveryRec := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec,
        '-rr'));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract,
+  SelfExtract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSelfExtract,
          '-sfx'));
-  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, '-s'));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
+  Solid := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSolid, '-s'));
+  RecurseSubDirs := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
          ''));
-  SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
+  SetPathInside := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
-  StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  StoreCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, '-m0'));
-  FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastestCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastestCompression, '-m1'));
-  FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastCompression, '-m2'));
-  NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  NormalCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PNormalCompression, '-m3'));
-  GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  GoodCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PGoodCompression, '-m4'));
-  UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  UltraCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PUltraCompression, '-m5'));
-  ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
+  ComprListChar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
          '@'));
-  ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
+  ExtrListChar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
        '@'));
 
   q := GetVal(@Sign[1], @FreeStr[1], PAllVersion, '0');

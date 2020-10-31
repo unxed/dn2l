@@ -50,7 +50,7 @@ unit DnExec;
 interface
 
 uses
-  Defines, FilesCol, Commands
+  use32, drivers2, dnsys, objects, Defines, FilesCol, Commands
   ;
 
 procedure ExecString(const S: AnsiString; const WS: String);
@@ -114,8 +114,11 @@ procedure AnsiExec(const Path: String; const ComLine: AnsiString);
   MakeNoSlash(S);
   ChDir(S);
   c := IOResult;
+  (*
   DosError := SysExecute(StrPCopy(PathBuf, Path), PChar(Ans1), nil,
       ExecFlags = efAsync, nil, -1, -1, -1);
+  *)
+  // fixme: commented by unxed
 {$IFNDEF Win32}
 //  освобождаем каталог
   if ActiveDir[2] = ':' then
@@ -123,7 +126,8 @@ procedure AnsiExec(const Path: String; const ComLine: AnsiString);
 {$ENDIF Win32}
   ChDir(StartDir);
 
-  SysTVKbdInit;
+  //SysTVKbdInit;
+  // fixme: commented by unxed
   {Cat: в OS/2: боремся с интерпретацией Ctrl-C как Ctrl-Break
                       в WinNT: боремся с пропаданием мышиного курсора}
   end { AnsiExec };
@@ -173,7 +177,8 @@ function Win32Program(const S: String): SmallWord;
   RealName := lFExpand(RealName);
   DelRight(RealName);
   FSplit(RealName, Dir, Name, Ext);
-  UpStr(Ext);
+  // fixme: commented by unxed
+  //UpStr(Ext);
   if Ext <> '.EXE' then
     Exit;
   FileMode := Open_Access_ReadOnly or open_share_DenyNone;
@@ -279,7 +284,8 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
     I: Integer;
     EV: TEvent;
     X, Y: SmallWord; {Cat}
-    ScreenSize: TSysPoint; {Cat}
+    //ScreenSize: TSysPoint; {Cat}
+    ScreenSize: TPoint; {Cat} // by unxed
     {$IFDEF DPMI32}
     DosRunString: String;
     {$ENDIF}
@@ -360,6 +366,7 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   {$ENDIF}
   fExec := False;
   {AK155, Cat: чтобы комстрока и меню не налазили на вывод}
+  (*
   SysGetCurPos(X, Y);
   if InterfaceData.Options and ouiHideStatus = 0 then
     Inc(Y);
@@ -368,6 +375,8 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   SysTvGetScrMode(@ScreenSize, True);
   if Y >= ScreenSize.Y then
     Writeln;
+    *)
+    // fixme: commented by unxed
   {/AK155, Cat}
   if TimerMark then
     begin
@@ -384,8 +393,9 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   InitDOSMem;
   InitMemory;
   InitVideo;
-  SysTVDetectMouse; { AK155 Без этого под OS/2 может не появиться мышь,
-    если вызванная программа выполнила SysTVHideMouse }
+// fixme: commented by unxed
+//  SysTVDetectMouse; { AK155 Без этого под OS/2 может не появиться мышь,
+//    если вызванная программа выполнила SysTVHideMouse }
   InitEvents;
   InitSysError;
   {$IFDEF OS2}

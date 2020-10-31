@@ -52,6 +52,7 @@ unit FileFind;
 interface
 
 uses
+  dnsys, drivers2, math,
   Defines, Objects2, Streams, Views, Dialogs, Drivers,
   FilesCol, Drives, Gauge, DiskInfo, Objects
   ;
@@ -494,7 +495,9 @@ function FindFiles(var Files: PFilesCollection;
       PName := @SR.SR.Name;
     {$ENDIF}
     LongWorkBegin;
-    New(DirCol, Init($10, $10, False));
+    //New(DirCol, Init($10, $10, False));
+    // fixme: by unxed
+    New(DirCol);
     DirCol^.Insert(NewStr(Path));
     {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
     {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
@@ -592,6 +595,7 @@ function FindFiles(var Files: PFilesCollection;
           goto NotArchive;
         SkipSFX;
         AType := DetectArchive;
+        (*
         if  (AType = nil)
           or (AType^.GetID in [arcAIN, arcUC2, Arc7Z])
           {временно! - надо решить проблему с лочкой dndosout.bat}
@@ -599,7 +603,11 @@ function FindFiles(var Files: PFilesCollection;
            и поиск в нём почти работает, но пока подглючивает.}
           then
           goto NotArchive;
-        ArcDirs := New(PStringCollection, Init(30, 30, False));
+          *)
+          // fixme: commented by unxed
+        //ArcDirs := New(PStringCollection, Init(30, 30, False));
+        // fixme: by unxed
+        ArcDirs := New(PStringCollection);
         repeat
           AType^.GetFile;
           if FileInfo.Last = 0 then
@@ -872,7 +880,9 @@ Skip:
     MemReq := LowMemSize;
     MAvail := MaxAvail;
 
-    LCol := New(PStringCollection, Init(10, 10, False));
+    //LCol := New(PStringCollection, Init(10, 10, False));
+    // fixme: by unxed
+    LCol := New(PStringCollection);
 
     LongWorkBegin;
 
@@ -1152,7 +1162,9 @@ function InsertFile(S: String; var DC: PSortedCollection;
     InsertFile := True;
     lFSplit(S, Dir, Nm, Xt);
     if DC = nil then
-      DC := New(PStringCollection, Init($10, $10, False));
+      //DC := New(PStringCollection, Init($10, $10, False));
+      DC := New(PStringCollection);
+      // fixme: by unxed
     I := DC^.IndexOf(@Dir);
     if I < 0 then
       begin
@@ -1854,12 +1866,12 @@ TryAgain:
         Exit;
       { Flash >>> } {JO: взял код Flash из Arcview }
       if CheckForSpaces(S) then
-        S := ' '+CnvString(AType^.Garble)+S+' '
+        S := ' '+CnvString2(AType^.Garble)+S+' '
       else
         {$IFNDEF OS2}
        if AType^.UseLFN then
         {$ENDIF}
-        S := ' '+CnvString(AType^.Garble)+'"'+S+'"'+' '
+        S := ' '+CnvString2(AType^.Garble)+'"'+S+'"'+' '
           {$IFNDEF OS2}
       else
         begin
@@ -1884,8 +1896,8 @@ TryAgain:
     if OwnArc[Length(OwnArc)] = '.' then
       S2 := S2+'.';
     {$ENDIF}
-    S := CnvString(AType^.Extract)+' '+S+
-      CnvString(AType^.ForceMode)+' '+
+    S := CnvString2(AType^.Extract)+' '+S+
+      CnvString2(AType^.ForceMode)+' '+
       SquashesName(OwnArc)+' '+SquashesName(SS)+' ';
     DelDoubles('  ', S);
     TempFile := C+MakeNormName(TempDir, P^.FlName[True]);
@@ -1899,7 +1911,7 @@ TryAgain:
     RunUnp := not ExistFile(S2) or (PackedDate(P) <> FileTime(S2));
     if RunUnp then
       begin
-      Unp := CnvString(AType^.UnPacker);
+      Unp := CnvString2(AType^.UnPacker);
       if  (AType^.GetID = arcRAR) and (PosChar(';', Unp) > 0) then
         Unp := Copy(Unp, PosChar(';', Unp)+1, MaxStringLength);
       S := Unp+' '+S;
@@ -2009,7 +2021,9 @@ procedure CopyToTempDrive;
 
   begin { CopyToTempDrive }
   if TempDirs = nil then
-    TempDirs := New(PStringCollection, Init(10, 10, False));
+//    TempDirs := New(PStringCollection, Init(10, 10, False));
+    // fixme: by unxed
+    TempDirs := New(PStringCollection);
   if TempFiles = nil then
     NewTemp;
   Info := WriteMsg(GetString(dlPleaseStandBy));
@@ -2026,7 +2040,9 @@ constructor TTempDrive.Init;
   begin
   TObject.Init;
   if TempDirs = nil then
-    TempDirs := New(PStringCollection, Init(10, 10, False));
+//    TempDirs := New(PStringCollection, Init(10, 10, False));
+// fixme: by unxed
+    TempDirs := New(PStringCollection);
   if TempFiles = nil then
     NewTemp;
   isDisposable := True;
@@ -2076,7 +2092,9 @@ constructor TTempDrive.Load(var S: TStream);
 
   TDrive.Load(S);
   if TempDirs = nil then
-    TempDirs := New(PStringCollection, Init(10, 10, False));
+//    TempDirs := New(PStringCollection, Init(10, 10, False));
+// fixme: by unxed
+    TempDirs := New(PStringCollection);
   if TempFiles = nil then
     NewTemp;
   isDisposable := True;
@@ -2500,7 +2518,9 @@ procedure TFindDrive.DrvFindFile(FC: PFilesCollection);
     FindRec.AddChar := '';
   New(FFiles, Init($10, $10));
   FFiles^.SortMode := psmLongName;
-  Directories := New(PStringCollection, Init(30, 30, False));
+//  Directories := New(PStringCollection, Init(30, 30, False));
+  // fixme: by unxed
+  Directories := New(PStringCollection);
   R.Assign(1, 1, 40, 10);
   Inc(SkyEnabled);
   New(PInfo, Init(R));

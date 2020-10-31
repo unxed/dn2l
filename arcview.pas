@@ -53,6 +53,7 @@ unit ArcView;
 interface
 
 uses
+  dnsys, dnctrls, drivers2,
   Objects, Defines, Objects2, Streams, Views,
   FilesCol, DiskInfo,
   Drives, Commands, Archiver, FStorage
@@ -177,7 +178,7 @@ end;
 
 function MaxAvail: LongInt;
   begin
-  MaxAvail := MemAdjust(System.MaxAvail);
+  MaxAvail := MemAdjust(MaxAvail);
   end;
 
 procedure StdMsg(MsgNo: Byte);
@@ -323,16 +324,19 @@ constructor TArcDrive.Load;
     Failure;
   begin
   inherited Load(S);
-  S.ReadStrV(ArcName);
+  TStream_ReadStrV(S, ArcName); // by unxed
+  //S.ReadStrV(ArcName);
   {S.Read(ArcName[0],1); S.Read(ArcName[1],Length(ArcName));}
   {Cat}
-  S.ReadStrV(VArcName);
+  TStream_ReadStrV(S, VArcName); // by unxed
+  //S.ReadStrV(VArcName);
   {S.Read(VArcName[0],1); S.Read(VArcName[1],Length(VArcName));}
   {/Cat}
   S.Read(FakeKillAfterUse, 1);
   {временно}
   KillAfterUse := False;
-  S.ReadStrV(Password);
+  TStream_ReadStrV(S, Password); // by unxed
+  //S.ReadStrV(Password);
   {S.Read(Password[0],1); S.Read(Password[1],Length(Password));}
   S.Read(ArcDate, SizeOf(ArcDate)+SizeOf(ArcSize));
   ForceRescan := False;
@@ -396,7 +400,8 @@ procedure TArcDrive.Store;
   S.Write(KillAfterUse, 1);
   S.WriteStr(@Password); {S.Write(Password[0],1 + Length(Password));}
   S.Write(ArcDate, SizeOf(ArcDate)+SizeOf(ArcSize));
-  S.Put(Files);
+  // fixme: commented by unxed
+  //S.Put(Files);
   S.Write(ForceRescan, 1);
   end;
 
@@ -780,12 +785,12 @@ TryAgain:
       Exit;
     { Flash >>> }
     if CheckForSpaces(S) then
-      S := ' '+CnvString(AType^.Garble)+S+' '
+      S := ' '+CnvString2(AType^.Garble)+S+' '
     else
       {$IFNDEF OS2}
      if AType^.UseLFN then
       {$ENDIF}
-      S := ' '+CnvString(AType^.Garble)+'"'+S+'"'+' '
+      S := ' '+CnvString2(AType^.Garble)+'"'+S+'"'+' '
         {$IFNDEF OS2}
     else
       begin
@@ -809,12 +814,12 @@ TryAgain:
   // commented by unxed
   if ArcName[Length(ArcName)] = '.' then
     S2 := S2+'.';
-  S := CnvString(AType^.Extract)+' '+S+
-    CnvString(AType^.ForceMode)+' '+
+  S := CnvString2(AType^.Extract)+' '+S+
+    CnvString2(AType^.ForceMode)+' '+
     SquashesName(S2)+' '+SquashesName(SS)+' ';
   {$ELSE}
-  S := CnvString(AType^.Extract)+' '+S+
-    CnvString(AType^.ForceMode)+' '+
+  S := CnvString2(AType^.Extract)+' '+S+
+    CnvString2(AType^.ForceMode)+' '+
     SquashesName(ArcName)+' '+SquashesName(SS)+' ';
   {$ENDIF}
   {   DelDoubles('  ',S);} {piwamoto: files can have 2 spaces in names}
@@ -831,7 +836,7 @@ TryAgain:
                 or (P^.Size <> ASize);
   if RunUnp then
     begin
-    Unp := CnvString(AType^.UnPacker);
+    Unp := CnvString2(AType^.UnPacker);
     if  (AType^.GetID = arcRAR) and (PosChar(';', Unp) > 0) then
       begin
       if PRARArchive(AType)^.VersionToExtr > 20 then
@@ -887,7 +892,7 @@ function TArcDrive.Exec;
     begin
     Application^.Redraw;
     ST := S;
-    Pointer(L[0]) := @ST;
+    L[0] := LongInt(@ST);
     L[1] := DE;
     Msg(dlArcMsg8, @L, mfOKButton or mfError);
     end;
@@ -1161,11 +1166,11 @@ function TArcDrive.MakeListFile;
 
   begin { TArcDrive.MakeListFile }
   if UseUnp then
-    B := (CnvString(AType^.ExtrListChar) = ' ')
-           or (CnvString(AType^.ExtrListChar) = '')
+    B := (CnvString2(AType^.ExtrListChar) = ' ')
+           or (CnvString2(AType^.ExtrListChar) = '')
   else
-    B := (CnvString(AType^.ComprListChar) = ' ')
-           or (CnvString(AType^.ComprListChar) = '');
+    B := (CnvString2(AType^.ComprListChar) = ' ')
+           or (CnvString2(AType^.ComprListChar) = '');
   if B then
     S := ''
   else
@@ -1180,9 +1185,9 @@ function TArcDrive.MakeListFile;
     else
       begin
       if UseUnp then
-        S := CnvString(AType^.ExtrListChar)+S
+        S := CnvString2(AType^.ExtrListChar)+S
       else
-        S := CnvString(AType^.ComprListChar)+S;
+        S := CnvString2(AType^.ComprListChar)+S;
       end;
     end;
   for I := 0 to PC^.Count-1 do
@@ -1281,9 +1286,9 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
     while (SCurDir <> '') and (SCurDir[1] = '/') do // slash change by unxed
       Delete(SCurDir, 1, 1);
     MakeSlash(SCurDir);
-    if  (CnvString(AType^.SetPathInside) <> '') then
+    if  (CnvString2(AType^.SetPathInside) <> '') then
       begin
-      SCr := ' '+ CnvString(AType^.SetPathInside)+
+      SCr := ' '+ CnvString2(AType^.SetPathInside)+
         SquashesName(Copy(SCurDir, 1, Length(SCurDir)-1))+' ';
       SCurDir := '';
       end;
@@ -1335,11 +1340,11 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
   S := ' ';
   Pswd := False;
   AFiles^.ForEach(@Unselect);
-  ExtrChar := CnvString(AType^.ExtractWP);
+  ExtrChar := CnvString2(AType^.ExtractWP);
   if Options and 1 = 0 then
-    ExtrChar := CnvString(AType^.Extract);
+    ExtrChar := CnvString2(AType^.Extract);
   if Options and 2 <> 0 then
-    ExtrChar := CnvString(AType^.Test);
+    ExtrChar := CnvString2(AType^.Test);
   if Pswd then
     begin
     if Password = '' then
@@ -1350,12 +1355,12 @@ TryAgain:
         Exit;
     { Flash >>> } {JO: взял код Flash из Arcview.TArcDrive.UseFile }
     if CheckForSpaces(Password) then
-      S := ' '+CnvString(AType^.Garble)+Password+' '
+      S := ' '+CnvString2(AType^.Garble)+Password+' '
     else
       {$IFNDEF OS2}
      if AType^.UseLFN then
       {$ENDIF}
-      S := ' '+CnvString(AType^.Garble)+'"'+Password+'"'+' '
+      S := ' '+CnvString2(AType^.Garble)+'"'+Password+'"'+' '
         {$IFNDEF OS2}
     else
       begin
@@ -1380,12 +1385,12 @@ TryAgain:
       {$ENDIF}
       ;
   if  ( (Options and 4 <> 0) or TempDirUsed) and
-      (CnvString(AType^.ForceMode) <> '')
+      (CnvString2(AType^.ForceMode) <> '')
   then
-    S := S+CnvString(AType^.ForceMode)+' ';
+    S := S+CnvString2(AType^.ForceMode)+' ';
   S := S+SCr; {установка пути внутpи аpхива}
   S := ExtrChar+' '+S+ArchiveName;
-  Unp := CnvString(AType^.UnPacker);
+  Unp := CnvString2(AType^.UnPacker);
   if  (AType^.GetID = arcRAR) and (PosChar(';', Unp) > 0) then
     begin
     if PRARArchive(AType)^.VersionToExtr > 20 then
@@ -1579,18 +1584,18 @@ procedure TArcDrive.EraseFiles;
   {$IFNDEF OS2}
   if AType^.UseLFN then
     {$ENDIF}
-    S := CnvString(AType^.Delete)+' '+SquashesName(ArcName)
+    S := CnvString2(AType^.Delete)+' '+SquashesName(ArcName)
       {$IFNDEF OS2}
   {
   else
-    S := CnvString(AType^.Delete)+' '+lfGetShortFileName(ArcName)
+    S := CnvString2(AType^.Delete)+' '+lfGetShortFileName(ArcName)
   }
   // commented by unxed
       {$ENDIF}
       ;
 
   ForceRescan := True;
-  Exec(CnvString(AType^.Packer), S, SS, B);
+  Exec(CnvString2(AType^.Packer), S, SS, B);
   ForceRescan := False;
   O := Panel;
   if not ReadArchive then
@@ -1858,7 +1863,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
     _USize, _PSize: TSize;
     L: Integer;
     Root: String;
-    PDir: PString;
+    PDir: PShortString; // fixme: PString->PShortString by unxed
     LDir, DrName: String;
     I: LongInt;
     PI: PView;
@@ -1867,7 +1872,8 @@ function TArcDrive.OpenDirectory(const Dir: String;
   begin
   LongWorkBegin;
   NewTimer(tmr, 0);
-  Dirs := New(PStringCollection, Init($10, $10, False));
+  //Dirs := New(PStringCollection, Init($10, $10, False));
+  Dirs := New(PStringCollection); // fixme: by unxed
   PI := WriteMsg(GetString(dlReadingList));
   New(Fils, Init($10, $10));
   Fils^.SortMode := psmLongName;
@@ -1890,7 +1896,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
           Continue;
         _USize := Size;
         _PSize := CSize;
-        PDir := NewStr(Files^.LastDir);
+        PDir := NewStrDN2(Files^.LastDir);
         Inc(MemReq, Length(PDir^)+1);
         FR := NewFileRec(Name, {$IFDEF DualName}GetURZ(Name), {$ENDIF}
             _USize, Date, 0, 0, Attr, PDir);
@@ -1956,7 +1962,7 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
     _USize, _PSize: TSize;
     L: Integer;
     Root: String;
-    PDir: PString;
+    PDir: PShortString; // fixme: PString->PShortString by unxed
     LDir, DrName: String;
     DateAfter, DateBefore,
     SizeGreat, SizeLess: LongInt;
@@ -2008,7 +2014,8 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
     end;
 
   LongWorkBegin;
-  Dirs := New(PStringCollection, Init($10, $10, False));
+  //Dirs := New(PStringCollection, Init($10, $10, False));
+  Dirs := New(PStringCollection); // fixme: by unxed
   PI := WriteMsg(^M^M^C+GetString(dlSearching)+'...');
   New(Fils, Init($10, $10));
   Fils^.SortMode := psmLongName;

@@ -34,6 +34,9 @@ type
 
 function TPoint_EqualsXY(Point: TPoint; AX, AY: LongInt): boolean;
 
+procedure TStream_ReadStrV(var Stream: TStream; var S: String);
+function TStream_Eof(var S: TStream): Boolean;
+
 implementation
 
 procedure TLongInputLine.GetData(var Rec);
@@ -116,5 +119,25 @@ function TPoint_EqualsXY(Point: TPoint; AX, AY: LongInt): boolean;
 begin
     Result := (Point.X = AX) and (Point.Y = AY);
 end;
+
+procedure TStream_ReadStrV(var Stream: TStream; var S: String);
+  var
+    L: LongInt;
+  begin
+  L := 0;
+  Stream.Read(L, 1);
+  if L > 0 then
+    begin
+    SetLength(S, L);
+    Stream.Read(S[1], L);
+    end
+  else
+    S := '';
+  end;
+
+function TStream_Eof(var S: TStream): Boolean;
+  begin
+    TStream_Eof := (S.GetPos >= S.GetSize);
+  end;
 
 end.

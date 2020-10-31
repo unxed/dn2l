@@ -10,6 +10,8 @@ interface
 uses sysutils;
 
 const
+  stOK = 0; { No error }
+
   open_access_ReadOnly          = fmOpenRead;
   open_access_WriteOnly         = fmOpenWrite;
   open_access_ReadWrite         = fmOpenReadWrite;

@@ -77,11 +77,13 @@ var
     {` Перевод на нижний регистр в ASCII`}
 
 function NewStrDN(const S: String): PString;
+function NewStrDN2(const S: String): PShortString;
 function NewLongStr(const S: LongString): PLongString;
 procedure DisposeStrDN(var P: PString);
 procedure DisposeLongStr(var P: PLongString);
 procedure ReplaceP(var P: PString; S: String);
 function CnvString(P: PString): String; {conversion: PString to String}
+function CnvString2(P: PShortString): String; // by unxed
 function CnvLongString(P: PLongString): LongString;
 {conversion: PLongString to LongString}
 function StrGrd(AMax, ACur: TSize; Wide: Byte; Rev: Boolean): String;
@@ -1637,6 +1639,20 @@ function NewStrDN(const S: String): PString;
   NewStrDN := P;
   end;
 
+function NewStrDN2(const S: String): PShortString;
+var
+    P: PShortString;
+begin
+  if S = '' then
+    P := nil
+  else
+    begin
+    GetMem(P, Length(S)+1);
+    P^:= S;
+    end;
+  NewStr := P;
+end;
+
 procedure DisposeStrDN(var P: PString);
   begin
   if P <> nil then
@@ -1662,6 +1678,15 @@ procedure ReplaceP(var P: PString; S: String);
   end;
 
 function CnvString(P: PString): String;
+  begin
+  if P = nil then
+    CnvString := ''
+  else
+    CnvString := P^;
+  end;
+
+// by unxed
+function CnvString2(P: PShortString): String;
   begin
   if P = nil then
     CnvString := ''

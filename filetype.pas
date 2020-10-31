@@ -1,3 +1,5 @@
+{$MODE DELPHI}
+
 unit FileType;
 
 interface

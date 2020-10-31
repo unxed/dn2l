@@ -51,7 +51,7 @@ unit Archiver;
 interface
 
 uses
-  Files,
+  Files, dnctrls,
   Views, Defines, Objects2, Streams, Objects
   ;
 
@@ -876,8 +876,8 @@ procedure MakeArchive;
       end { PutDir };
 
     begin { MakeListFile }
-    B := (CnvString(Arc^.ComprListChar) = ' ')
-           or (CnvString(Arc^.ComprListChar) = '');
+    B := (CnvString2(Arc^.ComprListChar) = ' ')
+           or (CnvString2(Arc^.ComprListChar) = '');
     if B then
       S := ''
     else
@@ -890,7 +890,7 @@ procedure MakeArchive;
       if B then
         S := ''
       else
-        S := CnvString(Arc^.ComprListChar)+S;
+        S := CnvString2(Arc^.ComprListChar)+S;
       end;
     for I := 0 to Files^.Count-1 do
       begin
@@ -1000,7 +1000,7 @@ procedure MakeArchive;
       begin
       Application^.Redraw;
       ST := S;
-      Pointer(L[0]) := @ST;
+      L[0] := LongInt(@ST); // fixme: by unxed
       L[1] := DE;
       Msg(dlArcMsg8, @L, mfOKButton or mfError);
       end;
@@ -1233,9 +1233,9 @@ TryAgain:
     goto Ex;
   MakeSlash(CurDir);
   if D.Options and 2 = 2 then
-    C := CnvString(Arc^.Move)
+    C := CnvString2(Arc^.Move)
   else
-    C := CnvString(Arc^.Add);
+    C := CnvString2(Arc^.Add);
   if D.Options and 1 = 0 then
     C := C+AddString(Arc^.ExcludePaths)
   else
@@ -1244,7 +1244,7 @@ TryAgain:
     C := C+AddString(Arc^.RecurseSubDirs);
 
   if D.Password <> '' then
-    C := C+' '+CnvString(Arc^.Garble)+D.Password;
+    C := C+' '+CnvString2(Arc^.Garble)+D.Password;
   if D.Options and 4 <> 0 then
     C := C+AddString(Arc^.ForceMode);
   if D.Options and 8 <> 0 then
@@ -1267,7 +1267,7 @@ TryAgain:
     C := C+AddString(Arc^.UltraCompression);
 
   SIntern := '';
-  if AddToExisting and (CnvString(Arc^.SetPathInside) <> '') then
+  if AddToExisting and (CnvString2(Arc^.SetPathInside) <> '') then
     begin
     if Owner <> nil then
       Message(PView(Owner)^.Owner, evCommand, cmPushInternalName,
@@ -1279,7 +1279,7 @@ TryAgain:
       while (SIntern[1] = '/') do // slash change by unxed
         Delete(SIntern, 1, 1);
       MakeNoSlash(SIntern);
-      SIntern := CnvString(Arc^.SetPathInside)+
+      SIntern := CnvString2(Arc^.SetPathInside)+
         SquashesName(SIntern)+' ';
       end;
     end;
@@ -1294,7 +1294,7 @@ TryAgain:
   { Message(Application, evCommand, cmExecString, @S);}
   if  (ST1 = '') then
     goto Ex;
-  ArcExec(CnvString(Arc^.Packer), S, ST1, B);
+  ArcExec(CnvString2(Arc^.Packer), S, ST1, B);
 Ex:
   Dispose(Arc, Done);
   end { MakeArchive };
@@ -1448,21 +1448,21 @@ TryAgain:
     Exit;
   {/JO}
 
-  ExtrChar := CnvString(AType^.ExtractWP);
+  ExtrChar := CnvString2(AType^.ExtractWP);
   if DT.W and 1 = 0 then
-    ExtrChar := CnvString(AType^.Extract);
+    ExtrChar := CnvString2(AType^.Extract);
   if DT.W and 2 <> 0 then
-    ExtrChar := CnvString(AType^.Test);
+    ExtrChar := CnvString2(AType^.Test);
   S := '';
   if DT.Psw <> '' then
     { Flash >>> }
     if CheckForSpaces(DT.Psw) then
-      S := S+' '+CnvString(AType^.Garble)+DT.Psw+' '
+      S := S+' '+CnvString2(AType^.Garble)+DT.Psw+' '
     else
       {$IFNDEF OS2}
      if AType^.UseLFN then
       {$ENDIF}
-      S := S+' '+CnvString(AType^.Garble)+'"'+DT.Psw+'"'+' '
+      S := S+' '+CnvString2(AType^.Garble)+'"'+DT.Psw+'"'+' '
         {$IFNDEF OS2}
     else
       begin
@@ -1472,14 +1472,14 @@ TryAgain:
       {$ENDIF}
       ;
   { Flash <<< }
-  Unp := CnvString(AType^.UnPacker);
+  Unp := CnvString2(AType^.UnPacker);
   if  (AType^.GetID = arcRAR) and (PosChar(';', Unp) > 0) then
     {begin
        if PRARArchive(AType)^.VersionToExtr > 20 then }
     Unp := Copy(Unp, PosChar(';', Unp)+1, 255)
       {else Unp := Copy(Unp, 1, PosChar(';', Unp)-1);
      end};
-  FMod := CnvString(AType^.ForceMode);
+  FMod := CnvString2(AType^.ForceMode);
   {JO}
   if  ( (DT.W and 4 <> 0) or TempDirUsed) and (FMod <> '') then
     FMod := FMod+' '
@@ -1671,7 +1671,7 @@ Recurce:
    ArcFile^.Read(ArcId, SizeOf(ArcId));
    Inc (ArcPosID);
   Until ((ArcPos + BufferSize - ArcPosID) = 3{SizeOf(ArcId)-1}) or
-       (ArcFile^.EOF) or
+       (TStream_EOF(ArcFile^)) or
   {ZIP}(ArcId = $04034b50 {'PK'#3#4}) or
   {RAR}(ArcId = $21726152 {'Rar!'}) or
   {ARJ}((ArcIdArr[0] = $60) and
@@ -1704,7 +1704,7 @@ Recurce:
   {CAB}(ArcId = $8648862a) or {digital sign for Microsoft's hotfixes}
   {CAB}(ArcId = $4643534d {'MSCF'});
 
-   if ((ArcPos + BufferSize - ArcPosID) > 3) and not ArcFile^.EOF
+   if ((ArcPos + BufferSize - ArcPosID) > 3) and not TStream_EOF(ArcFile^)
      then ArcPos := ArcPosID - 1;
 
   {$IFNDEF MINARCH}

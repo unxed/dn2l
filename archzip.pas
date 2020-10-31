@@ -49,7 +49,7 @@ unit archZip; {ZIP}
 
 interface
 uses
-  Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
+  dnsys, sysutils, Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
 type
@@ -116,113 +116,113 @@ constructor TZIPArchive.Init;
   TObject.Init;
   {$IFNDEF OS2}
   {$IFDEF SEVENZIP}
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker,'7Z'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, '7Z'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a -tzip'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, ''));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-p'));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
-  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
-  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
-  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
+  Packer := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PPacker,'7Z'));
+  UnPacker := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PUnPacker, '7Z'));
+  Extract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtract, 'e'));
+  ExtractWP := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtractWP, 'x'));
+  Add := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PAdd, 'a -tzip'));
+  Move := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PMove, ''));
+  Delete := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PDelete, 'd'));
+  Garble := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PGarble, '-p'));
+  Test := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PTest, 't'));
+  IncludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
+  ExcludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExcludePaths, ''));
+  ForceMode := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-y'));
+  RecoveryRec := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
+  SelfExtract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  Solid := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
+  RecurseSubDirs := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
          '-r0'));
-  SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
+  SetPathInside := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
-  StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  StoreCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, '-m0'));
-  FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastestCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastestCompression, ''));
-  FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastCompression, ''));
-  NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  NormalCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PNormalCompression, ''));
-  GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  GoodCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PGoodCompression, ''));
-  UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  UltraCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PUltraCompression, '-mx'));
-  ComprListchar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListchar,
+  ComprListchar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PComprListchar,
          '@'));
-  ExtrListchar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListchar, '@'));
+  ExtrListchar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtrListchar, '@'));
   {$ELSE SEVENZIP}
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'PKZIP'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'PKUNZIP'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, ''));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-d'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-a -wsh'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-m -wsh'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-s'));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, '-t'));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths,
+  Packer := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PPacker, 'PKZIP'));
+  UnPacker := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'PKUNZIP'));
+  Extract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtract, ''));
+  ExtractWP := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '-d'));
+  Add := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PAdd, '-a -wsh'));
+  Move := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PMove, '-m -wsh'));
+  Delete := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
+  Garble := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PGarble, '-s'));
+  Test := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PTest, '-t'));
+  IncludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PIncludePaths,
          '-P'));
-  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
+  ExcludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
          '-p'));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
-  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
-  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
+  ForceMode := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PForceMode, ''));
+  RecoveryRec := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
+  SelfExtract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  Solid := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
+  RecurseSubDirs := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecurseSubDirs,
          ''));
-  SetPathInside := NewStr(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
+  SetPathInside := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSetPathInside,
          ''));
-  StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  StoreCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, '-e0'));
-  FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastestCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastestCompression, '-es'));
-  FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastCompression, '-ef'));
-  NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  NormalCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PNormalCompression, '-en'));
-  GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  GoodCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PGoodCompression, '-ex'));
-  UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  UltraCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PUltraCompression, '-exx'));
-  ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
+  ComprListChar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
          '@'));
-  ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
+  ExtrListChar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
        '@'));
   {$ENDIF}
   {$ELSE}
-  Packer := NewStr(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ZIP'));
-  UnPacker := NewStr(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'UNZIP'));
-  Extract := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtract, '-j --z'));
-  ExtractWP := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '--z'));
-  Add := NewStr(GetVal(@Sign[1], @FreeStr[1], PAdd, '-S'));
-  Move := NewStr(GetVal(@Sign[1], @FreeStr[1], PMove, '-m -S'));
-  Delete := NewStr(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
-  Garble := NewStr(GetVal(@Sign[1], @FreeStr[1], PGarble, '-P'));
-  Test := NewStr(GetVal(@Sign[1], @FreeStr[1], PTest, '-t -C'));
-  IncludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
-  ExcludePaths := NewStr(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
+  Packer := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PPacker, 'ZIP'));
+  UnPacker := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PUnPacker, 'UNZIP'));
+  Extract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtract, '-j --z'));
+  ExtractWP := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtractWP, '--z'));
+  Add := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PAdd, '-S'));
+  Move := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PMove, '-m -S'));
+  Delete := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PDelete, '-d'));
+  Garble := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PGarble, '-P'));
+  Test := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PTest, '-t -C'));
+  IncludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PIncludePaths, ''));
+  ExcludePaths := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExcludePaths,
          '-j'));
-  ForceMode := NewStr(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-q'));
-  RecoveryRec := NewStr(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
-  SelfExtract := NewStr(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
-  Solid := NewStr(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
-  RecurseSubDirs := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  ForceMode := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PForceMode, '-q'));
+  RecoveryRec := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PRecoveryRec, ''));
+  SelfExtract := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSelfExtract, ''));
+  Solid := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PSolid, ''));
+  RecurseSubDirs := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PRecurseSubDirs, '-r'));
-  StoreCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  StoreCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PStoreCompression, '-0'));
-  FastestCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastestCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastestCompression, '-1'));
-  FastCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  FastCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PFastCompression, '-3'));
-  NormalCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  NormalCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PNormalCompression, '-6'));
-  GoodCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  GoodCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PGoodCompression, '-8'));
-  UltraCompression := NewStr(GetVal(@Sign[1], @FreeStr[1],
+  UltraCompression := NewStrDN2(GetVal(@Sign[1], @FreeStr[1],
          PUltraCompression, '-9'));
-  ComprListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
+  ComprListChar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PComprListChar,
          '-@ < '));
-  ExtrListChar := NewStr(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
+  ExtrListChar := NewStrDN2(GetVal(@Sign[1], @FreeStr[1], PExtrListChar,
        ' '));
   {$ENDIF}
 

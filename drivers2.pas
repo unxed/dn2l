@@ -62,6 +62,9 @@ const
   ShiftState2: Byte = 0;
   MouseVisible: Boolean = True;
   CurrentBlink: Boolean = False;
+  NeedAbort: Boolean = False;
+
+  MenuActive: Boolean = False;
 
 var
   MouseX: Word;

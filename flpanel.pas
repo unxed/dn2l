@@ -52,7 +52,7 @@ unit FlPanel;
 interface
 
 uses
-  Defines, Streams, Views, Drivers, FilesCol,
+  drivers2, math, Defines, Streams, Views, Drivers, FilesCol,
   FlPanelX, Objects, TopView
   ;
 
@@ -199,9 +199,10 @@ constructor TDriveLine.Init;
   EventMask := evMouse or evBroadcast;
   MakeDriveLine;
   CharDelta := 1;
-  LogDrvMap := SysGetValidDrives;
-  UpdTicks := 3000;
-  RegisterToBackground(@Self);
+  // fixme: commented by unxed
+  //LogDrvMap := SysGetValidDrives;
+  //UpdTicks := 3000;
+  //RegisterToBackground(@Self);
   end;
 
 constructor TDriveLine.Load(var S: TStream);
@@ -210,8 +211,9 @@ constructor TDriveLine.Load(var S: TStream);
   MakeDriveLine;
   CharDelta := 1;
   GetPeerViewPtr(S, Panel);
-  UpdTicks := 3000;
-  RegisterToBackground(@Self);
+  // fixme: commented by unxed
+  //UpdTicks := 3000;
+  //RegisterToBackground(@Self);
   end;
 
 procedure TDriveLine.MakeDriveLine;
@@ -443,7 +445,9 @@ procedure TDriveLine.Refresh;
   var
     newLogDrvMap: LongInt;
   begin
-  newLogDrvMap := SysGetValidDrives;
+  newLogDrvMap := 0;
+  // fixme: commented by unxed
+  //newLogDrvMap := SysGetValidDrives;
   if newLogDrvMap <> LogDrvMap then
     begin
     LogDrvMap := newLogDrvMap;

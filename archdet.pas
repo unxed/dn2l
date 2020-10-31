@@ -50,6 +50,7 @@ unit ArchDet;
 interface
 
 uses
+  dnsys,
   Archiver
   ;
 

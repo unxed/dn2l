@@ -77,6 +77,15 @@ const
     kbCtrl9 = $e0;
     kbCtrl0 = $e1;
     kbCtrlAltZ = $e2;
+    kbAltShiftSlash = $e3;
+    kbBackUp = $e4;
+    kbShiftUp = $e5;
+    kbShiftDown = $e6;
+    kbShiftLeft = $e7;
+    kbShiftRight = $e8;
+    kbCtrlShiftIns = $e9;
+    kbShiftEnd = $ea;
+    kbShiftHome = $eb;
 
 
 // use FV constans instead; by unxed
