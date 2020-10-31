@@ -51,7 +51,7 @@ unit SWE;
 interface
 
 uses
-  Drivers, Defines, Streams, Views, Dialogs
+  Objects, Drivers, Defines, Streams, Views, Dialogs
   ;
 
 type

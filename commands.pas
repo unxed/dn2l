@@ -87,6 +87,16 @@ const
     kbShiftEnd = $ea;
     kbShiftHome = $eb;
 
+    kbGrayAst = $ff00;
+    kbDoubleAlt = $ff01;
+    kbCtrlShiftUp = $ff02;
+    kbCtrlShiftDown = $ff03;
+    kbUpUp = $ff04;
+    kbDownUp = $ff05;
+    kbSpace = $ff06;
+    kbDoubleCtrl = $ff07;
+
+
 
 // use FV constans instead; by unxed
 (*

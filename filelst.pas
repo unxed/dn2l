@@ -77,6 +77,7 @@ type
 
 procedure InpLineReplace(P: PInputLine; const S: String);
   begin
+  (*
   with P^ do
     begin
     Select;
@@ -88,6 +89,8 @@ procedure InpLineReplace(P: PInputLine; const S: String);
     SelEnd := CurPos;
     Draw;
     end;
+    *)
+    // currently unsupported. commented by unxed
   end;
 
 procedure TMakeListDlg.HandleEvent(var Event: TEvent);
@@ -99,19 +102,23 @@ procedure TMakeListDlg.HandleEvent(var Event: TEvent);
     case Event.Command of
       cmYes:
         begin
-        InpLineReplace(PInputLine(DirectLink[2]), '!:!\!.!');
+        //fixme: directlink not implemented
+        //InpLineReplace(PInputLine(DirectLink[2]), '!:!\!.!');
         ClearEvent(Event);
         Exit;
         end;
       cmNo:
         begin
-        InpLineReplace(PInputLine(DirectLink[2]), '#:#\#.#');
+        //fixme: directlink not implemented
+        //InpLineReplace(PInputLine(DirectLink[2]), '#:#\#.#');
         ClearEvent(Event);
         Exit;
         end;
       cmOK:
         begin { Не выпускаем с пустым именем списка или
           с пустым шаблоном обработки файла }
+        //fixme: directlink not implemented
+        (*
         for i := 1 to 2 do
         if PInputLine(DirectLink[i])^.Data = '' then
           begin
@@ -119,6 +126,7 @@ procedure TMakeListDlg.HandleEvent(var Event: TEvent);
           ClearEvent(Event);
           Exit;
           end;
+        *)
         end;
     end {case};
     end;
@@ -127,7 +135,7 @@ procedure TMakeListDlg.HandleEvent(var Event: TEvent);
 
 procedure PrepareMakeListDialog(P: PDialog);
   begin
-  ObjChangeType(P, TypeOf(TMakeListDlg));
+  ObjChangeType(PObject(P), TypeOf(TMakeListDlg));
   end;
 
 function ParseAddress(Address: String; var Zone, Net, Node, Point: Word)

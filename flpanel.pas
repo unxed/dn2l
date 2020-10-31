@@ -1146,6 +1146,7 @@ function MakeFilter(IV: PInfoView): Boolean;
 
 function MakeQSMask(IV: PInfoView): Boolean;
   begin
+  (*
   Result := QuickSearch and (IV^.Panel = ActivePanel);
    { Flash 25-01-2004:
        Если не сравнивать текущую панель с активной, то
@@ -1153,6 +1154,7 @@ function MakeQSMask(IV: PInfoView): Boolean;
     может появиться на обеих панелях, а это нонсенс. }
   if Result then
     MoveCStr(B[0], QuickSearchString(IV^.Size.X), Swap(C2_3));
+    *) // fixme: commented by unxed
   end;
 
 function MakeSelected(IV: PInfoView): Boolean;
@@ -1174,7 +1176,7 @@ function MakeSelected(IV: PInfoView): Boolean;
           S := S+'('+FStr(PackedLen)+')';
 
         S := S+GetString(dlBytesIn)+
-          +ItoS(SelNum)+'~'+GetString(dlSelectedFiles);
+          ItoS(SelNum)+'~'+GetString(dlSelectedFiles);
         end;
       DnD.SelectedY := Y;
       end
@@ -2120,7 +2122,8 @@ GotoKb:
            kbCtrlShiftDown, kbUpUp, kbDownUp
           :
             begin
-            CtrlWas :=  LongRec(Event.KeyCode).Hi = kbCtrlShift;
+            // fixme: commented by unxed
+            //CtrlWas :=  LongRec(Event.KeyCode).Hi = kbCtrlShift;
             if Event.KeyCode = kbCtrlUp then
               Event.KeyCode := kbUp;
             if Event.KeyCode = kbCtrlDown then
@@ -2186,10 +2189,13 @@ GotoKb:
         cmScrollBarChanged:
           if ScrollBar = Event.InfoPtr then
             begin
+            (*
             if ScrollBar^.ForceScroll or WheelEvent then
               Inc(Delta, ScrollBar^.Step);
                 { Немедленное скроллирование с сохранением позиции
                   курсора относительно окна }
+                  *)
+                  // fixme: commented by unxed
             if MSelect then
               begin
               CE;
