@@ -2,8 +2,8 @@
 { The Network Browser Panel unit }
 { Based on p_net plugin library by Cat (2:5030/1326.13) }
 
-{JO: 1-07-2005 - перенёс панельку броузера сети из плагина в ядро DN/2}
-{JO: 23-11-2006 - ввёл обработку пароля при входе на шару}
+{JO: 1-07-2005 - ╨┐╨╡╤А╨╡╨╜╤С╤Б ╨┐╨░╨╜╨╡╨╗╤М╨║╤Г ╨▒╤А╨╛╤Г╨╖╨╡╤А╨░ ╤Б╨╡╤В╨╕ ╨╕╨╖ ╨┐╨╗╨░╨│╨╕╨╜╨░ ╨▓ ╤П╨┤╤А╨╛ DN/2}
+{JO: 23-11-2006 - ╨▓╨▓╤С╨╗ ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╤Г ╨┐╨░╤А╨╛╨╗╤П ╨┐╤А╨╕ ╨▓╤Е╨╛╨┤╨╡ ╨╜╨░ ╤И╨░╤А╤Г}
 
 {$I STDEFINE.INC}
 
@@ -142,7 +142,7 @@ begin
     RC := ''
   else
     RC := ' (RC=' + ItoS(ReturnCode) + ')';
-  PFilePanelRoot(Panel)^.IncDrawDisabled; //см. комментарий к AddConnection
+  PFilePanelRoot(Panel)^.IncDrawDisabled; //╤Б╨╝. ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╣ ╨║ AddConnection
   if ErrorCode = 0 then
     MessageBox(^C + GetString(dlNoNetworkPath), nil, mfError+mfOkButton)
   else
@@ -245,7 +245,7 @@ end;
 
 function TNetDrive.AddConnection(var NetResource: TNetResource;
                                  var Rs: LongInt): Boolean;
-{JO: 23-11-2006 - ввёл обработку пароля при входе на шару}
+{JO: 23-11-2006 - ╨▓╨▓╤С╨╗ ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╤Г ╨┐╨░╤А╨╛╨╗╤П ╨┐╤А╨╕ ╨▓╤Е╨╛╨┤╨╡ ╨╜╨░ ╤И╨░╤А╤Г}
   var
       Lgn: record
         UN: String;
@@ -273,7 +273,7 @@ function TNetDrive.AddConnection(var NetResource: TNetResource;
     begin
     if (Rs = 86)     // ERROR_INVALID_PASSWORD The specified network password is incorrect
       or (Rs = 1216) // ERROR_INVALID_PASSWORDNAME The format of the specified password is invalid
-      or ((Rs >= 1303) and (Rs <= 1390 )) //ошибки, связанные с логином в сеть
+      or ((Rs >= 1303) and (Rs <= 1390 )) //╨╛╤И╨╕╨▒╨║╨╕, ╤Б╨▓╤П╨╖╨░╨╜╨╜╤Л╨╡ ╤Б ╨╗╨╛╨│╨╕╨╜╨╛╨╝ ╨▓ ╤Б╨╡╤В╤М
     then
       LogonErr := True;
     end;
@@ -285,10 +285,10 @@ begin
   Rs := WNetAddConnection2(NetResource, nil, nil, 0);
   if LogonErr then
     begin
-//JO: нижележащая строчка необходима перед вызовом любого диалога изнутри
-//    T*Drive.GetDirectory, иначе панель после закрытия диалога пытается
-//    перерисовываться, что при Files = nil чревато как минимум странными
-//    косметическими эффектами, а как максимум - падениями
+//JO: ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨░╤П ╤Б╤В╤А╨╛╤З╨║╨░ ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨░ ╨┐╨╡╤А╨╡╨┤ ╨▓╤Л╨╖╨╛╨▓╨╛╨╝ ╨╗╤О╨▒╨╛╨│╨╛ ╨┤╨╕╨░╨╗╨╛╨│╨░ ╨╕╨╖╨╜╤Г╤В╤А╨╕
+//    T*Drive.GetDirectory, ╨╕╨╜╨░╤З╨╡ ╨┐╨░╨╜╨╡╨╗╤М ╨┐╨╛╤Б╨╗╨╡ ╨╖╨░╨║╤А╤Л╤В╨╕╤П ╨┤╨╕╨░╨╗╨╛╨│╨░ ╨┐╤Л╤В╨░╨╡╤В╤Б╤П
+//    ╨┐╨╡╤А╨╡╤А╨╕╤Б╨╛╨▓╤Л╨▓╨░╤В╤М╤Б╤П, ╤З╤В╨╛ ╨┐╤А╨╕ Files = nil ╤З╤А╨╡╨▓╨░╤В╨╛ ╨║╨░╨║ ╨╝╨╕╨╜╨╕╨╝╤Г╨╝ ╤Б╤В╤А╨░╨╜╨╜╤Л╨╝╨╕
+//    ╨║╨╛╤Б╨╝╨╡╤В╨╕╤З╨╡╤Б╨║╨╕╨╝╨╕ ╤Н╤Д╤Д╨╡╨║╤В╨░╨╝╨╕, ╨░ ╨║╨░╨║ ╨╝╨░╨║╤Б╨╕╨╝╤Г╨╝ - ╨┐╨░╨┤╨╡╨╜╨╕╤П╨╝╨╕
     PFilePanelRoot(Panel)^.IncDrawDisabled;
     repeat
       @PreExecuteDialog := @PrepareLPDialog;
@@ -310,17 +310,17 @@ begin
         end;
       Rs := WNetAddConnection2(NetResource, PS2, PS1, 0);
     until {Rs = NO_ERROR } not LogonErr;
-    PFilePanelRoot(Panel)^.DecDrawDisabled;  //JO: см. комментарий выше
+    PFilePanelRoot(Panel)^.DecDrawDisabled;  //JO: ╤Б╨╝. ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╣ ╨▓╤Л╤И╨╡
     end;
   if (Rs <> NO_ERROR)
-    and (Rs <> 67) // попытка повторно использовать WNetAddConnection2 под NT
-    and (Rs <> 487) // то же под W9x
-    and not LogonErr // сообщение об ошибке ужЕ было в диалоге логина
+    and (Rs <> 67) // ╨┐╨╛╨┐╤Л╤В╨║╨░ ╨┐╨╛╨▓╤В╨╛╤А╨╜╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М WNetAddConnection2 ╨┐╨╛╨┤ NT
+    and (Rs <> 487) // ╤В╨╛ ╨╢╨╡ ╨┐╨╛╨┤ W9x
+    and not LogonErr // ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡ ╤Г╨╢╨Х ╨▒╤Л╨╗╨╛ ╨▓ ╨┤╨╕╨░╨╗╨╛╨│╨╡ ╨╗╨╛╨│╨╕╨╜╨░
   then
     AddError(6, Rs);
-  AddConnection := not LogonErr; // надо будет сделать более строгое условие
+  AddConnection := not LogonErr; // ╨╜╨░╨┤╨╛ ╨▒╤Г╨┤╨╡╤В ╤Б╨┤╨╡╨╗╨░╤В╤М ╨▒╨╛╨╗╨╡╨╡ ╤Б╤В╤А╨╛╨│╨╛╨╡ ╤Г╤Б╨╗╨╛╨▓╨╕╨╡
   if LogonErr then
-    Rs := NO_ERROR; // сообщение об ошибке ужЕ было в диалоге логина
+    Rs := NO_ERROR; // ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡ ╤Г╨╢╨Х ╨▒╤Л╨╗╨╛ ╨▓ ╨┤╨╕╨░╨╗╨╛╨│╨╡ ╨╗╨╛╨│╨╕╨╜╨░
 {$ELSE}
   Rs := $FFFF;
   PFilePanelRoot(Panel)^.IncDrawDisabled;
@@ -331,7 +331,7 @@ begin
     Dec(Rs);
   until False;
   PFilePanelRoot(Panel)^.DecDrawDisabled;
-  AddConnection := False; //вpеменно!
+  AddConnection := False; //╨▓p╨╡╨╝╨╡╨╜╨╜╨╛!
 {$ENDIF}
 end;
 
@@ -415,7 +415,7 @@ begin
   RootCountAlloced := 8;
   GetMem(RootResources, RootCountAlloced*SizeOf(TNetResource));
   GetMem(RootResourceNames, RootCountAlloced*SizeOf(String));
-  FillChar(ColAllowed, SizeOf(ColAllowed), 0); //JO: доп. колонки не нужны
+  FillChar(ColAllowed, SizeOf(ColAllowed), 0); //JO: ╨┤╨╛╨┐. ╨║╨╛╨╗╨╛╨╜╨║╨╕ ╨╜╨╡ ╨╜╤Г╨╢╨╜╤Л
 end;
 
 constructor TNetDrive.Load(var S: TStream);
@@ -596,7 +596,7 @@ var
   P: PFileRec;
   S: String;
   I: LongInt;
-{$IFDEF OS2} {отладочный код временно!!!}
+{$IFDEF OS2} {╨╛╤В╨╗╨░╨┤╨╛╤З╨╜╤Л╨╣ ╨║╨╛╨┤ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛!!!}
   SR: lSearchRec;
   TempResource: TNetResource;
   AddRC: LongInt;
@@ -624,7 +624,7 @@ begin
         AtInsert(Count, P);
     end;
 
-{$IFDEF OS2} {отладочный код временно!!!}
+{$IFDEF OS2} {╨╛╤В╨╗╨░╨┤╨╛╤З╨╜╤Л╨╣ ╨║╨╛╨┤ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛!!!}
 
   AddConnection(TempResource, AddRC);
 
@@ -637,7 +637,7 @@ begin
     lFindNext(SR);
     end;
   lFindClose(SR);
-{$ELSE} {конец отладочного кода!!!}
+{$ELSE} {╨║╨╛╨╜╨╡╤Ж ╨╛╤В╨╗╨░╨┤╨╛╤З╨╜╨╛╨│╨╛ ╨║╨╛╨┤╨░!!!}
   ClearNetResources;
   FindNetResources;
   for I := 0 to NetCount-1 do

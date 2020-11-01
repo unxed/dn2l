@@ -109,7 +109,7 @@ procedure TStrListMaker.CloseCurrent;
     end;
   end;
 
-{Cat: ЇҐаҐ¤Ґ« « ¤«п б®ў¬ҐбвЁ¬®бвЁ б AnsiString}
+{Cat: РїРµСЂРµРґРµР»Р°Р» РґР»СЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё СЃ AnsiString}
 procedure TStrListMaker.Put(Key: AWord; S: String);
   begin
   if  (Cur.Count = 16) or (Key <> Cur.Key+Cur.Count) then

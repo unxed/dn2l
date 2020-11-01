@@ -64,7 +64,7 @@ const
 type
   PPercentGauge = ^TPercentGauge;
   TPercentGauge = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     MaxValue: LongInt;
     CurValue: LongInt;
     constructor Init(var Bounds: TRect; AMaxValue: LongInt);
@@ -78,13 +78,13 @@ type
 
   PBarGauge = ^TBarGauge;
   TBarGauge = object(TPercentGauge)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     procedure Draw; virtual;
     end;
 
   PWhileView = ^TWhileView;
   TWhileView = object(TGroup)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Lines: PCollection;
     But: PButton;
     QuitNormal: Boolean;

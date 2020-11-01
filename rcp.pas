@@ -1146,7 +1146,7 @@ procedure ProcessDLGs;
     else if IdToken = idNotepad then
       begin
       Notepad := New(PNotepad, Init(R, Token(S, I), GetID(Token(S, I))));
-      PNotepad(D) := Notepad; // всё будет вставляться в диалог
+      PNotepad(D) := Notepad; // ╨▓╤Б╤С ╨▒╤Г╨┤╨╡╤В ╨▓╤Б╤В╨░╨▓╨╗╤П╤В╤М╤Б╤П ╨▓ ╨┤╨╕╨░╨╗╨╛╨│
       end
     else {idDialog}
       New(D, Init(R, Token(S, I)));
@@ -1157,8 +1157,8 @@ procedure ProcessDLGs;
       S := DefineParser.ProceedStr2(S);
       Inc(Line);
 
-      { Разбор метки прямой ссылки вида #1 .. #9, строго с первой позиции}
-      nDirectLink := 0; // 0 - метки нет
+      { ╨а╨░╨╖╨▒╨╛╤А ╨╝╨╡╤В╨║╨╕ ╨┐╤А╤П╨╝╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕ ╨▓╨╕╨┤╨░ #1 .. #9, ╤Б╤В╤А╨╛╨│╨╛ ╤Б ╨┐╨╡╤А╨▓╨╛╨╣ ╨┐╨╛╨╖╨╕╤Ж╨╕╨╕}
+      nDirectLink := 0; // 0 - ╨╝╨╡╤В╨║╨╕ ╨╜╨╡╤В
       if (Length(S) >= 2) and (S[1] = '#') and (S[2] in ['1'..'9']) then
         begin
         nDirectLink := Byte(S[2]) - Byte('0');
@@ -1227,7 +1227,7 @@ procedure ProcessDLGs;
         else if (S <> '') and (S[1] <> ';') then
           Error('Unknown identifier in line '+ItoS(Line));
         if nDirectLink <> 0 then
-          begin { запоминание прямой ссылки на текущий объект }
+          begin { ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╨╜╨╕╨╡ ╨┐╤А╤П╨╝╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕ ╨╜╨░ ╤В╨╡╨║╤Г╤Й╨╕╨╣ ╨╛╨▒╤К╨╡╨║╤В }
           if D^.DirectLink[nDirectLink] <> nil then
             Error('Direct Link Label redefined in line '+ItoS(Line));
           D^.DirectLink[nDirectLink] := PV;
@@ -1428,12 +1428,12 @@ Writeln('Copyright(C) 1995 AxoN(R)Soft');
 {Cat}
 {/Cat}
 
-{Cat: выбираем, какой конфигурационный файл использовать:
-      - если в командной строке O или OS2 - RCPVPO.INI
-      - если в командной строке W или W32 - RCPVPW.INI
-      - если в командной строке D или D32 - RCPVPD.INI
-      - если командная строка пуста - конфигурационный файл,
-      соответствующий системе, для которой скомпилирован RCP.EXE}
+{Cat: ╨▓╤Л╨▒╨╕╤А╨░╨╡╨╝, ╨║╨░╨║╨╛╨╣ ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╣ ╤Д╨░╨╣╨╗ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М:
+      - ╨╡╤Б╨╗╨╕ ╨▓ ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ O ╨╕╨╗╨╕ OS2 - RCPVPO.INI
+      - ╨╡╤Б╨╗╨╕ ╨▓ ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ W ╨╕╨╗╨╕ W32 - RCPVPW.INI
+      - ╨╡╤Б╨╗╨╕ ╨▓ ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ D ╨╕╨╗╨╕ D32 - RCPVPD.INI
+      - ╨╡╤Б╨╗╨╕ ╨║╨╛╨╝╨░╨╜╨┤╨╜╨░╤П ╤Б╤В╤А╨╛╨║╨░ ╨┐╤Г╤Б╤В╨░ - ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╣ ╤Д╨░╨╣╨╗,
+      ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╨╣ ╤Б╨╕╤Б╤В╨╡╨╝╨╡, ╨┤╨╗╤П ╨║╨╛╤В╨╛╤А╨╛╨╣ ╤Б╨║╨╛╨╝╨┐╨╕╨╗╨╕╤А╨╛╨▓╨░╨╜ RCP.EXE}
 
 FreeStr := ParamStr(1);
 UpStr(FreeStr);

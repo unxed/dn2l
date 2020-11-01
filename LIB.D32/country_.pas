@@ -9,15 +9,15 @@ uses
   Defines;
 
 procedure GetSysCountryInfo;
-  {` Заполняет CountryInfo (advance) данными от системы `}
+  {` ╨Ч╨░╨┐╨╛╨╗╨╜╤П╨╡╤В CountryInfo (advance) ╨┤╨░╨╜╨╜╤Л╨╝╨╕ ╨╛╤В ╤Б╨╕╤Б╤В╨╡╨╝╤Л `}
 
 procedure QueryUpcaseTable;
-  {` Для текущей кодовой страницы запрашивается у ОС таблица перекодировки
-  на верхний регистр. Результат - UpCaseArray `}
+  {` ╨Ф╨╗╤П ╤В╨╡╨║╤Г╤Й╨╡╨╣ ╨║╨╛╨┤╨╛╨▓╨╛╨╣ ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Л ╨╖╨░╨┐╤А╨░╤И╨╕╨▓╨░╨╡╤В╤Б╤П ╤Г ╨Ю╨б ╤В╨░╨▒╨╗╨╕╤Ж╨░ ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕
+  ╨╜╨░ ╨▓╨╡╤А╤Е╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А. ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В - UpCaseArray `}
 
 function QueryToAscii(CP: Word; var ToAscii: TXLat): Boolean;
-  {` Для кодовой страницы CP запрашивается у ОС таблица перекодировки
-  из CP в текущую кодовую страницу`}
+  {` ╨Ф╨╗╤П ╨║╨╛╨┤╨╛╨▓╨╛╨╣ ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Л CP ╨╖╨░╨┐╤А╨░╤И╨╕╨▓╨░╨╡╤В╤Б╤П ╤Г ╨Ю╨б ╤В╨░╨▒╨╗╨╕╤Ж╨░ ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕
+  ╨╕╨╖ CP ╨▓ ╤В╨╡╨║╤Г╤Й╤Г╤О ╨║╨╛╨┤╨╛╨▓╤Г╤О ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Г`}
 
 function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
 
@@ -89,7 +89,7 @@ procedure GetSysCountryInfo;
     end;
   end;
 
-{Заглушка!}
+{╨Ч╨░╨│╨╗╤Г╤И╨║╨░!}
 function QueryToAscii(CP: word; var ToAscii: TXLat): Boolean;
   begin
   NullXlat(ToAscii);
@@ -97,7 +97,7 @@ function QueryToAscii(CP: word; var ToAscii: TXLat): Boolean;
 
 function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
   begin
-  Result := False; //!! Пока не реализовано (04.09.2005)
+  Result := False; //!! ╨Я╨╛╨║╨░ ╨╜╨╡ ╤А╨╡╨░╨╗╨╕╨╖╨╛╨▓╨░╨╜╨╛ (04.09.2005)
   end;
 
 end.

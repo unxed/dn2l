@@ -29,10 +29,10 @@ function RetrieveEA(FName: String; pszName: PChar; var ea: Pointer;
 function StoreEA(FName: String; pszName: PChar; ea: Pointer;
     ulEASize: ULong): Integer;
 
-(*  {нужно для EABrowser'а}
+(*  {╨╜╤Г╨╢╨╜╨╛ ╨┤╨╗╤П EABrowser'╨░}
 function GetEAType(ea: Pointer): SmallWord;
 *)
-{нужно для EditLongName}
+{╨╜╤Г╨╢╨╜╨╛ ╨┤╨╗╤П EditLongName}
 function RetrieveStringSize(ea: Pointer): ULong;
 function RetrieveString(ea: Pointer; pszValue: PChar): PChar;
 function BuildEAFromString(pszValue: PChar; var ulEASize: Cardinal)
@@ -60,11 +60,11 @@ function EnumEAs(FName: String; var coll: PStringCollection): Integer;
   if  (Result = NO_ERROR)
     and (fst4.cbList > 0)
   then
-    {JO: 30-07-2002 - добавил это условие, т.к.  }
-    {    например при копировании с ISO-образов, }
-    {    подмонтированных через NDFS шла         }
-    {    бессмысленная ругань на невозможность   }
-    {    прочитать список EA                     }
+    {JO: 30-07-2002 - ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╤Н╤В╨╛ ╤Г╤Б╨╗╨╛╨▓╨╕╨╡, ╤В.╨║.  }
+    {    ╨╜╨░╨┐╤А╨╕╨╝╨╡╤А ╨┐╤А╨╕ ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╨╕ ╤Б ISO-╨╛╨▒╤А╨░╨╖╨╛╨▓, }
+    {    ╨┐╨╛╨┤╨╝╨╛╨╜╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╤Е ╤З╨╡╤А╨╡╨╖ NDFS ╤И╨╗╨░         }
+    {    ╨▒╨╡╤Б╤Б╨╝╤Л╤Б╨╗╨╡╨╜╨╜╨░╤П ╤А╤Г╨│╨░╨╜╤М ╨╜╨░ ╨╜╨╡╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М   }
+    {    ╨┐╤А╨╛╤З╨╕╤В╨░╤В╤М ╤Б╨┐╨╕╤Б╨╛╨║ EA                     }
     begin
     ulSize := fst4.cbList*2;
     GetMem(pvBuf, ulSize);
@@ -114,10 +114,10 @@ function RetrieveEA(FName: String; pszName: PChar; var ea: Pointer;
     ulFEASize := 4+StrLen(pszName)+1+fst4.cbList*2; // approx. :)
     ulGEASize := 4+4+1+StrLen(pszName)+1;
 
-    {JO: 31-07-2002  нижележащая строка - багфикс падений при попытке           }
-    {    редактировать .LONGNAME на NDFS . Похоже, проблема в том что           }
-    {    DosQueryPathInfo на нетдрайвовских дисках для файлов без EA выдаёт     }
-    {    значение fst4.cbList не 4, как для нормальных дисков, а 2              }
+    {JO: 31-07-2002  ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨░╤П ╤Б╤В╤А╨╛╨║╨░ - ╨▒╨░╨│╤Д╨╕╨║╤Б ╨┐╨░╨┤╨╡╨╜╨╕╨╣ ╨┐╤А╨╕ ╨┐╨╛╨┐╤Л╤В╨║╨╡           }
+    {    ╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╤В╤М .LONGNAME ╨╜╨░ NDFS . ╨Я╨╛╤Е╨╛╨╢╨╡, ╨┐╤А╨╛╨▒╨╗╨╡╨╝╨░ ╨▓ ╤В╨╛╨╝ ╤З╤В╨╛           }
+    {    DosQueryPathInfo ╨╜╨░ ╨╜╨╡╤В╨┤╤А╨░╨╣╨▓╨╛╨▓╤Б╨║╨╕╤Е ╨┤╨╕╤Б╨║╨░╤Е ╨┤╨╗╤П ╤Д╨░╨╣╨╗╨╛╨▓ ╨▒╨╡╨╖ EA ╨▓╤Л╨┤╨░╤С╤В     }
+    {    ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ fst4.cbList ╨╜╨╡ 4, ╨║╨░╨║ ╨┤╨╗╤П ╨╜╨╛╤А╨╝╨░╨╗╤М╨╜╤Л╤Е ╨┤╨╕╤Б╨║╨╛╨▓, ╨░ 2              }
 
     if ulFEASize < ulGEASize then
       ulFEASize := ulGEASize+4;
@@ -125,8 +125,8 @@ function RetrieveEA(FName: String; pszName: PChar; var ea: Pointer;
     GetMem(eaop.fpFEA2List, ulFEASize);
     GetMem(eaop.fpGEA2List, ulGEASize);
 
-    //JO: 25-08-2003 две нижележащие строки фиксят нерегулярные падения
-    //    при попытке включить показ логических имён по Ctrl-N на CD
+    //JO: 25-08-2003 ╨┤╨▓╨╡ ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╤Д╨╕╨║╤Б╤П╤В ╨╜╨╡╤А╨╡╨│╤Г╨╗╤П╤А╨╜╤Л╨╡ ╨┐╨░╨┤╨╡╨╜╨╕╤П
+    //    ╨┐╤А╨╕ ╨┐╨╛╨┐╤Л╤В╨║╨╡ ╨▓╨║╨╗╤О╤З╨╕╤В╤М ╨┐╨╛╨║╨░╨╖ ╨╗╨╛╨│╨╕╤З╨╡╤Б╨║╨╕╤Е ╨╕╨╝╤С╨╜ ╨┐╨╛ Ctrl-N ╨╜╨░ CD
     FillChar(eaop.fpFEA2List^, ulFEASize, 0);
     FillChar(eaop.fpGEA2List^, ulGEASize, 0);
 
@@ -168,7 +168,7 @@ function RetrieveEA(FName: String; pszName: PChar; var ea: Pointer;
   else
     begin
     if fst4.cbList = 0 then
-      Result := 48; {JO: ошибка 48 в оси зарезервирована}
+      Result := 48; {JO: ╨╛╤И╨╕╨▒╨║╨░ 48 ╨▓ ╨╛╤Б╨╕ ╨╖╨░╤А╨╡╨╖╨╡╤А╨▓╨╕╤А╨╛╨▓╨░╨╜╨░}
     if not Silent then
       MessageBox(#3'Failed to QUERY EA SIZE for '+FName+' , rc ::= %d.',
          @result, mfError or mfOKButton);

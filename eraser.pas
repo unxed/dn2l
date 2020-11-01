@@ -174,10 +174,10 @@ procedure EraseFiles;
       Over := cmYes;
     end;
 
-  {AK155 При отказе (DOSDelDir=false) Params.RC возвращает код
-завершения неудачной операции, если причина отказа - ошибка
-операции с файлом или каталогом. При посторонних причинах отказа
-(например, Abort) будет Params.RC=0}
+  {AK155 ╨Я╤А╨╕ ╨╛╤В╨║╨░╨╖╨╡ (DOSDelDir=false) Params.RC ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В ╨║╨╛╨┤
+╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╤П ╨╜╨╡╤Г╨┤╨░╤З╨╜╨╛╨╣ ╨╛╨┐╨╡╤А╨░╤Ж╨╕╨╕, ╨╡╤Б╨╗╨╕ ╨┐╤А╨╕╤З╨╕╨╜╨░ ╨╛╤В╨║╨░╨╖╨░ - ╨╛╤И╨╕╨▒╨║╨░
+╨╛╨┐╨╡╤А╨░╤Ж╨╕╨╕ ╤Б ╤Д╨░╨╣╨╗╨╛╨╝ ╨╕╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨╝. ╨Я╤А╨╕ ╨┐╨╛╤Б╤В╨╛╤А╨╛╨╜╨╜╨╕╤Е ╨┐╤А╨╕╤З╨╕╨╜╨░╤Е ╨╛╤В╨║╨░╨╖╨░
+(╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, Abort) ╨▒╤Г╨┤╨╡╤В Params.RC=0}
   function DosDelDir: Boolean;
     var
       DC: PDirCol;
@@ -230,7 +230,7 @@ procedure EraseFiles;
           if SR.SR.FindData.dwFileAttributes and
             FILE_ATTRIBUTE_REPARSE_POINT <> 0
           then
-            begin { Симлинк: удаляем сам симлинк }
+            begin { ╨б╨╕╨╝╨╗╨╕╨╜╨║: ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╤Б╨░╨╝ ╤Б╨╕╨╝╨╗╨╕╨╜╨║ }
             lRmDir(s);
             Params.RC := IOResult;
             if Params.RC <> 0 then
@@ -428,7 +428,7 @@ TryDel:
   for I := 1 to Files^.Count do
     begin
     PF := Files^.At(I-1);
-    {JO: файлы, найденные в архивах нельзя удалить из панели поиска}
+    {JO: ╤Д╨░╨╣╨╗╤Л, ╨╜╨░╨╣╨┤╨╡╨╜╨╜╤Л╨╡ ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е ╨╜╨╡╨╗╤М╨╖╤П ╤Г╨┤╨░╨╗╨╕╤В╤М ╨╕╨╖ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░}
     if PathFoundInArc(PF^.Owner^) then
       Continue;
     {/JO}
@@ -508,7 +508,7 @@ LLL:
         {$ENDIF}
         {$IFDEF WIN32}
         if PF^.Attr and FILE_ATTRIBUTE_REPARSE_POINT <> 0 then
-          begin { Симлинк: удаляем без подтверждений сам симлинк}
+          begin { ╨б╨╕╨╝╨╗╨╕╨╜╨║: ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨▒╨╡╨╖ ╨┐╨╛╨┤╤В╨▓╨╡╤А╨╢╨┤╨╡╨╜╨╕╨╣ ╤Б╨░╨╝ ╤Б╨╕╨╝╨╗╨╕╨╜╨║}
           lRmDir(S);
           if IOResult = 0 then
             goto DeleteDirDIZ;
@@ -536,8 +536,8 @@ DeleteDirDIZ:
     {$ENDIF}
     Dispose(PInfo, Done);
 
-  {Cat: Во-первых, совершенно непонятно, зачем перечитывать _все_ диски
-      Во-вторых, такой способ не работает с сетевыми путями}
+  {Cat: ╨Т╨╛-╨┐╨╡╤А╨▓╤Л╤Е, ╤Б╨╛╨▓╨╡╤А╤И╨╡╨╜╨╜╨╛ ╨╜╨╡╨┐╨╛╨╜╤П╤В╨╜╨╛, ╨╖╨░╤З╨╡╨╝ ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╤В╤М _╨▓╤Б╨╡_ ╨┤╨╕╤Б╨║╨╕
+      ╨Т╨╛-╨▓╤В╨╛╤А╤Л╤Е, ╤В╨░╨║╨╛╨╣ ╤Б╨┐╨╛╤Б╨╛╨▒ ╨╜╨╡ ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╤Б ╤Б╨╡╤В╨╡╨▓╤Л╨╝╨╕ ╨┐╤Г╤В╤П╨╝╨╕}
   (*
   DrivesSet := [];
   for I := 0 to Files^.Count-1 do
@@ -552,7 +552,7 @@ DeleteDirDIZ:
       end;
 *)
   RereadCollection := New(PStringCollection, Init(32, 32, False));
-  {сортированная, без повторов}
+  {╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╨░╤П, ╨▒╨╡╨╖ ╨┐╨╛╨▓╤В╨╛╤А╨╛╨▓}
   for I := 0 to Files^.Count-1 do
     begin
     RereadCollection^.Insert(PFileRec(Files^.At(I))^.Owner);
@@ -568,7 +568,7 @@ DeleteDirDIZ:
     begin
     PS := RereadCollection^.At(I);
     if S <> Copy(PS^, 1, Length(S)) then
-      {если уже перечитали вышележащий каталог, то этот перечитывать не надо}
+      {╨╡╤Б╨╗╨╕ ╤Г╨╢╨╡ ╨┐╨╡╤А╨╡╤З╨╕╤В╨░╨╗╨╕ ╨▓╤Л╤И╨╡╨╗╨╡╨╢╨░╤Й╨╕╨╣ ╨║╨░╤В╨░╨╗╨╛╨│, ╤В╨╛ ╤Н╤В╨╛╤В ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╤В╤М ╨╜╨╡ ╨╜╨░╨┤╨╛}
       begin
       S := PS^;
       if S[1] <> '>' then
@@ -608,9 +608,9 @@ procedure SetVLabel;
   begin
   Dr := GetCurDrive;
   if Dr = '/' then // slash change by unxed
-    Exit; {!! Это очень некрасивое решение. Лучше бы сделать неактивной
-      команду cmSetVolumeLabel, если на активной панели сетевой диск.
-      А заодно и если там архив. }
+    Exit; {!! ╨н╤В╨╛ ╨╛╤З╨╡╨╜╤М ╨╜╨╡╨║╤А╨░╤Б╨╕╨▓╨╛╨╡ ╤А╨╡╤И╨╡╨╜╨╕╨╡. ╨Ы╤Г╤З╤И╨╡ ╨▒╤Л ╤Б╨┤╨╡╨╗╨░╤В╤М ╨╜╨╡╨░╨║╤В╨╕╨▓╨╜╨╛╨╣
+      ╨║╨╛╨╝╨░╨╜╨┤╤Г cmSetVolumeLabel, ╨╡╤Б╨╗╨╕ ╨╜╨░ ╨░╨║╤В╨╕╨▓╨╜╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╤Б╨╡╤В╨╡╨▓╨╛╨╣ ╨┤╨╕╤Б╨║.
+      ╨Р ╨╖╨░╨╛╨┤╨╜╨╛ ╨╕ ╨╡╤Б╨╗╨╕ ╤В╨░╨╝ ╨░╤А╤Е╨╕╨▓. }
   S := {$IFDEF WIN32}CharToOemStr {$ENDIF}(GetVolumeLabel(Dr));
   {Cat}
   if ExecResource(dlgVolumeLabel, S) = cmOK then

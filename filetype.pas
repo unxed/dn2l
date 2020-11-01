@@ -7,7 +7,7 @@ procedure PrepareExtCollection;
 
 const
   Executables: String = 'exe;bat;com';
-  {JO: дополнительные расширения для поиска в архивах}
+  {JO: ╨┤╨╛╨┐╨╛╨╗╨╜╨╕╤В╨╡╨╗╤М╨╜╤Л╨╡ ╤А╨░╤Б╤И╨╕╤А╨╡╨╜╨╕╤П ╨┤╨╗╤П ╨┐╨╛╨╕╤Б╨║╨░ ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е}
   AddArchives: String =
    'exe;com';
   Archives: String =
@@ -187,7 +187,7 @@ procedure PutExtFilter(Filter: string; T: Integer);
 
 // fixme: commented by unxed
 //    if ExtCollection^.Search(@MZ, i) then
-      { дублирование: такого быть не должно }
+      { ╨┤╤Г╨▒╨╗╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡: ╤В╨░╨║╨╛╨│╨╛ ╨▒╤Л╤В╤М ╨╜╨╡ ╨┤╨╛╨╗╨╢╨╜╨╛ }
 //    else
       begin
       New(P);

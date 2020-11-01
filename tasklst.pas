@@ -8,10 +8,10 @@ Task List plugin
 Copyright (C) 2002 Aleksej Kozlov (Cat)
 2:5030/1326.13
 ******)
-{JO: 20-10-2002 переделал из плагина в модуль для компиляции в ядре DN/2 , }
-{    добавлены настройки ShowExePaths и KillAllowed в dn.ini ,             }
-{    в OS/2 версии добавлен показ типа сессии, показ заголовка окна        }
-{    (требует PM) и возможность переключения на окно процесса (требует PM) }
+{JO: 20-10-2002 ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╨╕╨╖ ╨┐╨╗╨░╨│╨╕╨╜╨░ ╨▓ ╨╝╨╛╨┤╤Г╨╗╤М ╨┤╨╗╤П ╨║╨╛╨╝╨┐╨╕╨╗╤П╤Ж╨╕╨╕ ╨▓ ╤П╨┤╤А╨╡ DN/2 , }
+{    ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╤Л ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╕ ShowExePaths ╨╕ KillAllowed ╨▓ dn.ini ,             }
+{    ╨▓ OS/2 ╨▓╨╡╤А╤Б╨╕╨╕ ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜ ╨┐╨╛╨║╨░╨╖ ╤В╨╕╨┐╨░ ╤Б╨╡╤Б╤Б╨╕╨╕, ╨┐╨╛╨║╨░╨╖ ╨╖╨░╨│╨╛╨╗╨╛╨▓╨║╨░ ╨╛╨║╨╜╨░        }
+{    (╤В╤А╨╡╨▒╤Г╨╡╤В PM) ╨╕ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨┐╨╡╤А╨╡╨║╨╗╤О╤З╨╡╨╜╨╕╤П ╨╜╨░ ╨╛╨║╨╜╨╛ ╨┐╤А╨╛╤Ж╨╡╤Б╤Б╨░ (╤В╤А╨╡╨▒╤Г╨╡╤В PM) }
 
 {&Delphi+}
 {&Use32+}
@@ -67,7 +67,7 @@ constructor TProcessDialog.Init(Collection: PProcessCollection);
     Y1 := Collection^.Count+4;
   if Y1 < 10 then
     Y1 := 10;
-  {Cat:warn в этом месте возникнут проблемы, если поставить слишком маленькие размеры экрана }
+  {Cat:warn ╨▓ ╤Н╤В╨╛╨╝ ╨╝╨╡╤Б╤В╨╡ ╨▓╨╛╨╖╨╜╨╕╨║╨╜╤Г╤В ╨┐╤А╨╛╨▒╨╗╨╡╨╝╤Л, ╨╡╤Б╨╗╨╕ ╨┐╨╛╤Б╤В╨░╨▓╨╕╤В╤М ╤Б╨╗╨╕╤И╨║╨╛╨╝ ╨╝╨░╨╗╨╡╨╜╤М╨║╨╕╨╡ ╤А╨░╨╖╨╝╨╡╤А╤Л ╤Н╨║╤А╨░╨╜╨░ }
   R.Assign(0, 0, X1, Y1);
   TDialog.Init(R, GetString(dlTasklist));
   Options := Options or ofCentered;
@@ -100,7 +100,7 @@ constructor TProcessDialog.Init(Collection: PProcessCollection);
   ListBox^.HScrollBar := HScrollBar;
   ListBox^.NewLisT(PCollection(Collection));
   Insert(ListBox);
-  {$IFDEF OS2} {JO: в Win32 пока не доделано}
+  {$IFDEF OS2} {JO: ╨▓ Win32 ╨┐╨╛╨║╨░ ╨╜╨╡ ╨┤╨╛╨┤╨╡╨╗╨░╨╜╨╛}
   I := 0;
   while (I < Collection^.Count) and
       (PProcessItem(Collection^.At(I))^.Pid < GetCurPid)

@@ -173,7 +173,7 @@ type
 
   PArvidDrive = ^TArvidDrive;
   TArvidDrive = object(TDrive)
-    {Cat: Ì‚Æ‚ Æ°Í•™‚ ¢Î≠•·•≠ ¢ Ø´†£®≠≠„Ó ¨Æ§•´Ï; ®ß¨•≠Ô‚Ï ™‡†©≠• Æ·‚Æ‡Æ¶≠Æ!}
+    {Cat: —ç—Ç–æ—Ç –æ–±—ä–µ–∫—Ç –≤—ã–Ω–µ—Å–µ–Ω –≤ –ø–ª–∞–≥–∏–Ω–Ω—É—é –º–æ–¥–µ–ª—å; –∏–∑–º–µ–Ω—è—Ç—å –∫—Ä–∞–π–Ω–µ –æ—Å—Ç–æ—Ä–æ–∂–Ω–æ!}
     Name: PString;
     Stream: PStream;
     CurFile: LongInt;
@@ -243,7 +243,7 @@ uses
   Advance, Advance2, Advance1, FlPanel, Commands, Startup, DNApp,
   Drivers, Messages, Dialogs, Memory, FileFind, DNUtil, FileCopy, UKeyMap,
   ArvidAvt, ArvidTdr
-  , PDSetup, FindObj{ ≠• ß†°Î‚Ï Ø‡®°®‚Ï ¢¨•·‚• · Ä‡¢®§Æ¨}
+  , PDSetup, FindObj{ –Ω–µ –∑–∞–±—ã—Ç—å –ø—Ä–∏–±–∏—Ç—å –≤–º–µ—Å—Ç–µ —Å –ê—Ä–≤–∏–¥–æ–º}
   , VPUtils
   ;
 
@@ -778,7 +778,7 @@ procedure TArvidDrive.ChangeUp;
     end;
   PFilePanel(Panel)^.Drive := Prev;
   Prev^.lChDir(Prev^.CurDir);
-{AK155 Ö·´® GetState(sfSelected+sfActive), ‚Æ ® ‚†™ ActivePanel = Panel
+{AK155 –ï—Å–ª–∏ GetState(sfSelected+sfActive), —Ç–æ –∏ —Ç–∞–∫ ActivePanel = Panel
   if  (Prev^.DriveType = dtDisk) and
       (PView(Panel)^.GetState(sfSelected+sfActive))
   then

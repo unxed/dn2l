@@ -318,7 +318,7 @@ procedure TClockView.Update;
     GetDate(y, mn, d, hund);
     if  (ShiftState and 7 <> 0)
       {$IFDEF OS2}
-      {AK155 Ç ≠•†™‚®¢≠Æ¨ Æ™Æ≠≠Æ¨ ·Æ·‚ÆÔ≠®® ≠• ≠†§Æ ‡•†£®‡Æ¢†‚Ï ≠†
+      {AK155 –í –Ω–µ–∞–∫—Ç–∏–≤–Ω–æ–º –æ–∫–æ–Ω–Ω–æ–º —Å–æ—Å—Ç–æ—è–Ω–∏–∏ –Ω–µ –Ω–∞–¥–æ —Ä–µ–∞–≥–∏—Ä–æ–≤–∞—Ç—å –Ω–∞
           Shift, Alt, Ctrl}
       and not DN_IsBGWindow
       {$ENDIF}
@@ -336,7 +336,7 @@ procedure TClockView.Update;
         if ShowDayOfWeek then
           begin
           DayWeek := hund; {DayOfWeek(Date)-1;}
-          {Cat: ·‚‡†≠≠Î• ™†™®•-‚Æ Ø‡Æ°´•¨Î...}
+          {Cat: —Å—Ç—Ä–∞–Ω–Ω—ã–µ –∫–∞–∫–∏–µ-—Ç–æ –ø—Ä–æ–±–ª–µ–º—ã...}
           if  (Length(DaysOfWeek) <> 14) and (Length(DaysOfWeek) <> 21)
           then
             TimeStr := ' '+Copy(GetString(stDaysWeek), 1+DayWeek*2, 2)
