@@ -2,8 +2,14 @@
 if ! command -v 7z &> /dev/null
 then
     echo "7z not found. trying to install via apt"
-    echo "install p7zip-full manually if you are using non deb-based distro"
-    sudo apt install p7zip-full
+    echo "install p7zip-full and p7zip-rar manually if you are using non deb-based distro"
+    sudo apt install p7zip-full p7zip-rar
+fi
+if ! command -v rename &> /dev/null
+then
+    echo "rename not found. trying to install via apt"
+    echo "install rename manually if you are using non deb-based distro"
+    sudo apt install rename
 fi
 # cleanup
 rm -rf dn2l_tryouts
