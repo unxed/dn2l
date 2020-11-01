@@ -49,10 +49,10 @@
 {Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
 
 {Cat
-   28/08/2001 - многие имеющиеся функции переделал для совместимости с типом
-   AnsiString; добавил аналогичные функции, работающие с типом LongString
-   16/01/2002 - функции поиска строки в буфере теперь получают параметры типа
-   LongInt вместо Word
+   28/08/2001 - ╨╝╨╜╨╛╨│╨╕╨╡ ╨╕╨╝╨╡╤О╤Й╨╕╨╡╤Б╤П ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╨┤╨╗╤П ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╤Б ╤В╨╕╨┐╨╛╨╝
+   AnsiString; ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨░╨╜╨░╨╗╨╛╨│╨╕╤З╨╜╤Л╨╡ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕, ╤А╨░╨▒╨╛╤В╨░╤О╤Й╨╕╨╡ ╤Б ╤В╨╕╨┐╨╛╨╝ LongString
+   16/01/2002 - ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╨┐╨╛╨╕╤Б╨║╨░ ╤Б╤В╤А╨╛╨║╨╕ ╨▓ ╨▒╤Г╤Д╨╡╤А╨╡ ╤В╨╡╨┐╨╡╤А╤М ╨┐╨╛╨╗╤Г╤З╨░╤О╤В ╨┐╨░╤А╨░╨╝╨╡╤В╤А╤Л ╤В╨╕╨┐╨░
+   LongInt ╨▓╨╝╨╡╤Б╤В╨╛ Word
 }
 
 unit Advance1; {String functions}
@@ -64,17 +64,17 @@ uses
   ;
 
 var
- {Следующие три таблицы используются вместо XlatCP для "перекодировки"
-  Ascii-Ascii (см. первые элементы KeyMapDescr). Поэтому они должны
-  присутствовать все три, и именно в таком порядке. }
+ {╨б╨╗╨╡╨┤╤Г╤О╤Й╨╕╨╡ ╤В╤А╨╕ ╤В╨░╨▒╨╗╨╕╤Ж╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤В╤Б╤П ╨▓╨╝╨╡╤Б╤В╨╛ XlatCP ╨┤╨╗╤П "╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕"
+  Ascii-Ascii (╤Б╨╝. ╨┐╨╡╤А╨▓╤Л╨╡ ╤Н╨╗╨╡╨╝╨╡╨╜╤В╤Л KeyMapDescr). ╨Я╨╛╤Н╤В╨╛╨╝╤Г ╨╛╨╜╨╕ ╨┤╨╛╨╗╨╢╨╜╤Л
+  ╨┐╤А╨╕╤Б╤Г╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨▓╤Б╨╡ ╤В╤А╨╕, ╨╕ ╨╕╨╝╨╡╨╜╨╜╨╛ ╨▓ ╤В╨░╨║╨╛╨╝ ╨┐╨╛╤А╤П╨┤╨║╨╡. }
   UpCaseArray: TXlat;
-    {` Перевод на верхний регистр в ASCII`}
+    {` ╨Я╨╡╤А╨╡╨▓╨╛╨┤ ╨╜╨░ ╨▓╨╡╤А╤Е╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А ╨▓ ASCII`}
   NullXlatTable: TXlat;
-    {` Тождественная перекодировка `}
+    {` ╨в╨╛╨╢╨┤╨╡╤Б╤В╨▓╨╡╨╜╨╜╨░╤П ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨░ `}
   NullXlatTable1: TXlat;
 
   LowCaseArray: TXlat;
-    {` Перевод на нижний регистр в ASCII`}
+    {` ╨Я╨╡╤А╨╡╨▓╨╛╨┤ ╨╜╨░ ╨╜╨╕╨╢╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А ╨▓ ASCII`}
 
 function NewStr(const S: String): PString;
 function NewLongStr(const S: LongString): PLongString;
@@ -86,7 +86,7 @@ function CnvLongString(P: PLongString): LongString;
 {conversion: PLongString to LongString}
 function StrGrd(AMax, ACur: TSize; Wide: Byte; Rev: Boolean): String;
 function Percent(AMax, ACur: TSize): String;
-  {` Построение строки вида 57%; длина - как получится. `}
+  {` ╨Я╨╛╤Б╤В╤А╨╛╨╡╨╜╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨▓╨╕╨┤╨░ 57%; ╨┤╨╗╨╕╨╜╨░ - ╨║╨░╨║ ╨┐╨╛╨╗╤Г╤З╨╕╤В╤Б╤П. `}
 procedure Hex8Lo(L: LongInt; var HexLo);
 procedure AddStr(var S: String; C: Char);
 {procedure DelFC(var s:String);}
@@ -109,10 +109,10 @@ function Cut(p: String; len: Integer): String;
 function CutH(p: String; len: Integer): String;
 
 function Strg(C: Char; Num: Byte): String;
-  {` Создать строку длиной Num, заполненную символом C `}
+  {` ╨б╨╛╨╖╨┤╨░╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╨┤╨╗╨╕╨╜╨╛╨╣ Num, ╨╖╨░╨┐╨╛╨╗╨╜╨╡╨╜╨╜╤Г╤О ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨╝ C `}
 
 function LongStrg(C: Char; Num: LongInt): LongString;
-  {` Создать строку длиной Num, заполненную символом C `}
+  {` ╨б╨╛╨╖╨┤╨░╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╨┤╨╗╨╕╨╜╨╛╨╣ Num, ╨╖╨░╨┐╨╛╨╗╨╜╨╡╨╜╨╜╤Г╤О ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨╝ C `}
 
 {case functions}
 function UpCase(c: Char): Char;
@@ -140,31 +140,31 @@ function StoI(const s: String): LongInt;
 function SStr(a: LongInt; B: Byte; C: Char): String;
 function SSt2(a: LongInt; B: Byte; C: Char): String;
 function FStr(a: TSize): String;
-  {` Строковое представление размера.
-    Длина результата - не более 12 символов, ведущих пробелов нет.
-    Триады разделяются в соответствии с настройками страны `}
+  {` ╨б╤В╤А╨╛╨║╨╛╨▓╨╛╨╡ ╨┐╤А╨╡╨┤╤Б╤В╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╤А╨░╨╖╨╝╨╡╤А╨░.
+    ╨Ф╨╗╨╕╨╜╨░ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨░ - ╨╜╨╡ ╨▒╨╛╨╗╨╡╨╡ 12 ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓, ╨▓╨╡╨┤╤Г╤Й╨╕╤Е ╨┐╤А╨╛╨▒╨╡╨╗╨╛╨▓ ╨╜╨╡╤В.
+    ╨в╤А╨╕╨░╨┤╤Л ╤А╨░╨╖╨┤╨╡╨╗╤П╤О╤В╤Б╤П ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╕ ╤Б ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨░╨╝╨╕ ╤Б╤В╤А╨░╨╜╤Л `}
 function FileSizeStr(X: TSize): String;
-  {` Строковое представление длины файла.
-    Длина результата - 9 символов, прижим вправо.
-    Триады разделяются в соответствии с настройками страны `}
+  {` ╨б╤В╤А╨╛╨║╨╛╨▓╨╛╨╡ ╨┐╤А╨╡╨┤╤Б╤В╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨┤╨╗╨╕╨╜╤Л ╤Д╨░╨╣╨╗╨░.
+    ╨Ф╨╗╨╕╨╜╨░ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨░ - 9 ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓, ╨┐╤А╨╕╨╢╨╕╨╝ ╨▓╨┐╤А╨░╨▓╨╛.
+    ╨в╤А╨╕╨░╨┤╤Л ╤А╨░╨╖╨┤╨╡╨╗╤П╤О╤В╤Б╤П ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╕ ╤Б ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨░╨╝╨╕ ╤Б╤В╤А╨░╨╜╤Л `}
 function Hex2(a: Byte): Str2;
 function Hex4(a: Word): Str4;
 function Hex8(a: LongInt): Str8;
 function HexFilePos(C: Comp): String;
-  {`9 hex-цифр`}
+  {`9 hex-╤Ж╨╕╤Д╤А`}
 function HexChar(a: Byte): Char;
 function Replace(const Pattern, ReplaceString: String; var S: String)
   : Boolean;
 function Dec2(w: Word): Str2;
-  {` Ровно две десятичные цифры (младшие) `}
+  {` ╨а╨╛╨▓╨╜╨╛ ╨┤╨▓╨╡ ╨┤╨╡╤Б╤П╤В╨╕╤З╨╜╤Л╨╡ ╤Ж╨╕╤Д╤А╤Л (╨╝╨╗╨░╨┤╤И╨╕╨╡) `}
 function fReplace(const SubFrom, SubTo: String; S: String): String;
 function PosChar(C: Char; const S: String): Byte;
 function CharCount(C: Char; const S: String): Byte; {DataCompBoy}
 function SecToStr(t: Word): String;
-  {` время, с учётом разделителя времени, результат типа 12:34:56 `}
+  {` ╨▓╤А╨╡╨╝╤П, ╤Б ╤Г╤З╤С╤В╨╛╨╝ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤П ╨▓╤А╨╡╨╝╨╡╨╜╨╕, ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В ╤В╨╕╨┐╨░ 12:34:56 `}
 function FormatTimeStr(H, M, SS: Word): String; {DataCompBoy}
-  {` время, с учётом формата и разделителя времени, результат может
-   быть типа 01:23:45pm `}
+  {` ╨▓╤А╨╡╨╝╤П, ╤Б ╤Г╤З╤С╤В╨╛╨╝ ╤Д╨╛╤А╨╝╨░╤В╨░ ╨╕ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤П ╨▓╤А╨╡╨╝╨╡╨╜╨╕, ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В ╨╝╨╛╨╢╨╡╤В
+   ╨▒╤Л╤В╤М ╤В╨╕╨┐╨░ 01:23:45pm `}
 function FormatDateTime(const DT: DateTime; Time: Boolean): String; {cat}
 procedure MakeCurrency(R: Real; var S: String);
 function GetDateTime(Time: Boolean): String;
@@ -184,8 +184,8 @@ procedure MakeDateFull(const Day, Month: Word; {-$VOL moidfied}
     const YFull: Boolean);
 
 function DumpStr
-  {` Сформировать представление Hex+Text c 9-значным
-     адресом слева. Первый Hex-символ -  S[12]`}
+  {` ╨б╤Д╨╛╤А╨╝╨╕╤А╨╛╨▓╨░╤В╤М ╨┐╤А╨╡╨┤╤Б╤В╨░╨▓╨╗╨╡╨╜╨╕╨╡ Hex+Text c 9-╨╖╨╜╨░╤З╨╜╤Л╨╝
+     ╨░╨┤╤А╨╡╤Б╨╛╨╝ ╤Б╨╗╨╡╨▓╨░. ╨Я╨╡╤А╨▓╤Л╨╣ Hex-╤Б╨╕╨╝╨▓╨╛╨╗ -  S[12]`}
   (var B; Addr: Comp; Count: Integer; Filter: Byte): String;
 
 function MemEqual(var Buf1; var Buf2; Len: Word): Boolean;
@@ -205,22 +205,22 @@ procedure Create_BackBMTable
     ExactCase: Boolean);
 
 function BMsearch(
-{` Boyer-Moore Search function. Результат - индекс (от 1)
-    начала найденного текста или 0, если текст не найден }
+{` Boyer-Moore Search function. ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В - ╨╕╨╜╨┤╨╡╨║╤Б (╨╛╤В 1)
+    ╨╜╨░╤З╨░╨╗╨░ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨│╨╛ ╤В╨╡╨║╤Б╤В╨░ ╨╕╨╗╨╕ 0, ╨╡╤Б╨╗╨╕ ╤В╨╡╨║╤Б╤В ╨╜╨╡ ╨╜╨░╨╣╨┤╨╡╨╜ }
     const BMT: BMTable;
-      {` должна быть построена заранее `}
+      {` ╨┤╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨┐╨╛╤Б╤В╤А╨╛╨╡╨╜╨░ ╨╖╨░╤А╨░╨╜╨╡╨╡ `}
     var Buffer;
     BuffSize: LongInt;
     const Pattern: String;
     const UpXlatArray: TXlat
-    {` совмещает перекодировку из кодировки Buffer в ASCII и
-     перевод на верхний регистр (если надо). В простейшем случае, когда
-     нужен регистрозависимый поиск в ASCII, это будет NullXlatTAble`}
+    {` ╤Б╨╛╨▓╨╝╨╡╤Й╨░╨╡╤В ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╤Г ╨╕╨╖ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕ Buffer ╨▓ ASCII ╨╕
+     ╨┐╨╡╤А╨╡╨▓╨╛╨┤ ╨╜╨░ ╨▓╨╡╤А╤Е╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А (╨╡╤Б╨╗╨╕ ╨╜╨░╨┤╨╛). ╨Т ╨┐╤А╨╛╤Б╤В╨╡╨╣╤И╨╡╨╝ ╤Б╨╗╤Г╤З╨░╨╡, ╨║╨╛╨│╨┤╨░
+     ╨╜╤Г╨╢╨╡╨╜ ╤А╨╡╨│╨╕╤Б╤В╤А╨╛╨╖╨░╨▓╨╕╤Б╨╕╨╝╤Л╨╣ ╨┐╨╛╨╕╤Б╨║ ╨▓ ASCII, ╤Н╤В╨╛ ╨▒╤Г╨┤╨╡╤В NullXlatTAble`}
     ): LongInt;
 {`}
 
 function BackBMsearch(
-{` Boyer-Moore Search function. Сделана из BMsearch}
+{` Boyer-Moore Search function. ╨б╨┤╨╡╨╗╨░╨╜╨░ ╨╕╨╖ BMsearch}
     const BMT: BMTable;
     var Buffer;
     BuffSize: LongInt;
@@ -238,23 +238,23 @@ function SearchForAllCP(S: String; var B; l: LongInt;
 procedure CompressString(var S: LongString);
 {AK155}
 function PosLastDot(StrToMake: String): Byte;
-  {` Позиция точки расширения. Если расширения нет - длина плюс 1 `}
+  {` ╨Я╨╛╨╖╨╕╤Ж╨╕╤П ╤В╨╛╤З╨║╨╕ ╤А╨░╤Б╤И╨╕╤А╨╡╨╜╨╕╤П. ╨Х╤Б╨╗╨╕ ╤А╨░╤Б╤И╨╕╤А╨╡╨╜╨╕╤П ╨╜╨╡╤В - ╨┤╨╗╨╕╨╜╨░ ╨┐╨╗╤О╤Б 1 `}
 function IsDummyDir(const DirName: String): Boolean;
 procedure CopyShortString(const s1, s2: ShortString);
-  {` Копирует строку в соответствии с её длиной, независимо от того,
-  как описана строка-получатель. Используется для копирования длинного
-  имени в TFileRec, которое синтаксически имеет длину 12, а
-  фактически продолжается в поле Dummy`}
+  {` ╨Ъ╨╛╨┐╨╕╤А╤Г╨╡╤В ╤Б╤В╤А╨╛╨║╤Г ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╕ ╤Б ╨╡╤С ╨┤╨╗╨╕╨╜╨╛╨╣, ╨╜╨╡╨╖╨░╨▓╨╕╤Б╨╕╨╝╨╛ ╨╛╤В ╤В╨╛╨│╨╛,
+  ╨║╨░╨║ ╨╛╨┐╨╕╤Б╨░╨╜╨░ ╤Б╤В╤А╨╛╨║╨░-╨┐╨╛╨╗╤Г╤З╨░╤В╨╡╨╗╤М. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨┤╨╗╤П ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╨┤╨╗╨╕╨╜╨╜╨╛╨│╨╛
+  ╨╕╨╝╨╡╨╜╨╕ ╨▓ TFileRec, ╨║╨╛╤В╨╛╤А╨╛╨╡ ╤Б╨╕╨╜╤В╨░╨║╤Б╨╕╤З╨╡╤Б╨║╨╕ ╨╕╨╝╨╡╨╡╤В ╨┤╨╗╨╕╨╜╤Г 12, ╨░
+  ╤Д╨░╨║╤В╨╕╤З╨╡╤Б╨║╨╕ ╨┐╤А╨╛╨┤╨╛╨╗╨╢╨░╨╡╤В╤Б╤П ╨▓ ╨┐╨╛╨╗╨╡ Dummy`}
 {/AK155}
 
 function SPos(SubStr, S: String; Start: Integer): Integer;
-  {` Аналог Pos, только поиск начинается с S[Start] `}
+  {` ╨Р╨╜╨░╨╗╨╛╨│ Pos, ╤В╨╛╨╗╤М╨║╨╛ ╨┐╨╛╨╕╤Б╨║ ╨╜╨░╤З╨╕╨╜╨░╨╡╤В╤Б╤П ╤Б S[Start] `}
 
 function MinBufSize(x: TFileSize; y: LongInt): LongInt;
-  {` Меньшее число из размера файла и размера буфера `}
+  {` ╨Ь╨╡╨╜╤М╤И╨╡╨╡ ╤З╨╕╤Б╨╗╨╛ ╨╕╨╖ ╤А╨░╨╖╨╝╨╡╤А╨░ ╤Д╨░╨╣╨╗╨░ ╨╕ ╤А╨░╨╖╨╝╨╡╤А╨░ ╨▒╤Г╤Д╨╡╤А╨░ `}
 
 function Positive(x: TFileSize): TFileSize;
-  {` Размер файла, ограниченный снизу нулём `}
+  {` ╨а╨░╨╖╨╝╨╡╤А ╤Д╨░╨╣╨╗╨░, ╨╛╨│╤А╨░╨╜╨╕╤З╨╡╨╜╨╜╤Л╨╣ ╤Б╨╜╨╕╨╖╤Г ╨╜╤Г╨╗╤С╨╝ `}
 
 function i32(x: TFileSize): LongInt;
   {` TFileSize -> LongInt `}
@@ -263,7 +263,7 @@ function CompToFSize(x: Comp): TFileSize;
   {` Comp -> TFileSize `}
 
 function FSizeMod(x: TFileSize; y: LongInt): LongInt;
-  {` Остаток от деления x на y `}
+  {` ╨Ю╤Б╤В╨░╤В╨╛╨║ ╨╛╤В ╨┤╨╡╨╗╨╡╨╜╨╕╤П x ╨╜╨░ y `}
 
 function Str2Comp(const s: String): Comp;
 
@@ -363,7 +363,7 @@ asm
   end { Hex8Lo };
 {$ENDIF}
 
-{Cat: по-моему, всё проще... это же System.Delete(s, 1, 1)... выкинул нафиг}
+{Cat: ╨┐╨╛-╨╝╨╛╨╡╨╝╤Г, ╨▓╤Б╤С ╨┐╤А╨╛╤Й╨╡... ╤Н╤В╨╛ ╨╢╨╡ System.Delete(s, 1, 1)... ╨▓╤Л╨║╨╕╨╜╤Г╨╗ ╨╜╨░╤Д╨╕╨│}
 (*
 procedure DelFC(var s:String);
 begin
@@ -515,11 +515,11 @@ procedure DelRight(var S: String);
   {&Frame-} {$USES ESI, EBX}
 asm
      mov  esi, S
-     movzx ebx, byte ptr [esi] {длина}
+     movzx ebx, byte ptr [esi] {╨┤╨╗╨╕╨╜╨░}
      inc  ebx
  @@Next:
      dec  ebx
-{специальный анализ длины на 0 не нужен, так как 0 - это не пробел и не Tab}
+{╤Б╨┐╨╡╤Ж╨╕╨░╨╗╤М╨╜╤Л╨╣ ╨░╨╜╨░╨╗╨╕╨╖ ╨┤╨╗╨╕╨╜╤Л ╨╜╨░ 0 ╨╜╨╡ ╨╜╤Г╨╢╨╡╨╜, ╤В╨░╨║ ╨║╨░╨║ 0 - ╤Н╤В╨╛ ╨╜╨╡ ╨┐╤А╨╛╨▒╨╡╨╗ ╨╕ ╨╜╨╡ Tab}
      mov  al, byte ptr [esi+ebx]
      cmp  al, ' '
      je   @@Next
@@ -737,7 +737,7 @@ procedure CapLongStr(var S: LongString; First, Last: Integer);
     Exit;
   SetLength(S, Length(S));
   I := First;
-  { Если слово начинается вне участка - прпускаем его }
+  { ╨Х╤Б╨╗╨╕ ╤Б╨╗╨╛╨▓╨╛ ╨╜╨░╤З╨╕╨╜╨░╨╡╤В╤Б╤П ╨▓╨╜╨╡ ╤Г╤З╨░╤Б╤В╨║╨░ - ╨┐╤А╨┐╤Г╤Б╨║╨░╨╡╨╝ ╨╡╨│╨╛ }
   if (I <> 1) and not (S[I-1] in BreakChars) then
     while not (S[I] in BreakChars) do
       begin
@@ -748,7 +748,7 @@ procedure CapLongStr(var S: LongString; First, Last: Integer);
 
   while True do
     begin
-    { Пропуск разделителей перед словом }
+    { ╨Я╤А╨╛╨┐╤Г╤Б╨║ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╨╡╨╣ ╨┐╨╡╤А╨╡╨┤ ╤Б╨╗╨╛╨▓╨╛╨╝ }
     while I <= Last do
       begin
       if not (S[I] in BreakChars) then
@@ -758,10 +758,10 @@ procedure CapLongStr(var S: LongString; First, Last: Integer);
     if I > Last then
       Exit;
 
-    { Первую букву слова - на верхний регистр }
+    { ╨Я╨╡╤А╨▓╤Г╤О ╨▒╤Г╨║╨▓╤Г ╤Б╨╗╨╛╨▓╨░ - ╨╜╨░ ╨▓╨╡╤А╤Е╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А }
     S[I] := UpCase(S[I]);
 
-    { Остальные буквы слова - на нижний регистр }
+    { ╨Ю╤Б╤В╨░╨╗╤М╨╜╤Л╨╡ ╨▒╤Г╨║╨▓╤Л ╤Б╨╗╨╛╨▓╨░ - ╨╜╨░ ╨╜╨╕╨╢╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А }
     while I < Last do
       begin
       Inc(I);
@@ -885,7 +885,7 @@ function SizeStr(a: TSize; MaxVal: TSize): String;
     begin
     i := 0;
     if a >= MaxVal then
-      MaxVal := MaxVal / 10; // место для буквы множителя
+      MaxVal := MaxVal / 10; // ╨╝╨╡╤Б╤В╨╛ ╨┤╨╗╤П ╨▒╤Г╨║╨▓╤Л ╨╝╨╜╨╛╨╢╨╕╤В╨╡╨╗╤П
     while a >= MaxVal do
       begin
       a := a/1024;
@@ -914,7 +914,7 @@ function FileSizeStr;
   begin
   Result := SizeStr(X, 10000000);
   if Length(Result) > 9 then
-    Delete(Result, 2, 1) { удаляем первый разделитель}
+    Delete(Result, 2, 1) { ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨┐╨╡╤А╨▓╤Л╨╣ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤М}
   else
     Result := PredSpace(Result, 9);
   end;
@@ -1096,15 +1096,15 @@ function GetDateTime(Time: Boolean): String;
   GetDateTime := S;
   end;
 
-function SecToStr(t: Word {в секундах }): String;
+function SecToStr(t: Word {╨▓ ╤Б╨╡╨║╤Г╨╜╨┤╨░╤Е }): String;
   var
     s: word;
   begin
   s := t mod 3600;
   Result :=
-    Dec2(t div 3600) + CountryInfo.TimeSep + { часы }
-    Dec2(s div 60) + CountryInfo.TimeSep + { минуты }
-    Dec2(s mod 60); { секунды }
+    Dec2(t div 3600) + CountryInfo.TimeSep + { ╤З╨░╤Б╤Л }
+    Dec2(s div 60) + CountryInfo.TimeSep + { ╨╝╨╕╨╜╤Г╤В╤Л }
+    Dec2(s mod 60); { ╤Б╨╡╨║╤Г╨╜╨┤╤Л }
   end;
 
 
@@ -1431,9 +1431,9 @@ function DumpStr;
   DumpStr := S;
   end { DumpStr };
 
-{AK155: Выкинул ту муть, что здесь была, и заменил на
-нормальнй BM-поиск, сделанный на основе программы
-demobmse.pas из SWAG }
+{AK155: ╨Т╤Л╨║╨╕╨╜╤Г╨╗ ╤В╤Г ╨╝╤Г╤В╤М, ╤З╤В╨╛ ╨╖╨┤╨╡╤Б╤М ╨▒╤Л╨╗╨░, ╨╕ ╨╖╨░╨╝╨╡╨╜╨╕╨╗ ╨╜╨░
+╨╜╨╛╤А╨╝╨░╨╗╤М╨╜╨╣ BM-╨┐╨╛╨╕╤Б╨║, ╤Б╨┤╨╡╨╗╨░╨╜╨╜╤Л╨╣ ╨╜╨░ ╨╛╤Б╨╜╨╛╨▓╨╡ ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╤Л
+demobmse.pas ╨╕╨╖ SWAG }
 (* Public-domain demo of Boyer-Moore search algorithm.  *)
 (* Guy McLoughlin - May 2, 1993.                        *)
 
@@ -1508,7 +1508,7 @@ function BMsearch(
     end;
   end { BMsearch };
 
-{Cat: обратный Boyer-Moore-поиск, переделал из прямого}
+{Cat: ╨╛╨▒╤А╨░╤В╨╜╤Л╨╣ Boyer-Moore-╨┐╨╛╨╕╤Б╨║, ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╨╕╨╖ ╨┐╤А╤П╨╝╨╛╨│╨╛}
 procedure Create_BackBMTable
     ( {output} var BMT: BMTable;
     {input/output} var Pattern: String;
@@ -1679,10 +1679,10 @@ function CnvLongString(P: PLongString): LongString;
   end;
 {/Cat}
 
-{Cat: переписал процедуры NewStr, DisposeStr для совместимости с AnsiString
-      добавил процедуры NewLongStr, DisposeLongStr
-      вариант не окончательный, возможны изменения
-      при изменении обязательно согласовать со следующими процедурами:
+{Cat: ╨┐╨╡╤А╨╡╨┐╨╕╤Б╨░╨╗ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╤Л NewStr, DisposeStr ╨┤╨╗╤П ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╤Б AnsiString
+      ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╤Л NewLongStr, DisposeLongStr
+      ╨▓╨░╤А╨╕╨░╨╜╤В ╨╜╨╡ ╨╛╨║╨╛╨╜╤З╨░╤В╨╡╨╗╤М╨╜╤Л╨╣, ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╤Л ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╤П
+      ╨┐╤А╨╕ ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╨╕ ╨╛╨▒╤П╨╖╨░╤В╨╡╨╗╤М╨╜╨╛ ╤Б╨╛╨│╨╗╨░╤Б╨╛╨▓╨░╤В╤М ╤Б╨╛ ╤Б╨╗╨╡╨┤╤Г╤О╤Й╨╕╨╝╨╕ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╨░╨╝╨╕:
         Streams.TStream.ReadAnsiStr
         Streams.TStream.WriteAnsiStr
         WinClpVP.Str2Collection}
@@ -1788,8 +1788,8 @@ procedure CompressString(var S: LongString);
   end;
 
 (*
-{Cat: добавил поддержку длинных строк
-      теперь эта процедура используется вместо аналогичных из MicroEd и Ed2}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨║╤Г ╨┤╨╗╨╕╨╜╨╜╤Л╤Е ╤Б╤В╤А╨╛╨║
+      ╤В╨╡╨┐╨╡╤А╤М ╤Н╤В╨░ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╨░ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨▓╨╝╨╡╤Б╤В╨╛ ╨░╨╜╨░╨╗╨╛╨│╨╕╤З╨╜╤Л╤Е ╨╕╨╖ MicroEd ╨╕ Ed2}
 procedure CompressString(var S: LongString);
 {$IFDEF USELONGSTRING}
 {Cat}
@@ -2014,7 +2014,7 @@ function i32(x: TFileSize): LongInt;
   end;
 
 function FSizeMod(x: TFileSize; y: LongInt): LongInt;
-  {` Остаток от деления x на y `}
+  {` ╨Ю╤Б╤В╨░╤В╨╛╨║ ╨╛╤В ╨┤╨╡╨╗╨╡╨╜╨╕╤П x ╨╜╨░ y `}
   begin
   Result := x mod y;
   end;

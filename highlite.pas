@@ -168,7 +168,7 @@ const
 implementation
 
 uses
-  {Consts,} {Cat: зачем? и без этого отлично компилится}
+  {Consts,} {Cat: ╨╖╨░╤З╨╡╨╝? ╨╕ ╨▒╨╡╨╖ ╤Н╤В╨╛╨│╨╛ ╨╛╤В╨╗╨╕╤З╨╜╨╛ ╨║╨╛╨╝╨┐╨╕╨╗╨╕╤В╤Б╤П}
   Defines, { TCharSet }
   Advance, { BreakChars }
   Advance1

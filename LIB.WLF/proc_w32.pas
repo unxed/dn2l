@@ -7,7 +7,7 @@ Copyright (C) 2002 Aleksej Kozlov (Cat)
 
 ******)
 
-{JO: 20-10-2002 - исправлено попадание kernel32.dll в список процессов под w9x }
+{JO: 20-10-2002 - ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╨╛ ╨┐╨╛╨┐╨░╨┤╨░╨╜╨╕╨╡ kernel32.dll ╨▓ ╤Б╨┐╨╕╤Б╨╛╨║ ╨┐╤А╨╛╤Ж╨╡╤Б╤Б╨╛╨▓ ╨┐╨╛╨┤ w9x }
 
 {&Delphi+}
 {&Use32+}
@@ -121,8 +121,8 @@ procedure FillWin95ProcessCollection(Collection: PProcessCollection);
   if not Process32First(hSnapshot, @Entry) then
     Exit;
 
-  {JO: нам совсем не нужно, чтобы kernel32.dll попадал в список процессов, }
-  {    а посему repeat ... until здесь использовать не надо                }
+  {JO: ╨╜╨░╨╝ ╤Б╨╛╨▓╤Б╨╡╨╝ ╨╜╨╡ ╨╜╤Г╨╢╨╜╨╛, ╤З╤В╨╛╨▒╤Л kernel32.dll ╨┐╨╛╨┐╨░╨┤╨░╨╗ ╨▓ ╤Б╨┐╨╕╤Б╨╛╨║ ╨┐╤А╨╛╤Ж╨╡╤Б╤Б╨╛╨▓, }
+  {    ╨░ ╨┐╨╛╤Б╨╡╨╝╤Г repeat ... until ╨╖╨┤╨╡╤Б╤М ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨╜╨╡ ╨╜╨░╨┤╨╛                }
   {repeat}
   while Process32Next(hSnapshot, @Entry) do
     begin

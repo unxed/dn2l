@@ -15,15 +15,15 @@ interface
 type
   PPointer = ^Pointer;
 
-  { обёртки для вызова системных функций }
+  { ╨╛╨▒╤С╤А╤В╨║╨╕ ╨┤╨╗╤П ╨▓╤Л╨╖╨╛╨▓╨░ ╤Б╨╕╤Б╤В╨╡╨╝╨╜╤Л╤Е ╤Д╤Г╨╜╨║╤Ж╨╕╨╣ }
 function LoadModule(ModuleName: PChar; var LibHandle: Integer): Boolean;
 procedure FreeModule(LibHandle: Integer);
 function GetProcAddress(LibHandle: Integer; ProcName: PChar;
      var ProcAddr: Pointer): Boolean;
 
-{ сначала пытается загрузить DLL из каталога ДН-а, если не удаётся, }
-{ то грузит из подкаталога, имеющего то же имя, что и модуль        }
-{ т.е. если передана строка PLUGIN, то делается попытка загрузки:   }
+{ ╤Б╨╜╨░╤З╨░╨╗╨░ ╨┐╤Л╤В╨░╨╡╤В╤Б╤П ╨╖╨░╨│╤А╤Г╨╖╨╕╤В╤М DLL ╨╕╨╖ ╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨Ф╨Э-╨░, ╨╡╤Б╨╗╨╕ ╨╜╨╡ ╤Г╨┤╨░╤С╤В╤Б╤П, }
+{ ╤В╨╛ ╨│╤А╤Г╨╖╨╕╤В ╨╕╨╖ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░, ╨╕╨╝╨╡╤О╤Й╨╡╨│╨╛ ╤В╨╛ ╨╢╨╡ ╨╕╨╝╤П, ╤З╤В╨╛ ╨╕ ╨╝╨╛╨┤╤Г╨╗╤М        }
+{ ╤В.╨╡. ╨╡╤Б╨╗╨╕ ╨┐╨╡╤А╨╡╨┤╨░╨╜╨░ ╤Б╤В╤А╨╛╨║╨░ PLUGIN, ╤В╨╛ ╨┤╨╡╨╗╨░╨╡╤В╤Б╤П ╨┐╨╛╨┐╤Л╤В╨║╨░ ╨╖╨░╨│╤А╤Г╨╖╨║╨╕:   }
 {    C:\DN\PLUGIN.DLL           }
 {    C:\DN\PLUGIN\PLUGIN.DLL    }
 function LoadPluginModule(const ModuleName: String;

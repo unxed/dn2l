@@ -12,22 +12,22 @@ Written by Cat 2:5030/1326.13
 {&Use32+}
 
 {Cat
-   05-10-2001 - начато добавление плагинов к ДН-у
-   19-10-2001 - плагины типа EventCatcher
-   21-10-2001 - плагины используют индексы в файлах ресурсов (Lng и Dlg)
-   27-10-2001 - плагины используют индекс в файле помощи (Hlp)
-   04-11-2001 - при установке плагина изменяем меню
-   26-12-2001 - для разных языков используем различные строки меню
-   17-01-2002 - теперь можем менять не только главное меню,
-                но и меню редактора и электронной таблицы
-   17-01-2002 - решил, что не следует изменять языковой файл и файл
-                ресурсов (за исключением добавления/удаления строк меню),
-                поэтому индексы в Lng, Dlg, Hlp файлах более не используются,
-                а ресурсы плагинов теперь будут содержаться в файлах *.REZ,
-                к которым Plugin Manager не будет иметь никакого отношения
-                Версия плагинов EventCatcher - 2.0
-   23-01-2002 - плагины типа ArchiveViewer
-   10-05-2002 - вся структура плагинов переделана заново, без использования
+   05-10-2001 - ╨╜╨░╤З╨░╤В╨╛ ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨┐╨╗╨░╨│╨╕╨╜╨╛╨▓ ╨║ ╨Ф╨Э-╤Г
+   19-10-2001 - ╨┐╨╗╨░╨│╨╕╨╜╤Л ╤В╨╕╨┐╨░ EventCatcher
+   21-10-2001 - ╨┐╨╗╨░╨│╨╕╨╜╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤В ╨╕╨╜╨┤╨╡╨║╤Б╤Л ╨▓ ╤Д╨░╨╣╨╗╨░╤Е ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ (Lng ╨╕ Dlg)
+   27-10-2001 - ╨┐╨╗╨░╨│╨╕╨╜╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤В ╨╕╨╜╨┤╨╡╨║╤Б ╨▓ ╤Д╨░╨╣╨╗╨╡ ╨┐╨╛╨╝╨╛╤Й╨╕ (Hlp)
+   04-11-2001 - ╨┐╤А╨╕ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨║╨╡ ╨┐╨╗╨░╨│╨╕╨╜╨░ ╨╕╨╖╨╝╨╡╨╜╤П╨╡╨╝ ╨╝╨╡╨╜╤О
+   26-12-2001 - ╨┤╨╗╤П ╤А╨░╨╖╨╜╤Л╤Е ╤П╨╖╤Л╨║╨╛╨▓ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤А╨░╨╖╨╗╨╕╤З╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╝╨╡╨╜╤О
+   17-01-2002 - ╤В╨╡╨┐╨╡╤А╤М ╨╝╨╛╨╢╨╡╨╝ ╨╝╨╡╨╜╤П╤В╤М ╨╜╨╡ ╤В╨╛╨╗╤М╨║╨╛ ╨│╨╗╨░╨▓╨╜╨╛╨╡ ╨╝╨╡╨╜╤О,
+                ╨╜╨╛ ╨╕ ╨╝╨╡╨╜╤О ╤А╨╡╨┤╨░╨║╤В╨╛╤А╨░ ╨╕ ╤Н╨╗╨╡╨║╤В╤А╨╛╨╜╨╜╨╛╨╣ ╤В╨░╨▒╨╗╨╕╤Ж╤Л
+   17-01-2002 - ╤А╨╡╤И╨╕╨╗, ╤З╤В╨╛ ╨╜╨╡ ╤Б╨╗╨╡╨┤╤Г╨╡╤В ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╤П╨╖╤Л╨║╨╛╨▓╨╛╨╣ ╤Д╨░╨╣╨╗ ╨╕ ╤Д╨░╨╣╨╗
+                ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ (╨╖╨░ ╨╕╤Б╨║╨╗╤О╤З╨╡╨╜╨╕╨╡╨╝ ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╤П/╤Г╨┤╨░╨╗╨╡╨╜╨╕╤П ╤Б╤В╤А╨╛╨║ ╨╝╨╡╨╜╤О),
+                ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╨╕╨╜╨┤╨╡╨║╤Б╤Л ╨▓ Lng, Dlg, Hlp ╤Д╨░╨╣╨╗╨░╤Е ╨▒╨╛╨╗╨╡╨╡ ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤В╤Б╤П,
+                ╨░ ╤А╨╡╤Б╤Г╤А╤Б╤Л ╨┐╨╗╨░╨│╨╕╨╜╨╛╨▓ ╤В╨╡╨┐╨╡╤А╤М ╨▒╤Г╨┤╤Г╤В ╤Б╨╛╨┤╨╡╤А╨╢╨░╤В╤М╤Б╤П ╨▓ ╤Д╨░╨╣╨╗╨░╤Е *.REZ,
+                ╨║ ╨║╨╛╤В╨╛╤А╤Л╨╝ Plugin Manager ╨╜╨╡ ╨▒╤Г╨┤╨╡╤В ╨╕╨╝╨╡╤В╤М ╨╜╨╕╨║╨░╨║╨╛╨│╨╛ ╨╛╤В╨╜╨╛╤И╨╡╨╜╨╕╤П
+                ╨Т╨╡╤А╤Б╨╕╤П ╨┐╨╗╨░╨│╨╕╨╜╨╛╨▓ EventCatcher - 2.0
+   23-01-2002 - ╨┐╨╗╨░╨│╨╕╨╜╤Л ╤В╨╕╨┐╨░ ArchiveViewer
+   10-05-2002 - ╨▓╤Б╤П ╤Б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨┐╨╗╨░╨│╨╕╨╜╨╛╨▓ ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╜╨░ ╨╖╨░╨╜╨╛╨▓╨╛, ╨▒╨╡╨╖ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П
                 DN2CAT.DLL
 }
 
@@ -181,7 +181,7 @@ function OverwriteConfigFile: Boolean;
   Dispose(Stream, Done);
   end { OverwriteConfigFile: };
 
-{ дубликат этой функции находится в MenuEdit.pas, изменения согласовывать }
+{ ╨┤╤Г╨▒╨╗╨╕╨║╨░╤В ╤Н╤В╨╛╨╣ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П ╨▓ MenuEdit.pas, ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╤П ╤Б╨╛╨│╨╗╨░╤Б╨╛╨▓╤Л╨▓╨░╤В╤М }
 function ChangeMenuResource(MenuChanger: TMenuChanger; Item: Pointer;
      MenuView: PMenuView; dlgMenu: Integer; CurMenuType: Byte): Boolean;
   var
@@ -199,16 +199,16 @@ function ChangeMenuResource(MenuChanger: TMenuChanger; Item: Pointer;
     Exit;
     end;
 
-  { изменяем меню }
+  { ╨╕╨╖╨╝╨╡╨╜╤П╨╡╨╝ ╨╝╨╡╨╜╤О }
   MenuChanger(Item, MenuView, CurMenuType);
 
   with DNFunctions^, SomeObjects1^ do
     begin
-    { копируем индекс ресурсов во временный буфер }
+    { ╨║╨╛╨┐╨╕╤А╤Г╨╡╨╝ ╨╕╨╜╨┤╨╡╨║╤Б ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ ╨▓╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨▒╤Г╤Д╨╡╤А }
     GetMem(Index, Resource^.Count*SizeOf(LongInt));
     Move(Resource^.Index^, Index^, Resource^.Count*SizeOf(LongInt));
 
-    { находим ресурс, располагающийся следом за меню }
+    { ╨╜╨░╤Е╨╛╨┤╨╕╨╝ ╤А╨╡╤Б╤Г╤А╤Б, ╤А╨░╤Б╨┐╨╛╨╗╨░╨│╨░╤О╤Й╨╕╨╣╤Б╤П ╤Б╨╗╨╡╨┤╨╛╨╝ ╨╖╨░ ╨╝╨╡╨╜╤О }
     NextResourceOffset := MaxLongInt;
     MenuResourceOffset := Index^[dlgMenu];
 
@@ -221,7 +221,7 @@ function ChangeMenuResource(MenuChanger: TMenuChanger; Item: Pointer;
       (ResourceStream)^.GetSize-NextResourceOffset;
     MenuResourceSize := NextResourceOffset-MenuResourceOffset;
 
-    { переоткрываем файл ресурсов, чтобы можно было в него писать }
+    { ╨┐╨╡╤А╨╡╨╛╤В╨║╤А╤Л╨▓╨░╨╡╨╝ ╤Д╨░╨╣╨╗ ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓, ╤З╤В╨╛╨▒╤Л ╨╝╨╛╨╢╨╜╨╛ ╨▒╤Л╨╗╨╛ ╨▓ ╨╜╨╡╨│╨╛ ╨┐╨╕╤Б╨░╤В╤М }
     repeat
       PStream(ResourceStream)^.Close;
       PStream(ResourceStream)^.DoOpen(Open_Access_ReadWrite or
@@ -234,13 +234,13 @@ function ChangeMenuResource(MenuChanger: TMenuChanger; Item: Pointer;
     if NextResourceOffset <> MaxLongInt then
       begin
 
-      { сдвигаем на место меню ресурсы, располагающиеся за ним, а само меню сдвигаем в конец файла }
+      { ╤Б╨┤╨▓╨╕╨│╨░╨╡╨╝ ╨╜╨░ ╨╝╨╡╤Б╤В╨╛ ╨╝╨╡╨╜╤О ╤А╨╡╤Б╤Г╤А╤Б╤Л, ╤А╨░╤Б╨┐╨╛╨╗╨░╨│╨░╤О╤Й╨╕╨╡╤Б╤П ╨╖╨░ ╨╜╨╕╨╝, ╨░ ╤Б╨░╨╝╨╛ ╨╝╨╡╨╜╤О ╤Б╨┤╨▓╨╕╨│╨░╨╡╨╝ ╨▓ ╨║╨╛╨╜╨╡╤Ж ╤Д╨░╨╣╨╗╨░ }
       for I := 0 to Resource^.Count-1 do
         if Index^[I] > MenuResourceOffset then
           Dec(Index^[I], MenuResourceSize);
       Inc(Index^[dlgMenu], RestResourceSize);
 
-      { удаляем меню из файла ресурсов - осторожно!! }
+      { ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨╝╨╡╨╜╤О ╨╕╨╖ ╤Д╨░╨╣╨╗╨░ ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ - ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!! }
       if MaxAvail < RestResourceSize then
         begin
         Result := False;
@@ -266,11 +266,11 @@ function ChangeMenuResource(MenuChanger: TMenuChanger; Item: Pointer;
     else
       PStream(ResourceStream)^.Seek(MenuResourceOffset);
 
-    { запихиваем меню обратно в Dlg-файл }
+    { ╨╖╨░╨┐╨╕╤Е╨╕╨▓╨░╨╡╨╝ ╨╝╨╡╨╜╤О ╨╛╨▒╤А╨░╤В╨╜╨╛ ╨▓ Dlg-╤Д╨░╨╣╨╗ }
     PStream(ResourceStream)^.Put(MenuView);
     Result := (PStream(ResourceStream)^.Status = stOK);
 
-    { если всё прошло успешно, то возвращаем индекс ресурсов из временного буфера }
+    { ╨╡╤Б╨╗╨╕ ╨▓╤Б╤С ╨┐╤А╨╛╤И╨╗╨╛ ╤Г╤Б╨┐╨╡╤И╨╜╨╛, ╤В╨╛ ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╨╝ ╨╕╨╜╨┤╨╡╨║╤Б ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ ╨╕╨╖ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╨▒╤Г╤Д╨╡╤А╨░ }
     Move(Index^, Resource^.Index^, Resource^.Count*SizeOf(LongInt));
     FreeMem(Index {, Resource^.Count*SizeOf(LongInt)});
     end;
@@ -308,7 +308,7 @@ procedure InstallMenu(Item: PPluginListItem; MenuView: PMenuView;
                      FirstCatchedCommand+Command, MenuHelpCtx^[Command],
                      MenuItemPtr^);
                 MenuWantBeAfter^[Command] := -MenuWantBeAfter^[Command];
-                { для обработанных элементов ставим отрицательное значение }
+                { ╨┤╨╗╤П ╨╛╨▒╤А╨░╨▒╨╛╤В╨░╨╜╨╜╤Л╤Е ╤Н╨╗╨╡╨╝╨╡╨╜╤В╨╛╨▓ ╤Б╤В╨░╨▓╨╕╨╝ ╨╛╤В╤А╨╕╤Ж╨░╤В╨╡╨╗╤М╨╜╨╛╨╡ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ }
                 end;
         MenuItemPtr := @MenuItemPtr^^.Next;
         end;
@@ -316,11 +316,11 @@ procedure InstallMenu(Item: PPluginListItem; MenuView: PMenuView;
     end { WalkMenu };
 
   begin { InstallMenu }
-  { сначала просматриваем меню и добавляем те строчки, }
-  { которые хотят вставиться в какое-то определённое место }
+  { ╤Б╨╜╨░╤З╨░╨╗╨░ ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╨╝ ╨╝╨╡╨╜╤О ╨╕ ╨┤╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╤В╨╡ ╤Б╤В╤А╨╛╤З╨║╨╕, }
+  { ╨║╨╛╤В╨╛╤А╤Л╨╡ ╤Е╨╛╤В╤П╤В ╨▓╤Б╤В╨░╨▓╨╕╤В╤М╤Б╤П ╨▓ ╨║╨░╨║╨╛╨╡-╤В╨╛ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╤С╨╜╨╜╨╛╨╡ ╨╝╨╡╤Б╤В╨╛ }
   WalkMenu(MenuView^.Menu^.Items);
 
-  { считаем, сколько ещё осталось добавить }
+  { ╤Б╤З╨╕╤В╨░╨╡╨╝, ╤Б╨║╨╛╨╗╤М╨║╨╛ ╨╡╤Й╤С ╨╛╤Б╤В╨░╨╗╨╛╤Б╤М ╨┤╨╛╨▒╨░╨▓╨╕╤В╤М }
   Count := 0;
   with Item^ do
     for Command := 0 to LastCatchedCommand-FirstCatchedCommand do
@@ -332,17 +332,17 @@ procedure InstallMenu(Item: PPluginListItem; MenuView: PMenuView;
         Inc(Count);
         end;
 
-  { если всё, что надо, уже добавлено, то тихо выходим }
+  { ╨╡╤Б╨╗╨╕ ╨▓╤Б╤С, ╤З╤В╨╛ ╨╜╨░╨┤╨╛, ╤Г╨╢╨╡ ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╛, ╤В╨╛ ╤В╨╕╤Е╨╛ ╨▓╤Л╤Е╨╛╨┤╨╕╨╝ }
   if Count = 0 then
     Exit;
 
-  { в противном случае... }
+  { ╨▓ ╨┐╤А╨╛╤В╨╕╨▓╨╜╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡... }
   with DNFunctions^, SomeObjects1^ do
     begin
     S := GetString(Integer(dlPlugins4));
     SubMenuPtr := @PMenuBar(MenuView)^.Menu^.Items;
 
-    { ищем подменю "плагины", если такого нету - создаём }
+    { ╨╕╤Й╨╡╨╝ ╨┐╨╛╨┤╨╝╨╡╨╜╤О "╨┐╨╗╨░╨│╨╕╨╜╤Л", ╨╡╤Б╨╗╨╕ ╤В╨░╨║╨╛╨│╨╛ ╨╜╨╡╤В╤Г - ╤Б╨╛╨╖╨┤╨░╤С╨╝ }
     while SubMenuPtr^ <> nil do
       if  (SubMenuPtr^^.Name <> nil) and (SubMenuPtr^^.Name^ = S)
            and (SubMenuPtr^^.Command = 0)
@@ -353,7 +353,7 @@ procedure InstallMenu(Item: PPluginListItem; MenuView: PMenuView;
     if SubMenuPtr^ = nil then
       SubMenuPtr^:= NewSubMenu(S, hcNoContext, NewMenu(nil), nil);
 
-    { спускаемся до конца меню и вставляем туда нужные строки }
+    { ╤Б╨┐╤Г╤Б╨║╨░╨╡╨╝╤Б╤П ╨┤╨╛ ╨║╨╛╨╜╤Ж╨░ ╨╝╨╡╨╜╤О ╨╕ ╨▓╤Б╤В╨░╨▓╨╗╤П╨╡╨╝ ╤В╤Г╨┤╨░ ╨╜╤Г╨╢╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ }
     MenuItemPtr := @SubMenuPtr^^.SubMenu^.Items;
     while MenuItemPtr^ <> nil do
       MenuItemPtr := @MenuItemPtr^^.Next;
@@ -369,7 +369,7 @@ procedure InstallMenu(Item: PPluginListItem; MenuView: PMenuView;
           MenuItemPtr := @MenuItemPtr^^.Next;
           end;
 
-    { если текущий элемент не определён - устанавливаем первый текущим }
+    { ╨╡╤Б╨╗╨╕ ╤В╨╡╨║╤Г╤Й╨╕╨╣ ╤Н╨╗╨╡╨╝╨╡╨╜╤В ╨╜╨╡ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╤С╨╜ - ╤Г╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╨╝ ╨┐╨╡╤А╨▓╤Л╨╣ ╤В╨╡╨║╤Г╤Й╨╕╨╝ }
     if SubMenuPtr^^.SubMenu^.Default = nil then
       SubMenuPtr^^.SubMenu^.Default := SubMenuPtr^^.SubMenu^.Items;
     end;
@@ -378,7 +378,7 @@ procedure InstallMenu(Item: PPluginListItem; MenuView: PMenuView;
 procedure UnInstallMenu(Item: PPluginListItem; MenuView: PMenuView;
      CurMenuType: Byte);
 
-  { рекурсивное очищение подменю от ненужных команд }
+  { ╤А╨╡╨║╤Г╤А╤Б╨╕╨▓╨╜╨╛╨╡ ╨╛╤З╨╕╤Й╨╡╨╜╨╕╨╡ ╨┐╨╛╨┤╨╝╨╡╨╜╤О ╨╛╤В ╨╜╨╡╨╜╤Г╨╢╨╜╤Л╤Е ╨║╨╛╨╝╨░╨╜╨┤ }
   procedure ClearSubMenu(Menu: PMenu);
     var
       MenuItemPtr: ^PMenuItem;
@@ -388,8 +388,8 @@ procedure UnInstallMenu(Item: PPluginListItem; MenuView: PMenuView;
     with DNFunctions^ do
       while MenuItemPtr^ <> nil do
         begin
-        { если это подменю - очищаем его рекурсивно }
-        { если в результате очистки удалили все пункты - уничтожаем подменю }
+        { ╨╡╤Б╨╗╨╕ ╤Н╤В╨╛ ╨┐╨╛╨┤╨╝╨╡╨╜╤О - ╨╛╤З╨╕╤Й╨░╨╡╨╝ ╨╡╨│╨╛ ╤А╨╡╨║╤Г╤А╤Б╨╕╨▓╨╜╨╛ }
+        { ╨╡╤Б╨╗╨╕ ╨▓ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╡ ╨╛╤З╨╕╤Б╤В╨║╨╕ ╤Г╨┤╨░╨╗╨╕╨╗╨╕ ╨▓╤Б╨╡ ╨┐╤Г╨╜╨║╤В╤Л - ╤Г╨╜╨╕╤З╤В╨╛╨╢╨░╨╡╨╝ ╨┐╨╛╨┤╨╝╨╡╨╜╤О }
         if  (MenuItemPtr^^.Name <> nil) and (MenuItemPtr^^.Command = 0)
         then
           begin
@@ -408,7 +408,7 @@ procedure UnInstallMenu(Item: PPluginListItem; MenuView: PMenuView;
           else
             MenuItemPtr := @MenuItemPtr^^.Next;
           end
-          { если это обычный пункт меню и соответствует диапазону команд - удаляем }
+          { ╨╡╤Б╨╗╨╕ ╤Н╤В╨╛ ╨╛╨▒╤Л╤З╨╜╤Л╨╣ ╨┐╤Г╨╜╨║╤В ╨╝╨╡╨╜╤О ╨╕ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨┤╨╕╨░╨┐╨░╨╖╨╛╨╜╤Г ╨║╨╛╨╝╨░╨╜╨┤ - ╤Г╨┤╨░╨╗╤П╨╡╨╝ }
         else if (MenuItemPtr^^.Command >= Item^.FirstCatchedCommand)
              and (MenuItemPtr^^.Command <= Item^.LastCatchedCommand)
         then
@@ -445,15 +445,15 @@ function Install(Item: PPluginListItem): Boolean;
     begin
     if  (Item^.PluginType and type_EventCatcher) <> 0 then
       begin
-      { если нету регистрационного файла - не будем устанавливать }
-      { если плагинов слишком много - то же самое }
+      { ╨╡╤Б╨╗╨╕ ╨╜╨╡╤В╤Г ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╨╛╨╜╨╜╨╛╨│╨╛ ╤Д╨░╨╣╨╗╨░ - ╨╜╨╡ ╨▒╤Г╨┤╨╡╨╝ ╤Г╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╤В╤М }
+      { ╨╡╤Б╨╗╨╕ ╨┐╨╗╨░╨│╨╕╨╜╨╛╨▓ ╤Б╨╗╨╕╤И╨║╨╛╨╝ ╨╝╨╜╨╛╨│╨╛ - ╤В╨╛ ╨╢╨╡ ╤Б╨░╨╝╨╛╨╡ }
       if not Item^.RegFilePresent or (EventCatchersCount >= 60000) then
         begin
         Result := False;
         Exit;
         end;
 
-      { добавляем плагин в список установленных }
+      { ╨┤╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╨┐╨╗╨░╨│╨╕╨╜ ╨▓ ╤Б╨┐╨╕╤Б╨╛╨║ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╜╤Л╤Е }
       Inc(EventCatchersCount);
       ReallocMem(EventCatchers,
            EventCatchersCount*SizeOf(TEventCatcherInfo));
@@ -476,13 +476,13 @@ function Install(Item: PPluginListItem): Boolean;
         Item^.Installed := EventCatchersCount;
         end;
 
-      { переписываем конфигурационный файл }
+      { ╨┐╨╡╤А╨╡╨┐╨╕╤Б╤Л╨▓╨░╨╡╨╝ ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╣ ╤Д╨░╨╣╨╗ }
       Result := OverwriteConfigFile;
       end;
 
     if  (Item^.PluginType and type_ArchiveViewer) <> 0 then
       begin
-      { грузим плагин }
+      { ╨│╤А╤Г╨╖╨╕╨╝ ╨┐╨╗╨░╨│╨╕╨╜ }
       New(P);
       with P^ do
         begin
@@ -538,8 +538,8 @@ function Install(Item: PPluginListItem): Boolean;
         {$ENDIF}
         end;
 
-      { спрашиваем, сколько форматов данный плагин поддерживает }
-      { и ищем свободное место, куда бы его приткнуть }
+      { ╤Б╨┐╤А╨░╤И╨╕╨▓╨░╨╡╨╝, ╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Д╨╛╤А╨╝╨░╤В╨╛╨▓ ╨┤╨░╨╜╨╜╤Л╨╣ ╨┐╨╗╨░╨│╨╕╨╜ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╨╡╤В }
+      { ╨╕ ╨╕╤Й╨╡╨╝ ╤Б╨▓╨╛╨▒╨╛╨┤╨╜╨╛╨╡ ╨╝╨╡╤Б╤В╨╛, ╨║╤Г╨┤╨░ ╨▒╤Л ╨╡╨│╨╛ ╨┐╤А╨╕╤В╨║╨╜╤Г╤В╤М }
       K := P^.FormatsCount;
       for I := ArcFirst to arcLast-K do
         begin
@@ -569,7 +569,7 @@ function Install(Item: PPluginListItem): Boolean;
       for J := I to I+K-1 do
         ArchiveViewers[J] := P;
 
-      { переписываем конфигурационный файл }
+      { ╨┐╨╡╤А╨╡╨┐╨╕╤Б╤Л╨▓╨░╨╡╨╝ ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╣ ╤Д╨░╨╣╨╗ }
       Result := OverwriteConfigFile;
       if Result then
         Item^.Installed := I
@@ -602,7 +602,7 @@ function UnInstall(Item: PPluginListItem): Boolean;
          and (Item^.Installed <= EventCatchersCount)
     then
       begin
-      { убираем возможность запустить плагин }
+      { ╤Г╨▒╨╕╤А╨░╨╡╨╝ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨╖╨░╨┐╤Г╤Б╤В╨╕╤В╤М ╨┐╨╗╨░╨│╨╕╨╜ }
       with EventCatchers^[Item^.Installed] do
         if FirstCatchedCommand <> $FFFF then
           begin
@@ -611,7 +611,7 @@ function UnInstall(Item: PPluginListItem): Boolean;
           Item^.Installed := 0;
           end;
 
-      { переписываем конфигурационный файл }
+      { ╨┐╨╡╤А╨╡╨┐╨╕╤Б╤Л╨▓╨░╨╡╨╝ ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╣ ╤Д╨░╨╣╨╗ }
       Result := OverwriteConfigFile;
       end;
 
@@ -624,14 +624,14 @@ function UnInstall(Item: PPluginListItem): Boolean;
         Exit;
         end;
 
-      { выгружаем плагин }
-      { вычищаем все упоминания о нём }
+      { ╨▓╤Л╨│╤А╤Г╨╢╨░╨╡╨╝ ╨┐╨╗╨░╨│╨╕╨╜ }
+      { ╨▓╤Л╤З╨╕╤Й╨░╨╡╨╝ ╨▓╤Б╨╡ ╤Г╨┐╨╛╨╝╨╕╨╜╨░╨╜╨╕╤П ╨╛ ╨╜╤С╨╝ }
       J := ArchiveViewers[Item^.Installed]^.FirstTag;
       for I := J+1 to J+ArchiveViewers[Item^.Installed]^.FormatsCount-1
       do
         ArchiveViewers[I] := nil;
-      { надо бы выгрузить библиотеку, но она ещё может использоваться }
-      { поэтому понадеемся, что при выходе из программы система всё подчистит }
+      { ╨╜╨░╨┤╨╛ ╨▒╤Л ╨▓╤Л╨│╤А╤Г╨╖╨╕╤В╤М ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╤Г, ╨╜╨╛ ╨╛╨╜╨░ ╨╡╤Й╤С ╨╝╨╛╨╢╨╡╤В ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М╤Б╤П }
+      { ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╨┐╨╛╨╜╨░╨┤╨╡╨╡╨╝╤Б╤П, ╤З╤В╨╛ ╨┐╤А╨╕ ╨▓╤Л╤Е╨╛╨┤╨╡ ╨╕╨╖ ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╤Л ╤Б╨╕╤Б╤В╨╡╨╝╨░ ╨▓╤Б╤С ╨┐╨╛╨┤╤З╨╕╤Б╤В╨╕╤В }
       (*
           {$IFDEF OS2}
           DosFreeModule(ArchiveViewers[J]^.LibHandle);
@@ -643,7 +643,7 @@ function UnInstall(Item: PPluginListItem): Boolean;
       Dispose(ArchiveViewers[J]);
       ArchiveViewers[J] := nil;
 
-      { переписываем конфигурационный файл }
+      { ╨┐╨╡╤А╨╡╨┐╨╕╤Б╤Л╨▓╨░╨╡╨╝ ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╣ ╤Д╨░╨╣╨╗ }
       Result := OverwriteConfigFile;
       if Result then
         Item^.Installed := 0;
@@ -765,7 +765,7 @@ function TPluginManager.MakeCollection: PCollection;
     MyLngId := LngId;
     UpStr(MyLngId);
 
-    { просматриваем установленные плагины EventCatcher }
+    { ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╨╝ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╜╤Л╨╡ ╨┐╨╗╨░╨│╨╕╨╜╤Л EventCatcher }
     for I := 1 to EventCatchersCount do
       with EventCatchers^[I] do
         if  (FirstCatchedCommand <> $FFFF) then
@@ -798,7 +798,7 @@ function TPluginManager.MakeCollection: PCollection;
               ObjTypeUsed^[J] := True;
           end;
 
-    { просматриваем установленные плагины ArchiveViewer }
+    { ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╨╝ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╜╤Л╨╡ ╨┐╨╗╨░╨│╨╕╨╜╤Л ArchiveViewer }
     for I := ArcFirst to arcLast do
       if  (ArchiveViewers[I] <> nil)
            and (ArchiveViewers[I] <> ArchiveViewers[I-1])
@@ -813,7 +813,7 @@ function TPluginManager.MakeCollection: PCollection;
         Result^.Insert(Item);
         end;
 
-    { просматриваем регистрационные файлы }
+    { ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╨╝ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╨╡ ╤Д╨░╨╣╨╗╤Л }
     lFindFirst(SourceDir+'*.REG', AnyFile and not(Directory+VolumeID), SR);
     while DosError = 0 do
       begin
@@ -830,7 +830,7 @@ function TPluginManager.MakeCollection: PCollection;
            mfError+mfOKButton)
       else
         begin
-        { проверяем, не попался ли уже этот плагин среди установленных }
+        { ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝, ╨╜╨╡ ╨┐╨╛╨┐╨░╨╗╤Б╤П ╨╗╨╕ ╤Г╨╢╨╡ ╤Н╤В╨╛╤В ╨┐╨╗╨░╨│╨╕╨╜ ╤Б╤А╨╡╨┤╨╕ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╜╤Л╤Е }
         for I := 0 to Result^.Count-1 do
           if PPluginListItem(Result^.At(I))^.PluginPath = Name then
             begin
@@ -840,7 +840,7 @@ function TPluginManager.MakeCollection: PCollection;
             goto 1;
             end;
 
-        { ищем незанятую область команд нужной длины }
+        { ╨╕╤Й╨╡╨╝ ╨╜╨╡╨╖╨░╨╜╤П╤В╤Г╤О ╨╛╨▒╨╗╨░╤Б╤В╤М ╨║╨╛╨╝╨░╨╜╨┤ ╨╜╤Г╨╢╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╤Л }
         for I := cmPlugins to cmPluginsEnd-WW[1] do
           begin
           for J := I to I+WW[1] do
@@ -861,7 +861,7 @@ function TPluginManager.MakeCollection: PCollection;
         goto 2;
 L1:
 
-        { ищем незанятую область индексов Lng-файла нужной длины }
+        { ╨╕╤Й╨╡╨╝ ╨╜╨╡╨╖╨░╨╜╤П╤В╤Г╤О ╨╛╨▒╨╗╨░╤Б╤В╤М ╨╕╨╜╨┤╨╡╨║╤Б╨╛╨▓ Lng-╤Д╨░╨╣╨╗╨░ ╨╜╤Г╨╢╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╤Л }
         {
               if WW[2]=0 then
                 begin
@@ -891,7 +891,7 @@ L1:
                 end;
               }
 
-        { ищем незанятую область индексов Dlg-файла нужной длины }
+        { ╨╕╤Й╨╡╨╝ ╨╜╨╡╨╖╨░╨╜╤П╤В╤Г╤О ╨╛╨▒╨╗╨░╤Б╤В╤М ╨╕╨╜╨┤╨╡╨║╤Б╨╛╨▓ Dlg-╤Д╨░╨╣╨╗╨░ ╨╜╤Г╨╢╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╤Л }
         {
               if WW[3]=0 then
                 begin
@@ -921,7 +921,7 @@ L1:
                 end;
               }
 
-        { ищем незанятую область индексов Hlp-файла нужной длины }
+        { ╨╕╤Й╨╡╨╝ ╨╜╨╡╨╖╨░╨╜╤П╤В╤Г╤О ╨╛╨▒╨╗╨░╤Б╤В╤М ╨╕╨╜╨┤╨╡╨║╤Б╨╛╨▓ Hlp-╤Д╨░╨╣╨╗╨░ ╨╜╤Г╨╢╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╤Л }
         {
               if WW[4]=0 then
                 begin
@@ -951,7 +951,7 @@ L1:
                 end;
               }
 
-        { ищем незанятую область регистрационных кодов объектов нужной длины }
+        { ╨╕╤Й╨╡╨╝ ╨╜╨╡╨╖╨░╨╜╤П╤В╤Г╤О ╨╛╨▒╨╗╨░╤Б╤В╤М ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╨╛╨╜╨╜╤Л╤Е ╨║╨╛╨┤╨╛╨▓ ╨╛╨▒╤К╨╡╨║╤В╨╛╨▓ ╨╜╤Г╨╢╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╤Л }
         if WW[9] = 0 then
           begin
           FirstObjType := $FFFF;
@@ -992,9 +992,9 @@ L5:
 
 1:
 
-        { дочитываем из регистрационного файла информацию о меню }
-        { повторяем до тех пор, пока не найдём нужный язык }
-        { если языки закончились, а нужный не найден - используем последний }
+        { ╨┤╨╛╤З╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╕╨╖ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╨╛╨╜╨╜╨╛╨│╨╛ ╤Д╨░╨╣╨╗╨░ ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╤О ╨╛ ╨╝╨╡╨╜╤О }
+        { ╨┐╨╛╨▓╤В╨╛╤А╤П╨╡╨╝ ╨┤╨╛ ╤В╨╡╤Е ╨┐╨╛╤А, ╨┐╨╛╨║╨░ ╨╜╨╡ ╨╜╨░╨╣╨┤╤С╨╝ ╨╜╤Г╨╢╨╜╤Л╨╣ ╤П╨╖╤Л╨║ }
+        { ╨╡╤Б╨╗╨╕ ╤П╨╖╤Л╨║╨╕ ╨╖╨░╨║╨╛╨╜╤З╨╕╨╗╨╕╤Б╤М, ╨░ ╨╜╤Г╨╢╨╜╤Л╨╣ ╨╜╨╡ ╨╜╨░╨╣╨┤╨╡╨╜ - ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╕╨╣ }
         with Stream^, Item^ do
           for J := 0 to WW[5] do
             begin
@@ -1213,7 +1213,7 @@ procedure CatchCommand(Command, ObjType: SmallWord;
         begin
         MessageBox
           ('Newer version of DN/2 is required for start this plugin'^M^M+
-          'Для запуска этого плагина требуется более новая версия DN/2',
+          '╨Ф╨╗╤П ╨╖╨░╨┐╤Г╤Б╨║╨░ ╤Н╤В╨╛╨│╨╛ ╨┐╨╗╨░╨│╨╕╨╜╨░ ╤В╤А╨╡╨▒╤Г╨╡╤В╤Б╤П ╨▒╨╛╨╗╨╡╨╡ ╨╜╨╛╨▓╨░╤П ╨▓╨╡╤А╤Б╨╕╤П DN/2',
            nil, mfError+mfOKButton);
         Exit;
         end;

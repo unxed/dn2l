@@ -272,10 +272,10 @@ type
 
   PComboBox = ^TComboBox;
   TComboBox = object(TView)
-(*  Selected: Word; // ‚•™„È®© ≠Æ¨•‡ ¢†‡®†≠‚† (≠„¨•‡†Ê®Ô Æ‚ 1)
-    Count: Word; { ≠• Æ‚‡Î¢†‚Ï Æ‚ Selected! ë¨. Load,Store}
+(*  Selected: Word; // —Ç–µ–∫—É—â–∏–π –Ω–æ–º–µ—Ä –≤–∞—Ä–∏–∞–Ω—Ç–∞ (–Ω—É–º–µ—Ä–∞—Ü–∏—è –æ—Ç 1)
+    Count: Word; { –Ω–µ –æ—Ç—Ä—ã–≤–∞—Ç—å –æ—Ç Selected! –°–º. Load,Store}
     Menu: PMenu;
-    Items: array[1..10] of PMenuItem; // Ø‡Ô¨Î• ··Î´™® ¢ ¨•≠Ó
+    Items: array[1..10] of PMenuItem; // –ø—Ä—è–º—ã–µ —Å—Å—ã–ª–∫–∏ –≤ –º–µ–Ω—é
     constructor Init(var Bounds: TRect; AStrings: PSItem);
     procedure BuildMenu(AStrings: PSItem);
     destructor Done; virtual;

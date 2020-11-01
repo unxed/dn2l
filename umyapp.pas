@@ -58,7 +58,7 @@ uses
 
 type
   MyApp = object(TDNApplication)
-    {Cat: Ì‚Æ‚ Æ°Í•™‚ ¢Î≠•·•≠ ¢ Ø´†£®≠≠„Ó ¨Æ§•´Ï; ®ß¨•≠Ô‚Ï ™‡†©≠• Æ·‚Æ‡Æ¶≠Æ!}
+    {Cat: —ç—Ç–æ—Ç –æ–±—ä–µ–∫—Ç –≤—ã–Ω–µ—Å–µ–Ω –≤ –ø–ª–∞–≥–∏–Ω–Ω—É—é –º–æ–¥–µ–ª—å; –∏–∑–º–µ–Ω—è—Ç—å –∫—Ä–∞–π–Ω–µ –æ—Å—Ç–æ—Ä–æ–∂–Ω–æ!}
     procedure HandleEvent(var Event: TEvent); virtual;
     procedure GetEvent(var Event: TEvent); virtual;
     procedure Idle; virtual;
@@ -258,7 +258,7 @@ procedure MyApp.GetEvent;
         cmNavyLinkSetup,
         cmQuit:
           HandleCommand(Event);
-        {Cat: Ø‡Æ¢•‡Ô•¨, ≠• ØÆ‡† ´® ß†Ø„·™†‚Ï Ø´†£®≠Î - EventCatcher-Î}
+        {Cat: –ø—Ä–æ–≤–µ—Ä—è–µ–º, –Ω–µ –ø–æ—Ä–∞ –ª–∏ –∑–∞–ø—É—Å–∫–∞—Ç—å –ø–ª–∞–≥–∏–Ω—ã - EventCatcher-—ã}
         {$IFDEF PLUGIN}
         else {case}
           CatchersHandleCommand(Event.Command);

@@ -44,8 +44,8 @@
 //  (including the GNU Public Licence).
 //
 //////////////////////////////////////////////////////////////////////////}
-{JO: 17.06.2002 - добавил поиск файлов в архивах}
-{JO:  2.12.2002 - добавил разархивирование файлов, найденных в архивах}
+{JO: 17.06.2002 - ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╨╛╨╕╤Б╨║ ╤Д╨░╨╣╨╗╨╛╨▓ ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е}
+{JO:  2.12.2002 - ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╤Д╨░╨╣╨╗╨╛╨▓, ╨╜╨░╨╣╨┤╨╡╨╜╨╜╤Л╤Е ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е}
 {$I STDEFINE.INC}
 unit FileFind;
 
@@ -85,7 +85,7 @@ type
     Attr: Word; {Checkbox}
     end;
 
- const  { какие-то рудименты чего-то не доделанного Ритлабсами
+ const  { ╨║╨░╨║╨╕╨╡-╤В╨╛ ╤А╤Г╨┤╨╕╨╝╨╡╨╜╤В╤Л ╤З╨╡╨│╨╛-╤В╨╛ ╨╜╨╡ ╨┤╨╛╨┤╨╡╨╗╨░╨╜╨╜╨╛╨│╨╛ ╨а╨╕╤В╨╗╨░╨▒╤Б╨░╨╝╨╕
   CFindWindow = #126#127#128#129#130#131#132#133#134#135#136#137#138;
   CFileFinder = #6#7#8#9;
   CFindInfo = #10#11#12#13;}
@@ -108,8 +108,8 @@ type
 
   FindRec: TFindRec = (Mask: '*.*';
     What: '';
-    Options: 4; {рекурсивный поиск}
-    Where: 0; {поиск в текущем каталоге}
+    Options: 4; {╤А╨╡╨║╤Г╤А╤Б╨╕╨▓╨╜╤Л╨╣ ╨┐╨╛╨╕╤Б╨║}
+    Where: 0; {╨┐╨╛╨╕╤Б╨║ ╨▓ ╤В╨╡╨║╤Г╤Й╨╡╨╝ ╨║╨░╤В╨░╨╗╨╛╨│╨╡}
     AddChar: ''
     );
 
@@ -137,13 +137,13 @@ type
 
   PFindDrive = ^TFindDrive;
   TFindDrive = object(TDrive)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     isDisposable: Boolean;
     Files: PFilesCollection;
     Dirs: PSortedCollection;
-      {В Dirs хранятся строки встретившихся путей для того, чтобы на них
-      ссылались Owner файловых записей из Files. В Dirs каждый путь
-      хранится в одном экземпляре.}
+      {╨Т Dirs ╤Е╤А╨░╨╜╤П╤В╤Б╤П ╤Б╤В╤А╨╛╨║╨╕ ╨▓╤Б╤В╤А╨╡╤В╨╕╨▓╤И╨╕╤Е╤Б╤П ╨┐╤Г╤В╨╡╨╣ ╨┤╨╗╤П ╤В╨╛╨│╨╛, ╤З╤В╨╛╨▒╤Л ╨╜╨░ ╨╜╨╕╤Е
+      ╤Б╤Б╤Л╨╗╨░╨╗╨╕╤Б╤М Owner ╤Д╨░╨╣╨╗╨╛╨▓╤Л╤Е ╨╖╨░╨┐╨╕╤Б╨╡╨╣ ╨╕╨╖ Files. ╨Т Dirs ╨║╨░╨╢╨┤╤Л╨╣ ╨┐╤Г╤В╤М
+      ╤Е╤А╨░╨╜╨╕╤В╤Б╤П ╨▓ ╨╛╨┤╨╜╨╛╨╝ ╤Н╨║╨╖╨╡╨╝╨┐╨╗╤П╤А╨╡.}
     ListFile: PString;
     UpFile: PFileRec; {DataCompBoy}
     AMask, AWhat: PString;
@@ -188,7 +188,7 @@ type
 
   PTempDrive = ^TTempDrive;
   TTempDrive = object(TFindDrive)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     constructor Init;
     constructor Load(var S: TStream);
     procedure Store(var S: TStream); virtual;
@@ -214,8 +214,8 @@ const
 {$IFDEF DualName}
 var
   ShortNameSearch: Boolean;
-    {` Поиск выполнять по коротким именам. Присваивается панелью
-     перед поиском в соотвествии с режимом отображения панели.`}
+    {` ╨Я╨╛╨╕╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╤П╤В╤М ╨┐╨╛ ╨║╨╛╤А╨╛╤В╨║╨╕╨╝ ╨╕╨╝╨╡╨╜╨░╨╝. ╨Я╤А╨╕╤Б╨▓╨░╨╕╨▓╨░╨╡╤В╤Б╤П ╨┐╨░╨╜╨╡╨╗╤М╤О
+     ╨┐╨╡╤А╨╡╨┤ ╨┐╨╛╨╕╤Б╨║╨╛╨╝ ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤Б╤В╨▓╨╕╨╕ ╤Б ╤А╨╡╨╢╨╕╨╝╨╛╨╝ ╨╛╤В╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П ╨┐╨░╨╜╨╡╨╗╨╕.`}
 {$ENDIF}
 
 implementation
@@ -225,9 +225,9 @@ uses
   , FViewer, Microed,
   Tree, xTime, DNUtil, UKeyMap, {!!}CmdLine, Histries,
   Archiver, ArchDet {JO},
-  ArcView {JO: для разархивирования файлов найденных в архивах}
-  , Events {AK155 для LongWorkBegin - LongWorkEnd}
-  , FlTl {JO: для GetDriveTypeNew}
+  ArcView {JO: ╨┤╨╗╤П ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╤Д╨░╨╣╨╗╨╛╨▓ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╤Л╤Е ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е}
+  , Events {AK155 ╨┤╨╗╤П LongWorkBegin - LongWorkEnd}
+  , FlTl {JO: ╨┤╨╗╤П GetDriveTypeNew}
   , filetype, Eraser, Advance, Files, DnIni, Menus, FileCopy
   , PDSetup, VPUtils
   ;
@@ -393,8 +393,8 @@ function FindFiles(var Files: PFilesCollection;
         begin
         PFilePanel(Pnl)^.ChangeLocked := True;
 {$IFDEF DualName}
-       {AK155 Показ длинных/коротких имён привести в соответствие с режимом
-        поиска, то есть он будет таким же, как у родительской панели }
+       {AK155 ╨Я╨╛╨║╨░╨╖ ╨┤╨╗╨╕╨╜╨╜╤Л╤Е/╨║╨╛╤А╨╛╤В╨║╨╕╤Е ╨╕╨╝╤С╨╜ ╨┐╤А╨╕╨▓╨╡╤Б╤В╨╕ ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤Б ╤А╨╡╨╢╨╕╨╝╨╛╨╝
+        ╨┐╨╛╨╕╤Б╨║╨░, ╤В╨╛ ╨╡╤Б╤В╤М ╨╛╨╜ ╨▒╤Г╨┤╨╡╤В ╤В╨░╨║╨╕╨╝ ╨╢╨╡, ╨║╨░╨║ ╤Г ╤А╨╛╨┤╨╕╤В╨╡╨╗╤М╤Б╨║╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ }
         with PFilePanel(Pnl)^.PanSetup^.Show do
           begin
           if ShortNameSearch then
@@ -430,7 +430,7 @@ function FindFiles(var Files: PFilesCollection;
   function SearchF(FilePath: String): Boolean;
     var
       S: TDOSStream;
-      {AK155: было TBufStream; буферизация здесь абсолютно не нужна }
+      {AK155: ╨▒╤Л╨╗╨╛ TBufStream; ╨▒╤Г╤Д╨╡╤А╨╕╨╖╨░╤Ж╨╕╤П ╨╖╨┤╨╡╤Б╤М ╨░╨▒╤Б╨╛╨╗╤О╤В╨╜╨╛ ╨╜╨╡ ╨╜╤Г╨╢╨╜╨░ }
       CaseSensitive: Boolean;
     begin
     PInfo^.Write(2, Cut(FilePath, 50));
@@ -455,14 +455,14 @@ function FindFiles(var Files: PFilesCollection;
     S.Done;
     end { SearchF: };
 
-  {JO: добавил поиск в архивах 17.06.02}
+  {JO: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╨╛╨╕╤Б╨║ ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е 17.06.02}
   procedure SearchData(Path: String);
     label Skip,
       NotArchive; {JO}
     var
       PDir: PString;
       SR: lSearchRec;
-      PName: PString; //AK155 В SR имя для сравнения с маской
+      PName: PString; //AK155 ╨Т SR ╨╕╨╝╤П ╨┤╨╗╤П ╤Б╤А╨░╨▓╨╜╨╡╨╜╨╕╤П ╤Б ╨╝╨░╤Б╨║╨╛╨╣
       P: PFileRec;
       I: Byte;
       D: DateTime;
@@ -490,15 +490,15 @@ function FindFiles(var Files: PFilesCollection;
       Exit;
     PName := @SR.FullName;
     {$IFDEF DualName}
-    if ShortNameSearch then // в панели короткие имена
+    if ShortNameSearch then // ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨║╨╛╤А╨╛╤В╨║╨╕╨╡ ╨╕╨╝╨╡╨╜╨░
       PName := @SR.SR.Name;
     {$ENDIF}
     LongWorkBegin;
     New(DirCol, Init($10, $10, False));
     DirCol^.Insert(NewStr(Path));
-    {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
-    {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
-    {    доступный изначально объём                                              }
+    {JO: ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╛╨┤╨╕╨╜ p╨░╨╖ ╨╛╨┐p╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╛╨▒╤К╤С╨╝ ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕, ╨░ ╨╖╨░╤В╨╡╨╝ ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░}
+    {    ╨┐╨╛╨┤╤Б╤З╤В╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╜╨░╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Вp╨╡╨▒╨╛╨▓╨░╨╜╨╕╤П ╨┐╨░╨╝╤П╤В╨╕ p╨░╤Б╤В╤Г╤В ╨╕ ╨╜╨╡ ╨┐p╨╡╨▓╤Л╤Б╨╕╨╗╨╕ ╨╗╨╕ ╨╛╨╜╨╕  }
+    {    ╨┤╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╣ ╨╕╨╖╨╜╨░╤З╨░╨╗╤М╨╜╨╛ ╨╛╨▒╤К╤С╨╝                                              }
     MemReq := LowMemSize;
     MAvail := MaxAvail;
     while DirCol^.Count > 0 do
@@ -519,7 +519,7 @@ function FindFiles(var Files: PFilesCollection;
         end;
       if Path[Length(Path)] <> '|' then
         {JO}
-        begin {начало поиска не в архиве}
+        begin {╨╜╨░╤З╨░╨╗╨╛ ╨┐╨╛╨╕╤Б╨║╨░ ╨╜╨╡ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
         SearchAttr := AnyFileDir;
         if Security then
           SearchAttr := AnyFileDir and not Hidden;
@@ -580,10 +580,10 @@ function FindFiles(var Files: PFilesCollection;
           MessageBox(GetString(dl_CodePage_FS_Error), nil,
              mfError+mfOKButton);
         {$ENDIF}
-        end {конец поиска не в архиве}
+        end {╨║╨╛╨╜╨╡╤Ж ╨┐╨╛╨╕╤Б╨║╨░ ╨╜╨╡ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
       else
         {JO}
-        begin {начало поиска в архиве}
+        begin {╨╜╨░╤З╨░╨╗╨╛ ╨┐╨╛╨╕╤Б╨║╨░ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
         CtrlBreakHit := False;
         ArcPath := Copy(Path, 1, Length(Path)-1);
         ArcTime := FileTime(ArcPath);
@@ -594,9 +594,9 @@ function FindFiles(var Files: PFilesCollection;
         AType := DetectArchive;
         if  (AType = nil)
           or (AType^.GetID in [arcAIN, arcUC2, Arc7Z])
-          {временно! - надо решить проблему с лочкой dndosout.bat}
-          {15.02.2005 AK155 7z никакого отношения к dndosout.bat не имеет,
-           и поиск в нём почти работает, но пока подглючивает.}
+          {╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛! - ╨╜╨░╨┤╨╛ ╤А╨╡╤И╨╕╤В╤М ╨┐╤А╨╛╨▒╨╗╨╡╨╝╤Г ╤Б ╨╗╨╛╤З╨║╨╛╨╣ dndosout.bat}
+          {15.02.2005 AK155 7z ╨╜╨╕╨║╨░╨║╨╛╨│╨╛ ╨╛╤В╨╜╨╛╤И╨╡╨╜╨╕╤П ╨║ dndosout.bat ╨╜╨╡ ╨╕╨╝╨╡╨╡╤В,
+           ╨╕ ╨┐╨╛╨╕╤Б╨║ ╨▓ ╨╜╤С╨╝ ╨┐╨╛╤З╤В╨╕ ╤А╨░╨▒╨╛╤В╨░╨╡╤В, ╨╜╨╛ ╨┐╨╛╨║╨░ ╨┐╨╛╨┤╨│╨╗╤О╤З╨╕╨▓╨░╨╡╤В.}
           then
           goto NotArchive;
         ArcDirs := New(PStringCollection, Init(30, 30, False));
@@ -679,7 +679,7 @@ function FindFiles(var Files: PFilesCollection;
               else
                 DisposeStr(PArcLastDir);
               end;
-            {добавляем каталоги которые присутствуют только в виде путей к файлам }
+            {╨┤╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨┐╤А╨╕╤Б╤Г╤В╤Б╤В╨▓╤Г╤О╤В ╤В╨╛╨╗╤М╨║╨╛ ╨▓ ╨▓╨╕╨┤╨╡ ╨┐╤Г╤В╨╡╨╣ ╨║ ╤Д╨░╨╣╨╗╨░╨╝ }
             LDir := GetPath(FileInfo.FName);
             if Length(LDir) > 2 then
               repeat
@@ -736,7 +736,7 @@ function FindFiles(var Files: PFilesCollection;
                 else
                   DisposeStr(PArcLastDir);
               until Length(LDir) <= 2;
-            {конец добавления каталогов которые присутствуют только в виде путей к файлам}
+            {╨║╨╛╨╜╨╡╤Ж ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓ ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨┐╤А╨╕╤Б╤Г╤В╤Б╤В╨▓╤Г╤О╤В ╤В╨╛╨╗╤М╨║╨╛ ╨▓ ╨▓╨╕╨┤╨╡ ╨┐╤Г╤В╨╡╨╣ ╨║ ╤Д╨░╨╣╨╗╨░╨╝}
             end;
           if TimerExpired(T) then
             begin
@@ -750,7 +750,7 @@ function FindFiles(var Files: PFilesCollection;
         CtrlBreakHit := False;
 NotArchive:
         FreeObject(ArcFile);
-        end; {конец поиска в архиве}
+        end; {╨║╨╛╨╜╨╡╤Ж ╨┐╨╛╨╕╤Б╨║╨░ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
       {/JO}
       if  (MAvail <= MemReq) then
         Drv^.NoMemory := True;
@@ -808,7 +808,7 @@ Skip:
     LongWorkEnd;
     end { SearchData };
 
-  { Flash >>> } {JO - вынес в отдельную пpоцедуру}
+  { Flash >>> } {JO - ╨▓╤Л╨╜╨╡╤Б ╨▓ ╨╛╤В╨┤╨╡╨╗╤М╨╜╤Г╤О ╨┐p╨╛╤Ж╨╡╨┤╤Г╤А╤Г}
   procedure CheckPathInMask;
     begin
     MakeSlash(FN);
@@ -824,7 +824,7 @@ Skip:
     end;
   { Flash <<< }
 
- {JO: 2-04-2006 - поиск файлов в панели поиска/ветви}
+ {JO: 2-04-2006 - ╨┐╨╛╨╕╤Б╨║ ╤Д╨░╨╣╨╗╨╛╨▓ ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░/╨▓╨╡╤В╨▓╨╕}
   procedure SearchDataInBranch(SrcFC: PFilesCollection);
     var
       FR: PFileRec;
@@ -837,12 +837,12 @@ Skip:
       CurSel: LongInt; {JO}
       PDir: PString;
 
-    { Удаление из LCol^ всех подкаталогов. При поиске их отдельно
-    просматривать не надо, так как они будут просмотрены через
-    объемлющий каталог.
-      Поскольку коллекция сортированная по возрастанию строк,
-    объемлющий каталог всегда непосредственно предшествует всем
-    своим подкаталогам. }
+    { ╨г╨┤╨░╨╗╨╡╨╜╨╕╨╡ ╨╕╨╖ LCol^ ╨▓╤Б╨╡╤Е ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓. ╨Я╤А╨╕ ╨┐╨╛╨╕╤Б╨║╨╡ ╨╕╤Е ╨╛╤В╨┤╨╡╨╗╤М╨╜╨╛
+    ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╤В╤М ╨╜╨╡ ╨╜╨░╨┤╨╛, ╤В╨░╨║ ╨║╨░╨║ ╨╛╨╜╨╕ ╨▒╤Г╨┤╤Г╤В ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨╡╨╜╤Л ╤З╨╡╤А╨╡╨╖
+    ╨╛╨▒╤К╨╡╨╝╨╗╤О╤Й╨╕╨╣ ╨║╨░╤В╨░╨╗╨╛╨│.
+      ╨Я╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤П ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╨░╤П ╨┐╨╛ ╨▓╨╛╨╖╤А╨░╤Б╤В╨░╨╜╨╕╤О ╤Б╤В╤А╨╛╨║,
+    ╨╛╨▒╤К╨╡╨╝╨╗╤О╤Й╨╕╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ ╨▓╤Б╨╡╨│╨┤╨░ ╨╜╨╡╨┐╨╛╤Б╤А╨╡╨┤╤Б╤В╨▓╨╡╨╜╨╜╨╛ ╨┐╤А╨╡╨┤╤И╨╡╤Б╤В╨▓╤Г╨╡╤В ╨▓╤Б╨╡╨╝
+    ╤Б╨▓╨╛╨╕╨╝ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░╨╝. }
     procedure DelDuplicatesSubdir;
       var
         i, j: Integer;
@@ -855,7 +855,7 @@ Skip:
         begin
         P1 := LCol^.At(i);
         if Pos(P0^+'/', P1^) = 1 then // slash change by unxed
-          DisposeStr(P1) // удаляем подкаталог
+          DisposeStr(P1) // ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│
         else
           begin
           LCol^.Items^[j] := LCol^.Items^[i];
@@ -876,7 +876,7 @@ Skip:
 
     LongWorkBegin;
 
-    for CurSel1 := 0 to SrcFC^.Count-1 do {начало цикла}
+    for CurSel1 := 0 to SrcFC^.Count-1 do {╨╜╨░╤З╨░╨╗╨╛ ╤Ж╨╕╨║╨╗╨░}
       begin
       if CancelSearch or (MAvail <= MemReq) then
         Break;
@@ -914,14 +914,14 @@ Skip:
         if (PDir <> nil)
           and (Directories^.IndexOf(PDir) = -1) then
             Directories^.Insert(PDir);
-//JO: нижележащий кусок закомментирован, т.к. InitPanel тянет за собой
-//    TFilePanelRoot.ReadDirectory , а в ней уничтожается коллекция файлов
-//    текущей панели, с которой у SrcFC будуть общие записи, если последняя
-//    получена с текущей панели помощью FLTools.GetSelection , и это может
-//    приводить к падениям во время поиска
-//    То, что мы делаем InitPanel по завершении цикла, имеет только то
-//    последствие, что панель с результатами поиска мы увидим по завершении
-//    цикла. Это не смертельно, т.к. поиск в панели обычно происходит быстро
+//JO: ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨╕╨╣ ╨║╤Г╤Б╨╛╨║ ╨╖╨░╨║╨╛╨╝╨╝╨╡╨╜╤В╨╕╤А╨╛╨▓╨░╨╜, ╤В.╨║. InitPanel ╤В╤П╨╜╨╡╤В ╨╖╨░ ╤Б╨╛╨▒╨╛╨╣
+//    TFilePanelRoot.ReadDirectory , ╨░ ╨▓ ╨╜╨╡╨╣ ╤Г╨╜╨╕╤З╤В╨╛╨╢╨░╨╡╤В╤Б╤П ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤П ╤Д╨░╨╣╨╗╨╛╨▓
+//    ╤В╨╡╨║╤Г╤Й╨╡╨╣ ╨┐╨░╨╜╨╡╨╗╨╕, ╤Б ╨║╨╛╤В╨╛╤А╨╛╨╣ ╤Г SrcFC ╨▒╤Г╨┤╤Г╤В╤М ╨╛╨▒╤Й╨╕╨╡ ╨╖╨░╨┐╨╕╤Б╨╕, ╨╡╤Б╨╗╨╕ ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╤П╤П
+//    ╨┐╨╛╨╗╤Г╤З╨╡╨╜╨░ ╤Б ╤В╨╡╨║╤Г╤Й╨╡╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╝╨╛╤Й╤М╤О FLTools.GetSelection , ╨╕ ╤Н╤В╨╛ ╨╝╨╛╨╢╨╡╤В
+//    ╨┐╤А╨╕╨▓╨╛╨┤╨╕╤В╤М ╨║ ╨┐╨░╨┤╨╡╨╜╨╕╤П╨╝ ╨▓╨╛ ╨▓╤А╨╡╨╝╤П ╨┐╨╛╨╕╤Б╨║╨░
+//    ╨в╨╛, ╤З╤В╨╛ ╨╝╤Л ╨┤╨╡╨╗╨░╨╡╨╝ InitPanel ╨┐╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╨╕ ╤Ж╨╕╨║╨╗╨░, ╨╕╨╝╨╡╨╡╤В ╤В╨╛╨╗╤М╨║╨╛ ╤В╨╛
+//    ╨┐╨╛╤Б╨╗╨╡╨┤╤Б╤В╨▓╨╕╨╡, ╤З╤В╨╛ ╨┐╨░╨╜╨╡╨╗╤М ╤Б ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨░╨╝╨╕ ╨┐╨╛╨╕╤Б╨║╨░ ╨╝╤Л ╤Г╨▓╨╕╨┤╨╕╨╝ ╨┐╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╨╕
+//    ╤Ж╨╕╨║╨╗╨░. ╨н╤В╨╛ ╨╜╨╡ ╤Б╨╝╨╡╤А╤В╨╡╨╗╤М╨╜╨╛, ╤В.╨║. ╨┐╨╛╨╕╤Б╨║ ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨╛╨▒╤Л╤З╨╜╨╛ ╨┐╤А╨╛╨╕╤Б╤Е╨╛╨┤╨╕╤В ╨▒╤Л╤Б╤В╤А╨╛
        {if Pnl = nil then
           InitPanel;
         if Pnl <> nil then
@@ -942,7 +942,7 @@ Skip:
           end;
         end;
 
-{JO: добавляем каталоги и аpхивы в коллекцию стpок для поиска}
+{JO: ╨┤╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╨╕ ╨░p╤Е╨╕╨▓╤Л ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤О ╤Б╤Вp╨╛╨║ ╨┤╨╗╤П ╨┐╨╛╨╕╤Б╨║╨░}
         if  (FR^.Attr and Directory <> 0) then
           begin
           if  (FindRec.Options and ffoRecursive <> 0) then
@@ -958,16 +958,16 @@ Skip:
           then
             LCol^.Insert(NewStr(MakeNormName(FR^.Owner^,
                                            FR^.FlName[uLfn])+'|'));
-{JO: конец добавления каталогов и аpхивов в коллекцию стpок для поиска}
+{JO: ╨║╨╛╨╜╨╡╤Ж ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓ ╨╕ ╨░p╤Е╨╕╨▓╨╛╨▓ ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤О ╤Б╤Вp╨╛╨║ ╨┤╨╗╤П ╨┐╨╛╨╕╤Б╨║╨░}
       if TimerExpired(T) then
         begin
         DispatchEvents;
         NewTimer(T, 50);
         end;
-      end; {конец цикла}
+      end; {╨║╨╛╨╜╨╡╤Ж ╤Ж╨╕╨║╨╗╨░}
 
     if (Pnl = nil) and (Files^.Count > 0) then
-      InitPanel; {создаём панель; найденное в цикле ужЕ в ней}
+      InitPanel; {╤Б╨╛╨╖╨┤╨░╤С╨╝ ╨┐╨░╨╜╨╡╨╗╤М; ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨╡ ╨▓ ╤Ж╨╕╨║╨╗╨╡ ╤Г╨╢╨Х ╨▓ ╨╜╨╡╨╣}
 
     if LCol <> nil then
       begin
@@ -1032,13 +1032,13 @@ Skip:
   CancelSearch := False;
   FFResult := ffSeFnd;
   SearchString.What := FindRec.What;
-  SearchString.Opts := FindRec.Options shr 4; //пpопускаем пеpвые 4 чекбокса
+  SearchString.Opts := FindRec.Options shr 4; //╨┐p╨╛╨┐╤Г╤Б╨║╨░╨╡╨╝ ╨┐╨╡p╨▓╤Л╨╡ 4 ╤З╨╡╨║╨▒╨╛╨║╤Б╨░
   Microed.SearchData.Line := FindRec.What;
   Microed.SearchData.What := #0;
   Microed.SearchData.Options := SearchString.Opts;
   Microed.SearchData.Scope := 0;
 
-//используем '<>' в качестве пpизнака панели поиска
+//╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ '<>' ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡ ╨┐p╨╕╨╖╨╜╨░╨║╨░ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░
   New(Drv, Init('<>'+FindRec.Mask, Directories, Files));
   if FindRec.What <> '' then
     Drv^.AWhat := NewStr(FindRec.What);
@@ -1048,7 +1048,7 @@ Skip:
   if (FindRec.Options and ffoNoSort) <> 0 then
     RereadNoSort := True;
 
-{JO: 2-04-2006 - поиск в ветви}
+{JO: 2-04-2006 - ╨┐╨╛╨╕╤Б╨║ ╨▓ ╨▓╨╡╤В╨▓╨╕}
   if InBranch then
     begin
     SearchDataInBranch(SourceFC);
@@ -1056,7 +1056,7 @@ Skip:
     end;
 {/JO}
 
-  if FindRec.Where <> 1 then {JO: если не ищем в выделенных каталогах}
+  if FindRec.Where <> 1 then {JO: ╨╡╤Б╨╗╨╕ ╨╜╨╡ ╨╕╤Й╨╡╨╝ ╨▓ ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╜╤Л╤Е ╨║╨░╤В╨░╨╗╨╛╨│╨░╤Е}
     { Flash >>> }
     begin
     lGetDir(0, FN);
@@ -1067,7 +1067,7 @@ Skip:
   case FindRec.Where of
     0:
       SearchData(FN);
-{JO: 31-03-2006 - поиск в выделенном}
+{JO: 31-03-2006 - ╨┐╨╛╨╕╤Б╨║ ╨▓ ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╜╨╛╨╝}
     1:
       if (SourceFC <> nil) and (SourceFC^.Count > 0) then
         SearchDataInBranch(SourceFC);
@@ -1097,8 +1097,8 @@ Common1:
     if (FindRec.Options and ffoNoSort) = 0 then
       begin
       PFilePanel(Pnl)^.RereadDir;
-      {JO: позиционируем фокус на файле, на котором он был
-       до перечитывания панели}
+      {JO: ╨┐╨╛╨╖╨╕╤Ж╨╕╨╛╨╜╨╕╤А╤Г╨╡╨╝ ╤Д╨╛╨║╤Г╤Б ╨╜╨░ ╤Д╨░╨╣╨╗╨╡, ╨╜╨░ ╨║╨╛╤В╨╛╤А╨╛╨╝ ╨╛╨╜ ╨▒╤Л╨╗
+       ╨┤╨╛ ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╤П ╨┐╨░╨╜╨╡╨╗╨╕}
       with PFilePanel(Pnl)^.Files^ do
         for CurP := 0 to Count-1 do
           if  (PFileRec(At(CurP))^.FlName[True] =
@@ -1118,8 +1118,8 @@ Common1:
     Drv := nil;
     FFResult := FFResult and ffSeNotFnd; {-$VOL}
     end
-    // JO: здесь сортировка не нужна, т.к. она делается в TFindDrive.GetDirectory
-    //     и в результате мы получаем сортировку дважды
+    // JO: ╨╖╨┤╨╡╤Б╤М ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨░ ╨╜╨╡ ╨╜╤Г╨╢╨╜╨░, ╤В.╨║. ╨╛╨╜╨░ ╨┤╨╡╨╗╨░╨╡╤В╤Б╤П ╨▓ TFindDrive.GetDirectory
+    //     ╨╕ ╨▓ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╡ ╨╝╤Л ╨┐╨╛╨╗╤Г╤З╨░╨╡╨╝ ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╤Г ╨┤╨▓╨░╨╢╨┤╤Л
     {else Files^.Sort}
     ;
   FindFiles := FFResult;
@@ -1141,7 +1141,7 @@ function InsertFile(S: String; var DC: PSortedCollection;
   InsertFile := False;
   if  (S = '')
     or (S = '*') or (S = '*.*')
-    {JO: иначе в список попадёт весь каталог}
+    {JO: ╨╕╨╜╨░╤З╨╡ ╨▓ ╤Б╨┐╨╕╤Б╨╛╨║ ╨┐╨╛╨┐╨░╨┤╤С╤В ╨▓╨╡╤Б╤М ╨║╨░╤В╨░╨╗╨╛╨│}
     then
     Exit;
   ClrIO;
@@ -1231,17 +1231,17 @@ function ReadList(const AName: String; var DC: PSortedCollection;
     if S <> '' then
       case S[1] of
         ' ', #9, '>':
-          begin {игнорируем последующие строки многострочного описания}
+          begin {╨╕╨│╨╜╨╛╤А╨╕╤А╤Г╨╡╨╝ ╨┐╨╛╤Б╨╗╨╡╨┤╤Г╤О╤Й╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╝╨╜╨╛╨│╨╛╤Б╤В╤А╨╛╤З╨╜╨╛╨│╨╛ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П}
           end;
         '"':
-          begin { длинное имя в кавычках }
+          begin { ╨┤╨╗╨╕╨╜╨╜╨╛╨╡ ╨╕╨╝╤П ╨▓ ╨║╨░╨▓╤Л╤З╨║╨░╤Е }
           System.Delete(S, 1, 1);
           SetLength(S, PosChar('"', S)-1);
           InsertFile(S, DC, FC);
           end;
         else
-          {попробуем целиком, или без первого символа (BSO),
-              а если не вышло - то до первого пробела или Tab}
+          {╨┐╨╛╨┐╤А╨╛╨▒╤Г╨╡╨╝ ╤Ж╨╡╨╗╨╕╨║╨╛╨╝, ╨╕╨╗╨╕ ╨▒╨╡╨╖ ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╤Б╨╕╨╝╨▓╨╛╨╗╨░ (BSO),
+              ╨░ ╨╡╤Б╨╗╨╕ ╨╜╨╡ ╨▓╤Л╤И╨╗╨╛ - ╤В╨╛ ╨┤╨╛ ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╨┐╤А╨╛╨▒╨╡╨╗╨░ ╨╕╨╗╨╕ Tab}
           begin
           if not InsertFile(S, DC, FC) and
               ( (S[1] <> '~') and
@@ -1291,7 +1291,7 @@ function GetArcName(S: String): String;
     Exit;
     end;
   C := S[2];
-  S[2] := ';'; {JO: реально не важно на что меняем, лишь бы не ':'}
+  S[2] := ';'; {JO: ╤А╨╡╨░╨╗╤М╨╜╨╛ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛ ╨╜╨░ ╤З╤В╨╛ ╨╝╨╡╨╜╤П╨╡╨╝, ╨╗╨╕╤И╤М ╨▒╤Л ╨╜╨╡ ':'}
   S := Copy(S, 1, PosChar(':', S)-1);
   if Length(S) > 1 then
     S[2] := C;
@@ -1513,8 +1513,8 @@ procedure TFindDrive.ChangeUp;
     S := GetName(ListFile^);
   if Panel = nil then
     Exit;
-{AK155 16.05.2005 Prev = nil не бывает. Подробности см. в комментарии
-в TFindDrive.ChangeRoot
+{AK155 16.05.2005 Prev = nil ╨╜╨╡ ╨▒╤Л╨▓╨░╨╡╤В. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╛╤Б╤В╨╕ ╤Б╨╝. ╨▓ ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╕
+╨▓ TFindDrive.ChangeRoot
   if Prev = nil then
     begin
     New(Prev, Init(0, Panel));
@@ -1526,9 +1526,9 @@ procedure TFindDrive.ChangeUp;
   PFilePanel(Panel)^.Drive := PDrive(Prev);
   Prev^.lChDir(Prev^.CurDir);
 
-{AK155 16.05.2005 Присвоение для ActivePanel не нужно, так как
-не в активной панели не может возникнуть ChangeUp. А даже если бы
-и могла, то с какой стати нужно было бы эту панель активизировать?
+{AK155 16.05.2005 ╨Я╤А╨╕╤Б╨▓╨╛╨╡╨╜╨╕╨╡ ╨┤╨╗╤П ActivePanel ╨╜╨╡ ╨╜╤Г╨╢╨╜╨╛, ╤В╨░╨║ ╨║╨░╨║
+╨╜╨╡ ╨▓ ╨░╨║╤В╨╕╨▓╨╜╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╨╜╨╡ ╨╝╨╛╨╢╨╡╤В ╨▓╨╛╨╖╨╜╨╕╨║╨╜╤Г╤В╤М ChangeUp. ╨Р ╨┤╨░╨╢╨╡ ╨╡╤Б╨╗╨╕ ╨▒╤Л
+╨╕ ╨╝╨╛╨│╨╗╨░, ╤В╨╛ ╤Б ╨║╨░╨║╨╛╨╣ ╤Б╤В╨░╤В╨╕ ╨╜╤Г╨╢╨╜╨╛ ╨▒╤Л╨╗╨╛ ╨▒╤Л ╤Н╤В╤Г ╨┐╨░╨╜╨╡╨╗╤М ╨░╨║╤В╨╕╨▓╨╕╨╖╨╕╤А╨╛╨▓╨░╤В╤М?
   if  (Prev^.DriveType = dtDisk) and
       (PView(Panel)^.GetState(sfSelected+sfActive))
   then
@@ -1549,10 +1549,10 @@ procedure TFindDrive.ChangeRoot;
     Exit;
     end;
 {!! AK155 16.05.2005
-FindDrive может появиться на панели только в результате
-InsertDrive, а в нём FindDrive обязательно получит Prev <> nil.
-Так что анализ не нужен и финальная часть данной процедуры
-тоже не нужна
+FindDrive ╨╝╨╛╨╢╨╡╤В ╨┐╨╛╤П╨▓╨╕╤В╤М╤Б╤П ╨╜╨░ ╨┐╨░╨╜╨╡╨╗╨╕ ╤В╨╛╨╗╤М╨║╨╛ ╨▓ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╡
+InsertDrive, ╨░ ╨▓ ╨╜╤С╨╝ FindDrive ╨╛╨▒╤П╨╖╨░╤В╨╡╨╗╤М╨╜╨╛ ╨┐╨╛╨╗╤Г╤З╨╕╤В Prev <> nil.
+╨в╨░╨║ ╤З╤В╨╛ ╨░╨╜╨░╨╗╨╕╨╖ ╨╜╨╡ ╨╜╤Г╨╢╨╡╨╜ ╨╕ ╤Д╨╕╨╜╨░╨╗╤М╨╜╨░╤П ╤З╨░╤Б╤В╤М ╨┤╨░╨╜╨╜╨╛╨╣ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╤Л
+╤В╨╛╨╢╨╡ ╨╜╨╡ ╨╜╤Г╨╢╨╜╨░
 }
 //  if Prev <> nil then
     begin
@@ -1605,16 +1605,16 @@ procedure DosReread(Files: PFilesCollection; Dir: String;
     begin
     ClrIO;
     p := Files^.At(i);
-    //JO: если файл не в интересующем нас каталоге или
-    //    (при Strict = False) не в его подкаталогах,
-    //    то его не проверяем
+    //JO: ╨╡╤Б╨╗╨╕ ╤Д╨░╨╣╨╗ ╨╜╨╡ ╨▓ ╨╕╨╜╤В╨╡╤А╨╡╤Б╤Г╤О╤Й╨╡╨╝ ╨╜╨░╤Б ╨║╨░╤В╨░╨╗╨╛╨│╨╡ ╨╕╨╗╨╕
+    //    (╨┐╤А╨╕ Strict = False) ╨╜╨╡ ╨▓ ╨╡╨│╨╛ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░╤Е,
+    //    ╤В╨╛ ╨╡╨│╨╛ ╨╜╨╡ ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝
     if (Dir <> '') and ((UpStrg(Dir) <>
                          UpStrg(Copy(p^.Owner^, 1, Length(Dir))))
                    or (Strict and ((UpStrg(Dir) <>
                         UpStrg(p^.Owner^))))) then
       Inc(i)
     else
-    {JO: проверяем, не лежит ли файл в архиве в панели поиска}
+    {JO: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝, ╨╜╨╡ ╨╗╨╡╨╢╨╕╤В ╨╗╨╕ ╤Д╨░╨╣╨╗ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡ ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░}
     if not PathFoundInArc(p^.Owner^) then
       begin
       with p^ do
@@ -1625,8 +1625,8 @@ procedure DosReread(Files: PFilesCollection; Dir: String;
         begin
         j := 0;
         if p^.Attr and Directory <> 0 then
-//JO:  удаляем всё что лежало в данном каталоге, т.к. оно
-//     заведомо не существует
+//JO:  ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨▓╤Б╤С ╤З╤В╨╛ ╨╗╨╡╨╢╨░╨╗╨╛ ╨▓ ╨┤╨░╨╜╨╜╨╛╨╝ ╨║╨░╤В╨░╨╗╨╛╨│╨╡, ╤В.╨║. ╨╛╨╜╨╛
+//     ╨╖╨░╨▓╨╡╨┤╨╛╨╝╨╛ ╨╜╨╡ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В
           while j < Files^.Count do
             if (UpStrg(MakeNormName(p^.Owner^, p^.FlName[True])+'/') // slash change by unxed
                      = UpStrg(Copy(PFileRec(Files^.At(j))^.Owner^,
@@ -1655,23 +1655,23 @@ procedure DosReread(Files: PFilesCollection; Dir: String;
           end;
         p^.Second := D.Sec;
         p^.Attr := sr.sr.Attr;
-        {JO: чтобы менялся цвет в панели поиска и временной панели при переименовании}
+        {JO: ╤З╤В╨╛╨▒╤Л ╨╝╨╡╨╜╤П╨╗╤Б╤П ╤Ж╨▓╨╡╤В ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░ ╨╕ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╤А╨╕ ╨┐╨╡╤А╨╡╨╕╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╕}
         p^.TType := GetFileType(p^.FlName[True], p^.Attr);
         Inc(i);
         end;
       end
     else
       begin
-      {JO: проверяем, существует ли архив, в котором лежит файл }
+      {JO: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝, ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В ╨╗╨╕ ╨░╤А╤Е╨╕╨▓, ╨▓ ╨║╨╛╤В╨╛╤А╨╛╨╝ ╨╗╨╡╨╢╨╕╤В ╤Д╨░╨╣╨╗ }
       S := p^.Owner^;
       if Length(S) > 1 then
         S[2] := ';';
-      {JO: реально не важно, какой символ взять, лишь бы не ':'}
+      {JO: ╤А╨╡╨░╨╗╤М╨╜╨╛ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛, ╨║╨░╨║╨╛╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨▓╨╖╤П╤В╤М, ╨╗╨╕╤И╤М ╨▒╤Л ╨╜╨╡ ':'}
       S := Copy(p^.Owner^, 1, PosChar(':', S)-1);
       lFindFirst(S, AnyFileDir, sr);
       lFindClose(sr);
       if  (DosError <> 0) or Abort then
-      {JO: удаляем всё что лежало в данном архиве}
+      {JO: ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨▓╤Б╤С ╤З╤В╨╛ ╨╗╨╡╨╢╨░╨╗╨╛ ╨▓ ╨┤╨░╨╜╨╜╨╛╨╝ ╨░╤А╤Е╨╕╨▓╨╡}
         begin
         j := 0;
         while j < Files^.Count do
@@ -1690,9 +1690,9 @@ procedure DosReread(Files: PFilesCollection; Dir: String;
         Inc(i);
       end;
     end;
-//JO: непонятно, зачем здесь нужна сортировка: порядок элементов коллекции
-//    данная процедура не изменяет, так что от сортировки только лишние
-//    тормоза
+//JO: ╨╜╨╡╨┐╨╛╨╜╤П╤В╨╜╨╛, ╨╖╨░╤З╨╡╨╝ ╨╖╨┤╨╡╤Б╤М ╨╜╤Г╨╢╨╜╨░ ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨░: ╨┐╨╛╤А╤П╨┤╨╛╨║ ╤Н╨╗╨╡╨╝╨╡╨╜╤В╨╛╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕
+//    ╨┤╨░╨╜╨╜╨░╤П ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╨░ ╨╜╨╡ ╨╕╨╖╨╝╨╡╨╜╤П╨╡╤В, ╤В╨░╨║ ╤З╤В╨╛ ╨╛╤В ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨╕ ╤В╨╛╨╗╤М╨║╨╛ ╨╗╨╕╤И╨╜╨╕╨╡
+//    ╤В╨╛╤А╨╝╨╛╨╖╨░
  {if Files^.Count > 0 then
     Files^.Sort;}
   end { DosReread };
@@ -1706,21 +1706,21 @@ procedure TFindDrive.RereadDirectory;
   begin
   if Prev <> nil then
     Prev^.RereadDirectory(S);
-  if S = #22 then Exit; //см. Archiver.MakeArchive, лок. ф-цию ArcExec
+  if S = #22 then Exit; //╤Б╨╝. Archiver.MakeArchive, ╨╗╨╛╨║. ╤Д-╤Ж╨╕╤О ArcExec
   if (S <> '')
-     and (S[1] = '>') // признак того, что надо перечитать подкаталоги
+     and (S[1] = '>') // ╨┐╤А╨╕╨╖╨╜╨░╨║ ╤В╨╛╨│╨╛, ╤З╤В╨╛ ╨╜╨░╨┤╨╛ ╨┐╨╡╤А╨╡╤З╨╕╤В╨░╤В╤М ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╕
   then
     begin
-    Strict := False; // перечитываем указанный каталог с подкаталогами
+    Strict := False; // ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╡╨╝ ╤Г╨║╨░╨╖╨░╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ ╤Б ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░╨╝╨╕
     STmp := Copy(S, 2, MaxStringLength);
     end
   else
     begin
     STmp := S;
     if S = '' then
-      Strict := False // перечитываем всю коллекцию
+      Strict := False // ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨▓╤Б╤О ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤О
     else
-      Strict := True; // перечитываем указанный каталог без подкаталогов
+      Strict := True; // ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╡╨╝ ╤Г╨║╨░╨╖╨░╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ ╨▒╨╡╨╖ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓
     end;
   MakeSlash(STmp);
   PDir := NewStr(STmp);
@@ -1729,7 +1729,7 @@ procedure TFindDrive.RereadDirectory;
       and
       ((S = '') or (Dirs^.IndexOf(PDir) >= 0)) then
     begin
-    if S = '' then //пеpечитывание всей ветви целиком может быть долгим
+    if S = '' then //╨┐╨╡p╨╡╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╨╡ ╨▓╤Б╨╡╨╣ ╨▓╨╡╤В╨▓╨╕ ╤Ж╨╡╨╗╨╕╨║╨╛╨╝ ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╨┤╨╛╨╗╨│╨╕╨╝
       begin
       PV := ReadingListMsg;
       ForceWriteShow(PV);
@@ -1783,7 +1783,7 @@ function TFindDrive.GetDir: String;
     end;
   end { TFindDrive.GetDir: };
 
-{JO: 20.06.2002 - возможен просмотр файла найденного в архиве}
+{JO: 20.06.2002 - ╨▓╨╛╨╖╨╝╨╛╨╢╨╡╨╜ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А ╤Д╨░╨╣╨╗╨░ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨│╨╛ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
 procedure TFindDrive.UseFile;
   var
     SS, S, S2, Q: String;
@@ -1801,22 +1801,22 @@ procedure TFindDrive.UseFile;
   if  (DriveType in [dtFind, dtTemp]) and (P^.Owner <> nil) and
     PathFoundInArc(P^.Owner^)
   then
-    begin {просмотр файла найденного в архиве}
+    begin {╨┐╤А╨╛╤Б╨╝╨╛╤В╤А ╤Д╨░╨╣╨╗╨░ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨│╨╛ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
     TempFile := '';
     if  (Command = cmEditFile) or (Command = cmFileEdit) or
         (Command = cmIntEditFile) or (Command = cmIntFileEdit)
     then
       Exit;
-    { определяем имя архиватора и путь внутри архива}
+    { ╨╛╨┐╤А╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╕╨╝╤П ╨░╤А╤Е╨╕╨▓╨░╤В╨╛╤А╨░ ╨╕ ╨┐╤Г╤В╤М ╨▓╨╜╤Г╤В╤А╨╕ ╨░╤А╤Е╨╕╨▓╨░}
     OwnArc := P^.Owner^;
     OwnArc[2] := ';';
-    {JO: реально не важно, какой символ взять, лишь бы не ':'}
+    {JO: ╤А╨╡╨░╨╗╤М╨╜╨╛ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛, ╨║╨░╨║╨╛╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨▓╨╖╤П╤В╤М, ╨╗╨╕╤И╤М ╨▒╤Л ╨╜╨╡ ':'}
     I := PosChar(':', OwnArc);
     OwnArc := Copy(P^.Owner^, 1, I-1);
     PathInside := Copy(P^.Owner^, I+1, MaxStringLength);
     if PathInside[1] = '/' then // slash change by unxed
       Delete(PathInside, 1, 1);
-    { детектим тип архива}
+    { ╨┤╨╡╤В╨╡╨║╤В╨╕╨╝ ╤В╨╕╨┐ ╨░╤А╤Е╨╕╨▓╨░}
     New(ArcFile, Init(OwnArc, stOpenRead, 512));
     if  (ArcFile = nil) or (ArcFile^.Status <> stOK) then
       begin
@@ -1852,7 +1852,7 @@ TryAgain:
       {$ENDIF}
       if ExecResource(dlgSetPassword, S) <> cmOK then
         Exit;
-      { Flash >>> } {JO: взял код Flash из Arcview }
+      { Flash >>> } {JO: ╨▓╨╖╤П╨╗ ╨║╨╛╨┤ Flash ╨╕╨╖ Arcview }
       if CheckForSpaces(S) then
         S := ' '+CnvString(AType^.Garble)+S+' '
       else
@@ -1922,7 +1922,7 @@ TryAgain:
     else
       TempFile := ''; {-$VOL}
     {$ENDIF}
-    end {конец просмотра файла найденного в архиве}
+    end {╨║╨╛╨╜╨╡╤Ж ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨░ ╤Д╨░╨╣╨╗╨░ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨│╨╛ ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
   else
     begin
     if  (Prev <> nil) and (Prev^.DriveType in [dtArc, dtArcFind]) then
@@ -1980,17 +1980,17 @@ procedure CopyToTempDrive;
     NewP^ := P^;
     with NewP^ do
       begin
-      Owner := l; {удаляться будет вместе с TempDirs }
+      Owner := l; {╤Г╨┤╨░╨╗╤П╤В╤М╤Б╤П ╨▒╤Г╨┤╨╡╤В ╨▓╨╝╨╡╤Б╤В╨╡ ╤Б TempDirs }
       Selected := False;
       UsageCount := 1;
       if Diz <> nil then
-        begin { Пересоздаём собственную копию }
+        begin { ╨Я╨╡╤А╨╡╤Б╨╛╨╖╨┤╨░╤С╨╝ ╤Б╨╛╨▒╤Б╤В╨▓╨╡╨╜╨╜╤Г╤О ╨║╨╛╨┐╨╕╤О }
         New(Diz);
         Diz^.DizText := P^.Diz^.DizText;
         Diz^.Container := nil;
-          {! Это очень сомнительная штука,
-          которая выстрелит, если будет возможно редактирование
-          описания с TEMP:. Впрочем, возможно, CalcDPath вытянет}
+          {! ╨н╤В╨╛ ╨╛╤З╨╡╨╜╤М ╤Б╨╛╨╝╨╜╨╕╤В╨╡╨╗╤М╨╜╨░╤П ╤И╤В╤Г╨║╨░,
+          ╨║╨╛╤В╨╛╤А╨░╤П ╨▓╤Л╤Б╤В╤А╨╡╨╗╨╕╤В, ╨╡╤Б╨╗╨╕ ╨▒╤Г╨┤╨╡╤В ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛ ╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡
+          ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╤Б TEMP:. ╨Т╨┐╤А╨╛╤З╨╡╨╝, ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛, CalcDPath ╨▓╤Л╤В╤П╨╜╨╡╤В}
         end;
       end;
     TempFiles^.AtInsert(J, NewP);
@@ -2204,12 +2204,12 @@ procedure TFindDrive.CopyFromArc;
       Result := '';
       Exit;
       end;
-    S[2] := ';'; {JO: реально не важно на что меняем, лишь бы не ':'}
+    S[2] := ';'; {JO: ╤А╨╡╨░╨╗╤М╨╜╨╛ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛ ╨╜╨░ ╤З╤В╨╛ ╨╝╨╡╨╜╤П╨╡╨╝, ╨╗╨╕╤И╤М ╨▒╤Л ╨╜╨╡ ':'}
     Result := Copy(S, PosChar(':', S)+1, MaxStringLength);
     end;
 
   begin { TFindDrive.CopyFromArc }
-  // JO: выводим диалог разархивирования, общий для всех архивов
+  // JO: ╨▓╤Л╨▓╨╛╨┤╨╕╨╝ ╨┤╨╕╨░╨╗╨╛╨│ ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╤П, ╨╛╨▒╤Й╨╕╨╣ ╨┤╨╗╤П ╨▓╤Б╨╡╤Е ╨░╤А╤Е╨╕╨▓╨╛╨▓
   ExtrDir := '';
   DT.S := '';
   DT.Psw := '';
@@ -2228,14 +2228,14 @@ procedure TFindDrive.CopyFromArc;
     Exit;
     end;
   {JO}
-  // пpовеpяем, находится ли диск в списке дисков, на котоpые надо
-  // pазаpхивиpовать не чеpез вpеменный подкаталог (по умолчанию A: и B:)
+  // ╨┐p╨╛╨▓╨╡p╤П╨╡╨╝, ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П ╨╗╨╕ ╨┤╨╕╤Б╨║ ╨▓ ╤Б╨┐╨╕╤Б╨║╨╡ ╨┤╨╕╤Б╨║╨╛╨▓, ╨╜╨░ ╨║╨╛╤В╨╛p╤Л╨╡ ╨╜╨░╨┤╨╛
+  // p╨░╨╖╨░p╤Е╨╕╨▓╨╕p╨╛╨▓╨░╤В╤М ╨╜╨╡ ╤З╨╡p╨╡╨╖ ╨▓p╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│ (╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О A: ╨╕ B:)
   if  (DT.S <> '') and (Length(DT.S) >= 2) then
     begin
     if DT.S[2] = ':' then
       DDr := UpCase(DT.S[1])
     else
-      DDr := #1; {любой символ не входящий в 'A'..'Z'}
+      DDr := #1; {╨╗╤О╨▒╨╛╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨╜╨╡ ╨▓╤Е╨╛╨┤╤П╤Й╨╕╨╣ ╨▓ 'A'..'Z'}
     end
   else
     begin
@@ -2261,13 +2261,13 @@ procedure TFindDrive.CopyFromArc;
   SkipCopyDialog := False;
   ExtrDir := DT.S;
 
-  // JO: формируем файловые коллекции для каждого архива и разархивируем
-  //     файлы из архивов
+  // JO: ╤Д╨╛╤А╨╝╨╕╤А╤Г╨╡╨╝ ╤Д╨░╨╣╨╗╨╛╨▓╤Л╨╡ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨┤╨╗╤П ╨║╨░╨╢╨┤╨╛╨│╨╛ ╨░╤А╤Е╨╕╨▓╨░ ╨╕ ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╤Г╨╡╨╝
+  //     ╤Д╨░╨╣╨╗╤Л ╨╕╨╖ ╨░╤А╤Е╨╕╨▓╨╛╨▓
   repeat
     I := 0;
     FR := AFiles^.At(0);
-    // для файлов с разными путями внутри архива запускаем архиватор отдельно,
-    // иначе они будут распакованы с созданием подкаталогов, а нам это не надо
+    // ╨┤╨╗╤П ╤Д╨░╨╣╨╗╨╛╨▓ ╤Б ╤А╨░╨╖╨╜╤Л╨╝╨╕ ╨┐╤Г╤В╤П╨╝╨╕ ╨▓╨╜╤Г╤В╤А╨╕ ╨░╤А╤Е╨╕╨▓╨░ ╨╖╨░╨┐╤Г╤Б╨║╨░╨╡╨╝ ╨░╤А╤Е╨╕╨▓╨░╤В╨╛╤А ╨╛╤В╨┤╨╡╨╗╤М╨╜╨╛,
+    // ╨╕╨╜╨░╤З╨╡ ╨╛╨╜╨╕ ╨▒╤Г╨┤╤Г╤В ╤А╨░╤Б╨┐╨░╨║╨╛╨▓╨░╨╜╤Л ╤Б ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╡╨╝ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓, ╨░ ╨╜╨░╨╝ ╤Н╤В╨╛ ╨╜╨╡ ╨╜╨░╨┤╨╛
     CurArcName := UpStrg(FR^.Owner^);
     New(FCCur, Init($10, $10));
     repeat
@@ -2287,7 +2287,7 @@ procedure TFindDrive.CopyFromArc;
       if Drv <> nil then
         begin
         Drv^.Panel := Panel;
-        // дабы обеспечить снятие выделения в панели
+        // ╨┤╨░╨▒╤Л ╨╛╨▒╨╡╤Б╨┐╨╡╤З╨╕╤В╤М ╤Б╨╜╤П╤В╨╕╨╡ ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕
         Drv^.lChDir(GetArcOwn(CurArcName));
         PArcDrive(Drv)^.Password := DT.Psw;
         PArcDrive(Drv)^.ExtractFiles(FCCur, ExtrDir, Own, DT.W);
@@ -2305,8 +2305,8 @@ procedure TFindDrive.CopyFiles;
   var
     FC_Disk, FC_Arc: PFilesCollection;
 
-    // JO: разделяем коллекцию файлов в панели поиска на две: в одну помещаем
-    //     файлы, которые лежат на диске, в другую - которые лежет в архивах
+    // JO: ╤А╨░╨╖╨┤╨╡╨╗╤П╨╡╨╝ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤О ╤Д╨░╨╣╨╗╨╛╨▓ ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░ ╨╜╨░ ╨┤╨▓╨╡: ╨▓ ╨╛╨┤╨╜╤Г ╨┐╨╛╨╝╨╡╤Й╨░╨╡╨╝
+    //     ╤Д╨░╨╣╨╗╤Л, ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨╗╨╡╨╢╨░╤В ╨╜╨░ ╨┤╨╕╤Б╨║╨╡, ╨▓ ╨┤╤А╤Г╨│╤Г╤О - ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨╗╨╡╨╢╨╡╤В ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е
   procedure SeparateCollections(FC_Comm: PFilesCollection;
       var FC_Disk, FC_Arc: PFilesCollection);
     var
@@ -2471,8 +2471,8 @@ procedure TFindDrive.DrvFindFile(FC: PFilesCollection);
       end
     else
       begin
-//JO: поскольку ArcFindRec по absolute совмещена с FindRec,
-//    то после вызова диалога можно использовать просто FindRec
+//JO: ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ArcFindRec ╨┐╨╛ absolute ╤Б╨╛╨▓╨╝╨╡╤Й╨╡╨╜╨░ ╤Б FindRec,
+//    ╤В╨╛ ╨┐╨╛╤Б╨╗╨╡ ╨▓╤Л╨╖╨╛╨▓╨░ ╨┤╨╕╨░╨╗╨╛╨│╨░ ╨╝╨╛╨╢╨╜╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨┐╤А╨╛╤Б╤В╨╛ FindRec
       Dlg^.SetData(ArcFindRec);
       DlgCm := Application^.ExecView(Dlg);
       Dlg^.GetData(ArcFindRec);

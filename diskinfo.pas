@@ -61,7 +61,7 @@ type
     Title: PString;
     Dir: PString;
     Files: PString;
-    Free: PString; { см. TDrive.GetFreeSpace }
+    Free: PString; { ╤Б╨╝. TDrive.GetFreeSpace }
     Total: PString;
     VolumeID: PString;
     SerialNo: PString; { Rainbow }
@@ -79,14 +79,14 @@ type
     Info: TDiskInfoRec;
     Delta: TPoint;
     OtherPanel: PView{PFilePanelRoot};
-      { Файловая панель, с которой связана данная панель информации }
+      { ╨д╨░╨╣╨╗╨╛╨▓╨░╤П ╨┐╨░╨╜╨╡╨╗╤М, ╤Б ╨║╨╛╤В╨╛╤А╨╛╨╣ ╤Б╨▓╤П╨╖╨░╨╜╨░ ╨┤╨░╨╜╨╜╨░╤П ╨┐╨░╨╜╨╡╨╗╤М ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╨╕ }
     DriveView: PDriveView;
-      { Диск/шара в верхней рамке. См. InsertDriveView и Done }
+      { ╨Ф╨╕╤Б╨║/╤И╨░╤А╨░ ╨▓ ╨▓╨╡╤А╤Е╨╜╨╡╨╣ ╤А╨░╨╝╨║╨╡. ╨б╨╝. InsertDriveView ╨╕ Done }
     constructor Init(R: TRect; Panel: PView{PFilePanelRoot});
     constructor Load(var S: TStream);
     procedure Store(var S: TStream); virtual;
     procedure InsertDriveView;
-      { Для инфо о диске создать DriveView и вставить в Owner }
+      { ╨Ф╨╗╤П ╨╕╨╜╤Д╨╛ ╨╛ ╨┤╨╕╤Б╨║╨╡ ╤Б╨╛╨╖╨┤╨░╤В╤М DriveView ╨╕ ╨▓╤Б╤В╨░╨▓╨╕╤В╤М ╨▓ Owner }
     procedure ReadData;
     procedure HandleEvent(var Event: TEvent); virtual;
     function GetPalette: PPalette; virtual;
@@ -102,16 +102,16 @@ type
     end;
 
 function CountDirLen(const Dir: String; Recurse: Boolean;
-{` Подсчёт числа файлов (NumFiles) и их суммарного размера (Result)
-без захода в подкаталоги. NumFiles включает в себя и каталоги тоже.
-ClusterLen - суммарное занятое место (с учётом хвостов кластеров).
-  Вызывает GetDrInfo, так что все выходные переменные GetDrInfo
-также будут определены }
+{` ╨Я╨╛╨┤╤Б╤З╤С╤В ╤З╨╕╤Б╨╗╨░ ╤Д╨░╨╣╨╗╨╛╨▓ (NumFiles) ╨╕ ╨╕╤Е ╤Б╤Г╨╝╨╝╨░╤А╨╜╨╛╨│╨╛ ╤А╨░╨╖╨╝╨╡╤А╨░ (Result)
+╨▒╨╡╨╖ ╨╖╨░╤Е╨╛╨┤╨░ ╨▓ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╕. NumFiles ╨▓╨║╨╗╤О╤З╨░╨╡╤В ╨▓ ╤Б╨╡╨▒╤П ╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╤В╨╛╨╢╨╡.
+ClusterLen - ╤Б╤Г╨╝╨╝╨░╤А╨╜╨╛╨╡ ╨╖╨░╨╜╤П╤В╨╛╨╡ ╨╝╨╡╤Б╤В╨╛ (╤Б ╤Г╤З╤С╤В╨╛╨╝ ╤Е╨▓╨╛╤Б╤В╨╛╨▓ ╨║╨╗╨░╤Б╤В╨╡╤А╨╛╨▓).
+  ╨Т╤Л╨╖╤Л╨▓╨░╨╡╤В GetDrInfo, ╤В╨░╨║ ╤З╤В╨╛ ╨▓╤Б╨╡ ╨▓╤Л╤Е╨╛╨┤╨╜╤Л╨╡ ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╡ GetDrInfo
+╤В╨░╨║╨╢╨╡ ╨▒╤Г╨┤╤Г╤В ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╤Л }
     var ClusterLen: TSize; var NumFiles, NumDirs: Integer): TSize;
 {`}
 
 procedure GetDrInfo(CurDir: String);
-{` Определяет FreeSpc, TotalSpc, BytesPerCluster`}
+{` ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╤П╨╡╤В FreeSpc, TotalSpc, BytesPerCluster`}
 
 procedure ReadDiskInfo(Dr: String; var B: TDiskInfoRec);
 
@@ -147,11 +147,11 @@ const
 
 var
   FreeSpc, TotalSpc: TSize;
-  {` Общий размер диска и свободное место на нём. Определяются для
-  полного пути каталога (в т.ч. сетевого), софтлинки NTFS отслеживаются.`}
+  {` ╨Ю╨▒╤Й╨╕╨╣ ╤А╨░╨╖╨╝╨╡╤А ╨┤╨╕╤Б╨║╨░ ╨╕ ╤Б╨▓╨╛╨▒╨╛╨┤╨╜╨╛╨╡ ╨╝╨╡╤Б╤В╨╛ ╨╜╨░ ╨╜╤С╨╝. ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╤П╤О╤В╤Б╤П ╨┤╨╗╤П
+  ╨┐╨╛╨╗╨╜╨╛╨│╨╛ ╨┐╤Г╤В╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨░ (╨▓ ╤В.╤З. ╤Б╨╡╤В╨╡╨▓╨╛╨│╨╛), ╤Б╨╛╤Д╤В╨╗╨╕╨╜╨║╨╕ NTFS ╨╛╤В╤Б╨╗╨╡╨╢╨╕╨▓╨░╤О╤В╤Б╤П.`}
   BytesPerCluster: LongInt;
-  {` Определяется для корня диска или сетевого пути. Софтлинки
-  не отслеживаются. `}
+  {` ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╤П╨╡╤В╤Б╤П ╨┤╨╗╤П ╨║╨╛╤А╨╜╤П ╨┤╨╕╤Б╨║╨░ ╨╕╨╗╨╕ ╤Б╨╡╤В╨╡╨▓╨╛╨│╨╛ ╨┐╤Г╤В╨╕. ╨б╨╛╤Д╤В╨╗╨╕╨╜╨║╨╕
+  ╨╜╨╡ ╨╛╤В╤Б╨╗╨╡╨╢╨╕╨▓╨░╤О╤В╤Б╤П. `}
 
 implementation
 uses
@@ -260,10 +260,10 @@ function TDriveView.GetText(MaxWidth: Integer): String;
   L := Max(2, GetShareEnd(Result));
   SetLength(Result, L);
   if L = 2 then
-    begin { Буква диска. Не сетевого ли?}
+    begin { ╨С╤Г╨║╨▓╨░ ╨┤╨╕╤Б╨║╨░. ╨Э╨╡ ╤Б╨╡╤В╨╡╨▓╨╛╨│╨╛ ╨╗╨╕?}
     Share := GetShare(Result[1]);
     if Share <> '' then
-      Result := Result + ' ' + Share; { Таки сетевой }
+      Result := Result + ' ' + Share; { ╨в╨░╨║╨╕ ╤Б╨╡╤В╨╡╨▓╨╛╨╣ }
     end;
   if Length(Result) > MaxWidth then
     begin
@@ -337,27 +337,27 @@ procedure TDiskInfo.InsertDriveView;
   begin
   if PFilePanelRoot(OtherPanel)^.Drive^.DriveType <> dtDisk then
     Exit;
-    { Такой анализ очень некрасив, лучше было бы виртуализировать
-    заголовок инфо-панели, как виртуализировано её содержимое }
+    { ╨в╨░╨║╨╛╨╣ ╨░╨╜╨░╨╗╨╕╨╖ ╨╛╤З╨╡╨╜╤М ╨╜╨╡╨║╤А╨░╤Б╨╕╨▓, ╨╗╤Г╤З╤И╨╡ ╨▒╤Л╨╗╨╛ ╨▒╤Л ╨▓╨╕╤А╤В╤Г╨░╨╗╨╕╨╖╨╕╤А╨╛╨▓╨░╤В╤М
+    ╨╖╨░╨│╨╛╨╗╨╛╨▓╨╛╨║ ╨╕╨╜╤Д╨╛-╨┐╨░╨╜╨╡╨╗╨╕, ╨║╨░╨║ ╨▓╨╕╤А╤В╤Г╨░╨╗╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨╛ ╨╡╤С ╤Б╨╛╨┤╨╡╤А╨╢╨╕╨╝╨╛╨╡ }
 
   R.Assign(0, Origin.Y-1, 0, Origin.Y);
-    { По Y - на рамку, а с X DriveView^.Draw разбирается каждый раз }
+    { ╨Я╨╛ Y - ╨╜╨░ ╤А╨░╨╝╨║╤Г, ╨░ ╤Б X DriveView^.Draw ╤А╨░╨╖╨▒╨╕╤А╨░╨╡╤В╤Б╤П ╨║╨░╨╢╨┤╤Л╨╣ ╤А╨░╨╖ }
   New(DriveView, Init(R));
   DriveView^.Panel := @Self;
   Owner^.Insert(DriveView);
   DriveView^.Panel := @Self;
   end;
 
-{ При явном закрытии панели информации, например, при повторном Ctrl-L,
-DriveView тоже надо закрывать явно. А при завершении менеджера
-DriveView явно завершать нельзя - он будет завершён, как член
-группы менеджера. При этом в каком порядке будут завершаться DriveView
-и DiskInfo - неизвестно. А если после неявного освобожения DriveView
-попытаться завершить и явно тоже, это будет ошибка обращения к памяти
-и DN будети падать при закрытии менеджера.
-  Чтобы избежать повторных завершений, снабжаем DriveView и DiskInfo
-взаимными ссылками, которые обнуляем при завершении адресата ссылки.
-См. также TDriveView.Done;
+{ ╨Я╤А╨╕ ╤П╨▓╨╜╨╛╨╝ ╨╖╨░╨║╤А╤Л╤В╨╕╨╕ ╨┐╨░╨╜╨╡╨╗╨╕ ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╨╕, ╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, ╨┐╤А╨╕ ╨┐╨╛╨▓╤В╨╛╤А╨╜╨╛╨╝ Ctrl-L,
+DriveView ╤В╨╛╨╢╨╡ ╨╜╨░╨┤╨╛ ╨╖╨░╨║╤А╤Л╨▓╨░╤В╤М ╤П╨▓╨╜╨╛. ╨Р ╨┐╤А╨╕ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╨╕ ╨╝╨╡╨╜╨╡╨┤╨╢╨╡╤А╨░
+DriveView ╤П╨▓╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨░╤В╤М ╨╜╨╡╨╗╤М╨╖╤П - ╨╛╨╜ ╨▒╤Г╨┤╨╡╤В ╨╖╨░╨▓╨╡╤А╤И╤С╨╜, ╨║╨░╨║ ╤З╨╗╨╡╨╜
+╨│╤А╤Г╨┐╨┐╤Л ╨╝╨╡╨╜╨╡╨┤╨╢╨╡╤А╨░. ╨Я╤А╨╕ ╤Н╤В╨╛╨╝ ╨▓ ╨║╨░╨║╨╛╨╝ ╨┐╨╛╤А╤П╨┤╨║╨╡ ╨▒╤Г╨┤╤Г╤В ╨╖╨░╨▓╨╡╤А╤И╨░╤В╤М╤Б╤П DriveView
+╨╕ DiskInfo - ╨╜╨╡╨╕╨╖╨▓╨╡╤Б╤В╨╜╨╛. ╨Р ╨╡╤Б╨╗╨╕ ╨┐╨╛╤Б╨╗╨╡ ╨╜╨╡╤П╨▓╨╜╨╛╨│╨╛ ╨╛╤Б╨▓╨╛╨▒╨╛╨╢╨╡╨╜╨╕╤П DriveView
+╨┐╨╛╨┐╤Л╤В╨░╤В╤М╤Б╤П ╨╖╨░╨▓╨╡╤А╤И╨╕╤В╤М ╨╕ ╤П╨▓╨╜╨╛ ╤В╨╛╨╢╨╡, ╤Н╤В╨╛ ╨▒╤Г╨┤╨╡╤В ╨╛╤И╨╕╨▒╨║╨░ ╨╛╨▒╤А╨░╤Й╨╡╨╜╨╕╤П ╨║ ╨┐╨░╨╝╤П╤В╨╕
+╨╕ DN ╨▒╤Г╨┤╨╡╤В╨╕ ╨┐╨░╨┤╨░╤В╤М ╨┐╤А╨╕ ╨╖╨░╨║╤А╤Л╤В╨╕╨╕ ╨╝╨╡╨╜╨╡╨┤╨╢╨╡╤А╨░.
+  ╨з╤В╨╛╨▒╤Л ╨╕╨╖╨▒╨╡╨╢╨░╤В╤М ╨┐╨╛╨▓╤В╨╛╤А╨╜╤Л╤Е ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╨╣, ╤Б╨╜╨░╨▒╨╢╨░╨╡╨╝ DriveView ╨╕ DiskInfo
+╨▓╨╖╨░╨╕╨╝╨╜╤Л╨╝╨╕ ╤Б╤Б╤Л╨╗╨║╨░╨╝╨╕, ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨╛╨▒╨╜╤Г╨╗╤П╨╡╨╝ ╨┐╤А╨╕ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╨╕ ╨░╨┤╤А╨╡╤Б╨░╤В╨░ ╤Б╤Б╤Л╨╗╨║╨╕.
+╨б╨╝. ╤В╨░╨║╨╢╨╡ TDriveView.Done;
 }
 destructor TDiskInfo.Done;
   begin
@@ -500,7 +500,7 @@ procedure TDiskInfo.Draw;
     Inc(Y);
     end;
 
-  procedure Wrt_(S: String); {временно!!!}
+  procedure Wrt_(S: String); {╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛!!!}
     var
       I: Integer;
     begin
@@ -543,7 +543,7 @@ procedure TDiskInfo.Draw;
   then
     begin
     XWrt(Info.Title, fdiTitle);
-    {временно!!!}
+    {╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛!!!}
     if  (Info.Dir <> nil) and (DriveInfoData and fdiTitle <> 0) then
       Wrt_(Cut(Info.Dir^, Size.X));
     XWrt(Info.Files, fdiTotals);
@@ -629,8 +629,8 @@ procedure TDiskInfo.Draw;
   end { TDiskInfo.Draw };
 
 {-DataCompBoy-}
-{AK155: NumFiles включает в себя NumDirs, то есть число
-чисто файлов равно NumFiles-NumDirs}
+{AK155: NumFiles ╨▓╨║╨╗╤О╤З╨░╨╡╤В ╨▓ ╤Б╨╡╨▒╤П NumDirs, ╤В╨╛ ╨╡╤Б╤В╤М ╤З╨╕╤Б╨╗╨╛
+╤З╨╕╤Б╤В╨╛ ╤Д╨░╨╣╨╗╨╛╨▓ ╤А╨░╨▓╨╜╨╛ NumFiles-NumDirs}
 function CountDirLen;
   var
     Tmr: TEventTimer;
@@ -675,7 +675,7 @@ function CountDirLen;
     DosError := 0;
     Abort := False;
 
-    GetDrInfo(Dir); { Ради BytesPerCluster }
+    GetDrInfo(Dir); { ╨а╨░╨┤╨╕ BytesPerCluster }
     if Abort then
       Exit;
     lFindFirst(MakeNormName(FreeStr, x_x), AnyFileDir, SR); {JO}

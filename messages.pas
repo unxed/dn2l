@@ -143,11 +143,11 @@ function FmtFileId(Id: TStrIdx; const FName: String): String;
 const
   MsgActive: Boolean = False;
   MsgHelpCtx: Word = 0; {AK155}
-  {Это контекст хелпа, устанавливаемый заранее извне для
-использования вместо подразумеваемого контекста. 'Пустое'
-значение - нулевое. При выполнении MessageBoxRect (и,
-следовательно, MessageBox и прочих производных от MessageBoxRect
-процедур) MsgHelpCtx автоматически обнуляется. }
+  {╨н╤В╨╛ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В ╤Е╨╡╨╗╨┐╨░, ╤Г╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╨╝╤Л╨╣ ╨╖╨░╤А╨░╨╜╨╡╨╡ ╨╕╨╖╨▓╨╜╨╡ ╨┤╨╗╤П
+╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П ╨▓╨╝╨╡╤Б╤В╨╛ ╨┐╨╛╨┤╤А╨░╨╖╤Г╨╝╨╡╨▓╨░╨╡╨╝╨╛╨│╨╛ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨░. '╨Я╤Г╤Б╤В╨╛╨╡'
+╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ - ╨╜╤Г╨╗╨╡╨▓╨╛╨╡. ╨Я╤А╨╕ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╨╕ MessageBoxRect (╨╕,
+╤Б╨╗╨╡╨┤╨╛╨▓╨░╤В╨╡╨╗╤М╨╜╨╛, MessageBox ╨╕ ╨┐╤А╨╛╤З╨╕╤Е ╨┐╤А╨╛╨╕╨╖╨▓╨╛╨┤╨╜╤Л╤Е ╨╛╤В MessageBoxRect
+╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А) MsgHelpCtx ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╤З╨╡╤Б╨║╨╕ ╨╛╨▒╨╜╤Г╨╗╤П╨╡╤В╤Б╤П. }
 
 implementation
 
@@ -174,16 +174,16 @@ procedure CantWrite(const FName: String);
 function Msg;
   begin
   if Desktop <> nil then
-    {Cat: здесь надо проверять, существует ли
-                               уже к этому моменту Desktop}
+    {Cat: ╨╖╨┤╨╡╤Б╤М ╨╜╨░╨┤╨╛ ╨┐╤А╨╛╨▓╨╡╤А╤П╤В╤М, ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В ╨╗╨╕
+                               ╤Г╨╢╨╡ ╨║ ╤Н╤В╨╛╨╝╤Г ╨╝╨╛╨╝╨╡╨╜╤В╤Г Desktop}
     Msg := MessageBox(GetString(Index), Params, AOptions);
   end;
 
 function Msg2;
   begin
   if Desktop <> nil then
-    {Cat: здесь надо проверять, существует ли
-                               уже к этому моменту Desktop}
+    {Cat: ╨╖╨┤╨╡╤Б╤М ╨╜╨░╨┤╨╛ ╨┐╤А╨╛╨▓╨╡╤А╤П╤В╤М, ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В ╨╗╨╕
+                               ╤Г╨╢╨╡ ╨║ ╤Н╤В╨╛╨╝╤Г ╨╝╨╛╨╝╨╡╨╜╤В╤Г Desktop}
     Msg2 := MessageBox2(GetString(Index1),
         GetString(Index2),
         Params1,

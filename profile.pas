@@ -130,7 +130,7 @@ function OpenFile(FileName: PChar; Mode: Longint): Boolean;
   Result := True;
   if  (CurFileName = nil) or (FileName = nil) or
       (StrIComp(CurFileName, FileName) <> 0) or
-      (Mode and not CurMode <> 0) { ‚.•. ·¨•≠† · stOpenRead ≠† stOpen }
+      (Mode and not CurMode <> 0) { —Ç.–µ. —Å–º–µ–Ω–∞ —Å stOpenRead –Ω–∞ stOpen }
   then
     begin
     CloseFile;

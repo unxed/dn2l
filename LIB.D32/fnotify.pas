@@ -1,7 +1,7 @@
 unit fnotify;
 (******
 
-{Заглушка для D32}
+{╨Ч╨░╨│╨╗╤Г╤И╨║╨░ ╨┤╨╗╤П D32}
 Directory Change Notifier - Win32 version
 Written by Cat 2:5030/1326.13
 (for use in DN/2)

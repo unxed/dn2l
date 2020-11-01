@@ -233,16 +233,16 @@ procedure TCommandLine.Update;
   begin
   QueryCursorVisible;
   if  (CursorMustBeVisible <> PrevCmdLineCursorVisible)
-    { есть повод для работы }
+    { ╨╡╤Б╤В╤М ╨┐╨╛╨▓╨╛╨┤ ╨┤╨╗╤П ╤А╨░╨▒╨╛╤В╤Л }
     and (State and (sfDisabled or sfVisible) <> sfVisible)
-    { но не надо гасить чужой курсор }
+    { ╨╜╨╛ ╨╜╨╡ ╨╜╨░╨┤╨╛ ╨│╨░╤Б╨╕╤В╤М ╤З╤Г╨╢╨╛╨╣ ╨║╤Г╤А╤Б╨╛╤А }
     then
     ResetCursor;
   PrevCmdLineCursorVisible := CursorMustBeVisible;
   if not CursorMustBeVisible then
     Exit;
 
-  { А теперь делаем, чтобы курсор действиельно имел нужный вид }
+  { ╨Р ╤В╨╡╨┐╨╡╤А╤М ╨┤╨╡╨╗╨░╨╡╨╝, ╤З╤В╨╛╨▒╤Л ╨║╤Г╤А╤Б╨╛╤А ╨┤╨╡╨╣╤Б╤В╨▓╨╕╨╡╨╗╤М╨╜╨╛ ╨╕╨╝╨╡╨╗ ╨╜╤Г╨╢╨╜╤Л╨╣ ╨▓╨╕╨┤ }
   SysGetCurPos(A1, A2);
   SysTVGetCurType(CursorStartScanLine, CursorEndScanLine, CursorVisible);
   if
@@ -259,9 +259,9 @@ procedure TCommandLine.Update;
   P.Y := 0;
   MakeGlobal(P, P);
   //AK155  BB := not Overwrite  xor (InterfaceData.Options and ouiBlockInsertCursor <> 0);
-  {AK155 вызовы программ установки режимов курсора безобидны под OS/2,
-но под Win32 приводят к мерзкому миганию курсора. Поэтому я попытался
-не вызывать их без надобности. 18.10.2001 }
+  {AK155 ╨▓╤Л╨╖╨╛╨▓╤Л ╨┐╤А╨╛╨│╤А╨░╨╝╨╝ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨║╨╕ ╤А╨╡╨╢╨╕╨╝╨╛╨▓ ╨║╤Г╤А╤Б╨╛╤А╨░ ╨▒╨╡╨╖╨╛╨▒╨╕╨┤╨╜╤Л ╨┐╨╛╨┤ OS/2,
+╨╜╨╛ ╨┐╨╛╨┤ Win32 ╨┐╤А╨╕╨▓╨╛╨┤╤П╤В ╨║ ╨╝╨╡╤А╨╖╨║╨╛╨╝╤Г ╨╝╨╕╨│╨░╨╜╨╕╤О ╨║╤Г╤А╤Б╨╛╤А╨░. ╨Я╨╛╤Н╤В╨╛╨╝╤Г ╤П ╨┐╨╛╨┐╤Л╤В╨░╨╗╤Б╤П
+╨╜╨╡ ╨▓╤Л╨╖╤Л╨▓╨░╤В╤М ╨╕╤Е ╨▒╨╡╨╖ ╨╜╨░╨┤╨╛╨▒╨╜╨╛╤Б╤В╨╕. 18.10.2001 }
   if  (OldOverwrite <> Ord(Overwrite)) or not CursorVisible
   then
     begin
@@ -410,7 +410,7 @@ procedure TCommandLine.HandleEvent;
           if InterfaceData.Options and ouiHideCmdline = 0 then
             begin
             S := String(Event.InfoPtr^);
-            {AK155: обработка длинных имен с пробелами.}
+            {AK155: ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╨░ ╨┤╨╗╨╕╨╜╨╜╤Л╤Е ╨╕╨╝╨╡╨╜ ╤Б ╨┐╤А╨╛╨▒╨╡╨╗╨░╨╝╨╕.}
             if  (CurX > 0) and not (Str[CurX] in Separators)
               {and not (S[1] = '"')}
               then
@@ -450,7 +450,7 @@ procedure TCommandLine.HandleEvent;
                   Dec(l, 1);
                   Dec(ls, 1);
                   Dec(CurX, 2);
-                  goto EndLFN; { чтобы не обрабатывать конец S}
+                  goto EndLFN; { ╤З╤В╨╛╨▒╤Л ╨╜╨╡ ╨╛╨▒╤А╨░╨▒╨░╤В╤Л╨▓╨░╤В╤М ╨║╨╛╨╜╨╡╤Ж S}
                   end;
                 end
               else if s1 = '\"' then
@@ -519,11 +519,11 @@ EndLFN:
             begin
             if DelSpaces(Str) = '' then
               Exit;
-            {AK155: Шатания, которые здесь были (Up-Down), приводили
-у тому, что после выполнения команды по Ctrl-E вызывалась из
-истории не эта команда, а предыдущая. В чем смысл,
-я не понял, поэтому сделал по-простому. В ритлабовском DN
-шатания тоже были, но вызывалось, вроде, правильно.
+            {AK155: ╨и╨░╤В╨░╨╜╨╕╤П, ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨╖╨┤╨╡╤Б╤М ╨▒╤Л╨╗╨╕ (Up-Down), ╨┐╤А╨╕╨▓╨╛╨┤╨╕╨╗╨╕
+╤Г ╤В╨╛╨╝╤Г, ╤З╤В╨╛ ╨┐╨╛╤Б╨╗╨╡ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╨║╨╛╨╝╨░╨╜╨┤╤Л ╨┐╨╛ Ctrl-E ╨▓╤Л╨╖╤Л╨▓╨░╨╗╨░╤Б╤М ╨╕╨╖
+╨╕╤Б╤В╨╛╤А╨╕╨╕ ╨╜╨╡ ╤Н╤В╨░ ╨║╨╛╨╝╨░╨╜╨┤╨░, ╨░ ╨┐╤А╨╡╨┤╤Л╨┤╤Г╤Й╨░╤П. ╨Т ╤З╨╡╨╝ ╤Б╨╝╤Л╤Б╨╗,
+╤П ╨╜╨╡ ╨┐╨╛╨╜╤П╨╗, ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╤Б╨┤╨╡╨╗╨░╨╗ ╨┐╨╛-╨┐╤А╨╛╤Б╤В╨╛╨╝╤Г. ╨Т ╤А╨╕╤В╨╗╨░╨▒╨╛╨▓╤Б╨║╨╛╨╝ DN
+╤И╨░╤В╨░╨╜╨╕╤П ╤В╨╛╨╢╨╡ ╨▒╤Л╨╗╨╕, ╨╜╨╛ ╨▓╤Л╨╖╤Л╨▓╨░╨╗╨╛╤Б╤М, ╨▓╤А╨╛╨┤╨╡, ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛.
                          StrModified := True;
                          Message(@Self, evKeyDown, kbDown, nil);
                          Message(@Self, evKeyDown, kbUp, nil);
@@ -605,7 +605,7 @@ EndLFN:
                   Inc(LineType);
                 while (not (OS2exec or Win32exec)
                        and (LineType in [ltWindow, ltFullScreen]))
-                     //под виндой в F/S из комстpоки не запустишь
+                     //╨┐╨╛╨┤ ╨▓╨╕╨╜╨┤╨╛╨╣ ╨▓ F/S ╨╕╨╖ ╨║╨╛╨╝╤Б╤Вp╨╛╨║╨╕ ╨╜╨╡ ╨╖╨░╨┐╤Г╤Б╤В╨╕╤И╤М
                      or (Win32exec and (LineType = ltFullScreen))
                 do
                 if (Event.KeyCode = kbAltShiftSlash)

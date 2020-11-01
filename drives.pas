@@ -67,12 +67,12 @@ const
 
 type
   PDrive = ^TDrive;
-{`2 Вспомогательный объект, вставляемый в файловую панель.
-  Содержит особенности, специфические для типа панели (диск,
-  архив и т.п. Используется, в частности, для отрисовки строк
-  файловой панели.`}
+{`2 ╨Т╤Б╨┐╨╛╨╝╨╛╨│╨░╤В╨╡╨╗╤М╨╜╤Л╨╣ ╨╛╨▒╤К╨╡╨║╤В, ╨▓╤Б╤В╨░╨▓╨╗╤П╨╡╨╝╤Л╨╣ ╨▓ ╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М.
+  ╨б╨╛╨┤╨╡╤А╨╢╨╕╤В ╨╛╤Б╨╛╨▒╨╡╨╜╨╜╨╛╤Б╤В╨╕, ╤Б╨┐╨╡╤Ж╨╕╤Д╨╕╤З╨╡╤Б╨║╨╕╨╡ ╨┤╨╗╤П ╤В╨╕╨┐╨░ ╨┐╨░╨╜╨╡╨╗╨╕ (╨┤╨╕╤Б╨║,
+  ╨░╤А╤Е╨╕╨▓ ╨╕ ╤В.╨┐. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П, ╨▓ ╤З╨░╤Б╤В╨╜╨╛╤Б╤В╨╕, ╨┤╨╗╤П ╨╛╤В╤А╨╕╤Б╨╛╨▓╨║╨╕ ╤Б╤В╤А╨╛╨║
+  ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕.`}
   TDrive = object(TObject)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Panel: Pointer{PFilePanelRoot};
     Prev: PDrive;
     DriveType: TDriveType;
@@ -81,11 +81,11 @@ type
     NoMemory: Boolean;
     SizeX: LongInt;
     ColAllowed: TFileColAllowed;
-      {` Зависит от типа панели; введен на всякий случай для
-      облегчения будущего ввода новых типов панелей. `}
+      {` ╨Ч╨░╨▓╨╕╤Б╨╕╤В ╨╛╤В ╤В╨╕╨┐╨░ ╨┐╨░╨╜╨╡╨╗╨╕; ╨▓╨▓╨╡╨┤╨╡╨╜ ╨╜╨░ ╨▓╤Б╤П╨║╨╕╨╣ ╤Б╨╗╤Г╤З╨░╨╣ ╨┤╨╗╤П
+      ╨╛╨▒╨╗╨╡╨│╤З╨╡╨╜╨╕╤П ╨▒╤Г╨┤╤Г╤Й╨╡╨│╨╛ ╨▓╨▓╨╛╨┤╨░ ╨╜╨╛╨▓╤Л╤Е ╤В╨╕╨┐╨╛╨▓ ╨┐╨░╨╜╨╡╨╗╨╡╨╣. `}
     {$IFDEF OS2}
     ShowLogNames: Boolean;
-      {` Показывать в панели вместо имени EA .longname, если он есть `}
+      {` ╨Я╨╛╨║╨░╨╖╤Л╨▓╨░╤В╤М ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨▓╨╝╨╡╤Б╤В╨╛ ╨╕╨╝╨╡╨╜╨╕ EA .longname, ╨╡╤Б╨╗╨╕ ╨╛╨╜ ╨╡╤Б╤В╤М `}
     {$ENDIF}
     constructor Init(ADrive: Byte; AOwner: Pointer);
     constructor Load(var S: TStream);
@@ -108,21 +108,21 @@ type
     function GetRealName: String; virtual;
     function GetInternalName: String; virtual;
     procedure GetFull(var B; P: PFileRec; C, Sc: Word); virtual;
-     {` Сформировать в буфере B элемент файловой панели для файла
-      P в цвете С с Draw-кодом разделителя колонок Sc (цвет
-      разделителя может отличаться от цвета файла).
-        Этот метод работает для всех стандартных классов
-      панелей. А виртуальным он сделан на всякий случай. `}
+     {` ╨б╤Д╨╛╤А╨╝╨╕╤А╨╛╨▓╨░╤В╤М ╨▓ ╨▒╤Г╤Д╨╡╤А╨╡ B ╤Н╨╗╨╡╨╝╨╡╨╜╤В ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┤╨╗╤П ╤Д╨░╨╣╨╗╨░
+      P ╨▓ ╤Ж╨▓╨╡╤В╨╡ ╨б ╤Б Draw-╨║╨╛╨┤╨╛╨╝ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤П ╨║╨╛╨╗╨╛╨╜╨╛╨║ Sc (╤Ж╨▓╨╡╤В
+      ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤П ╨╝╨╛╨╢╨╡╤В ╨╛╤В╨╗╨╕╤З╨░╤В╤М╤Б╤П ╨╛╤В ╤Ж╨▓╨╡╤В╨░ ╤Д╨░╨╣╨╗╨░).
+        ╨н╤В╨╛╤В ╨╝╨╡╤В╨╛╨┤ ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨┤╨╗╤П ╨▓╤Б╨╡╤Е ╤Б╤В╨░╨╜╨┤╨░╤А╤В╨╜╤Л╤Е ╨║╨╗╨░╤Б╤Б╨╛╨▓
+      ╨┐╨░╨╜╨╡╨╗╨╡╨╣. ╨Р ╨▓╨╕╤А╤В╤Г╨░╨╗╤М╨╜╤Л╨╝ ╨╛╨╜ ╤Б╨┤╨╡╨╗╨░╨╜ ╨╜╨░ ╨▓╤Б╤П╨║╨╕╨╣ ╤Б╨╗╤Г╤З╨░╨╣. `}
     procedure MakeTop(var S: String); virtual;
-     {` Сформировать (раскрашенную) строку заголовков колонок.
-     Этот метод действительно перекрывается в разных классах
-     панелей. `}
+     {` ╨б╤Д╨╛╤А╨╝╨╕╤А╨╛╨▓╨░╤В╤М (╤А╨░╤Б╨║╤А╨░╤И╨╡╨╜╨╜╤Г╤О) ╤Б╤В╤А╨╛╨║╤Г ╨╖╨░╨│╨╛╨╗╨╛╨▓╨║╨╛╨▓ ╨║╨╛╨╗╨╛╨╜╨╛╨║.
+     ╨н╤В╨╛╤В ╨╝╨╡╤В╨╛╨┤ ╨┤╨╡╨╣╤Б╤В╨▓╨╕╤В╨╡╨╗╤М╨╜╨╛ ╨┐╨╡╤А╨╡╨║╤А╤Л╨▓╨░╨╡╤В╤Б╤П ╨▓ ╤А╨░╨╖╨╜╤Л╤Е ╨║╨╗╨░╤Б╤Б╨░╤Е
+     ╨┐╨░╨╜╨╡╨╗╨╡╨╣. `}
     procedure RereadDirectory(S: String); virtual; {DataCompBoy}
     procedure GetDown(var B; C: Word; P: PFileRec;
         var LFN_inCurFileLine: Boolean); virtual;
-      {` Сформировать строку текущего файла для подвала
-      в буфере B цветом С. LFN_inCurFileLine показывает,
-      показано ли при этом длинное имя, притом полностью. `}
+      {` ╨б╤Д╨╛╤А╨╝╨╕╤А╨╛╨▓╨░╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╤В╨╡╨║╤Г╤Й╨╡╨│╨╛ ╤Д╨░╨╣╨╗╨░ ╨┤╨╗╤П ╨┐╨╛╨┤╨▓╨░╨╗╨░
+      ╨▓ ╨▒╤Г╤Д╨╡╤А╨╡ B ╤Ж╨▓╨╡╤В╨╛╨╝ ╨б. LFN_inCurFileLine ╨┐╨╛╨║╨░╨╖╤Л╨▓╨░╨╡╤В,
+      ╨┐╨╛╨║╨░╨╖╨░╨╜╨╛ ╨╗╨╕ ╨┐╤А╨╕ ╤Н╤В╨╛╨╝ ╨┤╨╗╨╕╨╜╨╜╨╛╨╡ ╨╕╨╝╤П, ╨┐╤А╨╕╤В╨╛╨╝ ╨┐╨╛╨╗╨╜╨╛╤Б╤В╤М╤О. `}
     procedure HandleCommand(Command: Word; InfoPtr: Pointer); virtual;
     procedure GetDirInfo(var B: TDiskInfoRec); virtual;
     function GetRealDir: String; virtual;
@@ -139,7 +139,7 @@ type
     procedure DrvFindFile(FC: PFilesCollection); virtual;
     procedure ReadDescrptions(FilesC: PFilesCollection); virtual;
     function GetDriveLetter: Char; virtual;
-      {` Для выбора обозначения диска в линейке дисков и меню дисков `}
+      {` ╨Ф╨╗╤П ╨▓╤Л╨▒╨╛╤А╨░ ╨╛╨▒╨╛╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╨┤╨╕╤Б╨║╨░ ╨▓ ╨╗╨╕╨╜╨╡╨╣╨║╨╡ ╨┤╨╕╤Б╨║╨╛╨▓ ╨╕ ╨╝╨╡╨╜╤О ╨┤╨╕╤Б╨║╨╛╨▓ `}
     end;
 
 procedure RereadDirectory(Dir: String);
@@ -154,7 +154,7 @@ uses
   Startup, Tree, DNApp, FileCopy, Eraser, FlPanel, Commands,
   Dialogs, FileFind, FlPanelX, Filediz, CmdLine
   , xTime, Messages, Events, fnotify, Dos
-  , Gauge {для PWhileView}, DnIni, Advance, Advance1, Advance2
+  , Gauge {╨┤╨╗╤П PWhileView}, DnIni, Advance, Advance1, Advance2
   ;
 
 const
@@ -163,7 +163,7 @@ const
 type
   {-DataCompBoy-}
   PDesc = ^TDesc;
-    {`2 Элемент TDIZCol }
+    {`2 ╨н╨╗╨╡╨╝╨╡╨╜╤В TDIZCol }
   TDesc = record
     Name: String;
     DIZText: LongString;
@@ -173,9 +173,9 @@ type
   {-DataCompBoy-}
 
   PDIZCol = ^TDIZCol;
-    {`2 Коллекция описаний из файла описаний. Используется для
-    быстрого поиска описаний по имени при входе в каталог.
-    Имена запоминаются в коллекции на верхнем регистре. }
+    {`2 ╨Ъ╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤П ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣ ╨╕╨╖ ╤Д╨░╨╣╨╗╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨┤╨╗╤П
+    ╨▒╤Л╤Б╤В╤А╨╛╨│╨╛ ╨┐╨╛╨╕╤Б╨║╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣ ╨┐╨╛ ╨╕╨╝╨╡╨╜╨╕ ╨┐╤А╨╕ ╨▓╤Е╨╛╨┤╨╡ ╨▓ ╨║╨░╤В╨░╨╗╨╛╨│.
+    ╨Ш╨╝╨╡╨╜╨░ ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╤О╤В╤Б╤П ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨╜╨░ ╨▓╨╡╤А╤Е╨╜╨╡╨╝ ╤А╨╡╨│╨╕╤Б╤В╤А╨╡. }
   TDIZCol = object(TSortedCollection)
     procedure FreeItem(P: Pointer); virtual;
     function Compare(P1, P2: Pointer): Integer; virtual;
@@ -196,7 +196,7 @@ procedure TDIZCol.FreeItem;
   begin
   if P <> nil then
     begin
-    PDesc(P)^.DIZText := ''; // освободить строку
+    PDesc(P)^.DIZText := ''; // ╨╛╤Б╨▓╨╛╨▒╨╛╨┤╨╕╤В╤М ╤Б╤В╤А╨╛╨║╤Г
     Dispose(PDesc(P));
     end;
   end;
@@ -308,7 +308,7 @@ procedure TDrive.ChangeRoot;
     I: Word;
     B: Boolean;
   begin
-  {Cat: проверяем на сетевой путь}
+  {Cat: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝ ╨╜╨░ ╤Б╨╡╤В╨╡╨▓╨╛╨╣ ╨┐╤Г╤В╤М}
   if CurDir[1] = '/' then // slash change by unxed
     begin
     B := False;
@@ -341,9 +341,9 @@ procedure TDrive.ChangeRoot;
 {-DataCompBoy-}
 
 function FormatSizeCol(P: PFileRec): String;
-  { Сформировать колонку размера. Это может быть либо
-  действительно размер, либо обозначение каталога,
-  если его размер неизвестен }
+  { ╨б╤Д╨╛╤А╨╝╨╕╤А╨╛╨▓╨░╤В╤М ╨║╨╛╨╗╨╛╨╜╨║╤Г ╤А╨░╨╖╨╝╨╡╤А╨░. ╨н╤В╨╛ ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╨╗╨╕╨▒╨╛
+  ╨┤╨╡╨╣╤Б╤В╨▓╨╕╤В╨╡╨╗╤М╨╜╨╛ ╤А╨░╨╖╨╝╨╡╤А, ╨╗╨╕╨▒╨╛ ╨╛╨▒╨╛╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░,
+  ╨╡╤Б╨╗╨╕ ╨╡╨│╨╛ ╤А╨░╨╖╨╝╨╡╤А ╨╜╨╡╨╕╨╖╨▓╨╡╤Б╤В╨╡╨╜ }
   begin
   with P^ do
     begin
@@ -373,7 +373,7 @@ procedure TDrive.MakeTop;
     if not ColAllowed[i] then
       Flags := Flags and not (1 shl Ord(i));
     end;
-  { Теперь Flags содержит только допустимые для данного типа панели биты }
+  { ╨в╨╡╨┐╨╡╤А╤М Flags ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╤В╨╛╨╗╤М╨║╨╛ ╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╤Л╨╡ ╨┤╨╗╤П ╨┤╨░╨╜╨╜╨╛╨│╨╛ ╤В╨╕╨┐╨░ ╨┐╨░╨╜╨╡╨╗╨╕ ╨▒╨╕╤В╤Л }
   LFNLen := PFilePanelRoot(Panel)^.CalcNameLength;
   if not PFilePanelRoot(Panel)^.LFNLonger250 then
     begin
@@ -395,7 +395,7 @@ procedure TDrive.MakeTop;
   else
     S := '';
   if Flags and psShowSize <> 0 then
-    S := S+GetString(dlTopSize); //! для dtArcDrive надо бы dlTopOriginal
+    S := S+GetString(dlTopSize); //! ╨┤╨╗╤П dtArcDrive ╨╜╨░╨┤╨╛ ╨▒╤Л dlTopOriginal
   if Flags and psShowPacked <> 0 then
     S := S+GetString(dlTopPacked);
   if Flags and psShowRatio <> 0 then
@@ -476,7 +476,7 @@ procedure TDrive.GetFull;
     if not ColAllowed[i] then
       Flags := Flags and not (1 shl Ord(i));
     end;
-  { Теперь Flags содержит только допустимые для данного типа панели биты }
+  { ╨в╨╡╨┐╨╡╤А╤М Flags ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╤В╨╛╨╗╤М╨║╨╛ ╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╤Л╨╡ ╨┤╨╗╤П ╨┤╨░╨╜╨╜╨╛╨│╨╛ ╤В╨╕╨┐╨░ ╨┐╨░╨╜╨╡╨╗╨╕ ╨▒╨╕╤В╤Л }
 
   PFilePanelRoot(Panel)^.FormatName(P, NameString, NameLen);
   if P^.Selected then
@@ -537,7 +537,7 @@ procedure TDrive.GetFull;
   FormatDateTime(psShowLADate, psShowLATime, P^.FDateLAcc, P^.YrLAcc);
 
   if PFilePanelRoot(Panel)^.LFNLonger250 then
-    begin { длинное имя в конце подавляет вывод комментария и пути }
+    begin { ╨┤╨╗╨╕╨╜╨╜╨╛╨╡ ╨╕╨╝╤П ╨▓ ╨║╨╛╨╜╤Ж╨╡ ╨┐╨╛╨┤╨░╨▓╨╗╤П╨╡╤В ╨▓╤Л╨▓╨╛╨┤ ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╤П ╨╕ ╨┐╤Г╤В╨╕ }
     MoveCStr(TAWordArray(B)[X], NameString, C);
     Exit;
     end;
@@ -623,7 +623,7 @@ procedure TDrive.lChDir;
     ClrIO;
     NeedAbort := True;
     ATestDir := lFExpand(ATestDir);
-    {Cat: проверяем на сетевой путь}
+    {Cat: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝ ╨╜╨░ ╤Б╨╡╤В╨╡╨▓╨╛╨╣ ╨┐╤Г╤В╤М}
     if  (Length(ATestDir) > 2) and (ATestDir[1] = '/') // slash change by unxed
          and (ATestDir[2] = '/') // slash change by unxed
     then
@@ -759,20 +759,20 @@ procedure TDrive.UseFile;
   end;
 {-DataCompBoy-}
 
-{ Подготовка сортированной коллекции описаний, откуда описания будет
-удобно находить при считывании каталога. Используется ReadFileList}
+{ ╨Я╨╛╨┤╨│╨╛╤В╨╛╨▓╨║╨░ ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨╣ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣, ╨╛╤В╨║╤Г╨┤╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╨▒╤Г╨┤╨╡╤В
+╤Г╨┤╨╛╨▒╨╜╨╛ ╨╜╨░╤Е╨╛╨┤╨╕╤В╤М ╨┐╤А╨╕ ╤Б╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨░. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ReadFileList}
 var
   Descriptions: PDIZCol;
   PD: PDesc;
   IgnoreDiz: Boolean;
 
 function DizNameProc(const N: string; TextStart: Integer): Boolean;
-  { Для ReadFileList. Занесение элемента коллекции и первой строки }
+  { ╨Ф╨╗╤П ReadFileList. ╨Ч╨░╨╜╨╡╤Б╨╡╨╜╨╕╨╡ ╤Н╨╗╨╡╨╝╨╡╨╜╤В╨░ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨╕ ╨┐╨╡╤А╨▓╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ }
   var
     I: Integer;
   begin
   IgnoreDiz := Descriptions^.Search(@N, I);
-    // Повторное описание игнорируем
+    // ╨Я╨╛╨▓╤В╨╛╤А╨╜╨╛╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡ ╨╕╨│╨╜╨╛╤А╨╕╤А╤Г╨╡╨╝
   if not IgnoreDiz then
     begin
     New(PD);
@@ -783,8 +783,8 @@ function DizNameProc(const N: string; TextStart: Integer): Boolean;
   end;
 
 procedure DizLineProc;
-  { Для ReadFileList. Добавление очередной строки прямо в элемент
-    коллекции}
+  { ╨Ф╨╗╤П ReadFileList. ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╛╤З╨╡╤А╨╡╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ ╨┐╤А╤П╨╝╨╛ ╨▓ ╤Н╨╗╨╡╨╝╨╡╨╜╤В
+    ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕}
   const
     CrLf: string[2] = #13#10;
   begin
@@ -793,13 +793,13 @@ procedure DizLineProc;
   end;
 
 function DizEndProc: Boolean;
-  { Для ReadFileList. Ничего делать не надо}
+  { ╨Ф╨╗╤П ReadFileList. ╨Э╨╕╤З╨╡╨│╨╛ ╨┤╨╡╨╗╨░╤В╤М ╨╜╨╡ ╨╜╨░╨┤╨╛}
   begin
   Result := False;
   end;
 
 procedure PrepareDIZ(
-  { Чтение контейнера описаний и создание коллекции описаний }
+  { ╨з╤В╨╡╨╜╨╕╨╡ ╨║╨╛╨╜╤В╨╡╨╣╨╜╨╡╤А╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣ ╨╕ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣ }
     const CurDir: String;
     var Container: String);
   begin
@@ -841,8 +841,8 @@ procedure TossDescriptions(
         P^.DIZ^.Container := PDizContainer;
         P^.DIZ^.Line := PD^.Line;
 //        PD^.DIZText := '';
-  {AnsiString память не тратят при копировании, поэтому можно не спешить
-  с освобождением и подождать до освобождения элемента коллекции }
+  {AnsiString ╨┐╨░╨╝╤П╤В╤М ╨╜╨╡ ╤В╤А╨░╤В╤П╤В ╨┐╤А╨╕ ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╨╕, ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╨╝╨╛╨╢╨╜╨╛ ╨╜╨╡ ╤Б╨┐╨╡╤И╨╕╤В╤М
+  ╤Б ╨╛╤Б╨▓╨╛╨▒╨╛╨╢╨┤╨╡╨╜╨╕╨╡╨╝ ╨╕ ╨┐╨╛╨┤╨╛╨╢╨┤╨░╤В╤М ╨┤╨╛ ╨╛╤Б╨▓╨╛╨▒╨╛╨╢╨┤╨╡╨╜╨╕╤П ╤Н╨╗╨╡╨╝╨╡╨╜╤В╨░ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ }
         Break;
         end
       end;
@@ -877,7 +877,7 @@ function TDrive.GetDirectory;
     MemReq: LongInt;
     MAvail: LongInt;
     SearchAttr: word;
-    PName: PString; //AK155 В SR имя для сравнения с маской
+    PName: PString; //AK155 ╨Т SR ╨╕╨╝╤П ╨┤╨╗╤П ╤Б╤А╨░╨▓╨╜╨╡╨╜╨╕╤П ╤Б ╨╝╨░╤Б╨║╨╛╨╣
   begin
   ClrIO;
   PName := @SR.FullName;
@@ -885,7 +885,7 @@ function TDrive.GetDirectory;
   if (Panel <> nil) and
      ((PFilePanelRoot(Panel)^.PanSetup^.Show.ColumnsMask
        and psLFN_InColumns) = 0)
-  then // в панели короткие имена
+  then // ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨║╨╛╤А╨╛╤В╨║╨╕╨╡ ╨╕╨╝╨╡╨╜╨░
     PName := @SR.SR.Name;
   {$ENDIF}
 
@@ -898,9 +898,9 @@ function TDrive.GetDirectory;
   Files := New(PFilesCollection, Init($10, $20));
   Files^.Panel := Panel;
 
-  {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
-  {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
-  {    доступный изначально объём                                              }
+  {JO: ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╛╨┤╨╕╨╜ p╨░╨╖ ╨╛╨┐p╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╛╨▒╤К╤С╨╝ ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕, ╨░ ╨╖╨░╤В╨╡╨╝ ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░}
+  {    ╨┐╨╛╨┤╤Б╤З╤В╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╜╨░╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Вp╨╡╨▒╨╛╨▓╨░╨╜╨╕╤П ╨┐╨░╨╝╤П╤В╨╕ p╨░╤Б╤В╤Г╤В ╨╕ ╨╜╨╡ ╨┐p╨╡╨▓╤Л╤Б╨╕╨╗╨╕ ╨╗╨╕ ╨╛╨╜╨╕  }
+  {    ╨┤╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╣ ╨╕╨╖╨╜╨░╤З╨░╨╗╤М╨╜╨╛ ╨╛╨▒╤К╤С╨╝                                              }
   MemReq := LowMemSize;
   MAvail := MaxAvail;
 
@@ -981,7 +981,7 @@ procedure TDrive.GetDown;
     S2 := ''
   else
     begin
-    NameWidht := 13 + CountryInfo.TimeFmt; // уместить 12-часовое время
+    NameWidht := 13 + CountryInfo.TimeFmt; // ╤Г╨╝╨╡╤Б╤В╨╕╤В╤М 12-╤З╨░╤Б╨╛╨▓╨╛╨╡ ╨▓╤А╨╡╨╝╤П
     {$IFDEF DualName}
     uLfn := PFilePanelRoot(Panel)^.PanSetup^.Show.
       ColumnsMask and psLFN_InColumns <> 0;
@@ -1167,8 +1167,8 @@ function TDrive.OpenDirectory(const Dir: String;
     PI: PView;
     PDrv: PDrive;
     DirsToProcess: PCollection;
-      { несортированная коллекция, элементы которой создаются при помощи
-      NewStr и после использования переносятся в Dirs }
+      { ╨╜╨╡╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╨░╤П ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤П, ╤Н╨╗╨╡╨╝╨╡╨╜╤В╤Л ╨║╨╛╤В╨╛╤А╨╛╨╣ ╤Б╨╛╨╖╨┤╨░╤О╤В╤Б╤П ╨┐╤А╨╕ ╨┐╨╛╨╝╨╛╤Й╨╕
+      NewStr ╨╕ ╨┐╨╛╤Б╨╗╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П ╨┐╨╡╤А╨╡╨╜╨╛╤Б╤П╤В╤Б╤П ╨▓ Dirs }
     Dirs: PStringCollection;
     Files: PFilesCollection;
     P: PString;
@@ -1177,13 +1177,13 @@ function TDrive.OpenDirectory(const Dir: String;
     MAvail: LongInt;
 
   procedure AddDirectory(S: String);
-    { добавить каталог в список для обработки }
+    { ╨┤╨╛╨▒╨░╨▓╨╕╤В╤М ╨║╨░╤В╨░╨╗╨╛╨│ ╨▓ ╤Б╨┐╨╕╤Б╨╛╨║ ╨┤╨╗╤П ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╨╕ }
     begin
     if MAvail <= MemReq then
       Exit;
     MakeSlash(S);
     DirsToProcess^.Insert(NewStr(S));
-    Inc(MemReq, SizeOf(ShortString)); //почему 255, а не что-то+length(S)?
+    Inc(MemReq, SizeOf(ShortString)); //╨┐╨╛╤З╨╡╨╝╤Г 255, ╨░ ╨╜╨╡ ╤З╤В╨╛-╤В╨╛+length(S)?
     end;
 
   procedure ReadDir(Dr: PString);
@@ -1249,9 +1249,9 @@ function TDrive.OpenDirectory(const Dir: String;
 
   PI := WriteMsg(GetString(dlReadingList));
   New(Files, Init($10, $10));
-  {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
-  {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
-  {    доступный изначально объём                                              }
+  {JO: ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╛╨┤╨╕╨╜ p╨░╨╖ ╨╛╨┐p╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╛╨▒╤К╤С╨╝ ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕, ╨░ ╨╖╨░╤В╨╡╨╝ ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░}
+  {    ╨┐╨╛╨┤╤Б╤З╤В╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╜╨░╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Вp╨╡╨▒╨╛╨▓╨░╨╜╨╕╤П ╨┐╨░╨╝╤П╤В╨╕ p╨░╤Б╤В╤Г╤В ╨╕ ╨╜╨╡ ╨┐p╨╡╨▓╤Л╤Б╨╕╨╗╨╕ ╨╗╨╕ ╨╛╨╜╨╕  }
+  {    ╨┤╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╣ ╨╕╨╖╨╜╨░╤З╨░╨╗╤М╨╜╨╛ ╨╛╨▒╤К╤С╨╝                                              }
   MemReq := LowMemSize;
   MAvail := MaxAvail;
   AddDirectory(lFExpand(Dir));
@@ -1272,17 +1272,17 @@ function TDrive.OpenDirectory(const Dir: String;
     I := DirsToProcess^.Count-1;
     end;
   PI^.Free;
-  // JO: здесь сортировка не нужна, т.к. она делается в TFindDrive.GetDirectory
-  //     и в результате мы получаем сортировку дважды
+  // JO: ╨╖╨┤╨╡╤Б╤М ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨░ ╨╜╨╡ ╨╜╤Г╨╢╨╜╨░, ╤В.╨║. ╨╛╨╜╨░ ╨┤╨╡╨╗╨░╨╡╤В╤Б╤П ╨▓ TFindDrive.GetDirectory
+  //     ╨╕ ╨▓ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╡ ╨╝╤Л ╨┐╨╛╨╗╤Г╤З╨░╨╡╨╝ ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╤Г ╨┤╨▓╨░╨╢╨┤╤Л
   {Files^.Sort;}
-//используем '><' в качестве пpизнака ветви
+//╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ '><' ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡ ╨┐p╨╕╨╖╨╜╨░╨║╨░ ╨▓╨╡╤В╨▓╨╕
   PDrv := New(PFindDrive, Init('><'+Dir, Dirs, Files));
   PDrv^.NoMemory := MAvail <= MemReq;
   OpenDirectory := PDrv;
   LongWorkEnd;
   end { TDrive.OpenDirectory };
 
-{-DataCompBoy-} {JO - 31-03-2006 - сделал виртуальным методом TDrive}
+{-DataCompBoy-} {JO - 31-03-2006 - ╤Б╨┤╨╡╨╗╨░╨╗ ╨▓╨╕╤А╤В╤Г╨░╨╗╤М╨╜╤Л╨╝ ╨╝╨╡╤В╨╛╨┤╨╛╨╝ TDrive}
 procedure TDrive.DrvFindFile(FC: PFilesCollection);
   var
     PInfo: PWhileView;
@@ -1295,7 +1295,7 @@ procedure TDrive.DrvFindFile(FC: PFilesCollection);
 
   if ExecResource(dlgFileFind, FindRec) = cmCancel then
     Exit;
-  ConfigModified := True; {AK155 Не понял. При чём тут конфиг?!!}
+  ConfigModified := True; {AK155 ╨Э╨╡ ╨┐╨╛╨╜╤П╨╗. ╨Я╤А╨╕ ╤З╤С╨╝ ╤В╤Г╤В ╨║╨╛╨╜╤Д╨╕╨│?!!}
   DelLeft(FindRec.Mask);
   DelRight(FindRec.Mask);
   if FindRec.Mask = '' then

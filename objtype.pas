@@ -391,7 +391,7 @@ const
 
   { --- Plugins }
   otPlugins = 30000; {Cat}
-  {..........ß†≠Ô‚Æ...........} {Cat}
+  {..........–∑–∞–Ω—è—Ç–æ...........} {Cat}
   otPluginsEnd = 60000; {Cat}
 
 implementation

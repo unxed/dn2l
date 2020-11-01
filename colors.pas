@@ -135,7 +135,7 @@ procedure SetHighlightGroups;
     end;
   PrepareExtCollection;
   Message(Application, evCommand, cmUpdateConfig, nil);
- {JO: Ø•‡•Á®‚Î¢†•¨ £‡„ØØÎ §´Ô ¢·•Â Ø†≠•´•©}
+ {JO: –ø–µ—Ä–µ—á–∏—Ç—ã–≤–∞–µ–º –≥—Ä—É–ø–ø—ã –¥–ª—è –≤—Å–µ—Ö –ø–∞–Ω–µ–ª–µ–π}
   GlobalMessage(evCommand, cmUpdateHighlight, nil);
   end { SetHighlightGroups };
 
@@ -204,8 +204,8 @@ procedure WindowManager;
   begin { WindowManager }
   New(PC, Init(10, 10));
   Desktop^.ForEach(@InsView);
-(* AK155 äÆ≠‚‡Æ´Ï ≠† Count = 0 ≠• ≠„¶•≠, ‚†™ ™†™ •·´® Æ™Æ≠ ≠•‚, ‚Æ
-cmWindowManager ß†§®ß•©°´•≠†.
+(* AK155 –ö–æ–Ω—Ç—Ä–æ–ª—å –Ω–∞ Count = 0 –Ω–µ –Ω—É–∂–µ–Ω, —Ç–∞–∫ –∫–∞–∫ –µ—Å–ª–∏ –æ–∫–æ–Ω –Ω–µ—Ç, —Ç–æ
+cmWindowManager –∑–∞–¥–∏–∑–µ–π–±–ª–µ–Ω–∞.
   if PC^.Count = 0 then
     begin
     Dispose(PC, Done);
@@ -250,7 +250,7 @@ cmWindowManager ß†§®ß•©°´•≠†.
 while true do
   begin
   Cmd := Desktop^.ExecView(D);
-  D^.GetData(DT); { í•Ø•‡Ï DT.P = PC }
+  D^.GetData(DT); { –¢–µ–ø–µ—Ä—å DT.P = PC }
   PV := PView(DT.P^.At(DT.n));
   if Cmd = cmCancel then
     Break;
@@ -265,7 +265,7 @@ while true do
       begin
       PV^.Free;
       DT.P := nil;
-      D^.SetData(DT); {Ø‡® Ì‚Æ¨ NewList Æ·¢Æ°Æ§®‚ PC }
+      D^.SetData(DT); {–ø—Ä–∏ —ç—Ç–æ–º NewList –æ—Å–≤–æ–±–æ–¥–∏—Ç PC }
       New(PC, Init(10, 10));
       Desktop^.ForEach(@InsView);
       if PC^.Count = 0 then

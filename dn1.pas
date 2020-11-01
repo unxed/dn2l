@@ -80,10 +80,10 @@ uses
   , filetype, PDSetup
   ;
 
-{AK155 Мало проверить, что имя временного каталога непусто, надо
-еще проверить, что он существует, и что в нем можно создавать и
-уничтожать файлы. Побочным эффектом этой функции является обязательное
-наличие '\' в конце s }
+{AK155 ╨Ь╨░╨╗╨╛ ╨┐╤А╨╛╨▓╨╡╤А╨╕╤В╤М, ╤З╤В╨╛ ╨╕╨╝╤П ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨╜╨╡╨┐╤Г╤Б╤В╨╛, ╨╜╨░╨┤╨╛
+╨╡╤Й╨╡ ╨┐╤А╨╛╨▓╨╡╤А╨╕╤В╤М, ╤З╤В╨╛ ╨╛╨╜ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В, ╨╕ ╤З╤В╨╛ ╨▓ ╨╜╨╡╨╝ ╨╝╨╛╨╢╨╜╨╛ ╤Б╨╛╨╖╨┤╨░╨▓╨░╤В╤М ╨╕
+╤Г╨╜╨╕╤З╤В╨╛╨╢╨░╤В╤М ╤Д╨░╨╣╨╗╤Л. ╨Я╨╛╨▒╨╛╤З╨╜╤Л╨╝ ╤Н╤Д╤Д╨╡╨║╤В╨╛╨╝ ╤Н╤В╨╛╨╣ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╤П╨▓╨╗╤П╨╡╤В╤Б╤П ╨╛╨▒╤П╨╖╨░╤В╨╡╨╗╤М╨╜╨╛╨╡
+╨╜╨░╨╗╨╕╤З╨╕╨╡ '\' ╨▓ ╨║╨╛╨╜╤Ж╨╡ s }
 function BadTemp(var s: String): Boolean;
   var
     f: file;
@@ -102,7 +102,7 @@ function BadTemp(var s: String): Boolean;
     begin
     Close(f);
     Erase(f);
-    { Под Win NT бывает и так, что создать файл можно, а удалить - нет}
+    { ╨Я╨╛╨┤ Win NT ╨▒╤Л╨▓╨░╨╡╤В ╨╕ ╤В╨░╨║, ╤З╤В╨╛ ╤Б╨╛╨╖╨┤╨░╤В╤М ╤Д╨░╨╣╨╗ ╨╝╨╛╨╢╨╜╨╛, ╨░ ╤Г╨┤╨░╨╗╨╕╤В╤М - ╨╜╨╡╤В}
     if IOResult = 0 then
       BadTemp := False;
     end;
@@ -240,8 +240,8 @@ procedure DoStartup;
     procedure SSkip;
       begin
       S.Seek(S.GetPos + L);
-//JO: пытаться сделать локализацию нижележащего сообщения бесполезно,
-//    т.к. оно выдаётся до загрузки языковых установок
+//JO: ╨┐╤Л╤В╨░╤В╤М╤Б╤П ╤Б╨┤╨╡╨╗╨░╤В╤М ╨╗╨╛╨║╨░╨╗╨╕╨╖╨░╤Ж╨╕╤О ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨╡╨│╨╛ ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╤П ╨▒╨╡╤Б╨┐╨╛╨╗╨╡╨╖╨╜╨╛,
+//    ╤В.╨║. ╨╛╨╜╨╛ ╨▓╤Л╨┤╨░╤С╤В╤Б╤П ╨┤╨╛ ╨╖╨░╨│╤А╤Г╨╖╨║╨╕ ╤П╨╖╤Л╨║╨╛╨▓╤Л╤Е ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╛╨║
       WriteLn('Local error in config file, ID =  ' + ItoS(ID));
       end;
 
@@ -414,7 +414,7 @@ procedure DoStartup;
             end
           else SSkip;
         cfgFFindOptions:
-          if SizeOf(Word)*2 = L then {см. сохранение соотв. структуры}
+          if SizeOf(Word)*2 = L then {╤Б╨╝. ╤Б╨╛╤Е╤А╨░╨╜╨╡╨╜╨╕╨╡ ╤Б╨╛╨╛╤В╨▓. ╤Б╤В╤А╤Г╨║╤В╤Г╤А╤Л}
             SRead(FileFind.FindRec.Options) else SSkip;
         cfgTetrisRec:
           if SizeOf(TetrisRec) = L then SRead(TetrisRec) else SSkip;
@@ -442,7 +442,7 @@ procedure DoStartup;
           end;
         cfgUUEData:
           if SizeOf(UUDecodeOptions) +
-            SizeOf(TUUEncodeData) = L then {см. сохранение соотв. структуры}
+            SizeOf(TUUEncodeData) = L then {╤Б╨╝. ╤Б╨╛╤Е╤А╨░╨╜╨╡╨╜╨╕╨╡ ╤Б╨╛╨╛╤В╨▓. ╤Б╤В╤А╤Г╨║╤В╤Г╤А╤Л}
               SRead(UUDecodeOptions) else SSkip;
         cfgTermDefaults:
           if SizeOf(TerminalDefaults) = L then
@@ -550,12 +550,12 @@ procedure DoStartup;
       INItime, INIsize: LongInt;
     begin
     if ProbeINI(INItime, INIsize) then
-      begin {ini есть}
-      if (not ReadIniCache(INItime, INIsize)) {не удалось пpочесть файл-кэш}
-//JO: нижележащее условие - нет конфига, или сменилась его веpсия -
-//    с наибольшей веpоятностью говоpит о том, что DN новой веpсии
-//    только что установлен, и читать кэш ini-файла в такой ситуации
-//    нежелательно
+      begin {ini ╨╡╤Б╤В╤М}
+      if (not ReadIniCache(INItime, INIsize)) {╨╜╨╡ ╤Г╨┤╨░╨╗╨╛╤Б╤М ╨┐p╨╛╤З╨╡╤Б╤В╤М ╤Д╨░╨╣╨╗-╨║╤Н╤И}
+//JO: ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨╡╨╡ ╤Г╤Б╨╗╨╛╨▓╨╕╨╡ - ╨╜╨╡╤В ╨║╨╛╨╜╤Д╨╕╨│╨░, ╨╕╨╗╨╕ ╤Б╨╝╨╡╨╜╨╕╨╗╨░╤Б╤М ╨╡╨│╨╛ ╨▓╨╡p╤Б╨╕╤П -
+//    ╤Б ╨╜╨░╨╕╨▒╨╛╨╗╤М╤И╨╡╨╣ ╨▓╨╡p╨╛╤П╤В╨╜╨╛╤Б╤В╤М╤О ╨│╨╛╨▓╨╛p╨╕╤В ╨╛ ╤В╨╛╨╝, ╤З╤В╨╛ DN ╨╜╨╛╨▓╨╛╨╣ ╨▓╨╡p╤Б╨╕╨╕
+//    ╤В╨╛╨╗╤М╨║╨╛ ╤З╤В╨╛ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜, ╨╕ ╤З╨╕╤В╨░╤В╤М ╨║╤Н╤И ini-╤Д╨░╨╣╨╗╨░ ╨▓ ╤В╨░╨║╨╛╨╣ ╤Б╨╕╤В╤Г╨░╤Ж╨╕╨╕
+//    ╨╜╨╡╨╢╨╡╨╗╨░╤В╨╡╨╗╤М╨╜╨╛
         or Virgin then
         begin
         LoadDnIniSettings;
@@ -565,7 +565,7 @@ procedure DoStartup;
       CopyIniVarsToCfgVars;
       end
     else
-      SaveDnIniSettings(nil); {создаем ini}
+      SaveDnIniSettings(nil); {╤Б╨╛╨╖╨┤╨░╨╡╨╝ ini}
     DoneIniEngine;
     end { ReadIni };
 
@@ -658,7 +658,7 @@ procedure RUN_IT;
   if opSys = opWin then
     {Win9x}
     SetPriorityClass(GetCurrentProcess, High_Priority_Class);
-  {Cat: чтоб не тормозило}
+  {Cat: ╤З╤В╨╛╨▒ ╨╜╨╡ ╤В╨╛╤А╨╝╨╛╨╖╨╕╨╗╨╛}
   {$ENDIF}
 
   Randomize;
@@ -753,7 +753,7 @@ procedure RUN_IT;
 {JO}
     if Virgin then
       begin
-      ConfigModified := True; {создаём новый конфиг}
+      ConfigModified := True; {╤Б╨╛╨╖╨┤╨░╤С╨╝ ╨╜╨╛╨▓╤Л╨╣ ╨║╨╛╨╜╤Д╨╕╨│}
       Message(@MyApplication, evCommand, cmAbout, nil);
       end;
 {/JO}
