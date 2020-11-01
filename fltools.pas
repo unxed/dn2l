@@ -49,7 +49,7 @@ unit FLTools;
 
 interface
 uses
-  FilesCol, FlPanelX, PDSetup
+  dnctrls, drivers2, math, FilesCol, FlPanelX, PDSetup
   ;
 
 procedure CM_AdvancedFilter(AFP: Pointer);
@@ -2086,6 +2086,7 @@ procedure CM_RenameSingleL;
   if R.B.X-P^.Origin.X-P^.Size.X = 0 then
     Inc(R.B.X);
   New(PIF, Init(R, 255));
+  (*
   PIF^.LC := #179;
   PIF^.RC := #179;
   if P^.Origin.X-R.A.X = 1 then
@@ -2100,6 +2101,9 @@ procedure CM_RenameSingleL;
   PIF^.C[2] := PIF^.C[1];
   PIF^.C[3] := P^.GetColor(4);
   PIF^.C[4] := P^.GetColor(2);
+  *)
+  // not supported by fv
+  // fixme: commented by unxed
   {$IFDEF RecodeWhenDraw}
   S := CharToOemStr(S);
   {$ENDIF}
@@ -2707,7 +2711,9 @@ procedure CM_ChangeCase(AFP: Pointer);
   Abort := False;
   FC^.FirstThat(@DoChangeCase);
   Abort := False;
-  MessageL(P, evCommand, cmPanelReread, 0);
+  // fixme: commented by unxed
+  // circular unit ref?!
+  //MessageL(P, evCommand, cmPanelReread, 0);
   Info^.Free;
   FC^.DeleteAll;
   Dispose(FC, Done);
@@ -2773,12 +2779,14 @@ procedure CM_SelectColumn(AFP: Pointer); {JO}
   PC := dt2pc[P^.Drive^.DriveType];
   Items := NewSubmenu('~-~ ' + GetString(dlUndoPanelSetup),
       0, ActionMenu, nil);
-  Items^.Flags := ItemFlags;
+  // fixme: commented by unxed. not supported by fv
+  //Items^.Flags := ItemFlags;
   Items^.Command := 16000 + 12;
 
   Items := NewSubmenu('~=~ ' + GetString(dlOtherPanel),
       0, ActionMenu, Items);
-  Items^.Flags := ItemFlags;
+  // fixme: commented by unxed. not supported by fv
+  //Items^.Flags := ItemFlags;
   Items^.Command := 16000 + 11;
 
   for I := 10 downto 1 do
@@ -2786,7 +2794,8 @@ procedure CM_SelectColumn(AFP: Pointer); {JO}
     NameI := PanelSetupTag(PanSetupPreset[i], PC);
     Items := NewSubmenu('~'+Char(I mod 10 + Byte('0'))+'~ ' + NameI,
       0, ActionMenu, Items);
-    Items^.Flags := ItemFlags;
+    // fixme: commented by unxed. not supported by fv
+    //Items^.Flags := ItemFlags;
     Items^.Command := 16000 + i;
     if i = P^.PresetNum then
       SelectedItem := Items;
@@ -2824,7 +2833,8 @@ procedure CM_SelectColumn(AFP: Pointer); {JO}
   DisposeMenu(ActionMenu);
   if N = 0 then
     Exit;
-  W := ParentItem^.Command;
+  // fixme: commented by unxed
+  //W := ParentItem^.Command;
   if N <> cmYes then
     Inc(W, $10000{см. GetParam});
   P^.GetParam(W-16000);

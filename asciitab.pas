@@ -51,7 +51,7 @@ unit ASCIITab;
 interface
 
 uses
-  Defines, Views, Drivers, Streams
+  Objects, Defines, Views, Drivers, Streams
 
   ;
 
@@ -65,7 +65,7 @@ type
   TTable = object(TView)
     procedure Draw; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
-    function DataSize: Word; virtual;
+    function DataSize: DWord; virtual; // fixme: word->dword by unxed
     procedure GetData(var Data); virtual;
     procedure SetData(var Data); virtual;
     end;

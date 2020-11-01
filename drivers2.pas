@@ -70,6 +70,10 @@ var
   MouseX: Word;
   MouseY: Word;
 
+  // stub
+  TaggedDataCount: Longint; {<Views.004>}
+  TaggedDataOnly: Boolean;
+
 procedure DoDump;
 
 implementation
