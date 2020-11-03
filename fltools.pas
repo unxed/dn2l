@@ -113,7 +113,8 @@ type
   TSelectList = object(TListBox)
     function IsSelected(I: LongInt): Boolean; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
-    function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
+    function GetText(Item: LongInt; MaxLen: Integer): ShortString; virtual;
+    //function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
     end;
 
 procedure DrawViews(P: PFilePanelRoot);
@@ -204,7 +205,7 @@ procedure TSelectList.HandleEvent(var Event: TEvent);
     inherited HandleEvent(Event);
   end { TSelectList.HandleEvent };
 
-function TSelectList.GetText(Item: LongInt; MaxLen: Integer): String;
+function TSelectList.GetText(Item: LongInt; MaxLen: Integer): ShortString;
   var S: String;
       ColWidth: Byte;
   begin
@@ -283,6 +284,7 @@ procedure TSaveSetupDialg.HandleEvent(var Event: TEvent);
   begin
   if (Event.What = evCommand) and (Event.Command = cmSelectAll) then
     begin
+  (*
     T := PCheckBoxes(DirectLink[2]);
     with T^ do
       begin
@@ -292,19 +294,25 @@ procedure TSaveSetupDialg.HandleEvent(var Event: TEvent);
         Value := $FFF;
       Draw;
       end;
+    *)
+    // fixme: commented by unxed
     ClearEvent(Event);
     end
   else
     inherited HandleEvent(Event);
+
   end;
 
 procedure PrepareSaveSetupDialog(P: PDialog);
   begin
+  // fixme: commented by unxed
+  (*
   ObjChangeType(P, TypeOf(TSaveSetupDialg));
   ObjChangeType(P^.DirectLink[1], TypeOf(TPanelClassRB));
     { Прицепили свою реакцию на смену выбора класса панели }
   PPanelClassRB(P^.DirectLink[1])^.ChangeClass(Ord(PanelClass));
     { Сформировали блок радиокнопок с пресетами }
+  *)
   end;
 
 procedure TPanelClassRB.Press(Item: Integer);
@@ -329,7 +337,9 @@ procedure TPanelClassRB.ChangeClass(Item: Integer);
     S: String;
   begin
   PanelClass := Item;
-//  T := PRadioButtons(PDialog(Owner)^.DirectLink[2]);
+  // fixme: commented by unxed
+  (*
+  T := PRadioButtons(PDialog(Owner)^.DirectLink[2]);
   T := PCheckBoxes(PDialog(Owner)^.DirectLink[2]);
   with T^.Strings do
     begin
@@ -351,6 +361,7 @@ procedure TPanelClassRB.ChangeClass(Item: Integer);
       end;
     T^.DrawView;
     end;
+    *)
   end;
 
 procedure TSaveSetupButton.Press;
@@ -443,7 +454,9 @@ procedure TShowDialog.HandleEvent(var Event: TEvent);
   case Event.What of
     evKeyDown:
       case Event.KeyCode of
-        kbCtrl1..kbCtrl0:
+        kbCtrl0..kbCtrl1:
+        //fixme: reverse order by unxed
+        //kbCtrl1..kbCtrl0:
           begin
           N := 1 + (Event.KeyCode - kbCtrl1) div (kbCtrl2 - kbCtrl1);
           LoadData(N, @PanSetupPreset[N]);
@@ -499,7 +512,7 @@ type
   PExtSelList = ^TExtSelList; { Список расширений }
   TExtSelList = object(TSelectList)
     procedure SetState(AState: Word; Enable: Boolean); virtual;
-    function DataSize: Word; virtual;
+    function DataSize: DWord;// virtual;
     procedure GetData(var Rec); virtual;
       { Чтобы список не участвовал в GetData - SetData}
     end;
@@ -521,7 +534,7 @@ procedure TExtSelList.SetState(AState: Word; Enable: Boolean);
   inherited SetState(AState, Enable);
   end;
 
-function TExtSelList.DataSize: Word;
+function TExtSelList.DataSize: DWord;
   begin
   Result := 0;
   end;
@@ -586,7 +599,9 @@ procedure CM_AdvancedFilter;
       fc: PFilesCollection;
       i: Integer;
     begin
-    PC := New(PStringCollection, Init(20, 20, False));
+    //PC := New(PStringCollection, Init(20, 20, False));
+    // fixme: by unxed
+    PC := New(PStringCollection);
     fc := P^.Drive^.GetDirectory(x_x, ti);
     for i := 0 to fc^.Count-1 do
       with PFileRec(fc^.Items^[i])^ do
@@ -612,6 +627,8 @@ procedure CM_AdvancedFilter;
         Dlg: PDialog;
         b: Integer;
       begin
+      // fixme: commented by unxed
+      (*
       Dlg := PDialog(LoadResource(dlgAdvancedFilter));
       ObjChangeType(Dlg, TypeOf(TFilterDialog));
       with Dlg^ do
@@ -637,6 +654,7 @@ procedure CM_AdvancedFilter;
         Dlg^.SelectNext(False);
         end;
       MakeDialog := Dlg;
+      *)
       end;
 
     procedure DoMake(P: PString);
@@ -660,7 +678,8 @@ procedure CM_AdvancedFilter;
     D := MakeDialog;
     D^.Options := D^.Options or ofCentered;
     PL^.FocusItem(FItem);
-    IL^.Data := FileMask;
+    // fixme: commented by unxed
+    //IL^.Data := FileMask;
     Cmd := Desktop^.ExecView(D);
 
     SelectFilterLine := True;
@@ -684,7 +703,10 @@ procedure CM_AdvancedFilter;
       GetMaskSelection := FreeStr;
       end
     else if Cmd = cmOK then
-      GetMaskSelection := #20+IL^.Data;
+      begin
+        // fixme: commented by unxed
+        //GetMaskSelection := Concat(#20, IL^.Data);
+      end;
     Dispose(D, Done);
     end { GetMaskSelection };
 
@@ -749,7 +771,9 @@ procedure CM_AdvancedFilter;
           Replace(';'+Copy(FileMask, 3, 5)+';', ';', S)
         else
           Replace(';- '+FileMask+';', ';', S);
-        C := New(PStringCollection, Init(4, 4, False));
+        //C := New(PStringCollection, Init(4, 4, False));
+        // fixme: by unxed
+        C := New(PStringCollection);
         repeat
           i := PosChar(';', S);
           if i = 0 then
@@ -1607,6 +1631,8 @@ procedure PrepareShowDialog(P: PDialog);
   var
     i: Integer;
   begin
+  // fixme: commented by unxed
+  (*
   ObjChangeType(P, TypeOf(TShowDialog));
     { Подменяем диалогу тип, чтобы подсунуть свой HandleEvent}
   ObjChangeType(P^.DirectLink[4], TypeOf(TSaveSetupButton));
@@ -1617,6 +1643,7 @@ procedure PrepareShowDialog(P: PDialog);
     for i := 2 to 6 do
       Items[i].Flags := miDisabled;
     { Сделали недоступным "В подвале" и "На разделителе" % упаковки }
+  *)
   end;
 
 procedure CM_SetShowParms(AFP: Pointer);
@@ -1854,7 +1881,7 @@ constructor TDragger.Init;
   R.B.Y := R.A.Y+1;
   inherited Init(R);
   Options := Options or ofTopSelect;
-  Text := NewStr(AText);
+  Text := NewStrDN(AText);
   SetState(sfShadow, True);
   end;
 
@@ -1870,7 +1897,7 @@ procedure TDragger.Draw;
 
 destructor TDragger.Done;
   begin
-  DisposeStr(Text);
+  DisposeStrDN(Text);
   inherited Done;
   end;
 
@@ -2119,7 +2146,8 @@ procedure CM_RenameSingleL;
   if ReEnableCmdLine then
     begin
     CommandLine^.SetState(sfDisabled, True);
-    CommandLine^.Update;
+    // fixme: commented by unxed
+    //CommandLine^.Update;
     end;
 
   NotifySuspend; {AK155 25-01-2004 Если не отключить автообновление
@@ -2275,7 +2303,10 @@ procedure CM_SortBy;
   for i := 3 downto 0 do
     begin
     PM := NewSubmenu(GetString(Idx), 0, ActionMenu, PM);
+    (*
     PM^.Flags := ItemFlags or miParam;
+    *)
+    //fixme: commented by unxed
     PM^.Param := NewStr(OnOff[(wFlags and FlagMask) <> 0]);
     PM.Command := cmSortOwnerToggle+i;
     FlagMask := FlagMask shr 1;
@@ -2289,7 +2320,8 @@ procedure CM_SortBy;
   for i := NumSortModes-1 downto 0 do
     begin
     PM := NewSubmenu(GetString(Idx), 0, ActionMenu, PM);
-    PM^.Flags := ItemFlags;
+    //PM^.Flags := ItemFlags;
+    //fixme: commented by unxed
     PM.Command := cmSortName + i;
     if i = Mode then
       DefPM := PM;
@@ -2322,7 +2354,9 @@ procedure CM_SortBy;
       Break;
 
     CurrentOnly := (N = cmNo);
-    N := ParentItem^.Command;
+    N := 0;
+    // fixme: commented by unxed
+    //N := ParentItem^.Command;
     with P^ do
       begin
       if N < cmSortOwnerToggle then
@@ -2344,11 +2378,14 @@ procedure CM_SortBy;
     wFlags := wFlags xor (1 shl i);
     i := N-cmSortOwnerToggle;
     Menu^.Default := ToggleItem[i];
+    // fixme: commented by unxed
+    (*
     with ToggleItem[i] do
       begin
       DisposeStr(Param);
       Param := NewStr(OnOff[(wFlags and (1 shl i)) <> 0]);
       end;
+    *)
     with P^ do
       begin
       if CurrentOnly then
@@ -2385,10 +2422,13 @@ function TSortDialog.OwnDataAddress(P: PPanelSetup): Pointer;
 
 procedure PrepareSortDialog(P: PDialog);
   begin
+  // fixme: commented by unxed
+  (*
   ObjChangeType(P, TypeOf(TSortDialog));
     { Подменяем диалогу тип, чтобы подсунуть свой HandleEvent}
   ObjChangeType(P^.DirectLink[1], TypeOf(TSaveSetupButton));
     { Подменяем тип кнопки "Записать", чтобы подсунуть свой Press }
+    *)
   end;
 
 procedure CM_PanelSortSetup;

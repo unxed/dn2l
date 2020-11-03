@@ -96,6 +96,7 @@ const
     kbSpace = $ff06;
     kbDoubleCtrl = $ff07;
 
+    kbCtrlEqual = $ff08;
 
 
 // use FV constans instead; by unxed

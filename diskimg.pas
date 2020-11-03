@@ -51,6 +51,7 @@ unit DiskImg;
 interface
 
 uses
+  objects, math,
   FilesCol
   ;
 
@@ -521,9 +522,11 @@ procedure DoIt(AOwner: Pointer; AFiles: PFilesCollection;
   for I := 0 to AFiles^.Count-1 do
     begin
     PF := AFiles^.At(I);
+
+   (* 
     if not UnpackImage(MakeNormName(CnvString(PF^.Owner),
            PF^.FlName[True]), ADestPath, PInfo)
-    then
+    then *) // fixme: commented by unxed
       Break;
     if AOwner <> nil then
       Message(AOwner, evCommand, cmCopyUnselect, PF);
