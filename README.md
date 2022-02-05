@@ -83,6 +83,10 @@ And, if we are talking about transition to Unicode, I want to note that there is
 
 Anyway we should thank NDN devs for usable Linux DN version and for proofing that such port is even possbile. Guys, you are great!
 
+#### 05-02-2022 update
+
+Work on porting Free Vision to UTF8 is being done in separate repo: https://github.com/unxed/fv_utf8
+
 ### Acknowledgments
 
 Based on Dos Navigator by RIT Research Labs, with many thanks for opening the code. Also many thanks to DN OSP team for making old style DOS source code 32-bit and multi-platform friendly. Thanks to old-dos.ru team for hosting Virtual Pascal distribution — dn2l, perhaps, would never have been born without the ability to find and download VP. Thanks to VP developers for making their product available as freeware — without permission to use their compiler, dn2l might never have been built. And also thanks to habr.com community for inspiration!
