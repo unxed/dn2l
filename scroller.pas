@@ -64,7 +64,7 @@ type
 
   PScroller = ^TScroller;
   TScroller = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     HScrollBar: PScrollBar;
     VScrollBar: PScrollBar;
     Delta: TPoint;
@@ -97,7 +97,7 @@ type
 
   PListViewer = ^TListViewer;
   TListViewer = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     HScrollBar: PScrollBar;
     VScrollBar: PScrollBar;
     NumCols: LongInt;

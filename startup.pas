@@ -101,7 +101,7 @@ const
   Security: Boolean = True;
   ConfigModified: Boolean = False;
   SkyDelay: Byte = 1;
-  CmdExt: String[4] = '.CMD'; {‡†·Ë®‡•≠®• ™Æ¨†≠§≠ÎÂ ‰†©´Æ¢}
+  CmdExt: String[4] = '.CMD'; {—Ä–∞—Å—à–∏—Ä–µ–Ω–∏–µ –∫–æ–º–∞–Ω–¥–Ω—ã—Ö —Ñ–∞–π–ª–æ–≤}
 
 type
 
@@ -164,16 +164,16 @@ type
     end;
 
   TFMSetup = record
-    Options: Word; // èÆ¢•§•≠®•
+    Options: Word; // –ü–æ–≤–µ–¥–µ–Ω–∏–µ
     Quick: Word;
     LRCtrlInDriveLine: Word;
-    Show: Word;    // Ç≠•Ë≠®© ¢®§
+    Show: Word;    // –í–Ω–µ—à–Ω–∏–π –≤–∏–¥
     LFN_Wrap: Word; {Combo}
     LFN_Cut: Word; {Combo}
     LFN_Autohide: Word; {Checkbox[1]}
     LFN_Difference: Word; {Combo}
-    TagChar: String[1]; // Ö·´® ≠• ≠„¶•≠, ‚Æ TagChar[1]= ' ';
-    RestChar: String[1]; // RestChar[1] ¢·•£§† ™Æ‡‡•™‚•≠
+    TagChar: String[1]; // –ï—Å–ª–∏ –Ω–µ –Ω—É–∂–µ–Ω, —Ç–æ TagChar[1]= ' ';
+    RestChar: String[1]; // RestChar[1] –≤—Å–µ–≥–¥–∞ –∫–æ—Ä—Ä–µ–∫—Ç–µ–Ω
     DIZ: String[250];
     NewPanelPreset: Word;
     LeftPanelType: Word;
@@ -242,8 +242,8 @@ var
 
 const
   ChangeNamesCaseOptions: TNamesCaseOptions = (Name: 0; ext: 0); {JO}
-  {°Î´Æ Longint ® §•´®´Æ·Ï ≠† §¢† Word,}
-  {≠Æ Ì‚Æ ≠• £Æ§®‚·Ô §´Ô 32-°®‚≠Æ© Ø´†‚‰Æ‡¨Î}
+  {–±—ã–ª–æ Longint –∏ –¥–µ–ª–∏–ª–æ—Å—å –Ω–∞ –¥–≤–∞ Word,}
+  {–Ω–æ —ç—Ç–æ –Ω–µ –≥–æ–¥–∏—Ç—Å—è –¥–ª—è 32-–±–∏—Ç–Ω–æ–π –ø–ª–∞—Ç—Ñ–æ—Ä–º—ã}
   ComareDirsOptions: TComareDirsOptions = (o: 3; FMask: '*.*'; S: 0);
   UUDecodeOptions: AWord = 3;
 
@@ -310,7 +310,7 @@ const
     TagChar: #251;
     RestChar: #16;
     DIZ: 'descript.ion;files.bbs';
-    NewPanelPreset: 2; {≠„¨•‡†Ê®Ô Æ‚ ≠„´Ô, ‚Æ •·‚Ï 2 - Ì‚Æ ™†™ Ctrl-3}
+    NewPanelPreset: 2; {–Ω—É–º–µ—Ä–∞—Ü–∏—è –æ—Ç –Ω—É–ª—è, —Ç–æ –µ—Å—Ç—å 2 - —ç—Ç–æ –∫–∞–∫ Ctrl-3}
     LeftPanelType: fdoDriveDrive
     );
 

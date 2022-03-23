@@ -47,8 +47,8 @@
 {$I STDEFINE.INC}
 {Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
 
-{JO: этот дефайн позволяет при загрузке новой палитры принудительно сделать }
-{    цвета диалога сообщений об ошибках стандартными                        }
+{JO: ╤Н╤В╨╛╤В ╨┤╨╡╤Д╨░╨╣╨╜ ╨┐╨╛╨╖╨▓╨╛╨╗╤П╨╡╤В ╨┐╤А╨╕ ╨╖╨░╨│╤А╤Г╨╖╨║╨╡ ╨╜╨╛╨▓╨╛╨╣ ╨┐╨░╨╗╨╕╤В╤А╤Л ╨┐╤А╨╕╨╜╤Г╨┤╨╕╤В╨╡╨╗╤М╨╜╨╛ ╤Б╨┤╨╡╨╗╨░╤В╤М }
+{    ╤Ж╨▓╨╡╤В╨░ ╨┤╨╕╨░╨╗╨╛╨│╨░ ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╣ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨░╤Е ╤Б╤В╨░╨╜╨┤╨░╤А╤В╨╜╤Л╨╝╨╕                        }
 {.$DEFINE ForceErrPal}
 
 unit DNUtil;
@@ -73,7 +73,7 @@ const
   HelpWnd: PHelpWindow = nil;
   HelpInUse: Boolean = False;
   RunMenu: Boolean = False;
-    {`Признак автовыпадения меню ([X] Auto run User Menu)`}
+    {`╨Я╤А╨╕╨╖╨╜╨░╨║ ╨░╨▓╤В╨╛╨▓╤Л╨┐╨░╨┤╨╡╨╜╨╕╤П ╨╝╨╡╨╜╤О ([X] Auto run User Menu)`}
   IdleCounter: Word = 0;
   StartTicks: Word = 0;
   NullStr: Byte = 0;
@@ -91,7 +91,7 @@ const
 type
   PDNApplication = ^TDNApplication;
   TDNApplication = object(TApplication)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     IdleClick: TEventTimer;
     IdleEvt: TEvent;
     TreeReader: PTreeReader;
@@ -133,18 +133,18 @@ function w95QuitCheck: Boolean; {Gimly}
 procedure w95QuitCancel;
 {$ENDIF}
 procedure ClearSelection(AFP: Pointer {PFilePanelRoot};
-    FC: Pointer {PFilesCollection - файлы к разотметке });
+    FC: Pointer {PFilesCollection - ╤Д╨░╨╣╨╗╤Л ╨║ ╤А╨░╨╖╨╛╤В╨╝╨╡╤В╨║╨╡ });
 
 const
   w95locked: Boolean = False; {Gimly}
 
 const
-// Идентификаторы блоков dn.cfg, соответствующих структурам данных
-// различных диалогов настройки. При изменении размера или структуры
-// таких блоков желательно давать им новый идентификатор во избежание
-// неправильной интерпретации старых версий dn.cfg. Новые идентификаторы
-// во избежание путаницы следует помещать в конец данного списка,
-// а неиспользуемые - оставлять закомментированными на старом месте
+// ╨Ш╨┤╨╡╨╜╤В╨╕╤Д╨╕╨║╨░╤В╨╛╤А╤Л ╨▒╨╗╨╛╨║╨╛╨▓ dn.cfg, ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Б╤В╤А╤Г╨║╤В╤Г╤А╨░╨╝ ╨┤╨░╨╜╨╜╤Л╤Е
+// ╤А╨░╨╖╨╗╨╕╤З╨╜╤Л╤Е ╨┤╨╕╨░╨╗╨╛╨│╨╛╨▓ ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╕. ╨Я╤А╨╕ ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╨╕ ╤А╨░╨╖╨╝╨╡╤А╨░ ╨╕╨╗╨╕ ╤Б╤В╤А╤Г╨║╤В╤Г╤А╤Л
+// ╤В╨░╨║╨╕╤Е ╨▒╨╗╨╛╨║╨╛╨▓ ╨╢╨╡╨╗╨░╤В╨╡╨╗╤М╨╜╨╛ ╨┤╨░╨▓╨░╤В╤М ╨╕╨╝ ╨╜╨╛╨▓╤Л╨╣ ╨╕╨┤╨╡╨╜╤В╨╕╤Д╨╕╨║╨░╤В╨╛╤А ╨▓╨╛ ╨╕╨╖╨▒╨╡╨╢╨░╨╜╨╕╨╡
+// ╨╜╨╡╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛╨╣ ╨╕╨╜╤В╨╡╤А╨┐╤А╨╡╤В╨░╤Ж╨╕╨╕ ╤Б╤В╨░╤А╤Л╤Е ╨▓╨╡╤А╤Б╨╕╨╣ dn.cfg. ╨Э╨╛╨▓╤Л╨╡ ╨╕╨┤╨╡╨╜╤В╨╕╤Д╨╕╨║╨░╤В╨╛╤А╤Л
+// ╨▓╨╛ ╨╕╨╖╨▒╨╡╨╢╨░╨╜╨╕╨╡ ╨┐╤Г╤В╨░╨╜╨╕╤Ж╤Л ╤Б╨╗╨╡╨┤╤Г╨╡╤В ╨┐╨╛╨╝╨╡╤Й╨░╤В╤М ╨▓ ╨║╨╛╨╜╨╡╤Ж ╨┤╨░╨╜╨╜╨╛╨│╨╛ ╤Б╨┐╨╕╤Б╨║╨░,
+// ╨░ ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝╤Л╨╡ - ╨╛╤Б╤В╨░╨▓╨╗╤П╤В╤М ╨╖╨░╨║╨╛╨╝╨╝╨╡╨╜╤В╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╝╨╕ ╨╜╨░ ╤Б╤В╨░╤А╨╛╨╝ ╨╝╨╡╤Б╤В╨╡
   cfgMouseData = 3;
   cfgInterfaceData = 4;
   cfgSaversData = 5;
@@ -241,13 +241,13 @@ procedure SaveDsk;
 {$ENDIF}
 
 procedure GetFromClip(var S: String);
-  {` Взять строку из буфера обмена. Если в буфере пусто - будет '' `}
+  {` ╨Т╨╖╤П╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╨╕╨╖ ╨▒╤Г╤Д╨╡╤А╨░ ╨╛╨▒╨╝╨╡╨╜╨░. ╨Х╤Б╨╗╨╕ ╨▓ ╨▒╤Г╤Д╨╡╤А╨╡ ╨┐╤Г╤Б╤В╨╛ - ╨▒╤Г╨┤╨╡╤В '' `}
 procedure GetFromClipLong(var S: LongString);
-  {` Взять строку из буфера обмена. Если в буфере пусто - будет '' `}
+  {` ╨Т╨╖╤П╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╨╕╨╖ ╨▒╤Г╤Д╨╡╤А╨░ ╨╛╨▒╨╝╨╡╨╜╨░. ╨Х╤Б╨╗╨╕ ╨▓ ╨▒╤Г╤Д╨╡╤А╨╡ ╨┐╤Г╤Б╤В╨╛ - ╨▒╤Г╨┤╨╡╤В '' `}
 procedure PutInClip(const S: String);
-  {` Положить строку в буфера обмена и в его историю `}
+  {` ╨Я╨╛╨╗╨╛╨╢╨╕╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╨▓ ╨▒╤Г╤Д╨╡╤А╨░ ╨╛╨▒╨╝╨╡╨╜╨░ ╨╕ ╨▓ ╨╡╨│╨╛ ╨╕╤Б╤В╨╛╤А╨╕╤О `}
 procedure PutInClipLong(const S: LongString);
-  {` Положить строку в буфера обмена и в его историю `}
+  {` ╨Я╨╛╨╗╨╛╨╢╨╕╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╨▓ ╨▒╤Г╤Д╨╡╤А╨░ ╨╛╨▒╨╝╨╡╨╜╨░ ╨╕ ╨▓ ╨╡╨│╨╛ ╨╕╤Б╤В╨╛╤А╨╕╤О `}
 
 implementation
 
@@ -337,10 +337,10 @@ const
   dskTempContents = 6;
   dskTempContents2 = 7;
 
-  {Cat:warn потенциально глюкавое место: нельзя читать в память больше, чем
-          туда может поместиться; кроме того, нежелательно одной операцией
-          читать несколько подряд расположенных переменных - это у нас в
-          исходнике они подряд, а компилятор может думать иначе}
+  {Cat:warn ╨┐╨╛╤В╨╡╨╜╤Ж╨╕╨░╨╗╤М╨╜╨╛ ╨│╨╗╤О╨║╨░╨▓╨╛╨╡ ╨╝╨╡╤Б╤В╨╛: ╨╜╨╡╨╗╤М╨╖╤П ╤З╨╕╤В╨░╤В╤М ╨▓ ╨┐╨░╨╝╤П╤В╤М ╨▒╨╛╨╗╤М╤И╨╡, ╤З╨╡╨╝
+          ╤В╤Г╨┤╨░ ╨╝╨╛╨╢╨╡╤В ╨┐╨╛╨╝╨╡╤Б╤В╨╕╤В╤М╤Б╤П; ╨║╤А╨╛╨╝╨╡ ╤В╨╛╨│╨╛, ╨╜╨╡╨╢╨╡╨╗╨░╤В╨╡╨╗╤М╨╜╨╛ ╨╛╨┤╨╜╨╛╨╣ ╨╛╨┐╨╡╤А╨░╤Ж╨╕╨╡╨╣
+          ╤З╨╕╤В╨░╤В╤М ╨╜╨╡╤Б╨║╨╛╨╗╤М╨║╨╛ ╨┐╨╛╨┤╤А╤П╨┤ ╤А╨░╤Б╨┐╨╛╨╗╨╛╨╢╨╡╨╜╨╜╤Л╤Е ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Л╤Е - ╤Н╤В╨╛ ╤Г ╨╜╨░╤Б ╨▓
+          ╨╕╤Б╤Е╨╛╨┤╨╜╨╕╨║╨╡ ╨╛╨╜╨╕ ╨┐╨╛╨┤╤А╤П╨┤, ╨░ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А ╨╝╨╛╨╢╨╡╤В ╨┤╤Г╨╝╨░╤В╤М ╨╕╨╜╨░╤З╨╡}
 
 constructor TDataSaver.Load;
   var
@@ -678,7 +678,7 @@ procedure SaveDsk;
     begin
    {$IFDEF DPMI32}
     if StartDir <> '' then
-      StartDir := '<' + StartDir; {помечаем, что StartDir нужно сохpанить}
+      StartDir := '<' + StartDir; {╨┐╨╛╨╝╨╡╤З╨░╨╡╨╝, ╤З╤В╨╛ StartDir ╨╜╤Г╨╢╨╜╨╛ ╤Б╨╛╤Еp╨░╨╜╨╕╤В╤М}
    {$ENDIF}
     PDNApplication(Application)^.SaveDesktop
       (SwpDir+'DN'+ItoS(DNNumber)+'.SWP');
@@ -726,10 +726,10 @@ destructor TDNApplication.Done;
   {$ENDIF}
     ;
   {AK155 SaveHistories;}
-  {все запоминалось по ходу дела, притом с чтением,}
-  {а теперь можно только напортить}
+  {╨▓╤Б╨╡ ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╨╗╨╛╤Б╤М ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░, ╨┐╤А╨╕╤В╨╛╨╝ ╤Б ╤З╤В╨╡╨╜╨╕╨╡╨╝,}
+  {╨░ ╤В╨╡╨┐╨╡╤А╤М ╨╝╨╛╨╢╨╜╨╛ ╤В╨╛╨╗╤М╨║╨╛ ╨╜╨░╨┐╨╛╤А╤В╨╕╤В╤М}
   SaveHistories;
-  {JO: пока вернул назад, а то история совсем не запоминается}
+  {JO: ╨┐╨╛╨║╨░ ╨▓╨╡╤А╨╜╤Г╨╗ ╨╜╨░╨╖╨░╨┤, ╨░ ╤В╨╛ ╨╕╤Б╤В╨╛╤А╨╕╤П ╤Б╨╛╨▓╤Б╨╡╨╝ ╨╜╨╡ ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╨╡╤В╤Б╤П}
   HideCommandLine := (CommandLine <> nil)
        and not CommandLine^.GetState(sfVisible);
   B := $8000 or (Byte(HideCommandLine));
@@ -873,7 +873,7 @@ procedure WriteConfig;
   StoreBlock(cfgDefaultArchiverMode, DefaultArcMode,
        SizeOf(DefaultArcMode));
   StoreBlock(cfgExtractOptions, UnarchiveOpt, SizeOf(UnarchiveOpt));
-  {JO: два раза???}
+  {JO: ╨┤╨▓╨░ ╤А╨░╨╖╨░???}
   StoreBlock(cfgChangeCaseOptions, ChangeNamesCaseOptions,
        SizeOf(ChangeNamesCaseOptions));
   StoreBlock(cfgAppPalette, appPalette, SizeOf(appPalette));
@@ -933,8 +933,8 @@ procedure TDNApplication.LoadDesktop(var S: TStream);
           P^.Show;
         end;
     until { P = nil;}S.GetPos = S.GetSize;
-    {AK155: P = nil бывает, например, при невозможности открыть
-      запомненный просмотр; это не повод терять все остальные настройки }
+    {AK155: P = nil ╨▒╤Л╨▓╨░╨╡╤В, ╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, ╨┐╤А╨╕ ╨╜╨╡╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╨╕ ╨╛╤В╨║╤А╤Л╤В╤М
+      ╨╖╨░╨┐╨╛╨╝╨╜╨╡╨╜╨╜╤Л╨╣ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А; ╤Н╤В╨╛ ╨╜╨╡ ╨┐╨╛╨▓╨╛╨┤ ╤В╨╡╤А╤П╤В╤М ╨▓╤Б╨╡ ╨╛╤Б╤В╨░╨╗╤М╨╜╤Л╨╡ ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╕ }
     end;
   P := Desktop^.Current;
   if P <> nil then
@@ -1056,9 +1056,9 @@ procedure TDNApplication.ProcessTempFile(TFStr: String);
       Event.InfoPtr := @TempFile;
       PutEvent(Event);
       end;
-{AK155 27-10-2004 Убрал очистку RunMenu, поскольку единственный
-её результат - это глюк, заключающийся в том, что автовыпадение
-меню перестаёт работать после просмотра файла из архива
+{AK155 27-10-2004 ╨г╨▒╤А╨░╨╗ ╨╛╤З╨╕╤Б╤В╨║╤Г RunMenu, ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨╡╨┤╨╕╨╜╤Б╤В╨▓╨╡╨╜╨╜╤Л╨╣
+╨╡╤С ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В - ╤Н╤В╨╛ ╨│╨╗╤О╨║, ╨╖╨░╨║╨╗╤О╤З╨░╤О╤Й╨╕╨╣╤Б╤П ╨▓ ╤В╨╛╨╝, ╤З╤В╨╛ ╨░╨▓╤В╨╛╨▓╤Л╨┐╨░╨┤╨╡╨╜╨╕╨╡
+╨╝╨╡╨╜╤О ╨┐╨╡╤А╨╡╤Б╤В╨░╤С╤В ╤А╨░╨▒╨╛╤В╨░╤В╤М ╨┐╨╛╤Б╨╗╨╡ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨░ ╤Д╨░╨╣╨╗╨░ ╨╕╨╖ ╨░╤А╤Е╨╕╨▓╨░
     RunMenu := False;
 }
     end;
@@ -1121,8 +1121,8 @@ Err:
       ProcessTempFile(PJ^);
     DisposeStr(PJ);
 
-//JO: 31-05-2006 - процедура перекидывания файлов из временного
-//                 подкаталога после запуска архиватора
+//JO: 31-05-2006 - ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╨░ ╨┐╨╡╤А╨╡╨║╨╕╨┤╤Л╨▓╨░╨╜╨╕╤П ╤Д╨░╨╣╨╗╨╛╨▓ ╨╕╨╖ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛
+//                 ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨┐╨╛╤Б╨╗╨╡ ╨╖╨░╨┐╤Г╤Б╨║╨░ ╨░╤А╤Е╨╕╨▓╨░╤В╨╛╤А╨░
     PJ := S^.ReadStr;
     if  (PJ <> nil) and (PJ^ <> '') and (Pos('|', PJ^) > 0)  then
       begin
@@ -1137,14 +1137,14 @@ Err:
       SCurDir := Copy(TempExtrDir, Pos('|', TempExtrDir)+1,
                       MaxStringLength);
       TempExtrDir := Copy(TempExtrDir, 1, Pos('|', TempExtrDir)-1);
-    { перекидываем файлы из временного подкаталога в каталог назначения}
+    { ╨┐╨╡╤А╨╡╨║╨╕╨┤╤Л╨▓╨░╨╡╨╝ ╤Д╨░╨╣╨╗╤Л ╨╕╨╖ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨▓ ╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╤П}
       PV := New(PUserWindow, Init);
       Desktop^.Insert(PV);
       SetLength(TempExtrDir, Length(TempExtrDir)-1);
       Str1 := GetPath(TempExtrDir);
       CopyDirContent(TempExtrDir+'/'+SCurDir, Str1, True, ForceMod); // slash change by unxed
       PV^.Free;
-    { удаляем временный каталог со всем, что в нём осталось}
+    { ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ ╤Б╨╛ ╨▓╤Б╨╡╨╝, ╤З╤В╨╛ ╨▓ ╨╜╤С╨╝ ╨╛╤Б╤В╨░╨╗╨╛╤Б╤М}
       FRT := NewFileRec(GetName(TempExtrDir),
         GetName(TempExtrDir),
         0, 0, 0, 0, Directory,
@@ -1155,7 +1155,7 @@ Err:
       Confirms := 0;
       lGetDir(0, DirToChange);
       LFNvp.lChDir(Str1);
-      if ActiveDir[2] = ':' then {освобождаем каталог}
+      if ActiveDir[2] = ':' then {╨╛╤Б╨▓╨╛╨▒╨╛╨╢╨┤╨░╨╡╨╝ ╨║╨░╤В╨░╨╗╨╛╨│}
         ChDir(Copy(ActiveDir, 1, 2) + '/'); // slash change by unxed
       Eraser.EraseFiles(FCT);
       LFNvp.lChDir(DirToChange);
@@ -1166,7 +1166,7 @@ Err:
       end;
     DisposeStr(PJ);
 
-//JO: 8-06-2006 - восстанавливаем стаpтовый каталог
+//JO: 8-06-2006 - ╨▓╨╛╤Б╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╨╝ ╤Б╤В╨░p╤В╨╛╨▓╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│
     PJ := S^.ReadStr;
     if  (PJ <> nil) and (PJ^ <> '') then
       begin
@@ -1194,7 +1194,7 @@ Err:
       R.B.Y := R.A.Y+OldDskSize.Y;
       Desktop^.ChangeBounds(R);
       end;
-    {LoadDesktop(S^);} {Cat: перенёс в самый конец}
+    {LoadDesktop(S^);} {Cat: ╨┐╨╡╤А╨╡╨╜╤С╤Б ╨▓ ╤Б╨░╨╝╤Л╨╣ ╨║╨╛╨╜╨╡╤Ж}
     S^.Read(TempBounds, SizeOf(TempBounds));
     {S^.Read(ArcBounds, SizeOf(TempBounds));}
     {$IFDEF TrashCan}S^.Read(TrashCan^.ImVisible, 1); {$ENDIF}
@@ -1218,8 +1218,8 @@ Err:
     if PreserveMenuPositions then
       LoadMenuDefaults(MenuBar^.Menu, S^);
     LoadDesktop(S^);
-    // JO: нижележащий кусок должен _обязательно_ быть _после_ LoadDesktop,
-    //     иначе размер панелей не подстраивается под видеорежим
+    // JO: ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨╕╨╣ ╨║╤Г╤Б╨╛╨║ ╨┤╨╛╨╗╨╢╨╡╨╜ _╨╛╨▒╤П╨╖╨░╤В╨╡╨╗╤М╨╜╨╛_ ╨▒╤Л╤В╤М _╨┐╨╛╤Б╨╗╨╡_ LoadDesktop,
+    //     ╨╕╨╜╨░╤З╨╡ ╤А╨░╨╖╨╝╨╡╤А ╨┐╨░╨╜╨╡╨╗╨╡╨╣ ╨╜╨╡ ╨┐╨╛╨┤╤Б╤В╤А╨░╨╕╨▓╨░╨╡╤В╤Б╤П ╨┐╨╛╨┤ ╨▓╨╕╨┤╨╡╨╛╤А╨╡╨╢╨╕╨╝
     if BB then
       begin
       R.Assign(0, Byte(InterfaceData.Options and ouiHideMenu = 0),
@@ -1266,12 +1266,12 @@ procedure TDNApplication.SaveDesktop(const FileName: String);
     S^.WriteStr(@DirToChange);
    {$IFDEF DPMI32}
     S^.WriteStr(@TempFile);
-    S^.WriteStr(@DirToMoveContent); //каталог назначения пpи pазаpхивиpовании
-                                    //чеpез вpеменный подкаталог
+    S^.WriteStr(@DirToMoveContent); //╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╨┐p╨╕ p╨░╨╖╨░p╤Е╨╕╨▓╨╕p╨╛╨▓╨░╨╜╨╕╨╕
+                                    //╤З╨╡p╨╡╨╖ ╨▓p╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│
     if StartDir[1] = '<' then
       begin
       System.Delete(StartDir, 1, 1);
-      S^.WriteStr(@StartDir); //каталог, из котоpого DN/2 был запущен
+      S^.WriteStr(@StartDir); //╨║╨░╤В╨░╨╗╨╛╨│, ╨╕╨╖ ╨║╨╛╤В╨╛p╨╛╨│╨╛ DN/2 ╨▒╤Л╨╗ ╨╖╨░╨┐╤Г╤Й╨╡╨╜
       end
     else
       S^.WriteStr(@NullStr);
@@ -1284,7 +1284,7 @@ procedure TDNApplication.SaveDesktop(const FileName: String);
     S^.Write(Size, SizeOf(Size));
     S^.Write(Desktop^.Size, SizeOf(Size));
     StoreIndexes(S^);
-    {StoreDesktop(S^);} {Cat: перенёс в самый конец}
+    {StoreDesktop(S^);} {Cat: ╨┐╨╡╤А╨╡╨╜╤С╤Б ╨▓ ╤Б╨░╨╝╤Л╨╣ ╨║╨╛╨╜╨╡╤Ж}
     S^.Write(TempBounds, SizeOf(TempBounds));
     {$IFDEF TrashCan}S^.Write(TrashCan^.ImVisible, 1); {$ENDIF}
     S^.Put(KeyMacroses);
@@ -1449,8 +1449,8 @@ db:
       Dispose(W, Done);
       Exit;
       end;
-    {    StoreViewInfo(W);  AK155: сохранять бессмысленно (еще нечего)
-        и излишне (сохранит Done) }
+    {    StoreViewInfo(W);  AK155: ╤Б╨╛╤Е╤А╨░╨╜╤П╤В╤М ╨▒╨╡╤Б╤Б╨╝╤Л╤Б╨╗╨╡╨╜╨╜╨╛ (╨╡╤Й╨╡ ╨╜╨╡╤З╨╡╨│╨╛)
+        ╨╕ ╨╕╨╖╨╗╨╕╤И╨╜╨╡ (╤Б╨╛╤Е╤А╨░╨╜╨╕╤В Done) }
     InsertWindow(W);
     SpecialIntView := True;
     end { SpecialIntView: };
@@ -1533,7 +1533,7 @@ db:
       J := PosChar(';', FileName);
       if J > 0 then
         SetLength(FileName, J-1);
-      {AK155 удалить номер версии файла в uc2-архиве }
+      {AK155 ╤Г╨┤╨░╨╗╨╕╤В╤М ╨╜╨╛╨╝╨╡╤А ╨▓╨╡╤А╤Б╨╕╨╕ ╤Д╨░╨╣╨╗╨░ ╨▓ uc2-╨░╤А╤Е╨╕╨▓╨╡ }
       end;
     end;
   FileName := lFExpand(FileName);
@@ -1560,10 +1560,10 @@ db:
     Exit;
     end;
 
-  { Логика выбора просмотра такая:
-  по F3 (not AltExt) - согласно dn.vwr, затем специальный внутренний, затем текстовый;
-  по Alt-F3 (AltExt) - согласно dnalt.vwr, затем текстовый;
-  по Alt-Shift-F3 (это вообще не здесь) - безусловно текстовый. }
+  { ╨Ы╨╛╨│╨╕╨║╨░ ╨▓╤Л╨▒╨╛╤А╨░ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨░ ╤В╨░╨║╨░╤П:
+  ╨┐╨╛ F3 (not AltExt) - ╤Б╨╛╨│╨╗╨░╤Б╨╜╨╛ dn.vwr, ╨╖╨░╤В╨╡╨╝ ╤Б╨┐╨╡╤Ж╨╕╨░╨╗╤М╨╜╤Л╨╣ ╨▓╨╜╤Г╤В╤А╨╡╨╜╨╜╨╕╨╣, ╨╖╨░╤В╨╡╨╝ ╤В╨╡╨║╤Б╤В╨╛╨▓╤Л╨╣;
+  ╨┐╨╛ Alt-F3 (AltExt) - ╤Б╨╛╨│╨╗╨░╤Б╨╜╨╛ dnalt.vwr, ╨╖╨░╤В╨╡╨╝ ╤В╨╡╨║╤Б╤В╨╛╨▓╤Л╨╣;
+  ╨┐╨╛ Alt-Shift-F3 (╤Н╤В╨╛ ╨▓╨╛╨╛╨▒╤Й╨╡ ╨╜╨╡ ╨╖╨┤╨╡╤Б╤М) - ╨▒╨╡╨╖╤Г╤Б╨╗╨╛╨▓╨╜╨╛ ╤В╨╡╨║╤Б╤В╨╛╨▓╤Л╨╣. }
 
   if not NoExtFile and
     ExecExtFile(ExtFileName[AltExt], @up, dlLoadingViewer)
@@ -1597,7 +1597,7 @@ procedure TDNApplication.EditFile;
 
   label ex;
   begin
-  {JO: редактирование найденных в архиве файлов из панели поиска не предусмотрено}
+  {JO: ╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╤Л╤Е ╨▓ ╨░╤А╤Е╨╕╨▓╨╡ ╤Д╨░╨╣╨╗╨╛╨▓ ╨╕╨╖ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░ ╨╜╨╡ ╨┐╤А╨╡╨┤╤Г╤Б╨╝╨╛╤В╤А╨╡╨╜╨╛}
   if PathFoundInArc(FileName) then
     Exit;
   {/JO}
@@ -2178,10 +2178,10 @@ procedure TDNApplication.HandleCommand;
         if PathExist(S) then
           begin
           S[1] := UpCase(S[1]); {Cat}
-            {AK155 Под NT назначение маленькой буквы проходит буквально,
-              после чего в комстроке тоже индицируется маленькая буква,
-              что смешно, и начинает глючить перемещение по полосе дисков,
-              что уже не смешно. }
+            {AK155 ╨Я╨╛╨┤ NT ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨╝╨░╨╗╨╡╨╜╤М╨║╨╛╨╣ ╨▒╤Г╨║╨▓╤Л ╨┐╤А╨╛╤Е╨╛╨┤╨╕╤В ╨▒╤Г╨║╨▓╨░╨╗╤М╨╜╨╛,
+              ╨┐╨╛╤Б╨╗╨╡ ╤З╨╡╨│╨╛ ╨▓ ╨║╨╛╨╝╤Б╤В╤А╨╛╨║╨╡ ╤В╨╛╨╢╨╡ ╨╕╨╜╨┤╨╕╤Ж╨╕╤А╤Г╨╡╤В╤Б╤П ╨╝╨░╨╗╨╡╨╜╤М╨║╨░╤П ╨▒╤Г╨║╨▓╨░,
+              ╤З╤В╨╛ ╤Б╨╝╨╡╤И╨╜╨╛, ╨╕ ╨╜╨░╤З╨╕╨╜╨░╨╡╤В ╨│╨╗╤О╤З╨╕╤В╤М ╨┐╨╡╤А╨╡╨╝╨╡╤Й╨╡╨╜╨╕╨╡ ╨┐╨╛ ╨┐╨╛╨╗╨╛╤Б╨╡ ╨┤╨╕╤Б╨║╨╛╨▓,
+              ╤З╤В╨╛ ╤Г╨╢╨╡ ╨╜╨╡ ╤Б╨╝╨╡╤И╨╜╨╛. }
           Message(ActivePanel, evCommand, cmChangeDirectory, @S);
           end;
         SD := '';
@@ -2200,13 +2200,13 @@ procedure TDNApplication.HandleCommand;
     {$ENDIF}
     if TryRunSession(@S) then
       Exit;
-    {AK155 очистка комстроки нужна всегда, поэтому она вынесена в общую         }
-    {      часть. Очищать лучше перед выполнением, а не после, так как в        }
-    {      ExecString она запоминается и восстанавливается. Аналогичная вставка }
-    {      сделана в dnexec.ExecFile.RunCommand                                 }
-    {JO:  перенёс очистку комстроки после TryRunSession, так как иначе оно      }
-    {     не срабатывает, и при запуске набранного в коммандлайне не            }
-    {     получается запустить в отдельной сессии                               }
+    {AK155 ╨╛╤З╨╕╤Б╤В╨║╨░ ╨║╨╛╨╝╤Б╤В╤А╨╛╨║╨╕ ╨╜╤Г╨╢╨╜╨░ ╨▓╤Б╨╡╨│╨┤╨░, ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╨╛╨╜╨░ ╨▓╤Л╨╜╨╡╤Б╨╡╨╜╨░ ╨▓ ╨╛╨▒╤Й╤Г╤О         }
+    {      ╤З╨░╤Б╤В╤М. ╨Ю╤З╨╕╤Й╨░╤В╤М ╨╗╤Г╤З╤И╨╡ ╨┐╨╡╤А╨╡╨┤ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╨╡╨╝, ╨░ ╨╜╨╡ ╨┐╨╛╤Б╨╗╨╡, ╤В╨░╨║ ╨║╨░╨║ ╨▓        }
+    {      ExecString ╨╛╨╜╨░ ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╨╡╤В╤Б╤П ╨╕ ╨▓╨╛╤Б╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╤В╤Б╤П. ╨Р╨╜╨░╨╗╨╛╨│╨╕╤З╨╜╨░╤П ╨▓╤Б╤В╨░╨▓╨║╨░ }
+    {      ╤Б╨┤╨╡╨╗╨░╨╜╨░ ╨▓ dnexec.ExecFile.RunCommand                                 }
+    {JO:  ╨┐╨╡╤А╨╡╨╜╤С╤Б ╨╛╤З╨╕╤Б╤В╨║╤Г ╨║╨╛╨╝╤Б╤В╤А╨╛╨║╨╕ ╨┐╨╛╤Б╨╗╨╡ TryRunSession, ╤В╨░╨║ ╨║╨░╨║ ╨╕╨╜╨░╤З╨╡ ╨╛╨╜╨╛      }
+    {     ╨╜╨╡ ╤Б╤А╨░╨▒╨░╤В╤Л╨▓╨░╨╡╤В, ╨╕ ╨┐╤А╨╕ ╨╖╨░╨┐╤Г╤Б╨║╨╡ ╨╜╨░╨▒╤А╨░╨╜╨╜╨╛╨│╨╛ ╨▓ ╨║╨╛╨╝╨╝╨░╨╜╨┤╨╗╨░╨╣╨╜╨╡ ╨╜╨╡            }
+    {     ╨┐╨╛╨╗╤Г╤З╨░╨╡╤В╤Б╤П ╨╖╨░╨┐╤Г╤Б╤В╨╕╤В╤М ╨▓ ╨╛╤В╨┤╨╡╨╗╤М╨╜╨╛╨╣ ╤Б╨╡╤Б╤Б╨╕╨╕                               }
     SD := '';
     CommandLine^.SetData(SD);
     CommandLine^.DrawView;
@@ -2736,7 +2736,7 @@ procedure TDNApplication.HandleCommand;
     {cmViewFilter: ViewFile(true, true, CnvString(Event.InfoPtr));}
     cmViewFilter:
       ViewFile(False, True, CnvString(Event.InfoPtr));
-    {JO для распознания фильтрованных файлов как архивов}
+    {JO ╨┤╨╗╤П ╤А╨░╤Б╨┐╨╛╨╖╨╜╨░╨╜╨╕╤П ╤Д╨╕╨╗╤М╤В╤А╨╛╨▓╨░╨╜╨╜╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ ╨║╨░╨║ ╨░╤А╤Е╨╕╨▓╨╛╨▓}
     cmIntFileView:
       ViewFile(True, False, CnvString(Event.InfoPtr));
     cmIntFileEdit:
@@ -2901,12 +2901,12 @@ procedure TDNApplication.HandleCommand;
       P1:=DeskTop^.Current;
       if P1 = HelpWnd then
         Exit;
-        { Такое может быть только при работе граббера на окне хелпа,
-         так как иначе окно хелпа (если оно есть, и Current)
-         захватит cmHelp и выдаст Help on Help, а сюда управление
-         просто не попадёт }
+        { ╨в╨░╨║╨╛╨╡ ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╤В╨╛╨╗╤М╨║╨╛ ╨┐╤А╨╕ ╤А╨░╨▒╨╛╤В╨╡ ╨│╤А╨░╨▒╨▒╨╡╤А╨░ ╨╜╨░ ╨╛╨║╨╜╨╡ ╤Е╨╡╨╗╨┐╨░,
+         ╤В╨░╨║ ╨║╨░╨║ ╨╕╨╜╨░╤З╨╡ ╨╛╨║╨╜╨╛ ╤Е╨╡╨╗╨┐╨░ (╨╡╤Б╨╗╨╕ ╨╛╨╜╨╛ ╨╡╤Б╤В╤М, ╨╕ Current)
+         ╨╖╨░╤Е╨▓╨░╤В╨╕╤В cmHelp ╨╕ ╨▓╤Л╨┤╨░╤Б╤В Help on Help, ╨░ ╤Б╤О╨┤╨░ ╤Г╨┐╤А╨░╨▓╨╗╨╡╨╜╨╕╨╡
+         ╨┐╤А╨╛╤Б╤В╨╛ ╨╜╨╡ ╨┐╨╛╨┐╨░╨┤╤С╤В }
       if  (not HelpInUse) or (HelpWnd = nil) then
-        begin { создаём окно хелпа }
+        begin { ╤Б╨╛╨╖╨┤╨░╤С╨╝ ╨╛╨║╨╜╨╛ ╤Е╨╡╨╗╨┐╨░ }
         HelpStrm := New(PDosStream,
             Init(SourceDir+HelpLngId+'.HLP', stOpenRead {stOpenPacked})
             );
@@ -2934,10 +2934,10 @@ procedure TDNApplication.HandleCommand;
           end;
         end
       else
-        begin { используем существующее окно хелпа }
+        begin { ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╤О╤Й╨╡╨╡ ╨╛╨║╨╜╨╛ ╤Е╨╡╨╗╨┐╨░ }
         Lock;
         HelpWnd^.GotoContext(GetHelpCtx);
-        Desktop^.Delete(HelpWnd); { это может изменить Current}
+        Desktop^.Delete(HelpWnd); { ╤Н╤В╨╛ ╨╝╨╛╨╢╨╡╤В ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М Current}
         Desktop^.SetCurrent(P1, EnterSelect);
         Unlock;
         end;
@@ -2945,12 +2945,12 @@ procedure TDNApplication.HandleCommand;
       if (ModalCount <> 0) or MenuActive or
          Desktop^.Current^.GetState(sfDragging)
       then
-        begin { исполняем и уничтожаем модальный хелп }
+        begin { ╨╕╤Б╨┐╨╛╨╗╨╜╤П╨╡╨╝ ╨╕ ╤Г╨╜╨╕╤З╤В╨╛╨╢╨░╨╡╨╝ ╨╝╨╛╨┤╨░╨╗╤М╨╜╤Л╨╣ ╤Е╨╡╨╗╨┐ }
         ExecView(HelpWnd);
         HelpWnd^.Free;
         end
       else
-        begin { вставляем немодальный хелп-долгожитель }
+        begin { ╨▓╤Б╤В╨░╨▓╨╗╤П╨╡╨╝ ╨╜╨╡╨╝╨╛╨┤╨░╨╗╤М╨╜╤Л╨╣ ╤Е╨╡╨╗╨┐-╨┤╨╛╨╗╨│╨╛╨╢╨╕╤В╨╡╨╗╤М }
         Desktop^.Insert(HelpWnd);
         HelpInUse := True;
         end;
@@ -3097,7 +3097,7 @@ procedure ClearSelection(AFP: Pointer; FC: Pointer);
     end;
   end;
 
-{Cat: переписал для поддержки длинных строк в Clipboard-е}
+{Cat: ╨┐╨╡╤А╨╡╨┐╨╕╤Б╨░╨╗ ╨┤╨╗╤П ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨║╨╕ ╨┤╨╗╨╕╨╜╨╜╤Л╤Е ╤Б╤В╤А╨╛╨║ ╨▓ Clipboard-╨╡}
 procedure GetFromClip;
   begin
 // fixme: commented by unxed

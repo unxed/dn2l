@@ -732,7 +732,7 @@ function TFilterValidator.IsValidInput(var S: AnsiString;
       Result := False;
       Break;
       end;
-{AK155 Что-то я не понял, почеу SuppressFill никак не используется }
+{AK155 ╨з╤В╨╛-╤В╨╛ ╤П ╨╜╨╡ ╨┐╨╛╨╜╤П╨╗, ╨┐╨╛╤З╨╡╤Г SuppressFill ╨╜╨╕╨║╨░╨║ ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П }
   end;
 
 procedure TFilterValidator.Store(var S: TStream);

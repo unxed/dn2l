@@ -57,7 +57,7 @@ uses
 type
   PXFileEditor = ^TXFileEditor;
   TXFileEditor = object(TFileEditor)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     function HandleCommand(var Event: TEvent): Boolean; virtual;
     end;
 
@@ -127,9 +127,9 @@ function TXFileEditor.HandleCommand;
         SwapBits = $14; { swap bits: (...X.Y..) -> (...Y.X..) }
         {Cat:  efoCaseSens       =  1;}
         {      efoWholeWords     =  2;}
-        { ┌─>  efoReplacePrompt  =  4;}
-        { │    efoRegExp         =  8;}
-        { └─>  efoAllCP          = 16;}
+        { тФМтФА>  efoReplacePrompt  =  4;}
+        { тФВ    efoRegExp         =  8;}
+        { тФФтФА>  efoAllCP          = 16;}
       begin
       case (M and SwapBits) of
         0, SwapBits:
@@ -179,7 +179,7 @@ function TXFileEditor.HandleCommand;
     ReplaceAll := Replace and (Y = cmYes);
     {$IFDEF REGEXP}
     if SearchData.Options and {efoRegExp}16 = 0 then
-      {обычный поиск}
+      {╨╛╨▒╤Л╤З╨╜╤Л╨╣ ╨┐╨╛╨╕╤Б╨║}
       {$ENDIF}
       if SearchData.Origin = 0 then
         if SearchData.Dir = 0 then
@@ -189,7 +189,7 @@ function TXFileEditor.HandleCommand;
       else
         Search(Delta.X, Delta.Y)
         {$IFDEF REGEXP}
-    else {поиск регэкспа}
+    else {╨┐╨╛╨╕╤Б╨║ ╤А╨╡╨│╤Н╨║╤Б╨┐╨░}
       begin
       if not RegExp^.Compile(@SearchData.Line[1],
            Length(SearchData.Line))
@@ -1103,11 +1103,11 @@ function TXFileEditor.HandleCommand;
       Tmr: TEventTimer;
       Cmpr: function (const l, R: LongString): Boolean;
 
-      {AK155 QuickSort имеет существенный недостаток: при равных
-ключах он может переставлять строки. Поэтому я заменил его на
-метод Шелла, который этого недостака не имеет. По быстродействию
-разницы особой не будет: при числе элементов до 20000 Шелл если
-и проигрывает, то не сильно.}
+      {AK155 QuickSort ╨╕╨╝╨╡╨╡╤В ╤Б╤Г╤Й╨╡╤Б╤В╨▓╨╡╨╜╨╜╤Л╨╣ ╨╜╨╡╨┤╨╛╤Б╤В╨░╤В╨╛╨║: ╨┐╤А╨╕ ╤А╨░╨▓╨╜╤Л╤Е
+╨║╨╗╤О╤З╨░╤Е ╨╛╨╜ ╨╝╨╛╨╢╨╡╤В ╨┐╨╡╤А╨╡╤Б╤В╨░╨▓╨╗╤П╤В╤М ╤Б╤В╤А╨╛╨║╨╕. ╨Я╨╛╤Н╤В╨╛╨╝╤Г ╤П ╨╖╨░╨╝╨╡╨╜╨╕╨╗ ╨╡╨│╨╛ ╨╜╨░
+╨╝╨╡╤В╨╛╨┤ ╨и╨╡╨╗╨╗╨░, ╨║╨╛╤В╨╛╤А╤Л╨╣ ╤Н╤В╨╛╨│╨╛ ╨╜╨╡╨┤╨╛╤Б╤В╨░╨║╨░ ╨╜╨╡ ╨╕╨╝╨╡╨╡╤В. ╨Я╨╛ ╨▒╤Л╤Б╤В╤А╨╛╨┤╨╡╨╣╤Б╤В╨▓╨╕╤О
+╤А╨░╨╖╨╜╨╕╤Ж╤Л ╨╛╤Б╨╛╨▒╨╛╨╣ ╨╜╨╡ ╨▒╤Г╨┤╨╡╤В: ╨┐╤А╨╕ ╤З╨╕╤Б╨╗╨╡ ╤Н╨╗╨╡╨╝╨╡╨╜╤В╨╛╨▓ ╨┤╨╛ 20000 ╨и╨╡╨╗╨╗ ╨╡╤Б╨╗╨╕
+╨╕ ╨┐╤А╨╛╨╕╨│╤А╤Л╨▓╨░╨╡╤В, ╤В╨╛ ╨╜╨╡ ╤Б╨╕╨╗╤М╨╜╨╛.}
       (*
    procedure QuickSort(L, R: LongInt);
    var
@@ -1243,7 +1243,7 @@ function TXFileEditor.HandleCommand;
              Mark.B.X-Mark.A.X));
       if S <> '' then
         begin
-        EvalueError := False; {??? в .11 этой строки нет}
+        EvalueError := False; {??? ╨▓ .11 ╤Н╤В╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ ╨╜╨╡╤В}
         R := Evalue(S, nil);
         if not EvalueError then
           begin
@@ -1809,7 +1809,7 @@ function TXFileEditor.HandleCommand;
       FlushWorkString;
       KeyMap := RollKeyMap[KeyMap];
       HandleCommand := True;
-      WorkString := GetLine(Delta.Y); { Прочитать в новой кодировке }
+      WorkString := GetLine(Delta.Y); { ╨Я╤А╨╛╤З╨╕╤В╨░╤В╤М ╨▓ ╨╜╨╛╨▓╨╛╨╣ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╡ }
       end;
   end {case};
   end { TXFileEditor.HandleCommand };

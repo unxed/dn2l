@@ -85,7 +85,7 @@ uses
   fnotify,
   {$IFDEF PLUGIN}Plugin, {$ENDIF}
   ErrMess
-  , Events {AK155 для LongWorkBegin - LongWorkEnd}
+  , Events {AK155 ╨┤╨╗╤П LongWorkBegin - LongWorkEnd}
   ;
 
 type
@@ -284,12 +284,12 @@ procedure MISaveFile(AED: PFileEditor);
         MILockFile(AED);
         Exit;
         end;
-      {Cat: раньше почему-то проверка статуса происходила в этом месте,
-      т.е. считалось, что если поток создан успешно, то и записан
-      он также успешно, что неверно (например, когда место на диске
-      заканчивается); теперь проверка осуществляется после записи блока
-      кроме того, добавил вызов FileChanged - в случае неуспешной записи
-      содержимое файла может поменяться}
+      {Cat: ╤А╨░╨╜╤М╤И╨╡ ╨┐╨╛╤З╨╡╨╝╤Г-╤В╨╛ ╨┐╤А╨╛╨▓╨╡╤А╨║╨░ ╤Б╤В╨░╤В╤Г╤Б╨░ ╨┐╤А╨╛╨╕╤Б╤Е╨╛╨┤╨╕╨╗╨░ ╨▓ ╤Н╤В╨╛╨╝ ╨╝╨╡╤Б╤В╨╡,
+      ╤В.╨╡. ╤Б╤З╨╕╤В╨░╨╗╨╛╤Б╤М, ╤З╤В╨╛ ╨╡╤Б╨╗╨╕ ╨┐╨╛╤В╨╛╨║ ╤Б╨╛╨╖╨┤╨░╨╜ ╤Г╤Б╨┐╨╡╤И╨╜╨╛, ╤В╨╛ ╨╕ ╨╖╨░╨┐╨╕╤Б╨░╨╜
+      ╨╛╨╜ ╤В╨░╨║╨╢╨╡ ╤Г╤Б╨┐╨╡╤И╨╜╨╛, ╤З╤В╨╛ ╨╜╨╡╨▓╨╡╤А╨╜╨╛ (╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, ╨║╨╛╨│╨┤╨░ ╨╝╨╡╤Б╤В╨╛ ╨╜╨░ ╨┤╨╕╤Б╨║╨╡
+      ╨╖╨░╨║╨░╨╜╤З╨╕╨▓╨░╨╡╤В╤Б╤П); ╤В╨╡╨┐╨╡╤А╤М ╨┐╤А╨╛╨▓╨╡╤А╨║╨░ ╨╛╤Б╤Г╤Й╨╡╤Б╤В╨▓╨╗╤П╨╡╤В╤Б╤П ╨┐╨╛╤Б╨╗╨╡ ╨╖╨░╨┐╨╕╤Б╨╕ ╨▒╨╗╨╛╨║╨░
+      ╨║╤А╨╛╨╝╨╡ ╤В╨╛╨│╨╛, ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨▓╤Л╨╖╨╛╨▓ FileChanged - ╨▓ ╤Б╨╗╤Г╤З╨░╨╡ ╨╜╨╡╤Г╤Б╨┐╨╡╤И╨╜╨╛╨╣ ╨╖╨░╨┐╨╕╤Б╨╕
+      ╤Б╨╛╨┤╨╡╤А╨╢╨╕╨╝╨╛╨╡ ╤Д╨░╨╣╨╗╨░ ╨╝╨╛╨╢╨╡╤В ╨┐╨╛╨╝╨╡╨╜╤П╤В╤М╤Б╤П}
       WriteBlock(EditName, S, FileLines, EdOpt.ForcedCRLF, OptimalFill);
       if S^.Status <> stOK then
         begin
@@ -375,7 +375,7 @@ procedure MILoadFile(AED: PFileEditor; Name: String);
       {-SBlocks}
       if ClipBrd then
         begin {-$VOL begin}
-        {Cat:warn лишние переприсваивания}
+        {Cat:warn ╨╗╨╕╤И╨╜╨╕╨╡ ╨┐╨╡╤А╨╡╨┐╤А╨╕╤Б╨▓╨░╨╕╨▓╨░╨╜╨╕╤П}
         PC := nil;
         // fixme: commented by unxed
         //CopyStream2Lines(ClipBoardStream, PC);
@@ -432,7 +432,7 @@ procedure MILoadFile(AED: PFileEditor; Name: String);
       Name := lFExpand(Name);
     EditName := Name;
     DisposeStr(PWindow(Owner)^.Title);
-    {Cat:warn а не бред ли это?}
+    {Cat:warn ╨░ ╨╜╨╡ ╨▒╤А╨╡╨┤ ╨╗╨╕ ╤Н╤В╨╛?}
     if '*^&'+EditName = TempFile then
       begin
       EditName := '';
@@ -480,7 +480,7 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
     B: ^ByteArray;
     I: LongInt;
     FFSize: LongInt; {!!s}
-    J: LongInt; // длина прочитанного в буфер куска
+    J: LongInt; // ╨┤╨╗╨╕╨╜╨░ ╨┐╤А╨╛╤З╨╕╤В╨░╨╜╨╜╨╛╨│╨╛ ╨▓ ╨▒╤Г╤Д╨╡╤А ╨║╤Г╤Б╨║╨░
     K: LongInt;
     LCount: LongInt;
     Lines: PLineCollection {PCollector}; {-SBlocks}
@@ -490,15 +490,15 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
     CodePageDetector: TCodePageDetector;
     OD, OA, ODOA: LongInt;
 
-{AK155  15-02-2006 Полностью переписал, выкинув ассемблер и исправив
-   ошибку в развороте табуляции в конце промежуточного буфера. }
+{AK155  15-02-2006 ╨Я╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨┐╨╡╤А╨╡╨┐╨╕╤Б╨░╨╗, ╨▓╤Л╨║╨╕╨╜╤Г╨▓ ╨░╤Б╤Б╨╡╨╝╨▒╨╗╨╡╤А ╨╕ ╨╕╤Б╨┐╤А╨░╨▓╨╕╨▓
+   ╨╛╤И╨╕╨▒╨║╤Г ╨▓ ╤А╨░╨╖╨▓╨╛╤А╨╛╤В╨╡ ╤В╨░╨▒╤Г╨╗╤П╤Ж╨╕╨╕ ╨▓ ╨║╨╛╨╜╤Ж╨╡ ╨┐╤А╨╛╨╝╨╡╨╢╤Г╤В╨╛╤З╨╜╨╛╨│╨╛ ╨▒╤Г╤Д╨╡╤А╨░. }
   procedure SearchLines;
     var
       L: LongInt;
       MMM: array[0..1124] of Char;
-        // промежуточный буфер, чтобы не дёргать зря AnsiString
-      TS: LongInt; // ширина табуляции
-      i: Integer; // заполнение MMM
+        // ╨┐╤А╨╛╨╝╨╡╨╢╤Г╤В╨╛╤З╨╜╤Л╨╣ ╨▒╤Г╤Д╨╡╤А, ╤З╤В╨╛╨▒╤Л ╨╜╨╡ ╨┤╤С╤А╨│╨░╤В╤М ╨╖╤А╤П AnsiString
+      TS: LongInt; // ╤И╨╕╤А╨╕╨╜╨░ ╤В╨░╨▒╤Г╨╗╤П╤Ж╨╕╨╕
+      i: Integer; // ╨╖╨░╨┐╨╛╨╗╨╜╨╡╨╜╨╕╨╡ MMM
       InChar, BufEnd: PChar;
       C: Char;
     label
@@ -512,13 +512,13 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
       InChar := PChar(B);
       BufEnd := PChar(B)+J;
       while True do
-        begin { цикл строк; выход - катапультирование по концу буфера }
+        begin { ╤Ж╨╕╨║╨╗ ╤Б╤В╤А╨╛╨║; ╨▓╤Л╤Е╨╛╨┤ - ╨║╨░╤В╨░╨┐╤Г╨╗╤М╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┐╨╛ ╨║╨╛╨╜╤Ж╤Г ╨▒╤Г╤Д╨╡╤А╨░ }
         i := 0;
-        while True do { цикл символов; выход по разделителю строк или
-            катапультирование по концу буфера }
+        while True do { ╤Ж╨╕╨║╨╗ ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓; ╨▓╤Л╤Е╨╛╨┤ ╨┐╨╛ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤О ╤Б╤В╤А╨╛╨║ ╨╕╨╗╨╕
+            ╨║╨░╤В╨░╨┐╤Г╨╗╤М╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┐╨╛ ╨║╨╛╨╜╤Ж╤Г ╨▒╤Г╤Д╨╡╤А╨░ }
           begin
           if InChar = BufEnd then
-            begin // катапультирование по концу буфера
+            begin // ╨║╨░╤В╨░╨┐╤Г╨╗╤М╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┐╨╛ ╨║╨╛╨╜╤Ж╤Г ╨▒╤Г╤Д╨╡╤А╨░
             if i <> 0 then
               begin
               L := Length(ST);
@@ -547,13 +547,13 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
              Break;
              end;
           end {case};
-          { Запись символа в промежуточный буфер }
+          { ╨Ч╨░╨┐╨╕╤Б╤М ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╨▓ ╨┐╤А╨╛╨╝╨╡╨╢╤Г╤В╨╛╤З╨╜╤Л╨╣ ╨▒╤Г╤Д╨╡╤А }
           if (C <> #$09) or (TS = 0) then
-            begin { Просто запись символа }
+            begin { ╨Я╤А╨╛╤Б╤В╨╛ ╨╖╨░╨┐╨╕╤Б╤М ╤Б╨╕╨╝╨▓╨╛╨╗╨░ }
             MMM[i] := C;
             inc(i);
-            { Анализируем переполнение промежуточного буфера. В конце
-              буфера оставляем резерв на максимальный размер TabStep}
+            { ╨Р╨╜╨░╨╗╨╕╨╖╨╕╤А╤Г╨╡╨╝ ╨┐╨╡╤А╨╡╨┐╨╛╨╗╨╜╨╡╨╜╨╕╨╡ ╨┐╤А╨╛╨╝╨╡╨╢╤Г╤В╨╛╤З╨╜╨╛╨│╨╛ ╨▒╤Г╤Д╨╡╤А╨░. ╨Т ╨║╨╛╨╜╤Ж╨╡
+              ╨▒╤Г╤Д╨╡╤А╨░ ╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╨╝ ╤А╨╡╨╖╨╡╤А╨▓ ╨╜╨░ ╨╝╨░╨║╤Б╨╕╨╝╨░╨╗╤М╨╜╤Л╨╣ ╤А╨░╨╖╨╝╨╡╤А TabStep}
             if i > SizeOf(MMM)-101 then
               begin
               L := Length(ST);
@@ -563,8 +563,8 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
               end;
             end
           else
-            begin { Замена табуляции пробелами. Тут переполнение
-              буфера не анализируем, хватит запаса (см. выше). }
+            begin { ╨Ч╨░╨╝╨╡╨╜╨░ ╤В╨░╨▒╤Г╨╗╤П╤Ж╨╕╨╕ ╨┐╤А╨╛╨▒╨╡╨╗╨░╨╝╨╕. ╨в╤Г╤В ╨┐╨╡╤А╨╡╨┐╨╛╨╗╨╜╨╡╨╜╨╕╨╡
+              ╨▒╤Г╤Д╨╡╤А╨░ ╨╜╨╡ ╨░╨╜╨░╨╗╨╕╨╖╨╕╤А╤Г╨╡╨╝, ╤Е╨▓╨░╤В╨╕╤В ╨╖╨░╨┐╨░╤Б╨░ (╤Б╨╝. ╨▓╤Л╤И╨╡). }
             L := (i div TS + 1)*TS;
             while i <> L do
               begin
@@ -581,7 +581,7 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
           Move(MMM, ST[L+1], i);
           end;
 
-{!! Отбрасывание хвостовых пробелов. Надо сделать опциональным }
+{!! ╨Ю╤В╨▒╤А╨░╤Б╤Л╨▓╨░╨╜╨╕╨╡ ╤Е╨▓╨╛╤Б╤В╨╛╨▓╤Л╤Е ╨┐╤А╨╛╨▒╨╡╨╗╨╛╨▓. ╨Э╨░╨┤╨╛ ╤Б╨┤╨╡╨╗╨░╤В╤М ╨╛╨┐╤Ж╨╕╨╛╨╜╨░╨╗╤М╨╜╤Л╨╝ }
         if (ST <> '') and (ST[Length(ST)] = ' ') then
           LongDelRight(ST);
 
@@ -753,7 +753,7 @@ procedure MIUnLockFile(AED: PFileEditor);
     if EditorDefaults.EdOpt and ebfLck = 0 then
       Exit;
     if Locker = nil then
-      Exit; { на всякий случай }
+      Exit; { ╨╜╨░ ╨▓╤Б╤П╨║╨╕╨╣ ╤Б╨╗╤Г╤З╨░╨╣ }
     Dispose(Locker, Done);
     Locker := nil;
     end

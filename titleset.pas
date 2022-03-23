@@ -89,8 +89,8 @@ procedure SetTitle(Text: String);
   CurrentTitle := Text;
 
   Text := Text+#0;
-  {AK155 Под Win NT заголовок окна отображается в кодировке OEM,
-  а в Win 9x - в кодировке ANSI. }
+  {AK155 ╨Я╨╛╨┤ Win NT ╨╖╨░╨│╨╛╨╗╨╛╨▓╨╛╨║ ╨╛╨║╨╜╨░ ╨╛╤В╨╛╨▒╤А╨░╨╢╨░╨╡╤В╤Б╤П ╨▓ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╡ OEM,
+  ╨░ ╨▓ Win 9x - ╨▓ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╡ ANSI. }
   if  (SysPlatformId = 1 {Win 9x}) then
     OemToCharSt(Text);
   SetConsoleTitle(@Text[1]);

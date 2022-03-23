@@ -45,10 +45,10 @@
 //
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
-{AK155  3.06.2007 Для уменьшения циклических ссылок между модулями
- бывший startupp.pas разбит на два маодуля: startupp.pas и startupp.pas,
- при том первый из них содержит бОьшую часть того на что ссылаются
- другие модулиЮ но имеет почти пустой uses-список }
+{AK155  3.06.2007 ╨Ф╨╗╤П ╤Г╨╝╨╡╨╜╤М╤И╨╡╨╜╨╕╤П ╤Ж╨╕╨║╨╗╨╕╤З╨╡╤Б╨║╨╕╤Е ╤Б╤Б╤Л╨╗╨╛╨║ ╨╝╨╡╨╢╨┤╤Г ╨╝╨╛╨┤╤Г╨╗╤П╨╝╨╕
+ ╨▒╤Л╨▓╤И╨╕╨╣ startupp.pas ╤А╨░╨╖╨▒╨╕╤В ╨╜╨░ ╨┤╨▓╨░ ╨╝╨░╨╛╨┤╤Г╨╗╤П: startupp.pas ╨╕ startupp.pas,
+ ╨┐╤А╨╕ ╤В╨╛╨╝ ╨┐╨╡╤А╨▓╤Л╨╣ ╨╕╨╖ ╨╜╨╕╤Е ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╨▒╨Ю╤М╤И╤Г╤О ╤З╨░╤Б╤В╤М ╤В╨╛╨│╨╛ ╨╜╨░ ╤З╤В╨╛ ╤Б╤Б╤Л╨╗╨░╤О╤В╤Б╤П
+ ╨┤╤А╤Г╨│╨╕╨╡ ╨╝╨╛╨┤╤Г╨╗╨╕╨о ╨╜╨╛ ╨╕╨╝╨╡╨╡╤В ╨┐╨╛╤З╤В╨╕ ╨┐╤Г╤Б╤В╨╛╨╣ uses-╤Б╨┐╨╕╤Б╨╛╨║ }
 
 unit Startupp;
 
@@ -60,7 +60,7 @@ uses
 
 type
 
-  {Cat: выкинул, т.к. TTextCollection = TLineCollection}
+  {Cat: ╨▓╤Л╨║╨╕╨╜╤Г╨╗, ╤В.╨║. TTextCollection = TLineCollection}
   (*
   PTextCollection =^TTextCollection;
   TTextCollection = Object( TCollection )
@@ -129,7 +129,7 @@ while SourceDir[Length(SourceDir)] <> '/' do // slash change by unxed
   SetLength(SourceDir, Length(SourceDir)-1);
 StartupDir := SourceDir;
 {SourceDir := Dos.GetEnv('DN')}
-{Cat: заменил DNVP на DN2 - так намного логичнее}
+{Cat: ╨╖╨░╨╝╨╡╨╜╨╕╨╗ DNVP ╨╜╨░ DN2 - ╤В╨░╨║ ╨╜╨░╨╝╨╜╨╛╨│╨╛ ╨╗╨╛╨│╨╕╤З╨╜╨╡╨╡}
 (*
   if ExistDir(Dos.GetEnv('DNVP')) or (Dos.GetEnv('DNVP')='') then
       SourceDir := Dos.GetEnv('DNVP')
