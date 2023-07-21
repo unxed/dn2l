@@ -52,6 +52,7 @@ unit Phones;
 interface
 
 uses
+  stddlg,
   Defines, Objects2, Streams, Drivers, Dialogs, Menus,
   Views, DNStdDlg, Objects, StrView
   ;
@@ -102,8 +103,8 @@ type
     Info: PDStringView;
     destructor Done; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
-    function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
-    function GetKey(var S: String): Pointer; virtual;
+    function GetText(Item: LongInt; MaxLen: Integer): String;// virtual; // by unxed
+    function GetKey(var S: String): Pointer;// virtual; // by unxed
     procedure SetList(Alpha: Boolean);
     {      procedure SetState(AState: Word; Enable: Boolean); virtual;}
     end;
