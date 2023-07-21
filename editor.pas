@@ -51,7 +51,7 @@ unit Editor;
 interface
 
 uses
-  Drivers, Microed
+  Objects2, Drivers, Microed
   ;
 
 type
