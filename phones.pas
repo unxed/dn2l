@@ -803,8 +803,11 @@ procedure TPhoneBox.HandleEvent;
     M := 0;
     if  (Active = nil) or AlphaMode or SearchMode then
       Exit;
+    // fixme: commented by unxed
+    {
     S := GetFileNameDialog(x_x, GetString(dlPB_ImportPhones),
         GetString(dlFileName), fdOKButton+fdHelpButton, hsImportPhones);
+    }
     if S = '' then
       Exit;
     F := New(PTextReader, Init(S));
