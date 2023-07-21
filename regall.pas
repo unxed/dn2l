@@ -79,7 +79,7 @@ uses
   {$IFDEF PHONES}Phones, {$ENDIF}
   {$IFDEF NetBrowser}NetBrwsr, {$ENDIF}
   {$ENDIF !RCP}
-  ColorSel,
+//  ColorSel, // fixme: commented by unxed
   Dialogs, Menus, Streams, ObjType, Scroller, Setups,
   Validate, Views, SWE {$IFDEF UserSaver}, UserSavr {$ENDIF}
   , EdWin
@@ -391,11 +391,14 @@ RCollection : TStreamRec = (
       VmtLink: (TypeOf(Objects.TCollection));
       Load: @Objects.TCollection.Load;
       Store: @Objects.TCollection.Store);
+// fixme: commented by unxed
+(*
 RLineCollection : TStreamRec = (
       ObjType: otLineCollection;
       VmtLink: (TypeOf(Objects.TLineCollection));
       Load: @Objects.TLineCollection.Load;
       Store: @Objects.TLineCollection.Store);
+*)
 RStringCollection : TStreamRec = (
       ObjType: otStringCollection;
       VmtLink: (TypeOf(Objects.TStringCollection));
@@ -413,6 +416,8 @@ RStringList : TStreamRec = (
       Store: nil);
     {$ENDIF !RCP}
     { ColorSel }
+// fixme: commented by unxed
+(*
 RColorSelector : TStreamRec = (
       ObjType: otColorSelector;
       VmtLink: (TypeOf(ColorSel.TColorSelector));
@@ -448,6 +453,7 @@ RR_BWSelector : TStreamRec = (
       VmtLink: (TypeOf(ColorSel.T_BWSelector));
       Load: @ColorSel.T_BWSelector.Load;
       Store: @ColorSel.T_BWSelector.Store);
+*)
     {$IFNDEF RCP}
     {$IFDEF DBView}
     { DBView }
@@ -484,6 +490,8 @@ RInputLine : TStreamRec = (
       VmtLink: (TypeOf(Dialogs.TInputLine));
       Load: @Dialogs.TInputLine.Load;
       Store: @Dialogs.TInputLine.Store);
+// fixme: commented by unxed
+(*
 RHexLine : TStreamRec = (
       ObjType: otHexLine;
       VmtLink: (TypeOf(Dialogs.THexLine));
@@ -494,6 +502,7 @@ RLongInputLine : TStreamRec = (
       VmtLink: (TypeOf(Dialogs.TLongInputLine));
       Load: @Dialogs.TLongInputLine.Load;
       Store: @Dialogs.TLongInputLine.Store);
+*)
 RButton : TStreamRec = (
       ObjType: otButton;
       VmtLink: (TypeOf(Dialogs.TButton));
@@ -509,11 +518,14 @@ RRadioButtons : TStreamRec = (
       VmtLink: (TypeOf(Dialogs.TRadioButtons));
       Load: @Dialogs.TRadioButtons.Load;
       Store: @Dialogs.TRadioButtons.Store);
+// fixme: commented by unxed
+(*
 RComboBox : TStreamRec = (
       ObjType: otComboBox;
       VmtLink: (TypeOf(Dialogs.TComboBox));
       Load: @Dialogs.TComboBox.Load;
       Store: @Dialogs.TComboBox.Store);
+*)
 RCheckBoxes : TStreamRec = (
       ObjType: otCheckBoxes;
       VmtLink: (TypeOf(Dialogs.TCheckBoxes));
@@ -549,6 +561,8 @@ RParamText : TStreamRec = (
       VmtLink: (TypeOf(Dialogs.TParamText));
       Load: @Dialogs.TParamText.Load;
       Store: @Dialogs.TParamText.Store);
+// fixme: commented by unxed
+(*
 RNotepad : TStreamRec = (
       ObjType: otNotepad;
       VmtLink: (TypeOf(Dialogs.TNotepad));
@@ -574,6 +588,7 @@ RNotepadFrame : TStreamRec = (
       VmtLink: (TypeOf(Dialogs.TNotepadFrame));
       Load: @Dialogs.TNotepadFrame.Load;
       Store: @Dialogs.TNotepadFrame.Store);
+*)
     {$IFNDEF RCP}
     { DiskInfo }
 RDiskInfo : TStreamRec = (
@@ -598,6 +613,8 @@ RDesktop : TStreamRec = (
       Load: @DnApp.TDesktop.Load;
       Store: @DnApp.TDesktop.Store);
     { DnStdDlg }
+// fixme: commented by unxed
+(*
 RFileInputLine : TStreamRec = (
       ObjType: otFileInputLine;
       VmtLink: (TypeOf(DNStdDlg.TFileInputLine));
@@ -628,6 +645,7 @@ RSortedListBox : TStreamRec = (
       VmtLink: (TypeOf(DNStdDlg.TSortedListBox));
       Load: @DnStdDlg.TSortedListBox.Load;
       Store: @DnStdDlg.TSortedListBox.Store);
+*)
     { DNUtil }
 RDataSaver : TStreamRec = (
       ObjType: otDataSaver;
@@ -698,6 +716,8 @@ RDirView : TStreamRec = (
       VmtLink: (TypeOf(FlPanel.TDirView));
       Load: @FlPanel.TDirView.Load;
       Store: @FlPanel.TDirView.Store);
+// fixme: commented by unxed
+(*
 RSortView : TStreamRec = (
       ObjType: otSortView;
       VmtLink: (TypeOf(TopView.TSortView));
@@ -708,6 +728,7 @@ RSeparator : TStreamRec = (
       VmtLink: (TypeOf(DblWnd.TSeparator));
       Load: @DblWnd.TSeparator.Load;
       Store: @DblWnd.TSeparator.Store);
+*)
 RDriveLine : TStreamRec = (
       ObjType: otDriveLine;
       VmtLink: (TypeOf(FlPanel.TDriveLine));
@@ -865,11 +886,14 @@ RNetInfo : TStreamRec = (
       Store: @NetInfo.TNetInfo.Store);
     {$ENDIF NETINFO}
     {$IFDEF PHONES}
+// fixme: commented by unxed
+(*
 RDStringView : TStreamRec = (
       ObjType: otDStringView;
       VmtLink: (TypeOf(StrView.TDStringView));
       Load: @StrView.TDStringView.Load;
       Store: @StrView.TDStringView.Store);
+*)
 RPhone : TStreamRec = (
       ObjType: otPhone;
       VmtLink: (TypeOf(Phones.TPhone));
@@ -951,11 +975,14 @@ RSaversListBox : TStreamRec = (
     {$ENDIF SS}
     {$IFNDEF RCP}
     { Startup }
+// fixme: commented by unxed
+(*
 RTextCollection : TStreamRec = (
       ObjType: otTextCollection;
       VmtLink: (TypeOf(Startupp.TTextCollection));
       Load: @Startupp.TTextCollection.Load;
       Store: @Startupp.TTextCollection.Store);
+*)
     { Terminal }
     {$IFDEF Modem}
 RTerminalWindow : TStreamRec = (
@@ -1055,11 +1082,14 @@ RUserView : TStreamRec = (
       VmtLink: (TypeOf(UserMenu.TUserView));
       Load: @UserMenu.TUserView.Load;
       Store: @UserMenu.TUserView.Store);
+// fixme: commented by unxed
+(*
 RMyScrollBar : TStreamRec = (
       ObjType: otMyScrollBar;
       VmtLink: (TypeOf(Views.TMyScrollBar));
       Load: @Views.TMyScrollBar.Load;
       Store: @Views.TMyScrollBar.Store);
+*)
     { XDblWnd }
 RDoubleWindow : TStreamRec = (
       ObjType: otDoubleWindow;
@@ -1078,18 +1108,14 @@ procedure RegisterAll;
   var
     P: PStreamRec;
     I: Integer;
-  type
-    PtrRec = record
-      Ofs: LongInt;
-      end;
   begin
     P := @RFilterValidator;
     I := Ofs(RRangeValidator) - Ofs(RFilterValidator);
     {use it instead of SizeOf() because of compiler's data align engine}
     repeat
       RegisterType(P^);
-      Inc(PtrRec(P).Ofs, I);
-    until PtrRec(P).Ofs > Ofs(RColorPoint);
+      Inc(P, I);
+    until P > Addr(RColorPoint);
   end;
 
 end.
