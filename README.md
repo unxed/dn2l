@@ -87,6 +87,10 @@ Anyway we should thank NDN devs for usable Linux DN version and for proofing tha
 
 Work on porting Free Vision to UTF8 is being done in separate repo: https://github.com/unxed/fv_utf8
 
+#### 21-07-2023 update
+Free Vision has already been ported to Unicode in Free Pascal. So it's probably better to use official implementation (see units with names starting with "u"):
+https://github.com/fpc/FPCSource/tree/main/packages/fv/src
+
 ### Acknowledgments
 
 Based on Dos Navigator by RIT Research Labs, with many thanks for opening the code. Also many thanks to DN OSP team for making old style DOS source code 32-bit and multi-platform friendly. Thanks to old-dos.ru team for hosting Virtual Pascal distribution — dn2l, perhaps, would never have been born without the ability to find and download VP. Thanks to VP developers for making their product available as freeware — without permission to use their compiler, dn2l might never have been built. And also thanks to habr.com community for inspiration!
