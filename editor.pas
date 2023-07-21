@@ -1774,8 +1774,8 @@ function TXFileEditor.HandleCommand;
               Init(EditName, EditName, False)));
           Message(Application, evCommand, cmViewText,
             @EditName);
-          MessageL(Application, evCommand, cmScrollBarChanged,
-            GetOffsetForLineNumber(EditName, Pos.Y+1));
+          Message(Application, evCommand, cmScrollBarChanged, // fixme: MessageL -> Message, changed by unxed
+            Pointer(GetOffsetForLineNumber(EditName, Pos.Y+1)));
           end;
         ClearEvent(Event);
         Message(Owner, evCommand, cmClose, nil);
