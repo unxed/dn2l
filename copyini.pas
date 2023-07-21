@@ -41,15 +41,15 @@ procedure CopyIniVarsToCfgVars;
   SystemData.ForceDefArch := ForceDefaultArchiver;
   for i := 0 to 8 do
     Dispose(DirsToChange[i]);
-  DirsToChange[0] := NewStr(QDirs1);
-  DirsToChange[1] := NewStr(QDirs2);
-  DirsToChange[2] := NewStr(QDirs3);
-  DirsToChange[3] := NewStr(QDirs4);
-  DirsToChange[4] := NewStr(QDirs5);
-  DirsToChange[5] := NewStr(QDirs6);
-  DirsToChange[6] := NewStr(QDirs7);
-  DirsToChange[7] := NewStr(QDirs8);
-  DirsToChange[8] := NewStr(QDirs9);
+  DirsToChange[0] := QDirs1;
+  DirsToChange[1] := QDirs2;
+  DirsToChange[2] := QDirs3;
+  DirsToChange[3] := QDirs4;
+  DirsToChange[4] := QDirs5;
+  DirsToChange[5] := QDirs6;
+  DirsToChange[6] := QDirs7;
+  DirsToChange[7] := QDirs8;
+  DirsToChange[8] := QDirs9;
     {$IFDEF Win32}
     AltGreyAsAlt := AltGrAsAlt; {JO}
     {$ENDIF}
