@@ -82,6 +82,7 @@ function NewLongStr(const S: LongString): PLongString;
 procedure DisposeStrDN(var P: PString);
 procedure DisposeLongStr(var P: PLongString);
 procedure ReplaceP(var P: PString; S: String);
+procedure ReplaceP2(var P: PShortString; S: String);
 function CnvString(P: PString): String; {conversion: PString to String}
 function CnvString2(P: PShortString): String; // by unxed
 function CnvLongString(P: PLongString): LongString;
@@ -1661,6 +1662,23 @@ procedure DisposeStrDN(var P: PString);
   end;
 
 procedure ReplaceP(var P: PString; S: String);
+  begin
+  DelRight(S);
+  if P = nil then
+    begin
+    if S <> '' then
+      P := NewStrDN(S);
+    end
+  else if Length(S) = Length(P^) then
+    P^:= S
+  else
+    begin
+    DisposeStrDN(P);
+    P := NewStr(S);
+    end;
+  end;
+
+procedure ReplaceP2(var P: PShortString; S: String);
   begin
   DelRight(S);
   if P = nil then

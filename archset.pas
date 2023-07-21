@@ -50,7 +50,8 @@ unit ArchSet;
 interface
 uses
   Archiver,
-  Types
+  Types,
+  sysutils
   ;
 
 procedure SetupArchive(ArchCommand: Word);
@@ -160,7 +161,7 @@ procedure SetupArchive;
     s := ArcName(ArchCommand+cmLoConfigArchiver);
     if Length(s)+Length(D^.Title^)+10 < D^.Size.X then
       s := D^.Title^+' - '+s;
-    ReplaceP(D^.Title, s);
+    ReplaceP2(D^.Title, s);
     end;
 
   label Ex;
@@ -224,6 +225,7 @@ procedure SetupArchive;
   with Arch^ do
     begin
     Done;
+    AssignStr(Packer, DT.Pack);
     Packer := NewStr(DT.Pack);
     UnPacker := NewStr(DT.Unpack);
     Extract := NewStr(DT.Extract);
