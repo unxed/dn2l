@@ -227,7 +227,7 @@ constructor TPrintManager.Init;
     Exit;
   isValid := True;
   Paused := False;
-  RegisterToBackground(@Self);
+  // RegisterToBackground(@Self); // fixme: commented by unxed
   end;
 
 function TPrintManager.SetDestination;
@@ -238,6 +238,7 @@ function TPrintManager.SetDestination;
     hFile: LongInt;
     NotDev: Boolean;
   begin
+  (*
   SetDestination := False;
   NotDev := False;
   P := Paused;
@@ -339,6 +340,7 @@ function TPrintManager.SetDestination;
   InitPrinter;
   Paused := P;
   SetDestination := True;
+  *)
   end { TPrintManager.SetDestination };
 
 constructor TPrintManager.Load;
@@ -371,7 +373,7 @@ constructor TPrintManager.Load;
   PrintStream^.Seek(FilePos);
   {PrintStream := nil;}
   Printer := @Self;
-  RegisterToBackground(@Self);
+  //RegisterToBackground(@Self); // fixme: commented by unxed
   end { TPrintManager.Load };
 
 procedure TPrintManager.Store;
@@ -679,7 +681,7 @@ procedure PrintFile(const S: String);
     if W <> nil then
       begin
       W^.Hide;
-      Desktop^.InsertView(W, Desktop^.Last);
+      // Desktop^.InsertView(W, Desktop^.Last); // fixme: commented by unxed
       W^.Show;
       end;
     end;
