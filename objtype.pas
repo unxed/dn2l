@@ -124,7 +124,7 @@ const
 
   { --- ColorSel }
 
-  otColorSelector = 21;
+//  otColorSelector = 21; // fixme: commented by unxed
   otMonoSelector = 22;
   otColorDisplay = 23;
   otColorGroupList = 24;
