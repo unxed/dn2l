@@ -1,0 +1,50 @@
+
+how to build:
+fpc ./dn.pas
+
+не забываем добавлять // changed by unxed
+и // added by unxed
+возле всех изменений
+
+--
+
+Код:
+    exrules: array[Low(THighliteRule)..Succ(High(THighliteRule))] of PChar;
+
+Ошибка:
+highlite.pas(1118,40) Error: range check error while evaluating constants (4 must be between 0 and 3)
+
+Решение:
+Добавить в THighliteRule дополнительное поле, а Succ убрать:
+  THighliteRule = (
+    hrCommentStarts,
+    hrCommentStrings,
+    hrKeywords1,
+    hrKeywords2,
+    hrExtra
+    );
+    // ...
+    exrules: array[Low(THighliteRule)..High(THighliteRule)] of PChar;
+
+Коммит:
+https://github.com/unxed/dn2l/commit/5b020d7808c9165ebf4346d6243d3b04586365a9
+
+--
+
+Код:
+      FC^.AtReplace(I, nil); {-$VOL}
+
+Ошибка:
+flpanelx.pas(604,11) Error: identifier idents no member "AtReplace"
+
+Решение:
+Заменить проблемную строчку на
+      FC^.AtDelete(I);
+      FC^.AtInsert(I, nil);
+      {-$VOL}
+
+Коммит:
+https://github.com/unxed/dn2l/commit/a176a28e22ae347b25d74aeb55089e9644a5e30e
+
+--
+
