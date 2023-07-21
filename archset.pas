@@ -225,8 +225,6 @@ procedure SetupArchive;
   with Arch^ do
     begin
     Done;
-
-    Packer := PShortString(NewStr(DT.Pack));
     Packer := PShortString(NewStr(DT.Pack));
     UnPacker := PShortString(NewStr(DT.Unpack));
     Extract := PShortString(NewStr(DT.Extract));
