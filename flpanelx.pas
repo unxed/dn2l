@@ -2096,7 +2096,7 @@ WrongArc:
         if DirsToChange[I] <> nil then
           DoChange(CnvString(DirsToChange[I]));
         end;
-      kbCtrl1..kbCtrl0:
+      kbCtrl0..kbCtrl1: // changed by unxed: adopted to FV constants value
         begin
         GetParam((Event.KeyCode shr 8)-(kbCtrl1 shr 8)+1
                   + ($10000*Byte(FullMenuPanelSetup)));
@@ -2129,8 +2129,8 @@ WrongArc:
           Drive^.EditDescription(PF);
         CE;
         end;
-      //kbBack, kbShiftBack:
-      // fixme: Free Vision does not support those codes. by unxed
+      (*
+      kbBack, kbShiftBack:
         if  (FMSetup.Options and fmoBackGoesBack <> 0) and
             ( (ShiftState and 3 <> 0) or ((CmdLine.Str = '') and
                 (not CmdLine.StrCleared) and (not QuickSearch)))
@@ -2139,6 +2139,7 @@ WrongArc:
           _CtrlPgUp;
           Exit;
           end;
+      *) // fixme: Free Vision does not support those codes. by unxed
       kbUp, kbDown, kbUpUp, kbDownUp:
         begin
         CtrlWas := ShiftState and kbCtrlShift <> 0;
@@ -2150,6 +2151,7 @@ WrongArc:
         Message(@Self, evCommand, cmForceRescan, nil);
         CE
         end;
+      (*
       kbGrayAst, kbCtrlGAst:
         begin
         StopQuickSearch;
@@ -2198,8 +2200,9 @@ WrongArc:
         Owner^.Redraw;
         CE
         end;
-      kbCtrlRight, kbCtrlLeft,
-      kbCtrlShiftRight, kbCtrlShiftLeft:
+      *) // fixme: Free Vision does not support those codes. by unxed
+      kbCtrlRight, kbCtrlLeft(*,
+      kbCtrlShiftRight, kbCtrlShiftLeft*): // fixme: commented "duplicate" case labels by unxed
         _DoCtrl;
       kbCtrlDel:
         if Files^.Count > 0 then
@@ -2226,9 +2229,9 @@ WrongArc:
           CE;
           end;
       { Flash 23.05.2005: Добавлено взятие короткого имени с путём }
-      kbCtrlIns, kbCtrlShiftIns, kbCtrlAltIns, kbCtrlAltShiftIns:
+      kbCtrlIns(*, kbCtrlShiftIns, kbCtrlAltIns, kbCtrlAltShiftIns*): // fixme: commented by unxed
         {if ShiftState and kbCtrlShift<>0 then}_CtrlIns;
-      kbCtrlEnter, kbCtrlShiftEnter, kbCtrlAltEnter:
+      kbCtrlEnter(*, kbCtrlShiftEnter, kbCtrlAltEnter*): // fixme: commented by unxed
         _CtrlEnter;
       kbLeft:
         if  (Size.X+2 > LineLength) then
@@ -2290,8 +2293,9 @@ WrongArc:
         OldDelta := -1;
         ScrollBar^.SetValue(Files^.Count-1)
         end;
+      (*
       kbAltEnter, kbAltGrayEnter, kbAltShiftEnter {$IFDEF Win32},
-       kbAltHome {$ENDIF}:
+      kbAltHome {$ENDIF}:
         if _AltEnter then
           Exit
         else
@@ -2358,6 +2362,7 @@ WrongArc:
             else
               _GotoExt;
           end;
+      *) // fixme: commented by unxed
       kbCtrlPgUp:
         _CtrlPgUp;
       kbCtrlPgDn:
