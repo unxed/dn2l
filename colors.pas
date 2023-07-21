@@ -62,7 +62,7 @@ type
 
   PWindowList = ^TWindowList;
   TWindowList = object(TListBox)
-    function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
+    function GetText(Item: LongInt; MaxLen: Integer): String; // virtual; // commented by unxed
     end;
 
   PWindowCol = ^TWindowCol;
