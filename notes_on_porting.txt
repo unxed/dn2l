@@ -4,7 +4,10 @@ fpc ./dn.pas
 
 не забываем добавлять // changed by unxed
 и // added by unxed
-возле всех изменений
+и // commented by unxed
+возле всех изменений.
+
+и помечать изменения с потенциальной потерей функциональности как lossy.
 
 --
 
@@ -45,6 +48,25 @@ flpanelx.pas(604,11) Error: identifier idents no member "AtReplace"
 
 Коммит:
 https://github.com/unxed/dn2l/commit/a176a28e22ae347b25d74aeb55089e9644a5e30e
+
+--
+
+Код:
+flpanelx.pas(759,12) Error: identifier idents no member "Sort"
+
+Ошибка:
+    Files^.Sort;
+
+Тип Files — PFilesCollection, описан в filescol.pas
+Наследуется от системной TSortedCollection.
+
+Решение:
+В системной TSortedCollection метода Sort нет:
+https://www.freepascal.org/docs-html/rtl/objects/tsortedcollection.html
+Закомментим пока вызов Sort (возможно, там автоматическая сортировка, но это не точно).
+
+Коммит:
+https://github.com/unxed/dn2l/commit/739ff4b89d6bc6dcf120f1f0f3de25af224b8c02
 
 --
 
