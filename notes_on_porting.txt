@@ -30,7 +30,7 @@ highlite.pas(1118,40) Error: range check error while evaluating constants (4 mus
     exrules: array[Low(THighliteRule)..High(THighliteRule)] of PChar;
 
 Коммит:
-https://github.com/unxed/dn2l/commit/5b020d7808c9165ebf4346d6243d3b04586365a9
+https://github.com/unxed/dn2l/commit/5b020d7
 
 --
 
@@ -47,7 +47,7 @@ flpanelx.pas(604,11) Error: identifier idents no member "AtReplace"
       {-$VOL}
 
 Коммит:
-https://github.com/unxed/dn2l/commit/a176a28e22ae347b25d74aeb55089e9644a5e30e
+https://github.com/unxed/dn2l/commit/a176a28
 
 --
 
@@ -65,8 +65,9 @@ flpanelx.pas(759,12) Error: identifier idents no member "Sort"
 https://www.freepascal.org/docs-html/rtl/objects/tsortedcollection.html
 Закомментим пока вызов Sort (возможно, там автоматическая сортировка, но это не точно).
 
-Коммит:
-https://github.com/unxed/dn2l/commit/739ff4b89d6bc6dcf120f1f0f3de25af224b8c02
+Коммиты:
+https://github.com/unxed/dn2l/commit/739ff4b
+https://github.com/unxed/dn2l/commit/6afaa63
 
 --
 
@@ -108,8 +109,22 @@ flpanelx.pas(2024,7) Error: Identifier not found "kbCtrlAltShift1"
 Закомментировал пока код, обрабатывающий эти сочетания клавиш. Они определены в commands.pas,
 но не используются, т.к. подобные константы берутся из FV, а конкретно этих там нет.
 
-Коммит:
+Коммиты:
 https://github.com/unxed/dn2l/commit/b92518f
+https://github.com/unxed/dn2l/commit/7f35409
 
 --
+
+Код:
+  Result := Min(CalcNameLength+1+CalcLengthWithoutName, MaxViewWidth);
+
+Ошибка:
+flpanelx.pas(3358,13) Error: Identifier not found "Min"
+
+Решение:
+uses
+  math,
+
+Коммит:
+https://github.com/unxed/dn2l/commit/7701bce
 
