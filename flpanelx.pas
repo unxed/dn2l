@@ -54,6 +54,7 @@ FlPanelX;
 interface
 
 uses
+  math,
   drivers2,
   Objects, dnctrls, Defines, Streams,
   Views, Drivers, FilesCol, PDSetup, Drives, xTime
