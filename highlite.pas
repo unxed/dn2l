@@ -141,7 +141,8 @@ type
     hrCommentStarts,
     hrCommentStrings,
     hrKeywords1,
-    hrKeywords2
+    hrKeywords2,
+    hrExtra // added by unxed
     );
 
 procedure Highlites(Len: Integer; S: PChar; const Params: THighliteParams);
@@ -1115,7 +1116,7 @@ procedure FixHighliteParams(var Params: THighliteParams);
 function InsertHighliteRule(var Params: THighliteParams;
      Index: THighliteRule; const Rule: String): Boolean;
   var
-    exrules: array[Low(THighliteRule)..Succ(High(THighliteRule))] of PChar;
+    exrules: array[Low(THighliteRule)..High(THighliteRule)] of PChar; // changed by unxed
     rules: THiliteRules absolute exrules;
     space: Integer;
     comma: Boolean;
