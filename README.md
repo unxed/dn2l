@@ -1,9 +1,14 @@
 # dn2l
 dn2l — Dos Navigator Open Source Project linux port tryouts
 
-To build and run (very experimental) dn2l, use this one-liner:
+### Experimental branch
+
+This is experimental branch aimed for switching from Virtual Pascal to Free Pascal
+and from custom Turbo Vision implementation to Free Vision.
+
 ```
-wget https://raw.githubusercontent.com/unxed/dn2l/main/linux/init.sh && chmod +x init.sh && ./init.sh
+apt install fpc
+./build.sh
 ```
 
 ### Current state:
