@@ -755,8 +755,9 @@ procedure TFilePanelRoot.ReadDirectory;
 
   { Бывает сортировка по описаниям, поэтому Sort надо делать
   после ReadDescrptions }
-  if SM <> psmUnsorted then
-    Files^.Sort;
+//  if SM <> psmUnsorted then
+//    Files^.Sort;
+// commented by unxed. lossy.
   if Abort then
     Exit;
 
