@@ -49,7 +49,8 @@ unit ArchSet;
 
 interface
 uses
-  Archiver
+  Archiver,
+  Types
   ;
 
 procedure SetupArchive(ArchCommand: Word);
@@ -143,8 +144,9 @@ procedure SetupArchive;
       S: String;
       FreeByte: byte;
     begin
-    S := fReplace('~', '', CnvString(LookUpMenu(MenuBar^.Menu, ArcT,
-             dfByCommand)^.Name));
+//    S := fReplace('~', '', CnvString(LookUpMenu(MenuBar^.Menu, ArcT,
+//             dfByCommand)^.Name));
+// fixme: commented by unxed
     FreeByte := PosChar('-', S);
     if FreeByte > 0 then
       Delete(S, 1, FreeByte+1);
@@ -170,31 +172,31 @@ procedure SetupArchive;
     Exit;
   with Arch^ do
     begin
-    DT.Pack := CnvString(Packer);
-    DT.Unpack := CnvString(UnPacker);
-    DT.Extract := CnvString(Extract);
-    DT.ExWP := CnvString(ExtractWP);
-    DT.Add := CnvString(Add);
-    DT.Move := CnvString(Move);
-    DT.Test := CnvString(Test);
-    DT.Delete := CnvString(Delete);
-    DT.Password := CnvString(Garble);
-    DT.Force := CnvString(ForceMode);
-    DT.IncludeP := CnvString(IncludePaths);
-    DT.ExcludeP := CnvString(ExcludePaths);
-    DT.RecovRec := CnvString(RecoveryRec);
-    DT.SelfExtr := CnvString(SelfExtract);
-    DT.Solid := CnvString(Solid);
-    DT.Recurse := CnvString(RecurseSubDirs);
-    DT.PthInside := CnvString(SetPathInside);
-    DT.StoreC := CnvString(StoreCompression);
-    DT.FastestC := CnvString(FastestCompression);
-    DT.FastC := CnvString(FastCompression);
-    DT.NormC := CnvString(NormalCompression);
-    DT.GoodC := CnvString(GoodCompression);
-    DT.MaxC := CnvString(UltraCompression);
-    DT.CList := CnvString(ComprListChar);
-    DT.EList := CnvString(ExtrListChar);
+    DT.Pack := CnvString2(Packer);
+    DT.Unpack := CnvString2(UnPacker);
+    DT.Extract := CnvString2(Extract);
+    DT.ExWP := CnvString2(ExtractWP);
+    DT.Add := CnvString2(Add);
+    DT.Move := CnvString2(Move);
+    DT.Test := CnvString2(Test);
+    DT.Delete := CnvString2(Delete);
+    DT.Password := CnvString2(Garble);
+    DT.Force := CnvString2(ForceMode);
+    DT.IncludeP := CnvString2(IncludePaths);
+    DT.ExcludeP := CnvString2(ExcludePaths);
+    DT.RecovRec := CnvString2(RecoveryRec);
+    DT.SelfExtr := CnvString2(SelfExtract);
+    DT.Solid := CnvString2(Solid);
+    DT.Recurse := CnvString2(RecurseSubDirs);
+    DT.PthInside := CnvString2(SetPathInside);
+    DT.StoreC := CnvString2(StoreCompression);
+    DT.FastestC := CnvString2(FastestCompression);
+    DT.FastC := CnvString2(FastCompression);
+    DT.NormC := CnvString2(NormalCompression);
+    DT.GoodC := CnvString2(GoodCompression);
+    DT.MaxC := CnvString2(UltraCompression);
+    DT.CList := CnvString2(ComprListChar);
+    DT.EList := CnvString2(ExtrListChar);
     DT.AllVersion := Word(AllVersion);
     DT.PutDirs := Word(PutDirs);
     {$IFNDEF DPMI32}
