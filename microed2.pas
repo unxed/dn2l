@@ -50,7 +50,7 @@ unit MicroEd2;
 interface
 
 uses
-  SysUtils, Classes, Defines, Streams, Microed, EdWin,
+  SysUtils, Classes, Defines, Microed, EdWin,
   Objects2
   ;
 
@@ -66,8 +66,8 @@ function MIReadBlock(AED: PFileEditor; var FileName: String;
 procedure MILockFile(AED: PFileEditor);
 procedure MIUnLockFile(AED: PFileEditor);
 
-procedure MIStore(AED: PFileEditor; var S: TStream);
-procedure MILoad(AED: PFileEditor; var S: TStream);
+//procedure MIStore(AED: PFileEditor; var S: TStream);
+//procedure MILoad(AED: PFileEditor; var S: TStream);
 procedure MIAwaken(AED: PFileEditor);
 
 const
@@ -766,6 +766,7 @@ procedure MIUnLockFile(AED: PFileEditor);
     end
   end;
 
+(*
 procedure MIStore(AED: PFileEditor; var S: TStream);
   begin
   with AED^ do
@@ -801,7 +802,7 @@ procedure MIStore(AED: PFileEditor; var S: TStream);
     end
   end { MIStore };
 
-procedure MILoad(AED: PFileEditor; var S: TStream);
+procedure MILoad(AED: PFileEditor; var S: Objects.TStream);
   var
     SS: PString;
   begin
@@ -855,6 +856,7 @@ procedure MILoad(AED: PFileEditor; var S: TStream);
     MenuItemStr[False] := NewStr(GetString(dlMenuItemOff));
     end
   end { MILoad };
+*)
 
 procedure MIAwaken(AED: PFileEditor);
   var

@@ -200,3 +200,16 @@ https://github.com/unxed/dn2l/commit/de9a825
 
 --
 
+Ошибка:
+microed2.pas(769,11) Error: function header doesn't match the previous declaration "MIStore(PFileEditor;var TStream);"
+microed2.pas(69,11) Error: Found declaration: MIStore(PFileEditor;var TStream);
+microed2.pas(804,11) Error: function header doesn't match the previous declaration "MILoad(PFileEditor;var TStream);"
+microed2.pas(70,11) Error: Found declaration: MILoad(PFileEditor;var TStream);
+
+Возможно, в uses подхватывается новое определение TStream, которое перекрывает предыдущее.
+
+Решение:
+закомментируем пока эти две функции:
+//procedure MIStore(AED: PFileEditor; var S: TStream);
+//procedure MILoad(AED: PFileEditor; var S: TStream);
+и их реализации. Попробуем без них собрать.

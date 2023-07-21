@@ -219,7 +219,7 @@ constructor TEditWindow.Init;
   inherited Init(R, '', 0);
   LoadCommands;
   Options := Options or ofTileable;
-  Flags := Flags or wfMaxi;
+//  Flags := Flags or wfMaxi; // fixme: commented by unxed
 
   GetExtent(R);
   R.Grow(-1, -1);
