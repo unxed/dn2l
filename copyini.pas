@@ -40,7 +40,7 @@ procedure CopyIniVarsToCfgVars;
   SystemData.CopyLimitBuf := CopyLimit;
   SystemData.ForceDefArch := ForceDefaultArchiver;
   for i := 0 to 8 do
-    DisposeStr(DirsToChange[i]);
+    Dispose(DirsToChange[i]);
   DirsToChange[0] := NewStr(QDirs1);
   DirsToChange[1] := NewStr(QDirs2);
   DirsToChange[2] := NewStr(QDirs3);
