@@ -145,7 +145,7 @@ constructor TPMWindow.Init;
     S: PView;
   begin
   inherited Init(R, GetString(dlPManagerTitle));
-  Number := GetNum;
+  //Number := GetNum;
   R.Assign(Size.X-13, 1, Size.X-12, Size.Y-4);
   P := New(PScrollBar, Init(R));
   Insert(P);
