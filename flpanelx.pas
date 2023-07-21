@@ -2022,6 +2022,7 @@ WrongArc:
     begin
     PanelHeight := Size.Y-Byte((Pansetup^.Show.MiscOptions and 2) <> 0);
     case Event.KeyCode of
+      (*
       kbCtrlAltShift1, kbCtrlAltShift2, kbCtrlAltShift3,
       kbCtrlAltShift4, kbCtrlAltShift5, kbCtrlAltShift6,
       kbCtrlAltShift7, kbCtrlAltShift8, kbCtrlAltShift9:
@@ -2086,6 +2087,7 @@ WrongArc:
         end {case};
         DoneIniEngine;
         end;
+      *) // fixme: Free Vision does not support those codes. by unxed
       kbAlt1, kbAlt2, kbAlt3, kbAlt4, kbAlt5, kbAlt6, kbAlt7, kbAlt8,
        kbAlt9:
         begin
@@ -2127,7 +2129,8 @@ WrongArc:
           Drive^.EditDescription(PF);
         CE;
         end;
-      kbBack, kbShiftBack:
+      //kbBack, kbShiftBack:
+      // fixme: Free Vision does not support those codes. by unxed
         if  (FMSetup.Options and fmoBackGoesBack <> 0) and
             ( (ShiftState and 3 <> 0) or ((CmdLine.Str = '') and
                 (not CmdLine.StrCleared) and (not QuickSearch)))
