@@ -225,7 +225,6 @@ procedure SetupArchive;
   with Arch^ do
     begin
     Done;
-    AssignStr(Packer, DT.Pack);
     Packer := NewStr(DT.Pack);
     UnPacker := NewStr(DT.Unpack);
     Extract := NewStr(DT.Extract);
