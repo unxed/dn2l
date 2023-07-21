@@ -7,7 +7,7 @@ procedure CopyIniVarsToCfgVars;
 
 implementation
 uses
-  DnIni, Startup, Advance1, FlPanelX
+  sysutils, DnIni, Startup, Advance1, FlPanelX
   , fnotify
   {$IFDEF Win32}
   , VpKbdW32 {for AltGreyAsAlt}
@@ -41,15 +41,15 @@ procedure CopyIniVarsToCfgVars;
   SystemData.ForceDefArch := ForceDefaultArchiver;
   for i := 0 to 8 do
     Dispose(DirsToChange[i]);
-  DirsToChange[0] := QDirs1;
-  DirsToChange[1] := QDirs2;
-  DirsToChange[2] := QDirs3;
-  DirsToChange[3] := QDirs4;
-  DirsToChange[4] := QDirs5;
-  DirsToChange[5] := QDirs6;
-  DirsToChange[6] := QDirs7;
-  DirsToChange[7] := QDirs8;
-  DirsToChange[8] := QDirs9;
+  AssignStr(DirsToChange[0], QDirs1);
+  AssignStr(DirsToChange[1], QDirs2);
+  AssignStr(DirsToChange[2], QDirs3);
+  AssignStr(DirsToChange[3], QDirs4);
+  AssignStr(DirsToChange[4], QDirs5);
+  AssignStr(DirsToChange[5], QDirs6);
+  AssignStr(DirsToChange[6], QDirs7);
+  AssignStr(DirsToChange[7], QDirs8);
+  AssignStr(DirsToChange[8], QDirs9);
     {$IFDEF Win32}
     AltGreyAsAlt := AltGrAsAlt; {JO}
     {$ENDIF}
