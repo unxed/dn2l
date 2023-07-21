@@ -649,7 +649,8 @@ procedure TPhoneBox.HandleEvent;
         DrawView;
         Exit;
         end;
-      PSortedCollection(List)^.Sort;
+      // PSortedCollection(List)^.Sort;
+      // fixme: commented by unxed
       if  (PPhone(List^.At(0))^.Name <> '..') and (List^.Count > 0) then
         begin
         P := New(PPhone, Init(' ', '..', GetString(dlPhonesUpDir), ''));
@@ -1072,7 +1073,8 @@ constructor TPhoneCollection.Load;
   if not inherited Load(S) then
     Fail;
   Duplicates := True;
-  Sort;
+  //Sort;
+  // fixme: commented by unxed
   end;
 
 const
@@ -1132,7 +1134,8 @@ constructor TPhoneCollection.ShortLoad(var S: TStream);
       Break;
     end;
   S.Read(Duplicates, SizeOf(Boolean));
-  Sort;
+  //Sort;
+  // fixme: commented by unxed
   end { TPhoneCollection.ShortLoad };
 
 function TPhoneCollection.Compare;
