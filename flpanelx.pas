@@ -3292,7 +3292,7 @@ procedure TFilePanelRoot.Reorder;
     if ScrollBarValue >= Files^.Count then
       Exit; { AK155 IMHO так бывает только как 0 >= 0 }
     Cur := Files^.At(ScrollBarValue);
-    Files^.Sort;
+//    Files^.Sort;
     for ScrollBarValue := 0 to Files^.Count-1 do
       if Files^.At(ScrollBarValue) = Cur then
         begin
