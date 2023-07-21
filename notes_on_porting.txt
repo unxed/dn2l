@@ -128,3 +128,36 @@ uses
 Коммит:
 https://github.com/unxed/dn2l/commit/7701bce
 
+--
+
+Код:
+    function GetText(Item: LongInt; MaxLen: Integer): String; virtual;
+    function GetKey(var S: String): Pointer; virtual;
+
+Ошибка:
+phones.pas(106,14) Error: function header doesn't match the previous declaration "GetText(LongInt;LongInt):ShortString;"
+phones.pas(107,14) Error: function header doesn't match the previous declaration "GetKey(var ShortString):^untyped;"
+
+Там ниже есть реализация этих функций, поэтому, видимо, virtual лишний.
+
+Решение:
+    function GetText(Item: LongInt; MaxLen: Integer): String;// virtual;
+    function GetKey(var S: String): Pointer;// virtual;
+
+--
+
+Код:
+  Number := GetNum;
+
+Ошибка:
+printman.pas(148,13) Error: Identifier not found "GetNum"
+
+Решение:
+Комментируем эту строчку. Number это номер окна в TWindow, а GetNum вообще не ищется по коду.
+В dnfuncs.pas ещё такое есть: GetWinNumber: Views.GetNum;
+
+Коммит:
+https://github.com/unxed/dn2l/commit/b2e8e60
+
+--
+
