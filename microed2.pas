@@ -50,7 +50,7 @@ unit MicroEd2;
 interface
 
 uses
-  Defines, Streams, Microed, EdWin
+  Classes, Defines, Streams, Microed, EdWin
   ;
 
 const

@@ -90,7 +90,7 @@ type
     constructor Init(var Bounds: TRect);
     procedure SetData(var Rec); virtual;
     procedure GetData(var Rec); virtual;
-    function DataSize: Word; virtual;
+    function DataSize: Word; //virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
     end;
 
@@ -249,7 +249,7 @@ procedure StartupSetup;
     begin
     StartupData.Load := Data.Load;
     StartupData.Unload := Data.Unload;
-    LSliceCnt := -3;
+//    LSliceCnt := -3; // fixme: commented by unxed
     Message(Application, evCommand, cmUpdateConfig, nil);
 
     StartupDataLoad := StartupData.Load;
@@ -264,13 +264,14 @@ procedure MouseSetup;
   begin
   if ExecResource(dlgMouseSetup, MouseData) <> cmOK then
     Exit;
-  if MouseVisible xor (MouseData.Options and omsCursor <> 0) then
+(*  if MouseVisible xor (MouseData.Options and omsCursor <> 0) then
     begin
     DoneEvents;
     InitEvents;
     end;
+*) // fixme: commented by unxed
   MouseReverse := MouseData.Options and omsReverse <> 0;
-  SetMouseSpeed(MouseData.HSense, MouseData.VSense);
+  // SetMouseSpeed(MouseData.HSense, MouseData.VSense); // fixme: commented by unxed
   Message(Application, evCommand, cmUpdateConfig, nil);
   end;
 

@@ -51,6 +51,7 @@ unit UniWin;
 interface
 
 uses
+  Objects,
   Views
   ;
 

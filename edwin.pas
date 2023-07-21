@@ -51,7 +51,7 @@ unit EdWin;
 interface
 
 uses
-  Defines, Streams, Objects2, Microed, Menus, ed2, UniWin
+  Objects, Defines, Streams, Objects2, Microed, Menus, ed2, UniWin
   ;
 
 type
