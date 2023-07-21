@@ -1,11 +1,11 @@
 
-how to build:
-fpc ./dn.pas
+Сборка с отключенными warning и notes и выводом только 10 последних ошибок:
+fpc -Se10 -vw-n- ./dn.pas
 
-не забываем добавлять // changed by unxed
+Не забываем добавлять // changed by unxed
 и // added by unxed
 и // commented by unxed
-возле всех изменений.
+возле всех изменений,
 
 и помечать изменения с потенциальной потерей функциональности как fixme.
 
@@ -90,6 +90,26 @@ Error: Incompatible types: got "PShortString" expected "PString"
 
 Коммит:
 https://github.com/unxed/dn2l/commit/b4ff4ff
+
+--
+
+Код:
+      kbCtrlAltShift1, kbCtrlAltShift2, kbCtrlAltShift3,
+      kbCtrlAltShift4, kbCtrlAltShift5, kbCtrlAltShift6,
+      kbCtrlAltShift7, kbCtrlAltShift8, kbCtrlAltShift9:
+...
+      //kbBack, kbShiftBack:
+
+Ошибка:
+flpanelx.pas(2024,7) Error: Identifier not found "kbCtrlAltShift1"
+и т.д.
+
+Решение:
+Закомментировал пока код, обрабатывающий эти сочетания клавиш. Они определены в commands.pas,
+но не используются, т.к. подобные константы берутся из FV, а конкретно этих там нет.
+
+Коммит:
+https://github.com/unxed/dn2l/commit/b92518f
 
 --
 
