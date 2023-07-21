@@ -213,3 +213,27 @@ microed2.pas(70,11) Error: Found declaration: MILoad(PFileEditor;var TStream);
 //procedure MIStore(AED: PFileEditor; var S: TStream);
 //procedure MILoad(AED: PFileEditor; var S: TStream);
 и их реализации. Попробуем без них собрать.
+
+--
+
+Ошибка:
+editor.pas(758,10) Error: Identifier not found "PLineCollection"
+
+Решение:
+uses
+  Objects2
+
+Коммит:
+https://github.com/unxed/dn2l/commit/1817baf
+
+--
+
+Проблема:
+editor.pas(982,16) Error: Call by var for arg no. 1 has to match exactly: Got "AnsiString" expected "ShortString"
+editor.pas(1022,18) Error: Call by var for arg no. 1 has to match exactly: Got "AnsiString" expected "ShortString"
+
+Коммит:
+https://github.com/unxed/dn2l/commit/7c8077a
+
+--
+
