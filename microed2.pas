@@ -50,7 +50,8 @@ unit MicroEd2;
 interface
 
 uses
-  Classes, Defines, Streams, Microed, EdWin
+  Classes, Defines, Streams, Microed, EdWin,
+  Objects2
   ;
 
 const
@@ -121,9 +122,11 @@ procedure MISaveFileAs(AED: PFileEditor);
 
   with AED^ do
     begin
+    (*
     FileName := GetFileNameDialog(x_x, GetString(dlSaveFileAs),
         GetString(dlSaveFileAsName),
         fdOKButton+fdHelpButton, hsEditSave);
+    *) // fixme: commented by unxed
     if FileName <> '' then
       begin
       MIUnLockFile(AED);
@@ -161,9 +164,12 @@ procedure MIOpenFile(AED: PFileEditor);
   begin
   with AED^ do
     begin
+    (*
     FileName := GetFileNameDialog(x_x, GetString(dlOpenFile),
         GetString(dlOpenFileName),
         fdOpenButton+fdHelpButton, hsEditOpen);
+    *)
+    // fixme: commented by unxed
     if FileName <> '' then
       begin
       MIUnLockFile(AED);
@@ -741,8 +747,8 @@ procedure MILockFile(AED: PFileEditor);
       Exit;
     if Locker <> nil then
       Dispose(Locker, Done);
-    Locker := New(PDosStream, Init(EditName, (stOpenRead and fmDeny) or
-           fmDenyWrite));
+    Locker := New(PDosStream, Init(EditName, (stOpenRead and $FF0F) or // fmDeny to $FF0F changed by unxed
+           fmShareDenyWrite));
     end
   end;
 
