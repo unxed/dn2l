@@ -976,7 +976,7 @@ procedure TPhoneBox.HandleEvent;
         case Event.KeyCode of
           kbCtrlIns:
             CopyItem;
-          kbCtrlPgUp, kbCtrlSlash:
+          kbCtrlPgUp(*, kbCtrlSlash*): // fixme: commented by unxed
             begin
             Focused := 0;
             EnterDir;
