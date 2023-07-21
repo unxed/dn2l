@@ -601,7 +601,10 @@ procedure TFilePanelRoot.RereadDir;
     begin
     P := FC^.At(I); {-$VOL}
     if  (P <> CurP) and (P <> nil) and not P^.Selected then
-      FC^.AtReplace(I, nil); {-$VOL}
+      //FC^.AtReplace(I, nil); {-$VOL}
+      FC^.AtDelete(I);
+      FC^.AtInsert(I, nil);
+      {-$VOL} // changed by unxed
     Inc(I);
     end;
   ReadDirectory;
