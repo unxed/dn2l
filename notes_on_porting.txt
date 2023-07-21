@@ -237,3 +237,38 @@ https://github.com/unxed/dn2l/commit/7c8077a
 
 --
 
+Код:
+          MessageL(Application, evCommand, cmScrollBarChanged,
+            GetOffsetForLineNumber(EditName, Pos.Y+1));
+
+Ошибка:
+editor.pas(1777,11) Error: Identifier not found "MessageL"
+
+Причина:
+Через Lazarus (открываем dn.pas, пытаемся собрать, кликаем по Message, выбираем «найти объявление») нашёл это:
+
+FUNCTION Message (Receiver: PView; What, Command: Word;
+  InfoPtr: Pointer): Pointer;
+
+Функции MessageL (которая в dn, по-видимому, отличается тем, что получает "длинный" указатель) в Free Vision нет,
+так что я заменяю на Message, предполагая, что на amd64 в любом случае все указатели длинные.
+
+Коммит:
+https://github.com/unxed/dn2l/commit/46659e6
+
+--
+
+Код:
+      Inc(PtrRec(P).Ofs, I);
+
+Ошибка:
+regall.pas(1121,11) Error: Illegal type conversion: "PStreamRec" to "PtrRec"
+
+Решение:
+Переписать под плоскую модель памяти:
+    repeat
+      RegisterType(P^);
+      Inc(P, I);
+    until P > Addr(RColorPoint);
+
+Коммит:
