@@ -757,7 +757,7 @@ procedure TFilePanelRoot.ReadDirectory;
   после ReadDescrptions }
 //  if SM <> psmUnsorted then
 //    Files^.Sort;
-// commented by unxed. lossy.
+// fixme: commented by unxed
   if Abort then
     Exit;
 
@@ -1166,7 +1166,7 @@ WrongArc:
 
   procedure InsertDrive;
     var
-      PDir: PString;
+      PDir: PShortString; // fixme: PString->PShortString by unxed
     begin
     if ChangeLocked or (Event.InfoPtr = nil) then
       Exit;
