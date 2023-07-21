@@ -284,7 +284,7 @@ uses
   ArcView, FViewer, CmdLine, FBB, DNStdDlg,
   Colors, Microed, ed2, Editor, EdWin,
   Advance, Advance1, Advance2, Advance3, Advance4, Advance7,
-  ColorSel, Eraser,  DiskInfo
+  (*ColorSel,*) Eraser,  DiskInfo // commented by unxed
   , FileType, PDSetup, UKeyMap
   , Startup, Startupp
   ;
