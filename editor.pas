@@ -963,6 +963,7 @@ function TXFileEditor.HandleCommand;
       LL: array[1..3] of LongInt;
       SR: lSearchRec;
       FName: String;
+      Temp1: ShortString;
     label 1;
     begin
     ChangeLine;
@@ -979,7 +980,8 @@ function TXFileEditor.HandleCommand;
     else
       L := FileLines;
     LL[1] := L^.Count;
-    FormatStr(M, GetString(dlED_PrintQuery), LL);
+    Temp1 := Copy(M, 1, 255);
+    FormatStr(Temp1, GetString(dlED_PrintQuery), LL); // changed to Temp1 by unxed
     if MessageBox(M, nil, mfYesNoConfirm) <> cmYes
     then
       begin
@@ -1019,7 +1021,8 @@ function TXFileEditor.HandleCommand;
              L^.Count)+LongStrg(#177, 25), 1, 25));
       LL[1] := I+1;
       LL[2] := L^.Count+1;
-      FormatStr(M, GetString(dlED_PrintLine), LL);
+      Temp1 := Copy(M, 1, 255);
+      FormatStr(Temp1, GetString(dlED_PrintLine), LL); // changed to Temp1 by unxed
       P^.Write(3, M);
       if PS = nil then
         M := ''
