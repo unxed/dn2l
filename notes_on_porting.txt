@@ -7,7 +7,7 @@ fpc ./dn.pas
 и // commented by unxed
 возле всех изменений.
 
-и помечать изменения с потенциальной потерей функциональности как lossy.
+и помечать изменения с потенциальной потерей функциональности как fixme.
 
 --
 
@@ -67,6 +67,29 @@ https://www.freepascal.org/docs-html/rtl/objects/tsortedcollection.html
 
 Коммит:
 https://github.com/unxed/dn2l/commit/739ff4b89d6bc6dcf120f1f0f3de25af224b8c02
+
+--
+
+Код:
+PDir := NewStr(ArcName+':\')
+
+Ошибка:
+Error: Incompatible types: got "PShortString" expected "PString"
+
+Решение:
+Можно заменить проблемный код на
+          AssignStr(PDir, ArcName+':\')
+, но тогда всё ломается дальше, вот тут:
+        UpFile^.Owner := PDir;
+
+Поэтому поменял определение PDir на
+      PDir: PShortString;
+
+(см., например, "PDir: PShortString; // fixme: PString->PShortString by unxed" в arcview.pas:
+не помню уже, почему так сделано было [не понятно, хватит ли размера PShortString], но оставим пока так)
+
+Коммит:
+https://github.com/unxed/dn2l/commit/b4ff4ff
 
 --
 
