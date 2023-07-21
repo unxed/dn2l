@@ -161,3 +161,42 @@ https://github.com/unxed/dn2l/commit/b2e8e60
 
 --
 
+Проблема:
+Функция DisposeStr не найдена
+
+Решение:
+Меняем на Dispose
+
+Коммит:
+https://github.com/unxed/dn2l/commit/58175a3
+
+--
+
+Проблема: функция NewStr не найдена
+
+Решение: меняем её AssignStr
+
+Коммиты:
+https://github.com/unxed/dn2l/commit/399fe99
+https://github.com/unxed/dn2l/commit/2dbc380
+
+--
+
+Код:
+        Pointer(L[0]) := @EditName;
+
+Ошибка:
+microed2.pas(251,9) Error: Typecast has different size (4 -> 8) in assignment
+
+Массив L из Longint. В 32-битной системе, Pointer и LongInt имеют один и тот же размер в памяти (4 байта),
+но в 64-битной системе Pointer занимает 8 байт. На 64-битной системе возникает ошибка.
+
+Решение:
+        L[0] := LongInt(PtrInt(@EditName));
+        //Pointer(L[0]) := @EditName; // fixme: changed by unxed
+
+Коммит:
+https://github.com/unxed/dn2l/commit/de9a825
+
+--
+
