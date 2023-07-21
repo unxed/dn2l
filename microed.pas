@@ -284,6 +284,8 @@ const
 var
   EditCommands: array[1..110] of TEditCommand;
 
+function MemAvail: LongInt; // added by unxed, needed by microed2?
+
 implementation
 
 uses

@@ -50,7 +50,7 @@ unit MicroEd2;
 interface
 
 uses
-  Classes, Defines, Streams, Microed, EdWin,
+  SysUtils, Classes, Defines, Streams, Microed, EdWin,
   Objects2
   ;
 
