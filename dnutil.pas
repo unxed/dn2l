@@ -502,6 +502,7 @@ procedure ClearSwap;
     DT: Dos.DateTime;
     L: LongInt;
     SR: lSearchRec;
+    Temp1: Word;
 
   procedure ClearFiles(const FileSpec: String);
     begin
@@ -522,7 +523,8 @@ procedure ClearSwap;
 
   begin
   FillChar(DT, SizeOf(DT), 0);
-  GetDate(DT.Year, DT.Month, DT.Day, Word(L));
+  Temp1 := Word(L);
+  GetDate(DT.Year, DT.Month, DT.Day, Temp1);
 
   PackTime(DT, L);
   SetFileAttr(SwpDir+'DN.FLG', 0);
@@ -594,7 +596,7 @@ constructor TDNApplication.Init;
     LoadStream := PresentFile(SourceDir+'DN'+GetEnv('DNDSK')+'.DSK');
   if LoadStream <> nil then
     RetrieveDesktop('', LoadStream, True);
-  InitDrivers;
+  //InitDrivers; // fixme: commented by unxed
 
   {-$VOL begin}
   if not RunFirst or cbAutoSave then
