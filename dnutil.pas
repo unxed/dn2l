@@ -596,7 +596,7 @@ constructor TDNApplication.Init;
     LoadStream := PresentFile(SourceDir+'DN'+GetEnv('DNDSK')+'.DSK');
   if LoadStream <> nil then
     RetrieveDesktop('', LoadStream, True);
-  //InitDrivers; // fixme: commented by unxed
+  InitDrivers;
 
   {-$VOL begin}
   if not RunFirst or cbAutoSave then
