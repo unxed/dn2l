@@ -91,7 +91,7 @@ type
     Number: Integer;
     DirName: TFlName;
     Dummy: array[1..SizeOf(ShortString)-SizeOf(TShortName)] of Char;
-    {см. комментарий к TFileRec}
+    {╤Б╨╝. ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╣ ╨║ TFileRec}
     end;
 
   PTreeView = ^TTreeView;
@@ -150,13 +150,13 @@ type
     destructor Done; virtual;
     end;
 
-  PDTreeInfoView = ^TDTreeInfoView; { дерево в диалоге }
+  PDTreeInfoView = ^TDTreeInfoView; { ╨┤╨╡╤А╨╡╨▓╨╛ ╨▓ ╨┤╨╕╨░╨╗╨╛╨│╨╡ }
   TDTreeInfoView = object(TTreeInfoView)
     function GetPalette: PPalette; virtual;
     end;
 
   PHTreeView = ^THTreeView;
-   {`2 панель дерева с подвалом `}
+   {`2 ╨┐╨░╨╜╨╡╨╗╤М ╨┤╨╡╤А╨╡╨▓╨░ ╤Б ╨┐╨╛╨┤╨▓╨░╨╗╨╛╨╝ `}
   THTreeView = object(TTreePanel)
     Info: PView;
     constructor Init(R: TRect; ADrive: Integer; ParitalView: Boolean;
@@ -180,30 +180,30 @@ function ChangeDir(ATitle: TTitleStr; Drv: Byte): String; {DataCompBoy}
 procedure CheckMkDir(const Path: String);
  {` MkDir and check result AK155 `}
 procedure MakeDirectory;
- {` Создать каталог(и) в диалоге. Фактически, это TDrive.MakeDir.
-  В введённой строке можнт быть несколько каталогов, разделённых
-  точками с запятой.
-  Имя первого созданного каталог с полным путём без слэша помещается в
-  переменную CreatedDir. Если каталог не создался - CreatedDir=''.
-  Переменная CreatedDir используется в ARVIDAVT.PAS, и подозреваю, что
-  в каком-то другом смысле. `}
+ {` ╨б╨╛╨╖╨┤╨░╤В╤М ╨║╨░╤В╨░╨╗╨╛╨│(╨╕) ╨▓ ╨┤╨╕╨░╨╗╨╛╨│╨╡. ╨д╨░╨║╤В╨╕╤З╨╡╤Б╨║╨╕, ╤Н╤В╨╛ TDrive.MakeDir.
+  ╨Т ╨▓╨▓╨╡╨┤╤С╨╜╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ ╨╝╨╛╨╢╨╜╤В ╨▒╤Л╤В╤М ╨╜╨╡╤Б╨║╨╛╨╗╤М╨║╨╛ ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓, ╤А╨░╨╖╨┤╨╡╨╗╤С╨╜╨╜╤Л╤Е
+  ╤В╨╛╤З╨║╨░╨╝╨╕ ╤Б ╨╖╨░╨┐╤П╤В╨╛╨╣.
+  ╨Ш╨╝╤П ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╤Б╨╛╨╖╨┤╨░╨╜╨╜╨╛╨│╨╛ ╨║╨░╤В╨░╨╗╨╛╨│ ╤Б ╨┐╨╛╨╗╨╜╤Л╨╝ ╨┐╤Г╤В╤С╨╝ ╨▒╨╡╨╖ ╤Б╨╗╤Н╤И╨░ ╨┐╨╛╨╝╨╡╤Й╨░╨╡╤В╤Б╤П ╨▓
+  ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Г╤О CreatedDir. ╨Х╤Б╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨╡ ╤Б╨╛╨╖╨┤╨░╨╗╤Б╤П - CreatedDir=''.
+  ╨Я╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П CreatedDir ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨▓ ARVIDAVT.PAS, ╨╕ ╨┐╨╛╨┤╨╛╨╖╤А╨╡╨▓╨░╤О, ╤З╤В╨╛
+  ╨▓ ╨║╨░╨║╨╛╨╝-╤В╨╛ ╨┤╤А╤Г╨│╨╛╨╝ ╤Б╨╝╤Л╤Б╨╗╨╡. `}
 procedure FreeTree(C: Char);
 function GetDirLen(Dir: String): TSize; {DataCompBoy}
 function CreateDirInheritance(var S: String; Confirm: Boolean): Byte;
-  {` Создать каталог любой вложенности. S разворачивается при
-   помощи lFExpand и дополняется '\' в конце, и это значение
-   остаётся после вызова.
-     Результат - длина пути (то есть подстроки S) каталога, в
-   котором находится самый внешний созданный каталог (без слэша).
-   Например, если s='C:\TEMP\AAA\BBB' и каталог C:\TEMP существовал,
-   а C:\TEMP\AAA был создан, то результат - 7. Смысл этого в том,
-   что если C:\TEMP открыт на какой-то панели, то эту панель надо
-   перечитать, чтобы на ней появился AAA.
-     Если каталоги не создавались - результат 0. `}
+  {` ╨б╨╛╨╖╨┤╨░╤В╤М ╨║╨░╤В╨░╨╗╨╛╨│ ╨╗╤О╨▒╨╛╨╣ ╨▓╨╗╨╛╨╢╨╡╨╜╨╜╨╛╤Б╤В╨╕. S ╤А╨░╨╖╨▓╨╛╤А╨░╤З╨╕╨▓╨░╨╡╤В╤Б╤П ╨┐╤А╨╕
+   ╨┐╨╛╨╝╨╛╤Й╨╕ lFExpand ╨╕ ╨┤╨╛╨┐╨╛╨╗╨╜╤П╨╡╤В╤Б╤П '\' ╨▓ ╨║╨╛╨╜╤Ж╨╡, ╨╕ ╤Н╤В╨╛ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡
+   ╨╛╤Б╤В╨░╤С╤В╤Б╤П ╨┐╨╛╤Б╨╗╨╡ ╨▓╤Л╨╖╨╛╨▓╨░.
+     ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В - ╨┤╨╗╨╕╨╜╨░ ╨┐╤Г╤В╨╕ (╤В╨╛ ╨╡╤Б╤В╤М ╨┐╨╛╨┤╤Б╤В╤А╨╛╨║╨╕ S) ╨║╨░╤В╨░╨╗╨╛╨│╨░, ╨▓
+   ╨║╨╛╤В╨╛╤А╨╛╨╝ ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П ╤Б╨░╨╝╤Л╨╣ ╨▓╨╜╨╡╤И╨╜╨╕╨╣ ╤Б╨╛╨╖╨┤╨░╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ (╨▒╨╡╨╖ ╤Б╨╗╤Н╤И╨░).
+   ╨Э╨░╨┐╤А╨╕╨╝╨╡╤А, ╨╡╤Б╨╗╨╕ s='C:\TEMP\AAA\BBB' ╨╕ ╨║╨░╤В╨░╨╗╨╛╨│ C:\TEMP ╤Б╤Г╤Й╨╡╤Б╤В╨▓╨╛╨▓╨░╨╗,
+   ╨░ C:\TEMP\AAA ╨▒╤Л╨╗ ╤Б╨╛╨╖╨┤╨░╨╜, ╤В╨╛ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В - 7. ╨б╨╝╤Л╤Б╨╗ ╤Н╤В╨╛╨│╨╛ ╨▓ ╤В╨╛╨╝,
+   ╤З╤В╨╛ ╨╡╤Б╨╗╨╕ C:\TEMP ╨╛╤В╨║╤А╤Л╤В ╨╜╨░ ╨║╨░╨║╨╛╨╣-╤В╨╛ ╨┐╨░╨╜╨╡╨╗╨╕, ╤В╨╛ ╤Н╤В╤Г ╨┐╨░╨╜╨╡╨╗╤М ╨╜╨░╨┤╨╛
+   ╨┐╨╡╤А╨╡╤З╨╕╤В╨░╤В╤М, ╤З╤В╨╛╨▒╤Л ╨╜╨░ ╨╜╨╡╨╣ ╨┐╨╛╤П╨▓╨╕╨╗╤Б╤П AAA.
+     ╨Х╤Б╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╨╜╨╡ ╤Б╨╛╨╖╨┤╨░╨▓╨░╨╗╨╕╤Б╤М - ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В 0. `}
 
 const
   CreatedDir: String = '';
-    {` Результат MakeDirectory `}
+    {` ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В MakeDirectory `}
   TreeError: Boolean = False;
 
   CHTreeView = #15#16#17#18#19#20#21;
@@ -336,7 +336,7 @@ procedure ReadTree(C: Char; CountLen: Boolean);
 
     {-DataCompBoy-}
   begin { ReadTree }
-  {Cat:warn надо добавить вывод дерева для сетевых путей}
+  {Cat:warn ╨╜╨░╨┤╨╛ ╨┤╨╛╨▒╨░╨▓╨╕╤В╤М ╨▓╤Л╨▓╨╛╨┤ ╨┤╨╡╤А╨╡╨▓╨░ ╨┤╨╗╤П ╤Б╨╡╤В╨╡╨▓╤Л╤Е ╨┐╤Г╤В╨╡╨╣}
   NewTimer(Tmr, 1);
   C := UpCase(C);
   if not (C in ['A'..'Z']) then
@@ -572,15 +572,15 @@ Start:
   lMkDir(Path);
   rc := IOResult;
   {AK155 29-05-2002
-При создании существующего каталога (что не есть ошибка)
-под OS/2 rc=5, а под WinNT - rc=183.
-При создании каталога на CD (что есть ошибка)
-под OS/2 rc=19, а под WinNT - rc=5.
-Как оно будет под Win9x или DPMI - тоже еще вопрос.
-Поэтому проще и аккуратнее проверить фактическое наличие, а не
-анализировать rc }
+╨Я╤А╨╕ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╕ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╤О╤Й╨╡╨│╨╛ ╨║╨░╤В╨░╨╗╨╛╨│╨░ (╤З╤В╨╛ ╨╜╨╡ ╨╡╤Б╤В╤М ╨╛╤И╨╕╨▒╨║╨░)
+╨┐╨╛╨┤ OS/2 rc=5, ╨░ ╨┐╨╛╨┤ WinNT - rc=183.
+╨Я╤А╨╕ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨╜╨░ CD (╤З╤В╨╛ ╨╡╤Б╤В╤М ╨╛╤И╨╕╨▒╨║╨░)
+╨┐╨╛╨┤ OS/2 rc=19, ╨░ ╨┐╨╛╨┤ WinNT - rc=5.
+╨Ъ╨░╨║ ╨╛╨╜╨╛ ╨▒╤Г╨┤╨╡╤В ╨┐╨╛╨┤ Win9x ╨╕╨╗╨╕ DPMI - ╤В╨╛╨╢╨╡ ╨╡╤Й╨╡ ╨▓╨╛╨┐╤А╨╛╤Б.
+╨Я╨╛╤Н╤В╨╛╨╝╤Г ╨┐╤А╨╛╤Й╨╡ ╨╕ ╨░╨║╨║╤Г╤А╨░╤В╨╜╨╡╨╡ ╨┐╤А╨╛╨▓╨╡╤А╨╕╤В╤М ╤Д╨░╨║╤В╨╕╤З╨╡╤Б╨║╨╛╨╡ ╨╜╨░╨╗╨╕╤З╨╕╨╡, ╨░ ╨╜╨╡
+╨░╨╜╨░╨╗╨╕╨╖╨╕╤А╨╛╨▓╨░╤В╤М rc }
   if not PathExist(Path) then
-    (*  if (rc <> 0) and (rc <> 5 {каталог уже существует}) {$IFDEF Win32} and (rc <> 183) {$ENDIF} then*)
+    (*  if (rc <> 0) and (rc <> 5 {╨║╨░╤В╨░╨╗╨╛╨│ ╤Г╨╢╨╡ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В}) {$IFDEF Win32} and (rc <> 183) {$ENDIF} then*)
     begin
     if SysErrorFunc(rc, Byte(Path[1])-Byte('A')) = 1 then
       goto Start;
@@ -646,16 +646,16 @@ procedure MakeDirectory;
     B := CreateDirInheritance(S1, False);
     if Abort or (IOResult <> 0) then
       Exit;
-    SetLength(S1, Length(S1)-1); // удалить слэш
+    SetLength(S1, Length(S1)-1); // ╤Г╨┤╨░╨╗╨╕╤В╤М ╤Б╨╗╤Н╤И
     if CreatedDir = '' then
       CreatedDir := S1;
-    { определение каталога для перечитывания }
+    { ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨┤╨╗╤П ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╤П }
     if B > 0 then
       SetLength(S1, B)
     else
       begin
       lFSplit(S1, S1, Nm, XT);
-      SetLength(S1, Length(S1)-1); // удалить слэш
+      SetLength(S1, Length(S1)-1); // ╤Г╨┤╨░╨╗╨╕╤В╤М ╤Б╨╗╤Н╤И
       end;
     RereadDirectory(S1);
     GlobalMessage(evCommand, cmRereadTree, @Dr);
@@ -1373,7 +1373,7 @@ procedure TTreeView.HandleCommand;
         cmChangeTree:
           begin
           if PString(Event.InfoPtr)^[2] <> ':' then
-            {Cat:warn могут быть проблемы с сетевыми путями}
+            {Cat:warn ╨╝╨╛╨│╤Г╤В ╨▒╤Л╤В╤М ╨┐╤А╨╛╨▒╨╗╨╡╨╝╤Л ╤Б ╤Б╨╡╤В╨╡╨▓╤Л╨╝╨╕ ╨┐╤Г╤В╤П╨╝╨╕}
             begin
             CE;
             Exit;
@@ -1743,10 +1743,10 @@ procedure TTreeView.Draw;
       if CurPos = Idx then
         begin
         MoveStr(B[K+Length(S)], {' '#0+}Q {+#0' '}, CC);
-        {JO: зачем нужна была эта оторочка имён нулями - тайна,}
+        {JO: ╨╖╨░╤З╨╡╨╝ ╨╜╤Г╨╢╨╜╨░ ╨▒╤Л╨╗╨░ ╤Н╤В╨░ ╨╛╤В╨╛╤А╨╛╤З╨║╨░ ╨╕╨╝╤С╨╜ ╨╜╤Г╨╗╤П╨╝╨╕ - ╤В╨░╨╣╨╜╨░,}
         if QuickSearch then
-          {    покрытая мраком, но из-за неё каталоги в панели}
-          begin {    оторочены мерзкими точечками или чем ещё похуже}
+          {    ╨┐╨╛╨║╤А╤Л╤В╨░╤П ╨╝╤А╨░╨║╨╛╨╝, ╨╜╨╛ ╨╕╨╖-╨╖╨░ ╨╜╨╡╤С ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╨▓ ╨┐╨░╨╜╨╡╨╗╨╕}
+          begin {    ╨╛╤В╨╛╤А╨╛╤З╨╡╨╜╤Л ╨╝╨╡╤А╨╖╨║╨╕╨╝╨╕ ╤В╨╛╤З╨╡╤З╨║╨░╨╝╨╕ ╨╕╨╗╨╕ ╤З╨╡╨╝ ╨╡╤Й╤С ╨┐╨╛╤Е╤Г╨╢╨╡}
           ShowCursor;
           NormalCursor;
           SetCursor(K+Length(S)+LastSuccessPos-1, I-1)
@@ -2065,7 +2065,7 @@ procedure THTreeView.ChangeBounds;
     end
   end;
 
-{ AK155 10.06.05. Подвал надо прятать и показывать вместе с панелью }
+{ AK155 10.06.05. ╨Я╨╛╨┤╨▓╨░╨╗ ╨╜╨░╨┤╨╛ ╨┐╤А╤П╤В╨░╤В╤М ╨╕ ╨┐╨╛╨║╨░╨╖╤Л╨▓╨░╤В╤М ╨▓╨╝╨╡╤Б╤В╨╡ ╤Б ╨┐╨░╨╜╨╡╨╗╤М╤О }
 procedure THTreeView.SetState(AState: Word; Enable: Boolean);
   begin
   inherited SetState(AState, Enable);
@@ -2073,7 +2073,7 @@ procedure THTreeView.SetState(AState: Word; Enable: Boolean);
      Info^.SetState(sfVisible, Enable);
   end;
 
-{ AK155 26-01-2003. Раньше Info не освобождалось вообще }
+{ AK155 26-01-2003. ╨а╨░╨╜╤М╤И╨╡ Info ╨╜╨╡ ╨╛╤Б╨▓╨╛╨▒╨╛╨╢╨┤╨░╨╗╨╛╤Б╤М ╨▓╨╛╨╛╨▒╤Й╨╡ }
 destructor THTreeView.Done;
   begin
   if Info <> nil then
@@ -2099,19 +2099,19 @@ function CreateDirInheritance;
     Exit;
   while I < Length(S) do
     begin
-    J := I;  // указывает на '\' перед началом имени на очередном уровне
+    J := I;  // ╤Г╨║╨░╨╖╤Л╨▓╨░╨╡╤В ╨╜╨░ '\' ╨┐╨╡╤А╨╡╨┤ ╨╜╨░╤З╨░╨╗╨╛╨╝ ╨╕╨╝╨╡╨╜╨╕ ╨╜╨░ ╨╛╤З╨╡╤А╨╡╨┤╨╜╨╛╨╝ ╤Г╤А╨╛╨▓╨╜╨╡
     repeat
       Inc(I);
     until (S[I] = '/'); // slash change by unxed
-     // I указывает на первый символ за концом имени
-    M := Copy(S, 1, I-1); // полный путь очередного уровня
+     // I ╤Г╨║╨░╨╖╤Л╨▓╨░╨╡╤В ╨╜╨░ ╨┐╨╡╤А╨▓╤Л╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨╖╨░ ╨║╨╛╨╜╤Ж╨╛╨╝ ╨╕╨╝╨╡╨╜╨╕
+    M := Copy(S, 1, I-1); // ╨┐╨╛╨╗╨╜╤Л╨╣ ╨┐╤Г╤В╤М ╨╛╤З╨╡╤А╨╡╨┤╨╜╨╛╨│╨╛ ╤Г╤А╨╛╨▓╨╜╤П
     ClrIO;
     lFindFirst(M, AnyFileDir, SR); {JO}
     lFindClose(SR);
     if Abort then
       Exit;
     if DosError <> 0 then
-      begin // каталог не найден, надо создавать
+      begin // ╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨╡ ╨╜╨░╨╣╨┤╨╡╨╜, ╨╜╨░╨┤╨╛ ╤Б╨╛╨╖╨┤╨░╨▓╨░╤В╤М
       if Confirm and (Confirms and cfCreateSubdir <> 0) then
         begin
         if  (MessageBox(GetString(dlQueryCreateDir)+Cut(S, 40)+' ?',
@@ -2123,8 +2123,8 @@ function CreateDirInheritance;
       CheckMkDir(M);
       if Abort then
         Exit;
-      // Каталог создан успешно
-      if Result = 0 then // это был первый созданный каталог
+      // ╨Ъ╨░╤В╨░╨╗╨╛╨│ ╤Б╨╛╨╖╨┤╨░╨╜ ╤Г╤Б╨┐╨╡╤И╨╜╨╛
+      if Result = 0 then // ╤Н╤В╨╛ ╨▒╤Л╨╗ ╨┐╨╡╤А╨▓╤Л╨╣ ╤Б╨╛╨╖╨┤╨░╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│
         Result := J-1;
       end;
     end;

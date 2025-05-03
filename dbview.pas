@@ -925,9 +925,9 @@ procedure TDBViewer.HandleEvent;
       DBFile^.Seek(CurRec);
       DBFile^.BaseFile.Read(p^[0],DBFile^.RecLen);
       DBFile^.Seek(CurRec);   { TBufStream bug ? }
-      DBFile^.Seek(CurRec+1); { если перед этим не сделать Seek(CurRec),        }
-                              { то позиционирование идёт на один байт дальше    }
-                              { чем нужо. Почему - так и не понял. Особенность. }
+      DBFile^.Seek(CurRec+1); { ╨╡╤Б╨╗╨╕ ╨┐╨╡╤А╨╡╨┤ ╤Н╤В╨╕╨╝ ╨╜╨╡ ╤Б╨┤╨╡╨╗╨░╤В╤М Seek(CurRec),        }
+                              { ╤В╨╛ ╨┐╨╛╨╖╨╕╤Ж╨╕╨╛╨╜╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨┤╤С╤В ╨╜╨░ ╨╛╨┤╨╕╨╜ ╨▒╨░╨╣╤В ╨┤╨░╨╗╤М╤И╨╡    }
+                              { ╤З╨╡╨╝ ╨╜╤Г╨╢╨╛. ╨Я╨╛╤З╨╡╨╝╤Г - ╤В╨░╨║ ╨╕ ╨╜╨╡ ╨┐╨╛╨╜╤П╨╗. ╨Ю╤Б╨╛╨▒╨╡╨╜╨╜╨╛╤Б╤В╤М. }
       DBFile^.BaseFile.Write(p^[0], DBFile^.RecLen);
       dec(CurRec);
     end;
@@ -1034,11 +1034,11 @@ procedure TDBViewer.HandleEvent;
     P := GetRecord(Delta.Y);
     FldLen := PFR^.len;
     if FldLen > 252 then
-      { Больше чем 252 нельзя, иначе будет вылетать  }
+      { ╨С╨╛╨╗╤М╤И╨╡ ╤З╨╡╨╝ 252 ╨╜╨╡╨╗╤М╨╖╤П, ╨╕╨╜╨░╤З╨╡ ╨▒╤Г╨┤╨╡╤В ╨▓╤Л╨╗╨╡╤В╨░╤В╤М  }
       FldLen := 252; { Kirill }
-    { Здесь необходимо вывести предупреждение }
-    { о том, что будут отредактированы только }
-    { первые 252 символа длинного поля.       }
+    { ╨Ч╨┤╨╡╤Б╤М ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨╛ ╨▓╤Л╨▓╨╡╤Б╤В╨╕ ╨┐╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╡ }
+    { ╨╛ ╤В╨╛╨╝, ╤З╤В╨╛ ╨▒╤Г╨┤╤Г╤В ╨╛╤В╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╨╜╤Л ╤В╨╛╨╗╤М╨║╨╛ }
+    { ╨┐╨╡╤А╨▓╤Л╨╡ 252 ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╨┤╨╗╨╕╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤П.       }
     Move(P[PFR^.Pos], S[1], FldLen);
     S[0] := Char(FldLen); { Kirill }
     if PFR^.Who <> 'D' then
@@ -1506,7 +1506,7 @@ procedure TDBIndicator.Draw;
     C: Byte;
     PFR: PFieldRec;
   begin
-  {10171114/10171114═══[C 10,10]═WIN═}
+  {10171114/10171114тХРтХРтХР[C 10,10]тХРWINтХР}
   if  (DBViewer = nil) or (DBViewer^.DBFile = nil) then
     Exit;
   if DBViewer^.Delta.Y < 0 then

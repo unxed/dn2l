@@ -50,10 +50,10 @@
 {Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
 
 {Cat
-   28/08/2001 - переделал функции для совместимости с типами AnsiString и
-   LongString, а также для поддержки коллекций с длинными строками
+   28/08/2001 - ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╨┤╨╗╤П ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╤Б ╤В╨╕╨┐╨░╨╝╨╕ AnsiString ╨╕
+   LongString, ╨░ ╤В╨░╨║╨╢╨╡ ╨┤╨╗╤П ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨║╨╕ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╣ ╤Б ╨┤╨╗╨╕╨╜╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕
 
-   05/09/2001 - выкинул NeedStream из GetWinClip и SyncClipOut
+   05/09/2001 - ╨▓╤Л╨║╨╕╨╜╤Г╨╗ NeedStream ╨╕╨╖ GetWinClip ╨╕ SyncClipOut
 }
 
 unit WinClpVp;
@@ -119,7 +119,7 @@ procedure SyncClipOut {(NeedStream: boolean)};
   GetWinClip(PLineCollection(ClipBoard) {, NeedStream});
   end;
 
-{Cat: добавил обработку коллекций с длинными строками}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╤Г ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╣ ╤Б ╨┤╨╗╨╕╨╜╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕}
 function SetWinClip(PC: PLineCollection): Boolean;
   var
     B: PChar;
@@ -133,7 +133,7 @@ function SetWinClip(PC: PLineCollection): Boolean;
   Size := 0;
 
   if PC = nil then
-    Exit; {Cat: коллекции может и не быть}
+    Exit; {Cat: ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨╝╨╛╨╢╨╡╤В ╨╕ ╨╜╨╡ ╨▒╤Л╤В╤М}
 
   if PC^.LongStrings then
     begin
@@ -147,8 +147,8 @@ function SetWinClip(PC: PLineCollection): Boolean;
       end;
     end
   else
-    {AK155 Исправлена ошибка в подсчете длины
-(не учитывалось, что в коллекции могут быть nil) }
+    {AK155 ╨Ш╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╨░ ╨╛╤И╨╕╨▒╨║╨░ ╨▓ ╨┐╨╛╨┤╤Б╤З╨╡╤В╨╡ ╨┤╨╗╨╕╨╜╤Л
+(╨╜╨╡ ╤Г╤З╨╕╤В╤Л╨▓╨░╨╗╨╛╤Б╤М, ╤З╤В╨╛ ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨╝╨╛╨│╤Г╤В ╨▒╤Л╤В╤М nil) }
     begin
     for I := 0 to PC^.Count-1 do
       begin
@@ -193,9 +193,9 @@ function SetWinClip(PC: PLineCollection): Boolean;
   end { SetWinClip };
 {/Cat}
 
-{AK155 GetWinClip переписан почти полностью, так как та версия,
-которая мне досталась, во-первых, не работала, а во-вторых,
-делала это очень медленно :) }
+{AK155 GetWinClip ╨┐╨╡╤А╨╡╨┐╨╕╤Б╨░╨╜ ╨┐╨╛╤З╤В╨╕ ╨┐╨╛╨╗╨╜╨╛╤Б╤В╤М╤О, ╤В╨░╨║ ╨║╨░╨║ ╤В╨░ ╨▓╨╡╤А╤Б╨╕╤П,
+╨║╨╛╤В╨╛╤А╨░╤П ╨╝╨╜╨╡ ╨┤╨╛╤Б╤В╨░╨╗╨░╤Б╤М, ╨▓╨╛-╨┐╨╡╤А╨▓╤Л╤Е, ╨╜╨╡ ╤А╨░╨▒╨╛╤В╨░╨╗╨░, ╨░ ╨▓╨╛-╨▓╤В╨╛╤А╤Л╤Е,
+╨┤╨╡╨╗╨░╨╗╨░ ╤Н╤В╨╛ ╨╛╤З╨╡╨╜╤М ╨╝╨╡╨┤╨╗╨╡╨╜╨╜╨╛ :) }
 function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
   : Boolean;
   var
@@ -206,13 +206,13 @@ function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
     Start, Stop: PChar;
     i: LongInt;
     {ODOA: boolean;}
-    f0D: Boolean; { только что был 0D }
+    f0D: Boolean; { ╤В╨╛╨╗╤М╨║╨╛ ╤З╤В╨╛ ╨▒╤Л╨╗ 0D }
 
-    {Cat: переписал для совместимости с типами AnsiString и LongString
-      добавил обработку коллекций с длинными строками}
+    {Cat: ╨┐╨╡╤А╨╡╨┐╨╕╤Б╨░╨╗ ╨┤╨╗╤П ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╤Б ╤В╨╕╨┐╨░╨╝╨╕ AnsiString ╨╕ LongString
+      ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╤Г ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╣ ╤Б ╨┤╨╗╨╕╨╜╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕}
 
-    { текст от Start^ (включительно) до Stop^ (исключительно)
-     преобразовать в строку и добавить в PCL }
+    { ╤В╨╡╨║╤Б╤В ╨╛╤В Start^ (╨▓╨║╨╗╤О╤З╨╕╤В╨╡╨╗╤М╨╜╨╛) ╨┤╨╛ Stop^ (╨╕╤Б╨║╨╗╤О╤З╨╕╤В╨╡╨╗╤М╨╜╨╛)
+     ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╤В╤М ╨▓ ╤Б╤В╤А╨╛╨║╤Г ╨╕ ╨┤╨╛╨▒╨░╨▓╨╕╤В╤М ╨▓ PCL }
   procedure Str2Collection;
     var
       l: LongInt;
@@ -300,11 +300,11 @@ function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
   Buf := nil;
   Size := 0;
 
-  {Cat: приводит к дублированию строк в Clipboard-е
-      в случае использования "текстового буфера системы"
-      в результате выкидывания возможно появление новых
-      глюков, т.к. я абсолютно не понимаю, какой способ
-      работы Clipboard-а надлежит считать правильным...}
+  {Cat: ╨┐╤А╨╕╨▓╨╛╨┤╨╕╤В ╨║ ╨┤╤Г╨▒╨╗╨╕╤А╨╛╨▓╨░╨╜╨╕╤О ╤Б╤В╤А╨╛╨║ ╨▓ Clipboard-╨╡
+      ╨▓ ╤Б╨╗╤Г╤З╨░╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╤П "╤В╨╡╨║╤Б╤В╨╛╨▓╨╛╨│╨╛ ╨▒╤Г╤Д╨╡╤А╨░ ╤Б╨╕╤Б╤В╨╡╨╝╤Л"
+      ╨▓ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╡ ╨▓╤Л╨║╨╕╨┤╤Л╨▓╨░╨╜╨╕╤П ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛ ╨┐╨╛╤П╨▓╨╗╨╡╨╜╨╕╨╡ ╨╜╨╛╨▓╤Л╤Е
+      ╨│╨╗╤О╨║╨╛╨▓, ╤В.╨║. ╤П ╨░╨▒╤Б╨╛╨╗╤О╤В╨╜╨╛ ╨╜╨╡ ╨┐╨╛╨╜╨╕╨╝╨░╤О, ╨║╨░╨║╨╛╨╣ ╤Б╨┐╨╛╤Б╨╛╨▒
+      ╤А╨░╨▒╨╛╤В╤Л Clipboard-╨░ ╨╜╨░╨┤╨╗╨╡╨╢╨╕╤В ╤Б╤З╨╕╤В╨░╤В╤М ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╤Л╨╝...}
   (*
    if NeedStream then begin
      I := 0;
@@ -324,7 +324,7 @@ function GetWinClipSize: Boolean;
   {$ENDIF}
   end;
 
-{Cat: добавил обработку коллекций с длинными строками}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨╛╨▒╤А╨░╨▒╨╛╤В╨║╤Г ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╣ ╤Б ╨┤╨╗╨╕╨╜╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕}
 procedure PackLinesStream(var PCS: PStream); {-$VOL begin}
   var
     ps: PString;
@@ -337,7 +337,7 @@ procedure PackLinesStream(var PCS: PStream); {-$VOL begin}
   begin
   sp := PCS^.GetSize-cbSize;
   PCS^.Seek(0);
-  PCS^.Read(LongStrings, 1); {читаем флажок "длинноты" строк}
+  PCS^.Read(LongStrings, 1); {╤З╨╕╤В╨░╨╡╨╝ ╤Д╨╗╨░╨╢╨╛╨║ "╨┤╨╗╨╕╨╜╨╜╨╛╤В╤Л" ╤Б╤В╤А╨╛╨║}
   if LongStrings then
     while PCS^.GetPos < sp do
       begin
@@ -360,7 +360,7 @@ procedure PackLinesStream(var PCS: PStream); {-$VOL begin}
   MS := GetMeMemoStream;
   if MS = nil then
     Exit;
-  MS^.Write(LongStrings, 1); {пишем флажок "длинноты" строк}
+  MS^.Write(LongStrings, 1); {╨┐╨╕╤И╨╡╨╝ ╤Д╨╗╨░╨╢╨╛╨║ "╨┤╨╗╨╕╨╜╨╜╨╛╤В╤Л" ╤Б╤В╤А╨╛╨║}
   if LongStrings then
     while (PCS^.GetPos < PCS^.GetSize) do
       begin
@@ -399,18 +399,18 @@ procedure CopyLines2Stream(PC: PCollection; var PCS: PStream);
   if Pos = 0 then
     begin
     LongStrings := P^.LongStrings;
-    PCS^.Write(LongStrings, 1) {пишем флажок "длинноты" строк}
+    PCS^.Write(LongStrings, 1) {╨┐╨╕╤И╨╡╨╝ ╤Д╨╗╨░╨╢╨╛╨║ "╨┤╨╗╨╕╨╜╨╜╨╛╤В╤Л" ╤Б╤В╤А╨╛╨║}
     end
   else
     with PCS^ do
-      begin {выдёргиваем записанный когда-то давно в самое}
-      Seek(0); {начало потока флажок "длинноты" строк}
+      begin {╨▓╤Л╨┤╤С╤А╨│╨╕╨▓╨░╨╡╨╝ ╨╖╨░╨┐╨╕╤Б╨░╨╜╨╜╤Л╨╣ ╨║╨╛╨│╨┤╨░-╤В╨╛ ╨┤╨░╨▓╨╜╨╛ ╨▓ ╤Б╨░╨╝╨╛╨╡}
+      Seek(0); {╨╜╨░╤З╨░╨╗╨╛ ╨┐╨╛╤В╨╛╨║╨░ ╤Д╨╗╨░╨╢╨╛╨║ "╨┤╨╗╨╕╨╜╨╜╨╛╤В╤Л" ╤Б╤В╤А╨╛╨║}
       Read(LongStrings, 1);
       Seek(Pos);
       end;
   if LongStrings then
     if P^.LongStrings then
-      begin {пишем длинные строки из коллекции в длинные строки потока}
+      begin {╨┐╨╕╤И╨╡╨╝ ╨┤╨╗╨╕╨╜╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╕╨╖ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨▓ ╨┤╨╗╨╕╨╜╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨┐╨╛╤В╨╛╨║╨░}
       for i := 0 to P^.Count-1 do
         begin
         TempLongString := CnvLongString(P^.At(i));
@@ -422,7 +422,7 @@ procedure CopyLines2Stream(PC: PCollection; var PCS: PStream);
       end
     else
       begin
-      {пишем короткие строки из коллекции в длинные строки потока}
+      {╨┐╨╕╤И╨╡╨╝ ╨║╨╛╤А╨╛╤В╨║╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╕╨╖ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨▓ ╨┤╨╗╨╕╨╜╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨┐╨╛╤В╨╛╨║╨░}
       for i := 0 to P^.Count-1 do
         begin
         TempLongString := CnvString(P^.At(i));
@@ -433,7 +433,7 @@ procedure CopyLines2Stream(PC: PCollection; var PCS: PStream);
       PCS^.WriteLongStr(nil);
       end
   else if P^.LongStrings then
-    begin {пишем длинные строки из коллекции в короткие строки потока}
+    begin {╨┐╨╕╤И╨╡╨╝ ╨┤╨╗╨╕╨╜╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╕╨╖ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨▓ ╨║╨╛╤А╨╛╤В╨║╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨┐╨╛╤В╨╛╨║╨░}
     for i := 0 to P^.Count-1 do
       begin
       TempString := CnvLongString(P^.At(i));
@@ -444,7 +444,7 @@ procedure CopyLines2Stream(PC: PCollection; var PCS: PStream);
     PCS^.WriteStr(nil);
     end
   else
-    begin {пишем короткие строки из коллекции в короткие строки потока}
+    begin {╨┐╨╕╤И╨╡╨╝ ╨║╨╛╤А╨╛╤В╨║╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╕╨╖ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨▓ ╨║╨╛╤А╨╛╤В╨║╨╕╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨┐╨╛╤В╨╛╨║╨░}
     for i := 0 to P^.Count-1 do
       begin
       TempString := CnvString(P^.At(i));
@@ -468,7 +468,7 @@ procedure CopyStream2Lines(PCS: PStream; var PC: PCollection);
   if PCS = nil then
     Exit;
   PCS^.Seek(0);
-  PCS^.Read(LongStrings, 1); {читаем флажок "длинноты" строк}
+  PCS^.Read(LongStrings, 1); {╤З╨╕╤В╨░╨╡╨╝ ╤Д╨╗╨░╨╢╨╛╨║ "╨┤╨╗╨╕╨╜╨╜╨╛╤В╤Л" ╤Б╤В╤А╨╛╨║}
   if PC = nil then
     PC := New(PLineCollection, Init(50, 5, LongStrings));
   if PC = nil then

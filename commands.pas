@@ -58,11 +58,11 @@ const
   MaxLongStringLength = 1048575;
 
 const
-  {Cat: переделал все коды клавиш по следующему единому принципу:
+  {Cat: ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╨▓╤Б╨╡ ╨║╨╛╨┤╤Л ╨║╨╗╨░╨▓╨╕╤И ╨┐╨╛ ╤Б╨╗╨╡╨┤╤Г╤О╤Й╨╡╨╝╤Г ╨╡╨┤╨╕╨╜╨╛╨╝╤Г ╨┐╤А╨╕╨╜╤Ж╨╕╨┐╤Г:
         kbNNNN = $XXYYZZ
-        XX - флажки сдвигов: 3 - Shift, 4 - Ctrl, 8 - Alt
-        YY - скан-код клавиши
-        ZZ - символьный код клавиши
+        XX - ╤Д╨╗╨░╨╢╨║╨╕ ╤Б╨┤╨▓╨╕╨│╨╛╨▓: 3 - Shift, 4 - Ctrl, 8 - Alt
+        YY - ╤Б╨║╨░╨╜-╨║╨╛╨┤ ╨║╨╗╨░╨▓╨╕╤И╨╕
+        ZZ - ╤Б╨╕╨╝╨▓╨╛╨╗╤М╨╜╤Л╨╣ ╨║╨╛╨┤ ╨║╨╗╨░╨▓╨╕╤И╨╕
 }
 
   kbESC = $00011B;
@@ -641,7 +641,7 @@ const
   kbAtrlAltMenuSuxx = $0CEE00;
   kbCtrlAltShiftMenuSuxx = $0FEE00;
 
-  { псевдо-коды }
+  { ╨┐╤Б╨╡╨▓╨┤╨╛-╨║╨╛╨┤╤Л }
 
   kbNoKey = $000000;
   kbShortCut = $F0FFFF;
@@ -651,7 +651,7 @@ const
   kbDownUp = $00FE00;
   kbUpUp = $00FF00;
 
-  { дублирующиеся имена }
+  { ╨┤╤Г╨▒╨╗╨╕╤А╤Г╤О╤Й╨╕╨╡╤Б╤П ╨╕╨╝╨╡╨╜╨░ }
 
   kbAltCtrlSqBracketL = kbCtrlAltSqBracketL;
   kbAltCtrlSqBracketR = kbCtrlAltSqBracketR;
@@ -712,20 +712,20 @@ const
 
 const
   kbRightShift = $0001;
-    {` Нажат правый Shift `}
+    {` ╨Э╨░╨╢╨░╤В ╨┐╤А╨░╨▓╤Л╨╣ Shift `}
   kbLeftShift = $0002;
-    {` Нажат левый Shift `}
+    {` ╨Э╨░╨╢╨░╤В ╨╗╨╡╨▓╤Л╨╣ Shift `}
   kbCtrlShift = $0004;
-    {` Нажат Ctrl `}
+    {` ╨Э╨░╨╢╨░╤В Ctrl `}
   kbAltShift = $0008;
-    {` Нажат Alt `}
+    {` ╨Э╨░╨╢╨░╤В Alt `}
   kbScrollState = $0010;
   kbNumState = $0020;
   kbCapsState = $0040;
   kbInsState = $0080;
 
   kbAnyShift = $000F;
-    {` Нажат любой Shift, Alt или Ctrl `}
+    {` ╨Э╨░╨╢╨░╤В ╨╗╤О╨▒╨╛╨╣ Shift, Alt ╨╕╨╗╨╕ Ctrl `}
 
   { ViewMode constants }
   vmText = 0;
@@ -736,7 +736,7 @@ const
   vmExternal = 32;
   vmDB = 100;
   vmSpread = 101;
-  vmSpreadSL = 111; {AK155: это с линиями между колонками}
+  vmSpreadSL = 111; {AK155: ╤Н╤В╨╛ ╤Б ╨╗╨╕╨╜╨╕╤П╨╝╨╕ ╨╝╨╡╨╢╨┤╤Г ╨║╨╛╨╗╨╛╨╜╨║╨░╨╝╨╕}
   vmPKT = 102;
   vmMSG = 103;
 
@@ -949,9 +949,9 @@ const
   fmoPreserveDesc = $0200;
   fmoKillContainer = $0400;
   fmoAlwaysCopyDesc = $0800;
-  fmoAutorefreshDriveLine = $1000; // вместо ini  AutoRefreshDriveLine=1
-  fmoAutorefreshPanels = $2000; // вместо ini  AutoRefreshPanels=1
-  fmoDescrByShortNames = $4000; // вместо ini DescrByShortNames
+  fmoAutorefreshDriveLine = $1000; // ╨▓╨╝╨╡╤Б╤В╨╛ ini  AutoRefreshDriveLine=1
+  fmoAutorefreshPanels = $2000; // ╨▓╨╝╨╡╤Б╤В╨╛ ini  AutoRefreshPanels=1
+  fmoDescrByShortNames = $4000; // ╨▓╨╝╨╡╤Б╤В╨╛ ini DescrByShortNames
 
   { L(R) Ctrl in DriveLine }
   fdlNoDifference = 0;
@@ -992,8 +992,8 @@ const
 
 type
   TFileColNumber =
-    {` Номер колонки в описательных массивах;
-    колонка имени в нумерацию не входит.
+    {` ╨Э╨╛╨╝╨╡╤А ╨║╨╛╨╗╨╛╨╜╨║╨╕ ╨▓ ╨╛╨┐╨╕╤Б╨░╤В╨╡╨╗╤М╨╜╤Л╤Е ╨╝╨░╤Б╤Б╨╕╨▓╨░╤Е;
+    ╨║╨╛╨╗╨╛╨╜╨║╨░ ╨╕╨╝╨╡╨╜╨╕ ╨▓ ╨╜╤Г╨╝╨╡╤А╨░╤Ж╨╕╤О ╨╜╨╡ ╨▓╤Е╨╛╨┤╨╕╤В.
      }
    (psnShowSize,
     psnShowPacked,
@@ -1175,8 +1175,8 @@ const
   cmSwitchHiLine = 12158;
   cmSwitchHiColumn = 12159;
 
-{ Каждая команда перекодировки строки должна иметь код меньше, чем
-  cmUpcaseBlock, см. TFileEditor.ChangeBlockCase}
+{ ╨Ъ╨░╨╢╨┤╨░╤П ╨║╨╛╨╝╨░╨╜╨┤╨░ ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕ ╤Б╤В╤А╨╛╨║╨╕ ╨┤╨╛╨╗╨╢╨╜╨░ ╨╕╨╝╨╡╤В╤М ╨║╨╛╨┤ ╨╝╨╡╨╜╤М╤И╨╡, ╤З╨╡╨╝
+  cmUpcaseBlock, ╤Б╨╝. TFileEditor.ChangeBlockCase}
   cmUpString = 12160;
   cmLowString = 12161;
   cmCapString = 12162;
@@ -1197,8 +1197,8 @@ const
   cmSwitchBrackets = 12176;
   cmBracketPair = 12177;
 
-{ Каждая команда перекодировки строки должна иметь код меньше, чем
-  cmUpcaseBlock, см. TFileEditor.ChangeBlockCase}
+{ ╨Ъ╨░╨╢╨┤╨░╤П ╨║╨╛╨╝╨░╨╜╨┤╨░ ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕ ╤Б╤В╤А╨╛╨║╨╕ ╨┤╨╛╨╗╨╢╨╜╨░ ╨╕╨╝╨╡╤В╤М ╨║╨╛╨┤ ╨╝╨╡╨╜╤М╤И╨╡, ╤З╨╡╨╝
+  cmUpcaseBlock, ╤Б╨╝. TFileEditor.ChangeBlockCase}
   cmUpcaseBlock = 12178;
   cmLowcaseBlock = 12179;
   cmCapitalizeBlock = 12180;
@@ -1275,7 +1275,7 @@ const
   cmInsertName = 10301;
   cmInfoPresent = 10302;
   cmGetDirName = 10303;
-    {` Команда панели - дать путь к каталогу панели `}
+    {` ╨Ъ╨╛╨╝╨░╨╜╨┤╨░ ╨┐╨░╨╜╨╡╨╗╨╕ - ╨┤╨░╤В╤М ╨┐╤Г╤В╤М ╨║ ╨║╨░╤В╨░╨╗╨╛╨│╤Г ╨┐╨░╨╜╨╡╨╗╨╕ `}
 //  cmLocalReread = 10304;
   cmDlgNotFound = 10305;
 
@@ -1511,7 +1511,7 @@ const
   cmUserMenu = 3026;
   cmLocalMenuFileEdit = 3027;
   cmGetName = 3028;
-    {` Команда окна и панели - дать текст для списка окон `}
+    {` ╨Ъ╨╛╨╝╨░╨╜╨┤╨░ ╨╛╨║╨╜╨░ ╨╕ ╨┐╨░╨╜╨╡╨╗╨╕ - ╨┤╨░╤В╤М ╤В╨╡╨║╤Б╤В ╨┤╨╗╤П ╤Б╨┐╨╕╤Б╨║╨░ ╨╛╨║╨╛╨╜ `}
   cmPhoneBook = 3030;
   cmStoreColors = 3031;
   cmLoadColors = 3032;
@@ -1730,11 +1730,11 @@ const
   NumSortModes = 8;
 
   { Sort commands }
-   {AK155: коды команд в этой секции должны идти подряд
-    и их порядок должен соответствовать порядку констант
-    dlSortName и далее, а также psmLongName и далее.
-    И этот порядок должен соответствовать порядку чекбоксов
-    в диалоге настроек сортировки. См. также CM_SortBy }
+   {AK155: ╨║╨╛╨┤╤Л ╨║╨╛╨╝╨░╨╜╨┤ ╨▓ ╤Н╤В╨╛╨╣ ╤Б╨╡╨║╤Ж╨╕╨╕ ╨┤╨╛╨╗╨╢╨╜╤Л ╨╕╨┤╤В╨╕ ╨┐╨╛╨┤╤А╤П╨┤
+    ╨╕ ╨╕╤Е ╨┐╨╛╤А╤П╨┤╨╛╨║ ╨┤╨╛╨╗╨╢╨╡╨╜ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨┐╨╛╤А╤П╨┤╨║╤Г ╨║╨╛╨╜╤Б╤В╨░╨╜╤В
+    dlSortName ╨╕ ╨┤╨░╨╗╨╡╨╡, ╨░ ╤В╨░╨║╨╢╨╡ psmLongName ╨╕ ╨┤╨░╨╗╨╡╨╡.
+    ╨Ш ╤Н╤В╨╛╤В ╨┐╨╛╤А╤П╨┤╨╛╨║ ╨┤╨╛╨╗╨╢╨╡╨╜ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨┐╨╛╤А╤П╨┤╨║╤Г ╤З╨╡╨║╨▒╨╛╨║╤Б╨╛╨▓
+    ╨▓ ╨┤╨╕╨░╨╗╨╛╨│╨╡ ╨╜╨░╤Б╤В╤А╨╛╨╡╨║ ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨╕. ╨б╨╝. ╤В╨░╨║╨╢╨╡ CM_SortBy }
   cmSortName = 13000;
   cmSortExt = 13001;
   cmSortSize = 13002;
@@ -1759,19 +1759,19 @@ const
   psmDIZ = 6;
   psmUnsorted = 7;
 
-{//JO: ниже идут специальные значения, которые TFilesCollection.SortMode
- //    принимает перед использованием метода TFilesCollection.FileCompare}
-  fcmCompSize = 1; {сравнить размер файлов}
-  fcmCompTime = 2; {сравнить дату и время файлов}
-  fcmCompAttr = 4; {сравнить атрибуты файлов}
-  fcmCompContent = 8; {сравнить содержимое файлов}
-  fcmCaseSensitive = 16; {регистрочувствительное сравнение имён файлов}
-  fcmPreciseCompare = 32; {сравнение всего сразу для групповых операций}
+{//JO: ╨╜╨╕╨╢╨╡ ╨╕╨┤╤Г╤В ╤Б╨┐╨╡╤Ж╨╕╨░╨╗╤М╨╜╤Л╨╡ ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П, ╨║╨╛╤В╨╛╤А╤Л╨╡ TFilesCollection.SortMode
+ //    ╨┐╤А╨╕╨╜╨╕╨╝╨░╨╡╤В ╨┐╨╡╤А╨╡╨┤ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡╨╝ ╨╝╨╡╤В╨╛╨┤╨░ TFilesCollection.FileCompare}
+  fcmCompSize = 1; {╤Б╤А╨░╨▓╨╜╨╕╤В╤М ╤А╨░╨╖╨╝╨╡╤А ╤Д╨░╨╣╨╗╨╛╨▓}
+  fcmCompTime = 2; {╤Б╤А╨░╨▓╨╜╨╕╤В╤М ╨┤╨░╤В╤Г ╨╕ ╨▓╤А╨╡╨╝╤П ╤Д╨░╨╣╨╗╨╛╨▓}
+  fcmCompAttr = 4; {╤Б╤А╨░╨▓╨╜╨╕╤В╤М ╨░╤В╤А╨╕╨▒╤Г╤В╤Л ╤Д╨░╨╣╨╗╨╛╨▓}
+  fcmCompContent = 8; {╤Б╤А╨░╨▓╨╜╨╕╤В╤М ╤Б╨╛╨┤╨╡╤А╨╢╨╕╨╝╨╛╨╡ ╤Д╨░╨╣╨╗╨╛╨▓}
+  fcmCaseSensitive = 16; {╤А╨╡╨│╨╕╤Б╤В╤А╨╛╤З╤Г╨▓╤Б╤В╨▓╨╕╤В╨╡╨╗╤М╨╜╨╛╨╡ ╤Б╤А╨░╨▓╨╜╨╡╨╜╨╕╨╡ ╨╕╨╝╤С╨╜ ╤Д╨░╨╣╨╗╨╛╨▓}
+  fcmPreciseCompare = 32; {╤Б╤А╨░╨▓╨╜╨╡╨╜╨╕╨╡ ╨▓╤Б╨╡╨│╨╛ ╤Б╤А╨░╨╖╤Г ╨┤╨╗╤П ╨│╤А╤Г╨┐╨┐╨╛╨▓╤Л╤Е ╨╛╨┐╨╡╤А╨░╤Ж╨╕╨╣}
 
-  psfOwnerFirst = 1; {JO: сортировать сначала пути к файлам}
-  psfSortByType = 2; {JO: сортировать сначала по группе}
-  psfInverted = 4; {JO: сортировать в обратном порядке}
-  psfDirsByName = 8; {JO: сортировать каталоги всегда по имени}
+  psfOwnerFirst = 1; {JO: ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╤Б╨╜╨░╤З╨░╨╗╨░ ╨┐╤Г╤В╨╕ ╨║ ╤Д╨░╨╣╨╗╨░╨╝}
+  psfSortByType = 2; {JO: ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╤Б╨╜╨░╤З╨░╨╗╨░ ╨┐╨╛ ╨│╤А╤Г╨┐╨┐╨╡}
+  psfInverted = 4; {JO: ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╨▓ ╨╛╨▒╤А╨░╤В╨╜╨╛╨╝ ╨┐╨╛╤А╤П╨┤╨║╨╡}
+  psfDirsByName = 8; {JO: ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╨▓╤Б╨╡╨│╨┤╨░ ╨┐╨╛ ╨╕╨╝╨╡╨╜╨╕}
 
   { Groups of files placed to the top during panel sorting }
   upsNone = 0;
@@ -1816,7 +1816,7 @@ const
   cmSwitch = 31000;
 
   cmPlugins = 32000; {Cat}
-  {..........занято..........} {Cat}
+  {..........╨╖╨░╨╜╤П╤В╨╛..........} {Cat}
   cmPluginsEnd = 65000; {Cat}
 
   { Help Contexts }
@@ -1876,9 +1876,9 @@ type
 
 type
   TStrIdx = (
-    {Cat: эти индексы поставлены в начало списка, чтобы в будущем не возникало
-      несоответствий индексов ресурсов, когда файлы DN.EXE и PLUGMAN.DLL
-      взяты из разных версий ДН-а}
+    {Cat: ╤Н╤В╨╕ ╨╕╨╜╨┤╨╡╨║╤Б╤Л ╨┐╨╛╤Б╤В╨░╨▓╨╗╨╡╨╜╤Л ╨▓ ╨╜╨░╤З╨░╨╗╨╛ ╤Б╨┐╨╕╤Б╨║╨░, ╤З╤В╨╛╨▒╤Л ╨▓ ╨▒╤Г╨┤╤Г╤Й╨╡╨╝ ╨╜╨╡ ╨▓╨╛╨╖╨╜╨╕╨║╨░╨╗╨╛
+      ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╣ ╨╕╨╜╨┤╨╡╨║╤Б╨╛╨▓ ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓, ╨║╨╛╨│╨┤╨░ ╤Д╨░╨╣╨╗╤Л DN.EXE ╨╕ PLUGMAN.DLL
+      ╨▓╨╖╤П╤В╤Л ╨╕╨╖ ╤А╨░╨╖╨╜╤Л╤Е ╨▓╨╡╤А╤Б╨╕╨╣ ╨Ф╨Э-╨░}
     dlPlugins0,
     dlPlugins1,
     dlPlugins2,
@@ -2111,7 +2111,7 @@ type
     dlChangeDir,
     dlSetAttr,
 
-    dlSortName, {AK155: порядок в этой секции менять нельзя! См. CM_SortBy }
+    dlSortName, {AK155: ╨┐╨╛╤А╤П╨┤╨╛╨║ ╨▓ ╤Н╤В╨╛╨╣ ╤Б╨╡╨║╤Ж╨╕╨╕ ╨╝╨╡╨╜╤П╤В╤М ╨╜╨╡╨╗╤М╨╖╤П! ╨б╨╝. CM_SortBy }
     dlSortExt,
     dlSortSize,
     dlSortDate,

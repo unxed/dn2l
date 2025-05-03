@@ -9,27 +9,27 @@ uses
 type
 
   PXCoder = ^TXCoder;
-  {`2 Работа с перекодировками в просмотре, dbf и т.п.}
+  {`2 ╨а╨░╨▒╨╛╤В╨░ ╤Б ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨░╨╝╨╕ ╨▓ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨╡, dbf ╨╕ ╤В.╨┐.}
   TXCoder = object(TObject)
     XLatCP: TXLatCP;
     KeyMap: TKeyMap;
-      {` KeyMap=kmXlat для кодировки, загруженной из xlt-файла`}
+      {` KeyMap=kmXlat ╨┤╨╗╤П ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕, ╨╖╨░╨│╤А╤Г╨╢╨╡╨╜╨╜╨╛╨╣ ╨╕╨╖ xlt-╤Д╨░╨╣╨╗╨░`}
     MaxCodeTagLen: Byte;
-      {` Максимальная длина CodeTag. Не более 8.`}
+      {` ╨Ь╨░╨║╤Б╨╕╨╝╨░╨╗╤М╨╜╨░╤П ╨┤╨╗╨╕╨╜╨░ CodeTag. ╨Э╨╡ ╨▒╨╛╨╗╨╡╨╡ 8.`}
     CodeTag: Str8;
-      {` Обозначение кодировки для индикации в рамке.
-      Это имя предопределённой кодировки или имя файла загруженной
-      xlt-таблицы без пути `}
+      {` ╨Ю╨▒╨╛╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕ ╨┤╨╗╤П ╨╕╨╜╨┤╨╕╨║╨░╤Ж╨╕╨╕ ╨▓ ╤А╨░╨╝╨║╨╡.
+      ╨н╤В╨╛ ╨╕╨╝╤П ╨┐╤А╨╡╨┤╨╛╨┐╤А╨╡╨┤╨╡╨╗╤С╨╜╨╜╨╛╨╣ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨╕ ╨╕╨╗╨╕ ╨╕╨╝╤П ╤Д╨░╨╣╨╗╨░ ╨╖╨░╨│╤А╤Г╨╢╨╡╨╜╨╜╨╛╨╣
+      xlt-╤В╨░╨▒╨╗╨╕╤Ж╤Л ╨▒╨╡╨╖ ╨┐╤Г╤В╨╕ `}
     constructor Init(AMaxCodeTagLen: Byte);
     constructor Load(var S: TStream);
     procedure Store(var S: TStream);
     procedure UseToAscii;
-      {` Настроить всё на kmXlat на основании XLatCP[ToAscii]`}
+      {` ╨Э╨░╤Б╤В╤А╨╛╨╕╤В╤М ╨▓╤Б╤С ╨╜╨░ kmXlat ╨╜╨░ ╨╛╤Б╨╜╨╛╨▓╨░╨╜╨╕╨╕ XLatCP[ToAscii]`}
     procedure UseKeyMap;
-      {` Настроить всё на текущую KeyMap (kmAscii или более)`}
+      {` ╨Э╨░╤Б╤В╤А╨╛╨╕╤В╤М ╨▓╤Б╤С ╨╜╨░ ╤В╨╡╨║╤Г╤Й╤Г╤О KeyMap (kmAscii ╨╕╨╗╨╕ ╨▒╨╛╨╗╨╡╨╡)`}
     procedure LoadXlatTable;
     procedure NextXLat;
-      {` Переключение по кругу предопределённых кодировок `}
+      {` ╨Я╨╡╤А╨╡╨║╨╗╤О╤З╨╡╨╜╨╕╨╡ ╨┐╨╛ ╨║╤А╤Г╨│╤Г ╨┐╤А╨╡╨┤╨╛╨┐╤А╨╡╨┤╨╡╨╗╤С╨╜╨╜╤Л╤Е ╨║╨╛╨┤╨╕╤А╨╛╨▓╨╛╨║ `}
     procedure FromHistory(fKeyMap: TKeyMap;
       fToAscii: TXLat; fCodeTag: Str8);
     procedure ToHistory(var fKeyMap: TKeyMap;

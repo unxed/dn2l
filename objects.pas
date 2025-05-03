@@ -56,8 +56,8 @@
 {Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
 
 {Cat
-   28/08/2001 - переделал строковые коллекции для обеспечения возможности
-   хранить в них не только String-и, но и LongString-и
+   28/08/2001 - ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╤Б╤В╤А╨╛╨║╨╛╨▓╤Л╨╡ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨┤╨╗╤П ╨╛╨▒╨╡╤Б╨┐╨╡╤З╨╡╨╜╨╕╤П ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╨╕
+   ╤Е╤А╨░╨╜╨╕╤В╤М ╨▓ ╨╜╨╕╤Е ╨╜╨╡ ╤В╨╛╨╗╤М╨║╨╛ String-╨╕, ╨╜╨╛ ╨╕ LongString-╨╕
 }
 
 unit Objects;
@@ -84,12 +84,12 @@ type
 
   PCollection = ^TCollection;
   TCollection = object(TObject)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Items: PItemList;
     Count: LongInt;
     Limit: LongInt;
     Delta: LongInt;
-    Status, ErrorInfo: Integer; {!!! в OldColection}
+    Status, ErrorInfo: Integer; {!!! ╨▓ OldColection}
     constructor Init(ALimit, ADelta: LongInt);
     constructor Load(var S: TStream);
     destructor Done; virtual;
@@ -121,7 +121,7 @@ type
 
   PSortedCollection = ^TSortedCollection;
   TSortedCollection = object(TCollection)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Duplicates: Boolean;
     constructor Init(ALimit, ADelta: LongInt);
     constructor Load(var S: TStream);
@@ -140,7 +140,7 @@ type
 
   PLineCollection = ^TLineCollection;
   TLineCollection = object(TCollection)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     LongStrings: Boolean; {Cat}
     constructor Init(ALimit, ADelta: LongInt; ALongStrings: Boolean);
     {Cat}
@@ -153,7 +153,7 @@ type
 
   PStringCollection = ^TStringCollection;
   TStringCollection = object(TSortedCollection)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     LongStrings: Boolean; {Cat}
     constructor Init(ALimit, ADelta: LongInt; ALongStrings: Boolean);
     {Cat}
@@ -167,7 +167,7 @@ type
 
   PStrCollection = ^TStrCollection;
   TStrCollection = object(TSortedCollection)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     function Compare(Key1, Key2: Pointer): Integer; virtual;
     procedure FreeItem(Item: Pointer); virtual;
     function GetItem(var S: TStream): Pointer; virtual;
@@ -651,7 +651,7 @@ procedure TSortedCollection.Store(var S: TStream);
 
 { TStringCollection }
 
-{Cat: добавил возможность хранить в коллекции длинные строки}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Е╤А╨░╨╜╨╕╤В╤М ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨┤╨╗╨╕╨╜╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕}
 constructor TStringCollection.Init(ALimit, ADelta: LongInt;
      ALongStrings: Boolean);
   begin
@@ -751,7 +751,7 @@ procedure TStringCollection.PutItem(var S: TStream; Item: Pointer);
 {/Cat}
 
 { TLineCollection }
-{Cat: добавил возможность хранить в коллекции длинные строки}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Е╤А╨░╨╜╨╕╤В╤М ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕ ╨┤╨╗╨╕╨╜╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕}
 constructor TLineCollection.Init(ALimit, ADelta: LongInt;
      ALongStrings: Boolean);
   begin
@@ -1165,7 +1165,7 @@ var
 procedure TSortedCollection.Sort;
   begin
   if Count <= 0 then
-    Exit; {JO не удалять! иначе падаем по Ctrl-H и т.п.}
+    Exit; {JO ╨╜╨╡ ╤Г╨┤╨░╨╗╤П╤В╤М! ╨╕╨╜╨░╤З╨╡ ╨┐╨░╨┤╨░╨╡╨╝ ╨┐╨╛ Ctrl-H ╨╕ ╤В.╨┐.}
   QSort;
   end;
 

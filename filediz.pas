@@ -67,37 +67,37 @@ function GetDizPath(const Path: String; PreferedName: String): String;
 function CalcDPath(P: PDiz; Owen: PString): String;
 
 procedure ExportDiz(
-{` Внесение нового описания вместо старого, если оно было.
-  Из прежнего контейнера удаляются описания к именами FR^.FlName
-  и к OldName:, если оно задано.}
+{` ╨Т╨╜╨╡╤Б╨╡╨╜╨╕╨╡ ╨╜╨╛╨▓╨╛╨│╨╛ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╨▓╨╝╨╡╤Б╤В╨╛ ╤Б╤В╨░╤А╨╛╨│╨╛, ╨╡╤Б╨╗╨╕ ╨╛╨╜╨╛ ╨▒╤Л╨╗╨╛.
+  ╨Ш╨╖ ╨┐╤А╨╡╨╢╨╜╨╡╨│╨╛ ╨║╨╛╨╜╤В╨╡╨╣╨╜╨╡╤А╨░ ╤Г╨┤╨░╨╗╤П╤О╤В╤Б╤П ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╨║ ╨╕╨╝╨╡╨╜╨░╨╝╨╕ FR^.FlName
+  ╨╕ ╨║ OldName:, ╨╡╤Б╨╗╨╕ ╨╛╨╜╨╛ ╨╖╨░╨┤╨░╨╜╨╛.}
   const OldName: PFlName;
-{` Имя, которое было раньше; используется при переименовании `}
+{` ╨Ш╨╝╤П, ╨║╨╛╤В╨╛╤А╨╛╨╡ ╨▒╤Л╨╗╨╛ ╤А╨░╨╜╤М╤И╨╡; ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨┐╤А╨╕ ╨┐╨╡╤А╨╡╨╕╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╕ `}
   const NewLongName: string;
-{` Данные о новом файле. Короткое имя может быть недостоверным.
-  Путь (Owner) используется только если не задан TargetPath.
-  Файл с таким длинным именем должен существовать (уже или ещё).
-  FR^.DIZ содержит то, что, собственно, нужно занести.
+{` ╨Ф╨░╨╜╨╜╤Л╨╡ ╨╛ ╨╜╨╛╨▓╨╛╨╝ ╤Д╨░╨╣╨╗╨╡. ╨Ъ╨╛╤А╨╛╤В╨║╨╛╨╡ ╨╕╨╝╤П ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╨╜╨╡╨┤╨╛╤Б╤В╨╛╨▓╨╡╤А╨╜╤Л╨╝.
+  ╨Я╤Г╤В╤М (Owner) ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╤В╨╛╨╗╤М╨║╨╛ ╨╡╤Б╨╗╨╕ ╨╜╨╡ ╨╖╨░╨┤╨░╨╜ TargetPath.
+  ╨д╨░╨╣╨╗ ╤Б ╤В╨░╨║╨╕╨╝ ╨┤╨╗╨╕╨╜╨╜╤Л╨╝ ╨╕╨╝╨╡╨╜╨╡╨╝ ╨┤╨╛╨╗╨╢╨╡╨╜ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╨╛╨▓╨░╤В╤М (╤Г╨╢╨╡ ╨╕╨╗╨╕ ╨╡╤Й╤С).
+  FR^.DIZ ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╤В╨╛, ╤З╤В╨╛, ╤Б╨╛╨▒╤Б╤В╨▓╨╡╨╜╨╜╨╛, ╨╜╤Г╨╢╨╜╨╛ ╨╖╨░╨╜╨╡╤Б╤В╨╕.
 `}
   var NewDiz: PDiz;
   TargetPath: string
-{` Каталог, где находятся файл и контейнер описаний; если '', то
-  используется FR^.Owner `}
+{` ╨Ъ╨░╤В╨░╨╗╨╛╨│, ╨│╨┤╨╡ ╨╜╨░╤Е╨╛╨┤╤П╤В╤Б╤П ╤Д╨░╨╣╨╗ ╨╕ ╨║╨╛╨╜╤В╨╡╨╣╨╜╨╡╤А ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╣; ╨╡╤Б╨╗╨╕ '', ╤В╨╛
+  ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П FR^.Owner `}
 );
 {`}
 
 procedure DeleteDiz(FR: PFileRec);
 procedure GetDiz(FR: PFileRec);
- {` Обеспечить наличие DIZ, если это возможно `}
+ {` ╨Ю╨▒╨╡╤Б╨┐╨╡╤З╨╕╤В╤М ╨╜╨░╨╗╨╕╤З╨╕╨╡ DIZ, ╨╡╤Б╨╗╨╕ ╤Н╤В╨╛ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛ `}
 procedure SetDescription(PF: PFileRec; DizOwner: String);
 function DizFirstLine(DIZ: PDiz): String;
-  {` Вернуть первую строку текста описания.
-   Если DIZ=nil - результат пустой `}
+  {` ╨Т╨╡╤А╨╜╤Г╤В╤М ╨┐╨╡╤А╨▓╤Г╤О ╤Б╤В╤А╨╛╨║╤Г ╤В╨╡╨║╤Б╤В╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П.
+   ╨Х╤Б╨╗╨╕ DIZ=nil - ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В ╨┐╤Г╤Б╤В╨╛╨╣ `}
 
 function DizMaxLine(DIZ: PDiz): String;
-  {` Вернуть строку текста описания максимально возможной длины.
-  Многострочное описание дочитывать, заменяя CRLF и начальные
-  пробелы строк одним пробелом.
-   Если DIZ=nil - результат пустой `}
+  {` ╨Т╨╡╤А╨╜╤Г╤В╤М ╤Б╤В╤А╨╛╨║╤Г ╤В╨╡╨║╤Б╤В╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╨╝╨░╨║╤Б╨╕╨╝╨░╨╗╤М╨╜╨╛ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╤Л.
+  ╨Ь╨╜╨╛╨│╨╛╤Б╤В╤А╨╛╤З╨╜╨╛╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡ ╨┤╨╛╤З╨╕╤В╤Л╨▓╨░╤В╤М, ╨╖╨░╨╝╨╡╨╜╤П╤П CRLF ╨╕ ╨╜╨░╤З╨░╨╗╤М╨╜╤Л╨╡
+  ╨┐╤А╨╛╨▒╨╡╨╗╤Л ╤Б╤В╤А╨╛╨║ ╨╛╨┤╨╜╨╕╨╝ ╨┐╤А╨╛╨▒╨╡╨╗╨╛╨╝.
+   ╨Х╤Б╨╗╨╕ DIZ=nil - ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В ╨┐╤Г╤Б╤В╨╛╨╣ `}
 
 function OpenFileList(const AConatainerPath: string): Boolean;
 procedure ReadFileList(ProcessDizName: TDizNameProc;
@@ -160,14 +160,14 @@ function GetDizPath(const Path: String; PreferedName: String): String;
   repeat
     if Result = '' then
       begin
-      Result := PreferedName; // файл придётся создавать
+      Result := PreferedName; // ╤Д╨░╨╣╨╗ ╨┐╤А╨╕╨┤╤С╤В╤Б╤П ╤Б╨╛╨╖╨┤╨░╨▓╨░╤В╤М
       Exit;
       end;
     Result := MakeNormName(Path, Result);
     if PreferedName = '' then
-      PreferedName := Result; // теперь это полный путь
+      PreferedName := Result; // ╤В╨╡╨┐╨╡╤А╤М ╤Н╤В╨╛ ╨┐╨╛╨╗╨╜╤Л╨╣ ╨┐╤Г╤В╤М
     if ExistFile(Result) then
-      Exit; // контейнер найден
+      Exit; // ╨║╨╛╨╜╤В╨╡╨╣╨╜╨╡╤А ╨╜╨░╨╣╨┤╨╡╨╜
     Inc(I);
     Result := GetPossibleDizOwner(I);
   until False;
@@ -231,8 +231,8 @@ procedure SetDescription(PF: PFileRec; DizOwner: String);
   if  (PF^.DIZ <> nil) then
     NewDIZ := PF^.DIZ^.DIZText;
   K := PosChar(#13, NewDIZ);
-  {JO: проверяем на наличие дополнительных строк.
-   Если есть - редактируем только первую строку.}
+  {JO: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝ ╨╜╨░ ╨╜╨░╨╗╨╕╤З╨╕╨╡ ╨┤╨╛╨┐╨╛╨╗╨╜╨╕╤В╨╡╨╗╤М╨╜╤Л╤Е ╤Б╤В╤А╨╛╨║.
+   ╨Х╤Б╨╗╨╕ ╨╡╤Б╤В╤М - ╤А╨╡╨┤╨░╨║╤В╨╕╤А╤Г╨╡╨╝ ╤В╨╛╨╗╤М╨║╨╛ ╨┐╨╡╤А╨▓╤Г╤О ╤Б╤В╤А╨╛╨║╤Г.}
   if K = 0 then
     K := 255;
   S := Copy(NewDiz, 1, K-1);
@@ -256,7 +256,7 @@ procedure SetDescription(PF: PFileRec; DizOwner: String);
   end { SetDescription };
 {-DataCompBoy-}
 
-  { прочитать непустую строку (хвостовые пробелы отбрасываются)}
+  { ╨┐╤А╨╛╤З╨╕╤В╨░╤В╤М ╨╜╨╡╨┐╤Г╤Б╤В╤Г╤О ╤Б╤В╤А╨╛╨║╤Г (╤Е╨▓╨╛╤Б╤В╨╛╨▓╤Л╨╡ ╨┐╤А╨╛╨▒╨╡╨╗╤Л ╨╛╤В╨▒╤А╨░╤Б╤Л╨▓╨░╤О╤В╤Б╤П)}
 function ReadNextS: Boolean;
   var
     l: Integer;
@@ -310,15 +310,15 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
   begin
   while True do
     begin
-    { Обработка нового описания. LastDizLine уже прочитана.}
+    { ╨Ю╨▒╤А╨░╨▒╨╛╤В╨║╨░ ╨╜╨╛╨▓╨╛╨│╨╛ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П. LastDizLine ╤Г╨╢╨╡ ╨┐╤А╨╛╤З╨╕╤В╨░╨╜╨░.}
     if (LastDizLine = '') or (LastDizLine[1] in [' ', #9, '>']) then
       goto ReadNextLine;
-    { игнорируем остаток
-         предыдущего многострочного описания }
+    { ╨╕╨│╨╜╨╛╤А╨╕╤А╤Г╨╡╨╝ ╨╛╤Б╤В╨░╤В╨╛╨║
+         ╨┐╤А╨╡╨┤╤Л╨┤╤Г╤Й╨╡╨│╨╛ ╨╝╨╜╨╛╨│╨╛╤Б╤В╤А╨╛╤З╨╜╨╛╨│╨╛ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П }
 
     LS := Length(LastDizLine);
     if LastDizLine[1] = '"' then
-      {имя в кавычках - ищем вторую кавычку }
+      {╨╕╨╝╤П ╨▓ ╨║╨░╨▓╤Л╤З╨║╨░╤Е - ╨╕╤Й╨╡╨╝ ╨▓╤В╨╛╤А╤Г╤О ╨║╨░╨▓╤Л╤З╨║╤Г }
       begin
       NameEnd := 0;
       for j := 2 to LS do
@@ -331,23 +331,23 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
       if NameEnd <= 2 then
         goto ReadNextLine;
       if NameEnd = LS then
-        goto ReadNextLine; { пустое описание никого не интересует }
+        goto ReadNextLine; { ╨┐╤Г╤Б╤В╨╛╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡ ╨╜╨╕╨║╨╛╨│╨╛ ╨╜╨╡ ╨╕╨╜╤В╨╡╤А╨╡╤Б╤Г╨╡╤В }
       N := Copy(LastDizLine, 2, NameEnd-2);
       end
     else
-      {имя не в кавычках - ищем пробел или Tab. При этом
-        благодаря DelRight после него что-то должно быть }
+      {╨╕╨╝╤П ╨╜╨╡ ╨▓ ╨║╨░╨▓╤Л╤З╨║╨░╤Е - ╨╕╤Й╨╡╨╝ ╨┐╤А╨╛╨▒╨╡╨╗ ╨╕╨╗╨╕ Tab. ╨Я╤А╨╕ ╤Н╤В╨╛╨╝
+        ╨▒╨╗╨░╨│╨╛╨┤╨░╤А╤П DelRight ╨┐╨╛╤Б╨╗╨╡ ╨╜╨╡╨│╨╛ ╤З╤В╨╛-╤В╨╛ ╨┤╨╛╨╗╨╢╨╜╨╛ ╨▒╤Л╤В╤М }
       begin
       NameEnd := Pos(' ', LastDizLine);
       j := Pos(#9, LastDizLine);
       if  (j <> 0) and (j < NameEnd) then
-        NameEnd := j // заведомо не 0
+        NameEnd := j // ╨╖╨░╨▓╨╡╨┤╨╛╨╝╨╛ ╨╜╨╡ 0
       else
         begin
         if NameEnd = 0 then
-          NameEnd := j; // может быть и 0
+          NameEnd := j; // ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╨╕ 0
         if NameEnd = 0 then
-          goto ReadNextLine; { пустое описание никого не интересует }
+          goto ReadNextLine; { ╨┐╤Г╤Б╤В╨╛╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡ ╨╜╨╕╨║╨╛╨│╨╛ ╨╜╨╡ ╨╕╨╜╤В╨╡╤А╨╡╤Б╤Г╨╡╤В }
         j := NameEnd;
         end;
       N := Copy(LastDizLine, 1, NameEnd-1);
@@ -355,11 +355,11 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
     UpStr(N);
     while (J <= Length(LastDizLine)) and (LastDizLine[J] = ' ') do
       inc(J);
-    ProcessDizName(N, J); {LastDizLine доступна}
+    ProcessDizName(N, J); {LastDizLine ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨░}
 
-    {AK155: Дочитываем многострочное описание.
-Признаком дополнительной строки является побел или Tab в начале,
-а также '>' в начале (files.bbs в формате AllFix).}
+    {AK155: ╨Ф╨╛╤З╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╝╨╜╨╛╨│╨╛╤Б╤В╤А╨╛╤З╨╜╨╛╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡.
+╨Я╤А╨╕╨╖╨╜╨░╨║╨╛╨╝ ╨┤╨╛╨┐╨╛╨╗╨╜╨╕╤В╨╡╨╗╤М╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ ╤П╨▓╨╗╤П╨╡╤В╤Б╤П ╨┐╨╛╨▒╨╡╨╗ ╨╕╨╗╨╕ Tab ╨▓ ╨╜╨░╤З╨░╨╗╨╡,
+╨░ ╤В╨░╨║╨╢╨╡ '>' ╨▓ ╨╜╨░╤З╨░╨╗╨╡ (files.bbs ╨▓ ╤Д╨╛╤А╨╝╨░╤В╨╡ AllFix).}
     while True do
       begin
       if not ReadNextS then
@@ -390,7 +390,7 @@ var
   GetDizText: LongString;
 
 function GetDizNameProc(const N: string; TextStart: Integer): Boolean;
-  { Для ReadFileList. Сравнение имени и приём первой строки }
+  { ╨Ф╨╗╤П ReadFileList. ╨б╤А╨░╨▓╨╜╨╡╨╜╨╕╨╡ ╨╕╨╝╨╡╨╜╨╕ ╨╕ ╨┐╤А╨╕╤С╨╝ ╨┐╨╡╤А╨▓╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ }
   var
     I: Integer;
     F: TUseLFN;
@@ -406,8 +406,8 @@ function GetDizNameProc(const N: string; TextStart: Integer): Boolean;
   end;
 
 procedure GetDizLineProc;
-  { Для ReadFileList. Добавление очередной строки прямо в элемент
-    коллекции}
+  { ╨Ф╨╗╤П ReadFileList. ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╛╤З╨╡╤А╨╡╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ ╨┐╤А╤П╨╝╨╛ ╨▓ ╤Н╨╗╨╡╨╝╨╡╨╜╤В
+    ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╨╕}
   const
     CrLf: array[0..1] of char = #13#10;
   begin
@@ -416,7 +416,7 @@ procedure GetDizLineProc;
   end;
 
 function GetDizEndProc: Boolean;
-  { Для ReadFileList. Формирование признака завершения }
+  { ╨Ф╨╗╤П ReadFileList. ╨д╨╛╤А╨╝╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┐╤А╨╕╨╖╨╜╨░╨║╨░ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╤П }
   begin
   Result := GetDizFound;
   end;
@@ -427,9 +427,9 @@ procedure GetDiz(FR: PFileRec);
     Container: String;
     GetDizFull1: array[1..SizeOf(ShortString)+SizeOf(TShortName)] of Char;
     GetDizName1: TFlName absolute GetDizFull1;
-     { разместить Dummy после TFlName, как в TFileRec, в данном случае
-     нельзя, так как SmartLink попросту выбросит эту переменную, к которой
-     нет обращений. А в таком варианте (с absolute) память резервируется.}
+     { ╤А╨░╨╖╨╝╨╡╤Б╤В╨╕╤В╤М Dummy ╨┐╨╛╤Б╨╗╨╡ TFlName, ╨║╨░╨║ ╨▓ TFileRec, ╨▓ ╨┤╨░╨╜╨╜╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡
+     ╨╜╨╡╨╗╤М╨╖╤П, ╤В╨░╨║ ╨║╨░╨║ SmartLink ╨┐╨╛╨┐╤А╨╛╤Б╤В╤Г ╨▓╤Л╨▒╤А╨╛╤Б╨╕╤В ╤Н╤В╤Г ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Г╤О, ╨║ ╨║╨╛╤В╨╛╤А╨╛╨╣
+     ╨╜╨╡╤В ╨╛╨▒╤А╨░╤Й╨╡╨╜╨╕╨╣. ╨Р ╨▓ ╤В╨░╨║╨╛╨╝ ╨▓╨░╤А╨╕╨░╨╜╤В╨╡ (╤Б absolute) ╨┐╨░╨╝╤П╤В╤М ╤А╨╡╨╖╨╡╤А╨▓╨╕╤А╤Г╨╡╤В╤Б╤П.}
   begin
   if FR^.DIZ <> nil then
     Exit;
@@ -452,10 +452,10 @@ procedure GetDiz(FR: PFileRec);
     end;
   end { GetDiz };
 
-{ Обновление описания файла в конейнере }
+{ ╨Ю╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╤Д╨░╨╣╨╗╨░ ╨▓ ╨║╨╛╨╜╨╡╨╣╨╜╨╡╤А╨╡ }
 
 procedure SaveDizLineProc;
-  { Для ReadFileList }
+  { ╨Ф╨╗╤П ReadFileList }
   begin
   if not IgnoreDiz then
     begin
@@ -465,8 +465,8 @@ procedure SaveDizLineProc;
   end;
 
 function SaveDizNameProc(const N: string; TextStart: Integer): Boolean;
-  { Для ReadFileList. Сравнение имени; для данного имени пропуск описания,
-    для прочих - вывод первой строки }
+  { ╨Ф╨╗╤П ReadFileList. ╨б╤А╨░╨▓╨╜╨╡╨╜╨╕╨╡ ╨╕╨╝╨╡╨╜╨╕; ╨┤╨╗╤П ╨┤╨░╨╜╨╜╨╛╨│╨╛ ╨╕╨╝╨╡╨╜╨╕ ╨┐╤А╨╛╨┐╤Г╤Б╨║ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П,
+    ╨┤╨╗╤П ╨┐╤А╨╛╤З╨╕╤Е - ╨▓╤Л╨▓╨╛╨┤ ╨┐╨╡╤А╨▓╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕ }
   var
     I: Integer;
     F: TUseLFN;
@@ -487,7 +487,7 @@ function SaveDizNameProc(const N: string; TextStart: Integer): Boolean;
   end;
 
 function SaveDizEndProc: Boolean;
-  { Для ReadFileList. Продолжать копирование }
+  { ╨Ф╨╗╤П ReadFileList. ╨Я╤А╨╛╨┤╨╛╨╗╨╢╨░╤В╤М ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ }
   begin
   Result := False;
   IgnoreDiz := False;
@@ -499,8 +499,8 @@ procedure ExportDiz(
   var NewDiz: PDiz;
   TargetPath: String
   );
-{ Если в прежнем контейнере описание нашлось, то в новом оно
-будет под таким же (длинным или коротким) именем }
+{ ╨Х╤Б╨╗╨╕ ╨▓ ╨┐╤А╨╡╨╢╨╜╨╡╨╝ ╨║╨╛╨╜╤В╨╡╨╣╨╜╨╡╤А╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡ ╨╜╨░╤И╨╗╨╛╤Б╤М, ╤В╨╛ ╨▓ ╨╜╨╛╨▓╨╛╨╝ ╨╛╨╜╨╛
+╨▒╤Г╨┤╨╡╤В ╨┐╨╛╨┤ ╤В╨░╨║╨╕╨╝ ╨╢╨╡ (╨┤╨╗╨╕╨╜╨╜╤Л╨╝ ╨╕╨╗╨╕ ╨║╨╛╤А╨╛╤В╨║╨╕╨╝) ╨╕╨╝╨╡╨╜╨╡╨╝ }
   var
     F: TUseLFN;
     ContainerFullName: String;
@@ -523,16 +523,16 @@ procedure ExportDiz(
   ContainerFullName := '';
   if NewDiz^.Container <> nil then
     ContainerFullName := GetName(NewDiz^.Container^);
-  { сейчас ContainerFullName - только имя (или пусто) }
+  { ╤Б╨╡╨╣╤З╨░╤Б ContainerFullName - ╤В╨╛╨╗╤М╨║╨╛ ╨╕╨╝╤П (╨╕╨╗╨╕ ╨┐╤Г╤Б╤В╨╛) }
   ContainerFullName := GetDizPath(TargetPath, ContainerFullName);
-  { А теперь - полный путь }
+  { ╨Р ╤В╨╡╨┐╨╡╤А╤М - ╨┐╨╛╨╗╨╜╤Л╨╣ ╨┐╤Г╤В╤М }
   Assign(NewContainerFile, TargetPath+'$DN'+ItoS(DNNumber)+'$.DIZ');
   Rewrite(NewContainerFile);
   if IOResult <> 0 then
     begin
-    Exit; //! как-то не очень... Ошибку бы сообщить. И далее аналогично.
+    Exit; //! ╨║╨░╨║-╤В╨╛ ╨╜╨╡ ╨╛╤З╨╡╨╜╤М... ╨Ю╤И╨╕╨▒╨║╤Г ╨▒╤Л ╤Б╨╛╨╛╨▒╤Й╨╕╤В╤М. ╨Ш ╨┤╨░╨╗╨╡╨╡ ╨░╨╜╨░╨╗╨╛╨│╨╕╤З╨╜╨╛.
     end;
-  LName := True; // по умолчанию - по длинным именам
+  LName := True; // ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О - ╨┐╨╛ ╨┤╨╗╨╕╨╜╨╜╤Л╨╝ ╨╕╨╝╨╡╨╜╨░╨╝
   CopyShortString(UpStrg(NewLongName), GetDizName1[True]);
 {$IFDEF DualName}
   if (FMSetup.Options and fmoDescrByShortNames) <> 0 then
@@ -554,8 +554,8 @@ procedure ExportDiz(
     OldContainerAttr := Archive;
   if NewDiz^.DizText <> '' then
     begin
-    { Длинное имя восстановить, какое есть,
-     короткое имя - на нижний регистр }
+    { ╨Ф╨╗╨╕╨╜╨╜╨╛╨╡ ╨╕╨╝╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М, ╨║╨░╨║╨╛╨╡ ╨╡╤Б╤В╤М,
+     ╨║╨╛╤А╨╛╤В╨║╨╛╨╡ ╨╕╨╝╤П - ╨╜╨░ ╨╜╨╕╨╢╨╜╨╕╨╣ ╤А╨╡╨│╨╕╤Б╤В╤А }
     CopyShortString(NewLongName, GetDizName1[True]);
     {$IFDEF DualName}
     LowStr(GetDizName1[False]);
@@ -579,7 +579,7 @@ procedure ExportDiz(
 
 procedure DeleteDiz(FR: PFileRec);
   begin
-  if (FR <> nil) {Бывает для подкаталога при F6 на каталоге}
+  if (FR <> nil) {╨С╤Л╨▓╨░╨╡╤В ╨┤╨╗╤П ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨┐╤А╨╕ F6 ╨╜╨░ ╨║╨░╤В╨░╨╗╨╛╨│╨╡}
     and (FR^.DIZ <> nil)
     and (FR^.DIZ^.DizText <> '')
   then
@@ -596,9 +596,9 @@ function CalcDPath(P: PDiz; Owen: PString): String;
     SR: lSearchRec;
   begin
   if  (P = nil) or (P^.Container = nil) then
-    {! Интересно, а может ли быть P^.Container=nil?
-     Такое бывает в arvidavt и arvidtdr, но они, мне кажется,
-     не могут обратиться к CalcDPath, так что это условие лишнее }
+    {! ╨Ш╨╜╤В╨╡╤А╨╡╤Б╨╜╨╛, ╨░ ╨╝╨╛╨╢╨╡╤В ╨╗╨╕ ╨▒╤Л╤В╤М P^.Container=nil?
+     ╨в╨░╨║╨╛╨╡ ╨▒╤Л╨▓╨░╨╡╤В ╨▓ arvidavt ╨╕ arvidtdr, ╨╜╨╛ ╨╛╨╜╨╕, ╨╝╨╜╨╡ ╨║╨░╨╢╨╡╤В╤Б╤П,
+     ╨╜╨╡ ╨╝╨╛╨│╤Г╤В ╨╛╨▒╤А╨░╤В╨╕╤В╤М╤Б╤П ╨║ CalcDPath, ╤В╨░╨║ ╤З╤В╨╛ ╤Н╤В╨╛ ╤Г╤Б╨╗╨╛╨▓╨╕╨╡ ╨╗╨╕╤И╨╜╨╡╨╡ }
     begin
     for I := 1 to 128 do
       begin

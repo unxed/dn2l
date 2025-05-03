@@ -78,9 +78,9 @@ type
     procedure ShortStore(var S: TStream);
     procedure FreeItem(Item: Pointer); virtual;
     function NewCellRec(ACol, ARow: AInt; const A_S: String): PCellrec;
-    { создать запись }
+    { ╤Б╨╛╨╖╨┤╨░╤В╤М ╨╖╨░╨┐╨╕╤Б╤М }
     function NewItem(ACol, ARow: AInt; const A_S: String): PCellrec;
-    { создать запись и поместить ее в коллекцию }
+    { ╤Б╨╛╨╖╨┤╨░╤В╤М ╨╖╨░╨┐╨╕╤Б╤М ╨╕ ╨┐╨╛╨╝╨╡╤Б╤В╨╕╤В╤М ╨╡╨╡ ╨▓ ╨║╨╛╨╗╨╗╨╡╨║╤Ж╨╕╤О }
     function ReplaceItem
         (ACol: Byte; ARow: AInt; const A_S: String): PCellrec;
     function Get(Col: Byte; Row: AInt): PCellrec;
@@ -92,7 +92,7 @@ type
     function Compare(K1, K2: Pointer): Integer; virtual;
     function TSort(var Start: Integer): Boolean; {AK155}
     procedure ForRectangle(AX: Byte; AY: AInt; {AK155}
-        BX: Byte; BY: AInt; Action: Pointer); {см. комментарий к телу!}
+        BX: Byte; BY: AInt; Action: Pointer); {╤Б╨╝. ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╣ ╨║ ╤В╨╡╨╗╤Г!}
     end;
 
 {$IFNDEF B243} Real = Real48; {$ENDIF}
@@ -289,9 +289,9 @@ function TCellCollection.ReplaceItem
     end;
   end { TCellCollection.ReplaceItem };
 
-{ Для совместимости файла wkz со старыми версиями DN, выводится
-значение, притом Real, а не CReal (с контролем переполнения).
-Для нынешней версии значения в файле не нужны.}
+{ ╨Ф╨╗╤П ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╤Д╨░╨╣╨╗╨░ wkz ╤Б╨╛ ╤Б╤В╨░╤А╤Л╨╝╨╕ ╨▓╨╡╤А╤Б╨╕╤П╨╝╨╕ DN, ╨▓╤Л╨▓╨╛╨┤╨╕╤В╤Б╤П
+╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡, ╨┐╤А╨╕╤В╨╛╨╝ Real, ╨░ ╨╜╨╡ CReal (╤Б ╨║╨╛╨╜╤В╤А╨╛╨╗╨╡╨╝ ╨┐╨╡╤А╨╡╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П).
+╨Ф╨╗╤П ╨╜╤Л╨╜╨╡╤И╨╜╨╡╨╣ ╨▓╨╡╤А╤Б╨╕╨╕ ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╨▓ ╤Д╨░╨╣╨╗╨╡ ╨╜╨╡ ╨╜╤Г╨╢╨╜╤Л.}
 
 procedure TCellCollection.PutItem;
   var
@@ -383,9 +383,9 @@ function TCellCollection.TSort(var Start: Integer): Boolean;
     PoolUnit = 5;
   var
     QLink: PAWordArray;
-    {У Кнута есть еще Count, как синоним QLink, но мы будем писать везде QLink}
+    {╨г ╨Ъ╨╜╤Г╤В╨░ ╨╡╤Б╤В╤М ╨╡╤Й╨╡ Count, ╨║╨░╨║ ╤Б╨╕╨╜╨╛╨╜╨╕╨╝ QLink, ╨╜╨╛ ╨╝╤Л ╨▒╤Г╨┤╨╡╨╝ ╨┐╨╕╤Б╨░╤В╤М ╨▓╨╡╨╖╨┤╨╡ QLink}
     QLinkSize: LongInt;
-    Top: PAWordArray; {Top^[0] не используем}
+    Top: PAWordArray; {Top^[0] ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝}
     TopSize: LongInt;
     SucPool: PSucPool;
     PoolCount: LongInt;
@@ -451,8 +451,8 @@ function TCellCollection.TSort(var Start: Integer): Boolean;
     end { RegisterPrev };
 
   begin {TCellCollection.TSort}
-  { Топологическая сортировка. См. Д.Кнут, т.1, 2.3.2.}
-  P := 0; { инициализация SucPool}
+  { ╨в╨╛╨┐╨╛╨╗╨╛╨│╨╕╤З╨╡╤Б╨║╨░╤П ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨░. ╨б╨╝. ╨Ф.╨Ъ╨╜╤Г╤В, ╤В.1, 2.3.2.}
+  P := 0; { ╨╕╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░╤Ж╨╕╤П SucPool}
   N := Count;
   QLinkSize := (N+1)*SizeOf(QLink^[0]);
   QLink := MemAlloc(QLinkSize);
@@ -477,7 +477,7 @@ function TCellCollection.TSort(var Start: Integer): Boolean;
         while Scan(c2) do
           begin
           if op = 1 then
-            begin {обработка c1:c2}
+            begin {╨╛╨▒╤А╨░╨▒╨╛╤В╨║╨░ c1:c2}
             c1 := c2;
             Scan(c2);
             if GetCellCoord(c1, SR1.Col, SR1.Row)
@@ -489,7 +489,7 @@ function TCellCollection.TSort(var Start: Integer): Boolean;
             Scan(c1);
             end
           else
-            begin {обработка c2}
+            begin {╨╛╨▒╤А╨░╨▒╨╛╤В╨║╨░ c2}
             if GetCellCoord(c2, SR.Col, SR.Row) then
               RegisterPrev;
             c1 := c2;
@@ -505,7 +505,7 @@ function TCellCollection.TSort(var Start: Integer): Boolean;
     if QLink^[k] = 0 then
       begin
       QLink^[R] := k;
-      R := k; {в книге ошибочно написано P вместо R}
+      R := k; {╨▓ ╨║╨╜╨╕╨│╨╡ ╨╛╤И╨╕╨▒╨╛╤З╨╜╨╛ ╨╜╨░╨┐╨╕╤Б╨░╨╜╨╛ P ╨▓╨╝╨╡╤Б╤В╨╛ R}
       end;
   F := QLink^[0];
 
@@ -543,14 +543,14 @@ function TCellCollection.TSort(var Start: Integer): Boolean;
   FreeMem(SucPool, PoolCount*SizeOf(SucPool^[1]));
   end { TCellCollection.TSort };
 
-{  То ли в VP ошибка, то ли я чего-то не понимаю, но если переменные,
-которые экспортируются из вызывающей программы в программу Action^,
-описывать в вызывающей программе обычным образом, то есть как стековые,
-то доступ к ним в Action^ иногда получается некорректным. То же самое
-относится к ссылкам на поля self, если вызывающая программа - метод.
-Возможно, дело в глубине вложенности процедур. Радикальным средством
-борьбы с этим глюком является использование в Action^ только
-статических переменных. AK155}
+{  ╨в╨╛ ╨╗╨╕ ╨▓ VP ╨╛╤И╨╕╨▒╨║╨░, ╤В╨╛ ╨╗╨╕ ╤П ╤З╨╡╨│╨╛-╤В╨╛ ╨╜╨╡ ╨┐╨╛╨╜╨╕╨╝╨░╤О, ╨╜╨╛ ╨╡╤Б╨╗╨╕ ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╡,
+╨║╨╛╤В╨╛╤А╤Л╨╡ ╤Н╨║╤Б╨┐╨╛╤А╤В╨╕╤А╤Г╤О╤В╤Б╤П ╨╕╨╖ ╨▓╤Л╨╖╤Л╨▓╨░╤О╤Й╨╡╨╣ ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╤Л ╨▓ ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╤Г Action^,
+╨╛╨┐╨╕╤Б╤Л╨▓╨░╤В╤М ╨▓ ╨▓╤Л╨╖╤Л╨▓╨░╤О╤Й╨╡╨╣ ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╨╡ ╨╛╨▒╤Л╤З╨╜╤Л╨╝ ╨╛╨▒╤А╨░╨╖╨╛╨╝, ╤В╨╛ ╨╡╤Б╤В╤М ╨║╨░╨║ ╤Б╤В╨╡╨║╨╛╨▓╤Л╨╡,
+╤В╨╛ ╨┤╨╛╤Б╤В╤Г╨┐ ╨║ ╨╜╨╕╨╝ ╨▓ Action^ ╨╕╨╜╨╛╨│╨┤╨░ ╨┐╨╛╨╗╤Г╤З╨░╨╡╤В╤Б╤П ╨╜╨╡╨║╨╛╤А╤А╨╡╨║╤В╨╜╤Л╨╝. ╨в╨╛ ╨╢╨╡ ╤Б╨░╨╝╨╛╨╡
+╨╛╤В╨╜╨╛╤Б╨╕╤В╤Б╤П ╨║ ╤Б╤Б╤Л╨╗╨║╨░╨╝ ╨╜╨░ ╨┐╨╛╨╗╤П self, ╨╡╤Б╨╗╨╕ ╨▓╤Л╨╖╤Л╨▓╨░╤О╤Й╨░╤П ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╨░ - ╨╝╨╡╤В╨╛╨┤.
+╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨┤╨╡╨╗╨╛ ╨▓ ╨│╨╗╤Г╨▒╨╕╨╜╨╡ ╨▓╨╗╨╛╨╢╨╡╨╜╨╜╨╛╤Б╤В╨╕ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А. ╨а╨░╨┤╨╕╨║╨░╨╗╤М╨╜╤Л╨╝ ╤Б╤А╨╡╨┤╤Б╤В╨▓╨╛╨╝
+╨▒╨╛╤А╤М╨▒╤Л ╤Б ╤Н╤В╨╕╨╝ ╨│╨╗╤О╨║╨╛╨╝ ╤П╨▓╨╗╤П╨╡╤В╤Б╤П ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨▓ Action^ ╤В╨╛╨╗╤М╨║╨╛
+╤Б╤В╨░╤В╨╕╤З╨╡╤Б╨║╨╕╤Е ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Л╤Е. AK155}
 procedure TCellCollection.ForRectangle(AX: Byte; AY: AInt;
     BX: Byte; BY: AInt; Action: Pointer);
   type
@@ -598,13 +598,13 @@ function GetCellCoord(S: String; var X: Byte; var Y: AInt): Boolean;
   while (I <= Length(S)) and (S[I] >= 'A') and (S[I] <= 'Z') do
     Inc(I);
 
-  {код колонки - с j по i исключительно}
+  {╨║╨╛╨┤ ╨║╨╛╨╗╨╛╨╜╨║╨╕ - ╤Б j ╨┐╨╛ i ╨╕╤Б╨║╨╗╤О╤З╨╕╤В╨╡╨╗╤М╨╜╨╛}
   if I = J+1 then
     X := Byte(S[J])-Byte('A')
   else if I = J+2 then
     X := (Byte(S[J])-(Byte('A')-1))*26+Byte(S[J+1])-Byte('A')
   else
-    Exit; {допускается только 1 или 2 буквы}
+    Exit; {╨┤╨╛╨┐╤Г╤Б╨║╨░╨╡╤В╤Б╤П ╤В╨╛╨╗╤М╨║╨╛ 1 ╨╕╨╗╨╕ 2 ╨▒╤Г╨║╨▓╤Л}
 
   if S[I] = '@' then
     Inc(I);

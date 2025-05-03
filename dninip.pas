@@ -50,10 +50,10 @@
 //////////////////////////////////////////////////////////////////////////}
 {$I STDEFINE.INC}
 unit DnInip;
-{AK155  3.06.2007 Для уменьшения циклических ссылок между модулями
- бывший dnini.pas разбит на два маодуля: dnini.pas и dnini_p.pas,
- при том первый из них содержит бОьшую часть того на что ссылаются
- другие модулиЮ но имеет почти пустой uses-список }
+{AK155  3.06.2007 ╨Ф╨╗╤П ╤Г╨╝╨╡╨╜╤М╤И╨╡╨╜╨╕╤П ╤Ж╨╕╨║╨╗╨╕╤З╨╡╤Б╨║╨╕╤Е ╤Б╤Б╤Л╨╗╨╛╨║ ╨╝╨╡╨╢╨┤╤Г ╨╝╨╛╨┤╤Г╨╗╤П╨╝╨╕
+ ╨▒╤Л╨▓╤И╨╕╨╣ dnini.pas ╤А╨░╨╖╨▒╨╕╤В ╨╜╨░ ╨┤╨▓╨░ ╨╝╨░╨╛╨┤╤Г╨╗╤П: dnini.pas ╨╕ dnini_p.pas,
+ ╨┐╤А╨╕ ╤В╨╛╨╝ ╨┐╨╡╤А╨▓╤Л╨╣ ╨╕╨╖ ╨╜╨╕╤Е ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╨▒╨Ю╤М╤И╤Г╤О ╤З╨░╤Б╤В╤М ╤В╨╛╨│╨╛ ╨╜╨░ ╤З╤В╨╛ ╤Б╤Б╤Л╨╗╨░╤О╤В╤Б╤П
+ ╨┤╤А╤Г╨│╨╕╨╡ ╨╝╨╛╨┤╤Г╨╗╨╕╨о ╨╜╨╛ ╨╕╨╝╨╡╨╡╤В ╨┐╨╛╤З╤В╨╕ ╨┐╤Г╤Б╤В╨╛╨╣ uses-╤Б╨┐╨╕╤Б╨╛╨║ }
 
 interface
 
@@ -73,7 +73,7 @@ function ProbeINI(var INItime, INIsize: LongInt): Boolean;
 procedure ShowIniErrors;
 procedure ClearIniErrors;
 
-{JO: 21-04-2005 - кэш INI в отдельном файле}
+{JO: 21-04-2005 - ╨║╤Н╤И INI ╨▓ ╨╛╤В╨┤╨╡╨╗╤М╨╜╨╛╨╝ ╤Д╨░╨╣╨╗╨╡}
 procedure WriteIniCache(INItime, INIsize: LongInt);
 function ReadIniCache(INItime, INIsize: LongInt): Boolean;
 {/JO}
@@ -724,7 +724,7 @@ function ProbeINI(var INItime, INIsize: LongInt): Boolean;
     begin
     ProbeINI := True;
     INItime := SR.SR.Time;
-    INIsize := 0; {AK155 на случай DPMI, где Size: longint}
+    INIsize := 0; {AK155 ╨╜╨░ ╤Б╨╗╤Г╤З╨░╨╣ DPMI, ╨│╨┤╨╡ Size: longint}
     Move(SR.SR.Size, INIsize, SizeOf(INIsize)); {AK155 Size: comp}
     end
   else

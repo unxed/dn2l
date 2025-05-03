@@ -4,8 +4,8 @@ unit Streams;
 {Cat = Aleksej Kozlov, 2:5030/1326.13@fidonet}
 
 {Cat
-   28/08/2001 - переделал чтение/запись строк в потоки для совместимости с
-   типом AnsiString; добавил чтение/запись длинных строк (LongString) в потоки
+   28/08/2001 - ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╤З╤В╨╡╨╜╨╕╨╡/╨╖╨░╨┐╨╕╤Б╤М ╤Б╤В╤А╨╛╨║ ╨▓ ╨┐╨╛╤В╨╛╨║╨╕ ╨┤╨╗╤П ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╤Б
+   ╤В╨╕╨┐╨╛╨╝ AnsiString; ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╤З╤В╨╡╨╜╨╕╨╡/╨╖╨░╨┐╨╕╤Б╤М ╨┤╨╗╨╕╨╜╨╜╤Л╤Е ╤Б╤В╤А╨╛╨║ (LongString) ╨▓ ╨┐╨╛╤В╨╛╨║╨╕
 }
 
 interface
@@ -68,7 +68,7 @@ type
 
   PStream = ^TStream;
   TStream = object(TObject)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Status: Integer;
     ErrorInfo: Integer;
     StreamSize: TFileSize; { Stream current size }
@@ -100,7 +100,7 @@ type
 
   PDosStream = ^TDosStream;
   TDOSStream = object(TStream)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Handle: Integer;
     FName: AsciiZ;
     FMode: Word;
@@ -120,16 +120,16 @@ type
   PBufStream = ^TBufStream;
   TBufStream = object(TDOSStream)
   {`2}
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Buffer: PByteArray;
     BufSize: SW_Word;
     BufPtr: SW_Word;
-      {` Индекс в Buffer^ первого необработанного байта, то есть
-      непрочитанного при чтении, не записанного при записи`}
+      {` ╨Ш╨╜╨┤╨╡╨║╤Б ╨▓ Buffer^ ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╨╜╨╡╨╛╨▒╤А╨░╨▒╨╛╤В╨░╨╜╨╜╨╛╨│╨╛ ╨▒╨░╨╣╤В╨░, ╤В╨╛ ╨╡╤Б╤В╤М
+      ╨╜╨╡╨┐╤А╨╛╤З╨╕╤В╨░╨╜╨╜╨╛╨│╨╛ ╨┐╤А╨╕ ╤З╤В╨╡╨╜╨╕╨╕, ╨╜╨╡ ╨╖╨░╨┐╨╕╤Б╨░╨╜╨╜╨╛╨│╨╛ ╨┐╤А╨╕ ╨╖╨░╨┐╨╕╤Б╨╕`}
     BufEnd: SW_Word;
-      {` Индекс в Buffer^ первого незаполненного байта `}
+      {` ╨Ш╨╜╨┤╨╡╨║╤Б ╨▓ Buffer^ ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╨╜╨╡╨╖╨░╨┐╨╛╨╗╨╜╨╡╨╜╨╜╨╛╨│╨╛ ╨▒╨░╨╣╤В╨░ `}
     ModBufStart, ModBufEnd: SW_Word;
-      {` в буфере модифицированы байты с ModBufStart по ModBufEnd-1 `}
+      {` ╨▓ ╨▒╤Г╤Д╨╡╤А╨╡ ╨╝╨╛╨┤╨╕╤Д╨╕╤Ж╨╕╤А╨╛╨▓╨░╨╜╤Л ╨▒╨░╨╣╤В╤Л ╤Б ModBufStart ╨┐╨╛ ModBufEnd-1 `}
     constructor Init(FileName: FNameStr; Mode: Word; Size: SW_Word);
     destructor Done; virtual;
     procedure Flush; virtual;
@@ -144,7 +144,7 @@ type
 
   PMemoryStream = ^TMemoryStream;
   TMemoryStream = object(TStream)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     BlkCount: LongInt;
      {` Number of segments `}
     BlkSize: Word;
@@ -308,7 +308,7 @@ function TStream.Get: PObject;
   assembler; {$USES None}
   {$FRAME+}
 asm
-{Cat: добавил проверку StreamMagic}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╤А╨╛╨▓╨╡╤А╨║╤Г StreamMagic}
   push    eax
   mov     eax,esp
   push    eax                     { [1]:Pointer = Buf   }
@@ -332,8 +332,8 @@ asm
   pop     eax
   test    eax,eax                 { Return nil }
   jz      @@4
-{Cat: если пытаемся прочитать объект, регистрируемый плагином, то надо
-      сначала запустить этот плагин, чтобы он провёл регистрацию}
+{Cat: ╨╡╤Б╨╗╨╕ ╨┐╤Л╤В╨░╨╡╨╝╤Б╤П ╨┐╤А╨╛╤З╨╕╤В╨░╤В╤М ╨╛╨▒╤К╨╡╨║╤В, ╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╤Г╨╡╨╝╤Л╨╣ ╨┐╨╗╨░╨│╨╕╨╜╨╛╨╝, ╤В╨╛ ╨╜╨░╨┤╨╛
+      ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╖╨░╨┐╤Г╤Б╤В╨╕╤В╤М ╤Н╤В╨╛╤В ╨┐╨╗╨░╨│╨╕╨╜, ╤З╤В╨╛╨▒╤Л ╨╛╨╜ ╨┐╤А╨╛╨▓╤С╨╗ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╤О}
   {$IFDEF PLUGIN}
   push    eax
   push    eax
@@ -388,7 +388,7 @@ procedure TStream.Put(P: PObject);
   assembler; {$USES None}
   {$FRAME+}
 asm
-{Cat: добавил запись StreamMagic}
+{Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨╖╨░╨┐╨╕╤Б╤М StreamMagic}
   push    StreamMagic
   mov     eax,esp
   push    eax                     { [1]:Pointer = Buf  }
@@ -711,7 +711,7 @@ constructor TDOSStream.Init(FileName: FNameStr; Mode: Word);
         Success := ASetFilePos(Handle, 0, 0, Position);
       end;
     end;
-  if {AK155: под OS/2 бывает 0 (Handle = 0) or} (Success <> 0) then
+  if {AK155: ╨┐╨╛╨┤ OS/2 ╨▒╤Л╨▓╨░╨╡╤В 0 (Handle = 0) or} (Success <> 0) then
     begin
 {    if Handle = 0 then
       Handle := -1;}
@@ -971,7 +971,7 @@ procedure TDOSStream.Write(const Buf; Count: SW_Word);
     end;
   end { TDOSStream.Write };
 
-{Cat:warn правильно ли это работает?}
+{Cat:warn ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛ ╨╗╨╕ ╤Н╤В╨╛ ╤А╨░╨▒╨╛╤В╨░╨╡╤В?}
 procedure TDOSStream.DoOpen(OpenMode: Word);
   {$IFDEF PACKFILE}
   label 1;
@@ -1139,12 +1139,12 @@ procedure TBufStream.Read(var Buf; Count: SW_Word);
 
 procedure TBufStream.Seek(Pos: TFileSize);
   var
-    BufStart: TFileSize; // файловый адрес начала буфера
+    BufStart: TFileSize; // ╤Д╨░╨╣╨╗╨╛╨▓╤Л╨╣ ╨░╨┤╤А╨╡╤Б ╨╜╨░╤З╨░╨╗╨░ ╨▒╤Г╤Д╨╡╤А╨░
   begin
   Status := stOK;
   BufStart := Position-BufPtr;
   if (Pos >= BufStart) and (Pos < BufStart+BufEnd) then
-    begin { AK155 Установка в пределах буфера без обращения к файлу}
+    begin { AK155 ╨г╤Б╤В╨░╨╜╨╛╨▓╨║╨░ ╨▓ ╨┐╤А╨╡╨┤╨╡╨╗╨░╤Е ╨▒╤Г╤Д╨╡╤А╨░ ╨▒╨╡╨╖ ╨╛╨▒╤А╨░╤Й╨╡╨╜╨╕╤П ╨║ ╤Д╨░╨╣╨╗╤Г}
     BufPtr := i32(Pos - BufStart);
     Position := Pos;
     end
@@ -1241,15 +1241,15 @@ constructor TMemoryStream.Init(ALimit: LongInt; ABlockSize: Word);
   (*
   StreamSize:=MemSize;
 {AK155 2-03-2002
-   При работе с Clipboard StreamSize используется в качестве укзателя
-конца потока, поэтому у свежесозданного потока он должен быть равен нулю.
-А это присвоение создает возможость чтения мусора за пределами фактически
-записанного потока. Например, если в dn.ini указать MaxClipboardSize=0,
-то DN почти гарантировано виснет при первом же взятии в буфер в редакторе.
-   Но в FileCopy GetSize (то есть StreamSize) используется в качестве
-размера потока (что неестественно), поэтому там тоже есть соответствующая
-коррекция. Других мест, где используется StreamSize для TMemoryStream,
-я не нашел.}
+   ╨Я╤А╨╕ ╤А╨░╨▒╨╛╤В╨╡ ╤Б Clipboard StreamSize ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡ ╤Г╨║╨╖╨░╤В╨╡╨╗╤П
+╨║╨╛╨╜╤Ж╨░ ╨┐╨╛╤В╨╛╨║╨░, ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╤Г ╤Б╨▓╨╡╨╢╨╡╤Б╨╛╨╖╨┤╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╤В╨╛╨║╨░ ╨╛╨╜ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М ╤А╨░╨▓╨╡╨╜ ╨╜╤Г╨╗╤О.
+╨Р ╤Н╤В╨╛ ╨┐╤А╨╕╤Б╨▓╨╛╨╡╨╜╨╕╨╡ ╤Б╨╛╨╖╨┤╨░╨╡╤В ╨▓╨╛╨╖╨╝╨╛╨╢╨╛╤Б╤В╤М ╤З╤В╨╡╨╜╨╕╤П ╨╝╤Г╤Б╨╛╤А╨░ ╨╖╨░ ╨┐╤А╨╡╨┤╨╡╨╗╨░╨╝╨╕ ╤Д╨░╨║╤В╨╕╤З╨╡╤Б╨║╨╕
+╨╖╨░╨┐╨╕╤Б╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╤В╨╛╨║╨░. ╨Э╨░╨┐╤А╨╕╨╝╨╡╤А, ╨╡╤Б╨╗╨╕ ╨▓ dn.ini ╤Г╨║╨░╨╖╨░╤В╤М MaxClipboardSize=0,
+╤В╨╛ DN ╨┐╨╛╤З╤В╨╕ ╨│╨░╤А╨░╨╜╤В╨╕╤А╨╛╨▓╨░╨╜╨╛ ╨▓╨╕╤Б╨╜╨╡╤В ╨┐╤А╨╕ ╨┐╨╡╤А╨▓╨╛╨╝ ╨╢╨╡ ╨▓╨╖╤П╤В╨╕╨╕ ╨▓ ╨▒╤Г╤Д╨╡╤А ╨▓ ╤А╨╡╨┤╨░╨║╤В╨╛╤А╨╡.
+   ╨Э╨╛ ╨▓ FileCopy GetSize (╤В╨╛ ╨╡╤Б╤В╤М StreamSize) ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡
+╤А╨░╨╖╨╝╨╡╤А╨░ ╨┐╨╛╤В╨╛╨║╨░ (╤З╤В╨╛ ╨╜╨╡╨╡╤Б╤В╨╡╤Б╤В╨▓╨╡╨╜╨╜╨╛), ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╤В╨░╨╝ ╤В╨╛╨╢╨╡ ╨╡╤Б╤В╤М ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨░╤П
+╨║╨╛╤А╤А╨╡╨║╤Ж╨╕╤П. ╨Ф╤А╤Г╨│╨╕╤Е ╨╝╨╡╤Б╤В, ╨│╨┤╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П StreamSize ╨┤╨╗╤П TMemoryStream,
+╤П ╨╜╨╡ ╨╜╨░╤И╨╡╨╗.}
 *)
   end { TMemoryStream.Init };
 
@@ -1412,7 +1412,7 @@ procedure TMemoryStream.Write(const Buf; Count: SW_Word);
     end;
   end { TMemoryStream.Write };
 
-{Cat:warn нужна ли эта функция?}
+{Cat:warn ╨╜╤Г╨╢╨╜╨░ ╨╗╨╕ ╤Н╤В╨░ ╤Д╤Г╨╜╨║╤Ж╨╕╤П?}
 function GetAnyMemoryStream: PStream;
   var
     S: PStream;

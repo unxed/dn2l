@@ -22,9 +22,9 @@ procedure NotifyInit;
 procedure NotifyAddWatcher(const Path: String);
 procedure NotifyDeleteWatcher(const Path: String);
 function NotifyAsk(var S: String): Boolean;
-  {` Результат False показывает, что система автообновления
-    не запущена или в паузе, то есть никаких действий по
-    автообновлению производить не надо `}
+  {` ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В False ╨┐╨╛╨║╨░╨╖╤Л╨▓╨░╨╡╤В, ╤З╤В╨╛ ╤Б╨╕╤Б╤В╨╡╨╝╨░ ╨░╨▓╤В╨╛╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П
+    ╨╜╨╡ ╨╖╨░╨┐╤Г╤Й╨╡╨╜╨░ ╨╕╨╗╨╕ ╨▓ ╨┐╨░╤Г╨╖╨╡, ╤В╨╛ ╨╡╤Б╤В╤М ╨╜╨╕╨║╨░╨║╨╕╤Е ╨┤╨╡╨╣╤Б╤В╨▓╨╕╨╣ ╨┐╨╛
+    ╨░╨▓╤В╨╛╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤О ╨┐╤А╨╛╨╕╨╖╨▓╨╛╨┤╨╕╤В╤М ╨╜╨╡ ╨╜╨░╨┤╨╛ `}
 procedure NotifySuspend;
 procedure NotifyResume;
 procedure NotifyDone;
@@ -45,7 +45,7 @@ type
 
   PNotifierCollection = ^TNotifierCollection;
   TNotifierCollection = object(TStringCollection)
-    { чтобы использовать Compare для строк }
+    { ╤З╤В╨╛╨▒╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М Compare ╨┤╨╗╤П ╤Б╤В╤А╨╛╨║ }
     function KeyOf(Item: Pointer): Pointer; virtual;
     {function Compare(Key1, Key2: Pointer): Integer; virtual;}
     procedure FreeItem(Item: Pointer); virtual;
@@ -136,7 +136,7 @@ procedure NotifyAddWatcher(const Path: String);
 //  else
     begin
     {$IFDEF DEBUGLOG}
-    DebugLog('! не добавился');
+    DebugLog('! ╨╜╨╡ ╨┤╨╛╨▒╨░╨▓╨╕╨╗╤Б╤П');
     {$ENDIF}
     DisposeStr(P^.Path);
     Dispose(P);
@@ -157,7 +157,7 @@ procedure NotifyDeleteWatcher(const Path: String);
     NotifierCollection^.AtFree(I)
     {$IFDEF DEBUGLOG}
   else
-    DebugLog('! не удалился');
+    DebugLog('! ╨╜╨╡ ╤Г╨┤╨░╨╗╨╕╨╗╤Б╤П');
   {$ENDIF}
   end;
 
