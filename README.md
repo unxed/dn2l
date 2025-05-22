@@ -91,9 +91,9 @@ Work on porting Free Vision to UTF8 is being done in separate repo: https://gith
 Free Vision has already been ported to Unicode in Free Pascal. So it's probably better to use official implementation (see units with names starting with "u"):
 https://github.com/fpc/FPCSource/tree/main/packages/fv/src
 
-#### 25-04-2025 update
-It seems that the previous approaches were not very effective, because the development got stuck. Now I came up with another approach: using large language models to write from scratch an analogue of DN based on FreePascal and FreeVision, compatible in source file names, class hierarchy and API with the original DN as much as possible, taking into account a different compiler and the need to support Unicode. If you are interested, you can play around here (you will need access to Google AI Studio):
-https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221rbRS_ZbP-y6JhQaZJGEKY2G8hsc8hWEu%22%5D,%22action%22:%22open%22,%22userId%22:%22115224561273124777276%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing
+#### 22-05-2025 update
+After a number of experiments, I came to the conclusion that porting the source code of Dos Navigator to a Unicode-supported version of Free Vision is roughly as complex as recreating Dos Navigator from scratch on this platform, while preserving a similar class hierarchy and API wherever possible. Such experiment is being conducted in a separate repository:
+https://github.com/unxed/dn3l
 
 ### Acknowledgments
 
