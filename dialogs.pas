@@ -89,7 +89,7 @@ const
            #11#12#13#14#15#16#17#18#19#20 +
            #21#22#23#24#25#26#27#28#29#30+
            #31#32#33#34#35#36#37;
-    { Все цвета - как у Owner. Размер палитры как у CDialog }
+    { ╨Т╤Б╨╡ ╤Ж╨▓╨╡╤В╨░ - ╨║╨░╨║ ╤Г Owner. ╨а╨░╨╖╨╝╨╡╤А ╨┐╨░╨╗╨╕╤В╤А╤Л ╨║╨░╨║ ╤Г CDialog }
 
   { TDialog palette entires }
 
@@ -156,13 +156,13 @@ type
 
   PDialog = ^TDialog;
   TDialog = object(TWindow)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     DirectLink: array [1..9] of PView;
-      {` Прямые ссылки на вставленные в диалог объекты. Используются
-      для диалогов, загруженных из ресурсов. Заполняются на основе меток
-      прямых ссылок в ресурсах (скажем, #3 в начале строки исходника
-      ресурса диалога даёт возможность ссылаться на соответствующий
-      объект через DirectLink[3].). См. rcp, CompileDialog `}
+      {` ╨Я╤А╤П╨╝╤Л╨╡ ╤Б╤Б╤Л╨╗╨║╨╕ ╨╜╨░ ╨▓╤Б╤В╨░╨▓╨╗╨╡╨╜╨╜╤Л╨╡ ╨▓ ╨┤╨╕╨░╨╗╨╛╨│ ╨╛╨▒╤К╨╡╨║╤В╤Л. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤В╤Б╤П
+      ╨┤╨╗╤П ╨┤╨╕╨░╨╗╨╛╨│╨╛╨▓, ╨╖╨░╨│╤А╤Г╨╢╨╡╨╜╨╜╤Л╤Е ╨╕╨╖ ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓. ╨Ч╨░╨┐╨╛╨╗╨╜╤П╤О╤В╤Б╤П ╨╜╨░ ╨╛╤Б╨╜╨╛╨▓╨╡ ╨╝╨╡╤В╨╛╨║
+      ╨┐╤А╤П╨╝╤Л╤Е ╤Б╤Б╤Л╨╗╨╛╨║ ╨▓ ╤А╨╡╤Б╤Г╤А╤Б╨░╤Е (╤Б╨║╨░╨╢╨╡╨╝, #3 ╨▓ ╨╜╨░╤З╨░╨╗╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╕╤Б╤Е╨╛╨┤╨╜╨╕╨║╨░
+      ╤А╨╡╤Б╤Г╤А╤Б╨░ ╨┤╨╕╨░╨╗╨╛╨│╨░ ╨┤╨░╤С╤В ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Б╤Б╤Л╨╗╨░╤В╤М╤Б╤П ╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╨╣
+      ╨╛╨▒╤К╨╡╨║╤В ╤З╨╡╤А╨╡╨╖ DirectLink[3].). ╨б╨╝. rcp, CompileDialog `}
     constructor Init(var Bounds: TRect; const ATitle: TTitleStr);
     constructor Load(var S: TStream);
     procedure Store(var S: TStream);
@@ -189,36 +189,36 @@ type
 
   PInputline = ^TInputLine;
   TInputLine = object(TView)
-    {` Строка ввода с добавочными возможностями}
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {` ╨б╤В╤А╨╛╨║╨░ ╨▓╨▓╨╛╨┤╨░ ╤Б ╨┤╨╛╨▒╨░╨▓╨╛╤З╨╜╤Л╨╝╨╕ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤П╨╝╨╕}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Data: AnsiString;
-      {` Внимание! Это поле в DN/2 - AnsiString, а не PString, как в
-      классическом Turbo Vision. Однако все процедуры обмена данными
-      (Load-Store, GetData-SetData), как и раньше, работают с ShortString.
-        Если действительно нужно обмениваться длинными строками, то нужно
-      либо прямо обращаться к полю Data, либо использовать дочерний объект
+      {` ╨Т╨╜╨╕╨╝╨░╨╜╨╕╨╡! ╨н╤В╨╛ ╨┐╨╛╨╗╨╡ ╨▓ DN/2 - AnsiString, ╨░ ╨╜╨╡ PString, ╨║╨░╨║ ╨▓
+      ╨║╨╗╨░╤Б╤Б╨╕╤З╨╡╤Б╨║╨╛╨╝ Turbo Vision. ╨Ю╨┤╨╜╨░╨║╨╛ ╨▓╤Б╨╡ ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╤Л ╨╛╨▒╨╝╨╡╨╜╨░ ╨┤╨░╨╜╨╜╤Л╨╝╨╕
+      (Load-Store, GetData-SetData), ╨║╨░╨║ ╨╕ ╤А╨░╨╜╤М╤И╨╡, ╤А╨░╨▒╨╛╤В╨░╤О╤В ╤Б ShortString.
+        ╨Х╤Б╨╗╨╕ ╨┤╨╡╨╣╤Б╤В╨▓╨╕╤В╨╡╨╗╤М╨╜╨╛ ╨╜╤Г╨╢╨╜╨╛ ╨╛╨▒╨╝╨╡╨╜╨╕╨▓╨░╤В╤М╤Б╤П ╨┤╨╗╨╕╨╜╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕, ╤В╨╛ ╨╜╤Г╨╢╨╜╨╛
+      ╨╗╨╕╨▒╨╛ ╨┐╤А╤П╨╝╨╛ ╨╛╨▒╤А╨░╤Й╨░╤В╤М╤Б╤П ╨║ ╨┐╨╛╨╗╤О Data, ╨╗╨╕╨▒╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨┤╨╛╤З╨╡╤А╨╜╨╕╨╣ ╨╛╨▒╤К╨╡╨║╤В
       TLongInputLine.
-        Соответственно, при работе с обычными строками прямо к полю Data
-      лучше не обращаться, а если обращаться, то только в таком контексте,
-      в котором компилятор понимает, что это AnsiString и выполнит
-      необходимые преоборазования. И уж точно нельзя "из-за угла" делать
-      чего-то вроде DisposeStr(PString(@Data)) `}
+        ╨б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╡╨╜╨╜╨╛, ╨┐╤А╨╕ ╤А╨░╨▒╨╛╤В╨╡ ╤Б ╨╛╨▒╤Л╤З╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕ ╨┐╤А╤П╨╝╨╛ ╨║ ╨┐╨╛╨╗╤О Data
+      ╨╗╤Г╤З╤И╨╡ ╨╜╨╡ ╨╛╨▒╤А╨░╤Й╨░╤В╤М╤Б╤П, ╨░ ╨╡╤Б╨╗╨╕ ╨╛╨▒╤А╨░╤Й╨░╤В╤М╤Б╤П, ╤В╨╛ ╤В╨╛╨╗╤М╨║╨╛ ╨▓ ╤В╨░╨║╨╛╨╝ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨╡,
+      ╨▓ ╨║╨╛╤В╨╛╤А╨╛╨╝ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А ╨┐╨╛╨╜╨╕╨╝╨░╨╡╤В, ╤З╤В╨╛ ╤Н╤В╨╛ AnsiString ╨╕ ╨▓╤Л╨┐╨╛╨╗╨╜╨╕╤В
+      ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╤Л╨╡ ╨┐╤А╨╡╨╛╨▒╨╛╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╤П. ╨Ш ╤Г╨╢ ╤В╨╛╤З╨╜╨╛ ╨╜╨╡╨╗╤М╨╖╤П "╨╕╨╖-╨╖╨░ ╤Г╨│╨╗╨░" ╨┤╨╡╨╗╨░╤В╤М
+      ╤З╨╡╨│╨╛-╤В╨╛ ╨▓╤А╨╛╨┤╨╡ DisposeStr(PString(@Data)) `}
     MaxLen: LongInt;
-      {` Максимальная длина строки. В связи с AnsiString может быть
-       и больше, чем 255. В этом случае не допускается использовать
-       обычные функции передачи данных (Load-Store, GetData-SetData),
-       но можно использовать GetData-SetData дочернего TLongInputLine. `}
+      {` ╨Ь╨░╨║╤Б╨╕╨╝╨░╨╗╤М╨╜╨░╤П ╨┤╨╗╨╕╨╜╨░ ╤Б╤В╤А╨╛╨║╨╕. ╨Т ╤Б╨▓╤П╨╖╨╕ ╤Б AnsiString ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М
+       ╨╕ ╨▒╨╛╨╗╤М╤И╨╡, ╤З╨╡╨╝ 255. ╨Т ╤Н╤В╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡ ╨╜╨╡ ╨┤╨╛╨┐╤Г╤Б╨║╨░╨╡╤В╤Б╤П ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М
+       ╨╛╨▒╤Л╤З╨╜╤Л╨╡ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╨┐╨╡╤А╨╡╨┤╨░╤З╨╕ ╨┤╨░╨╜╨╜╤Л╤Е (Load-Store, GetData-SetData),
+       ╨╜╨╛ ╨╝╨╛╨╢╨╜╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М GetData-SetData ╨┤╨╛╤З╨╡╤А╨╜╨╡╨│╨╛ TLongInputLine. `}
     CurPos: LongInt;
     FirstPos: LongInt;
     SelStart: LongInt;
     SelEnd: LongInt;
     Validator: PValidator;
     LC, RC: Char;
-      {`2 Крайние символы строки ввода, когда они не символы обрезки.
-       Инициализируются пробелами, потом могут быть заданы извне.`}
+      {`2 ╨Ъ╤А╨░╨╣╨╜╨╕╨╡ ╤Б╨╕╨╝╨▓╨╛╨╗╤Л ╤Б╤В╤А╨╛╨║╨╕ ╨▓╨▓╨╛╨┤╨░, ╨║╨╛╨│╨┤╨░ ╨╛╨╜╨╕ ╨╜╨╡ ╤Б╨╕╨╝╨▓╨╛╨╗╤Л ╨╛╨▒╤А╨╡╨╖╨║╨╕.
+       ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨╕╤А╤Г╤О╤В╤Б╤П ╨┐╤А╨╛╨▒╨╡╨╗╨░╨╝╨╕, ╨┐╨╛╤В╨╛╨╝ ╨╝╨╛╨│╤Г╤В ╨▒╤Л╤В╤М ╨╖╨░╨┤╨░╨╜╤Л ╨╕╨╖╨▓╨╜╨╡.`}
     C: array [1..Length(CInputLine)] of Byte;
-      {` Цвета палитры. Могут быть заранее заданы извне, а если это
-        не сделано - при первом Draw будут занесены стандартные.`}
+      {` ╨ж╨▓╨╡╤В╨░ ╨┐╨░╨╗╨╕╤В╤А╤Л. ╨Ь╨╛╨│╤Г╤В ╨▒╤Л╤В╤М ╨╖╨░╤А╨░╨╜╨╡╨╡ ╨╖╨░╨┤╨░╨╜╤Л ╨╕╨╖╨▓╨╜╨╡, ╨░ ╨╡╤Б╨╗╨╕ ╤Н╤В╨╛
+        ╨╜╨╡ ╤Б╨┤╨╡╨╗╨░╨╜╨╛ - ╨┐╤А╨╕ ╨┐╨╡╤А╨▓╨╛╨╝ Draw ╨▒╤Г╨┤╤Г╤В ╨╖╨░╨╜╨╡╤Б╨╡╨╜╤Л ╤Б╤В╨░╨╜╨┤╨░╤А╤В╨╜╤Л╨╡.`}
     constructor Init(var Bounds: TRect; AMaxLen: LongInt);
     constructor Load(var S: TStream);
     destructor Done; virtual;
@@ -238,13 +238,13 @@ type
     {`}
 
   PLongInputline = ^TLongInputLine;
-  {`2 Аналог TInputLine, но GetData и SetData работают с AnsiString.
-    Внимание! Load и Store, как и раньше, работают с 1-байтной длиной!.
-      TLongInputLine не должен иметь истории, так как это, во-первых,
-    приведёт к ошибке в SetData при извлечени из истории, и, во-вторых,
-    не имеет смысла, так как история работает с короткими строками, то
-    tcnm полноценной истории для TLongInputLine быть не может, пока
-    история не будет переведена на AnsiString. }
+  {`2 ╨Р╨╜╨░╨╗╨╛╨│ TInputLine, ╨╜╨╛ GetData ╨╕ SetData ╤А╨░╨▒╨╛╤В╨░╤О╤В ╤Б AnsiString.
+    ╨Т╨╜╨╕╨╝╨░╨╜╨╕╨╡! Load ╨╕ Store, ╨║╨░╨║ ╨╕ ╤А╨░╨╜╤М╤И╨╡, ╤А╨░╨▒╨╛╤В╨░╤О╤В ╤Б 1-╨▒╨░╨╣╤В╨╜╨╛╨╣ ╨┤╨╗╨╕╨╜╨╛╨╣!.
+      TLongInputLine ╨╜╨╡ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨╕╨╝╨╡╤В╤М ╨╕╤Б╤В╨╛╤А╨╕╨╕, ╤В╨░╨║ ╨║╨░╨║ ╤Н╤В╨╛, ╨▓╨╛-╨┐╨╡╤А╨▓╤Л╤Е,
+    ╨┐╤А╨╕╨▓╨╡╨┤╤С╤В ╨║ ╨╛╤И╨╕╨▒╨║╨╡ ╨▓ SetData ╨┐╤А╨╕ ╨╕╨╖╨▓╨╗╨╡╤З╨╡╨╜╨╕ ╨╕╨╖ ╨╕╤Б╤В╨╛╤А╨╕╨╕, ╨╕, ╨▓╨╛-╨▓╤В╨╛╤А╤Л╤Е,
+    ╨╜╨╡ ╨╕╨╝╨╡╨╡╤В ╤Б╨╝╤Л╤Б╨╗╨░, ╤В╨░╨║ ╨║╨░╨║ ╨╕╤Б╤В╨╛╤А╨╕╤П ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╤Б ╨║╨╛╤А╨╛╤В╨║╨╕╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕, ╤В╨╛
+    tcnm ╨┐╨╛╨╗╨╜╨╛╤Ж╨╡╨╜╨╜╨╛╨╣ ╨╕╤Б╤В╨╛╤А╨╕╨╕ ╨┤╨╗╤П TLongInputLine ╨▒╤Л╤В╤М ╨╜╨╡ ╨╝╨╛╨╢╨╡╤В, ╨┐╨╛╨║╨░
+    ╨╕╤Б╤В╨╛╤А╨╕╤П ╨╜╨╡ ╨▒╤Г╨┤╨╡╤В ╨┐╨╡╤А╨╡╨▓╨╡╨┤╨╡╨╜╨░ ╨╜╨░ AnsiString. }
   TLongInputLine = object(TInputLine)
     procedure GetData(var Rec); virtual;
     procedure SetData(var Rec); virtual;
@@ -277,7 +277,7 @@ type
 
   PButton = ^TButton;
   TButton = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Title: PString;
     Command: AWord;
     Flags: Byte;
@@ -308,7 +308,7 @@ type
 
   PCluster = ^TCluster;
   TCluster = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Value: LongInt;
     Sel: AInt;
     EnableMask: LongInt;
@@ -349,7 +349,7 @@ type
 
   PRadioButtons = ^TRadioButtons;
   TRadioButtons = object(TCluster)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     procedure Draw; virtual;
     function Mark(Item: Integer): Boolean; virtual;
     procedure MovedTo(Item: Integer); virtual;
@@ -367,7 +367,7 @@ type
 
   PCheckBoxes = ^TCheckBoxes;
   TCheckBoxes = object(TCluster)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     procedure Draw; virtual;
     function Mark(Item: Integer): Boolean; virtual;
     procedure Press(Item: Integer); virtual;
@@ -383,7 +383,7 @@ type
 
   PMultiCheckBoxes = ^TMultiCheckBoxes;
   TMultiCheckBoxes = object(TCluster)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     SelRange: Byte;
     Flags: AWord;
     States: PString;
@@ -411,7 +411,7 @@ type
 
   PListBox = ^TListBox;
   TListBox = object(TListViewer)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     List: PCollection;
     constructor Init(var Bounds: TRect; ANumCols: Word;
         AScrollBar: PScrollBar);
@@ -431,7 +431,7 @@ type
 
   PStaticText = ^TStaticText;
   TStaticText = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Text: PString;
     constructor Init(var Bounds: TRect; const AText: String);
     constructor Load(var S: TStream);
@@ -449,7 +449,7 @@ type
 
   PParamText = ^TParamText;
   TParamText = object(TStaticText)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     ParamCount: AInt;
     ParamList: Pointer;
     constructor Init(var Bounds: TRect; const AText: String;
@@ -471,7 +471,7 @@ type
 
   PLabel = ^TLabel;
   TLabel = object(TStaticText)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Link: PView;
     Light: Boolean;
     constructor Init(var Bounds: TRect; const AText: String; ALink: PView);
@@ -494,7 +494,7 @@ type
 
   PHistoryViewer = ^THistoryViewer;
   THistoryViewer = object(TListViewer)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     HistoryId: AWord;
     SearchPos: AWord;
     constructor Init(var Bounds: TRect;
@@ -519,7 +519,7 @@ type
 
   PHistoryWindow = ^THistoryWindow;
   THistoryWindow = object(TWindow)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Viewer: PListViewer;
     constructor Init(var Bounds: TRect; HistoryId: AWord);
     function GetPalette: PPalette; virtual;
@@ -535,7 +535,7 @@ type
 
   PHistory = ^THistory;
   THistory = object(TView)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     Link: PInputline;
     HistoryId: AWord;
     constructor Init(var Bounds: TRect; ALink: PInputline;
@@ -550,17 +550,17 @@ type
     end;
 
   PComboBox = ^TComboBox;
-  {`2 Комбобкс с выбором только из списка, без возможности редактирования.
-        Допускается до 10 вариантов. Они соответствуют командам
-    1601..1610 строго согласно позиции в выпадающем меню.
-        Способа задизейблить сами команды команд нет, но пункты меню
-    можно сделать неактивными непосредственно: установить бит miDisabled
-    в соответствующих TMenuItem.Flags) }
+  {`2 ╨Ъ╨╛╨╝╨▒╨╛╨▒╨║╤Б ╤Б ╨▓╤Л╨▒╨╛╤А╨╛╨╝ ╤В╨╛╨╗╤М╨║╨╛ ╨╕╨╖ ╤Б╨┐╨╕╤Б╨║╨░, ╨▒╨╡╨╖ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╨╕ ╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╤П.
+        ╨Ф╨╛╨┐╤Г╤Б╨║╨░╨╡╤В╤Б╤П ╨┤╨╛ 10 ╨▓╨░╤А╨╕╨░╨╜╤В╨╛╨▓. ╨Ю╨╜╨╕ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤В ╨║╨╛╨╝╨░╨╜╨┤╨░╨╝
+    1601..1610 ╤Б╤В╤А╨╛╨│╨╛ ╤Б╨╛╨│╨╗╨░╤Б╨╜╨╛ ╨┐╨╛╨╖╨╕╤Ж╨╕╨╕ ╨▓ ╨▓╤Л╨┐╨░╨┤╨░╤О╤Й╨╡╨╝ ╨╝╨╡╨╜╤О.
+        ╨б╨┐╨╛╤Б╨╛╨▒╨░ ╨╖╨░╨┤╨╕╨╖╨╡╨╣╨▒╨╗╨╕╤В╤М ╤Б╨░╨╝╨╕ ╨║╨╛╨╝╨░╨╜╨┤╤Л ╨║╨╛╨╝╨░╨╜╨┤ ╨╜╨╡╤В, ╨╜╨╛ ╨┐╤Г╨╜╨║╤В╤Л ╨╝╨╡╨╜╤О
+    ╨╝╨╛╨╢╨╜╨╛ ╤Б╨┤╨╡╨╗╨░╤В╤М ╨╜╨╡╨░╨║╤В╨╕╨▓╨╜╤Л╨╝╨╕ ╨╜╨╡╨┐╨╛╤Б╤А╨╡╨┤╤Б╤В╨▓╨╡╨╜╨╜╨╛: ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М ╨▒╨╕╤В miDisabled
+    ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е TMenuItem.Flags) }
   TComboBox = object(TView)
-    Selected: Word; // текущий номер варианта (нумерация от 1)
-    Count: Word; { не отрывать от Selected! См. Load,Store}
+    Selected: Word; // ╤В╨╡╨║╤Г╤Й╨╕╨╣ ╨╜╨╛╨╝╨╡╤А ╨▓╨░╤А╨╕╨░╨╜╤В╨░ (╨╜╤Г╨╝╨╡╤А╨░╤Ж╨╕╤П ╨╛╤В 1)
+    Count: Word; { ╨╜╨╡ ╨╛╤В╤А╤Л╨▓╨░╤В╤М ╨╛╤В Selected! ╨б╨╝. Load,Store}
     Menu: PMenu;
-    Items: array[1..10] of PMenuItem; // прямые ссылки в меню
+    Items: array[1..10] of PMenuItem; // ╨┐╤А╤П╨╝╤Л╨╡ ╤Б╤Б╤Л╨╗╨║╨╕ ╨▓ ╨╝╨╡╨╜╤О
     constructor Init(var Bounds: TRect; AStrings: PSItem);
     procedure BuildMenu(AStrings: PSItem);
     destructor Done; virtual;
@@ -578,14 +578,14 @@ type
 
 type
   PBookmark = ^TBookmark;
-    {` см. TBookmark `}
+    {` ╤Б╨╝. TBookmark `}
 
   PPage = ^TPage;
-    {`2 Cтраница блокнота со страницами TNotepas }
+    {`2 C╤В╤А╨░╨╜╨╕╤Ж╨░ ╨▒╨╗╨╛╨║╨╜╨╛╤В╨░ ╤Б╨╛ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░╨╝╨╕ TNotepas }
   TPage = object(TDialog)
     Bookmark: PBookmark;
     PrevPage: PPage;
-      { циклический список }
+      { ╤Ж╨╕╨║╨╗╨╕╤З╨╡╤Б╨║╨╕╨╣ ╤Б╨┐╨╕╤Б╨╛╨║ }
     procedure InitFrame; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
     function GetPalette: PPalette; virtual;
@@ -595,7 +595,7 @@ type
     {`}
 
   TBookmark = Object(TLabel)
-    {` Закладка страницы блокнота со страницами TNotepas }
+    {` ╨Ч╨░╨║╨╗╨░╨┤╨║╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Л ╨▒╨╗╨╛╨║╨╜╨╛╤В╨░ ╤Б╨╛ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░╨╝╨╕ TNotepas }
     constructor Init(var Bounds: TRect; AText: String; ALink: PView);
     procedure Draw; virtual;
     procedure FocusLink; virtual;
@@ -603,7 +603,7 @@ type
     {`}
 
   PPageFrame = ^TPageFrame;
-    {`2 Полотно страницы блокнота со страницами TNotepas }
+    {`2 ╨Я╨╛╨╗╨╛╤В╨╜╨╛ ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Л ╨▒╨╗╨╛╨║╨╜╨╛╤В╨░ ╤Б╨╛ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░╨╝╨╕ TNotepas }
   TPageFrame = object(TView)
     function GetPalette: PPalette; virtual;
     procedure Draw; virtual;
@@ -611,10 +611,10 @@ type
     {`}
 
   PNotepad = ^TNotepad;  {<dialogs.001>}
-    {`2 Диалог-блокнот со страницами }
+    {`2 ╨Ф╨╕╨░╨╗╨╛╨│-╨▒╨╗╨╛╨║╨╜╨╛╤В ╤Б╨╛ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░╨╝╨╕ }
   TNotepad = object(TDialog)
     Page: array[0..9] of PPage;
-    BookmarkStart: integer; { X-коррдината левой линии закладок }
+    BookmarkStart: integer; { X-╨║╨╛╤А╤А╨┤╨╕╨╜╨░╤В╨░ ╨╗╨╡╨▓╨╛╨╣ ╨╗╨╕╨╜╨╕╨╕ ╨╖╨░╨║╨╗╨░╨┤╨╛╨║ }
     ActivePage: Integer;
     NumPages: Integer;
     constructor Init(var Bounds: TRect; ATitle: TTitleStr;
@@ -629,7 +629,7 @@ type
     {`}
 
   PNotepadFrame = ^TNotepadFrame;
-    {`2 Полотно и рамка блокнота со страницами }
+    {`2 ╨Я╨╛╨╗╨╛╤В╨╜╨╛ ╨╕ ╤А╨░╨╝╨║╨░ ╨▒╨╗╨╛╨║╨╜╨╛╤В╨░ ╤Б╨╛ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░╨╝╨╕ }
   TNotepadFrame = object(TFrame)
     procedure FrameLine(var FrameBuf; Y, N: Integer; Color: Byte); virtual;
     function GetTitleWidth: integer; virtual;
@@ -803,9 +803,9 @@ constructor TInputLine.Init(var Bounds: TRect; AMaxLen: LongInt);
   MaxLen := AMaxLen;
   end;
 
-{AK155 А интересно, в какой ситуации могут работать
-Load - Store для InputLine? Для ресурсов? }
-{JO: ну, например для окна калькулятора}
+{AK155 ╨Р ╨╕╨╜╤В╨╡╤А╨╡╤Б╨╜╨╛, ╨▓ ╨║╨░╨║╨╛╨╣ ╤Б╨╕╤В╤Г╨░╤Ж╨╕╨╕ ╨╝╨╛╨│╤Г╤В ╤А╨░╨▒╨╛╤В╨░╤В╤М
+Load - Store ╨┤╨╗╤П InputLine? ╨Ф╨╗╤П ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓? }
+{JO: ╨╜╤Г, ╨╜╨░╨┐╤А╨╕╨╝╨╡╤А ╨┤╨╗╤П ╨╛╨║╨╜╨░ ╨║╨░╨╗╤М╨║╤Г╨╗╤П╤В╨╛╤А╨░}
 constructor TInputLine.Load(var S: TStream);
   var
     WorkS: string;
@@ -892,7 +892,7 @@ procedure TInputLine.Draw;
   if PMWindowed and (WordRec(B[CurPos-FirstPos+1]).Hi and $F0 =
        $80)
   then
-    {JO: чтобы решить пробему курсора на сером фоне в окне}
+    {JO: ╤З╤В╨╛╨▒╤Л ╤А╨╡╤И╨╕╤В╤М ╨┐╤А╨╛╨▒╨╡╨╝╤Г ╨║╤Г╤А╤Б╨╛╤А╨░ ╨╜╨░ ╤Б╨╡╤А╨╛╨╝ ╤Д╨╛╨╜╨╡ ╨▓ ╨╛╨║╨╜╨╡}
     begin
     WordRec(B[CurPos-FirstPos+1])
         .Hi := WordRec(B[CurPos-FirstPos+1]).Hi and $0F;
@@ -913,8 +913,8 @@ procedure TInputLine.GetData(var Rec);
   then
     s := Copy(Data, 1, MaxLen);
   FillChar(s[Length(s)+1], MaxLen-Length(s), 0);
-   { AK155 Чтобы не было мусора за концом строки, мешающего сравнивать
-     данные просто как неструктурированную память }
+   { AK155 ╨з╤В╨╛╨▒╤Л ╨╜╨╡ ╨▒╤Л╨╗╨╛ ╨╝╤Г╤Б╨╛╤А╨░ ╨╖╨░ ╨║╨╛╨╜╤Ж╨╛╨╝ ╤Б╤В╤А╨╛╨║╨╕, ╨╝╨╡╤И╨░╤О╤Й╨╡╨│╨╛ ╤Б╤А╨░╨▓╨╜╨╕╨▓╨░╤В╤М
+     ╨┤╨░╨╜╨╜╤Л╨╡ ╨┐╤А╨╛╤Б╤В╨╛ ╨║╨░╨║ ╨╜╨╡╤Б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Г╤О ╨┐╨░╨╝╤П╤В╤М }
   end;
 
 function TInputLine.GetPalette: PPalette;
@@ -936,7 +936,7 @@ procedure TInputLine.HandleEvent(var Event: TEvent);
     OldCurPos, OldFirstPos,
     OldSelStart, OldSelEnd: LongInt;
     S: AnsiString;
-    pS: PString; {используется только для QuickDirs, котоpые ShortString}
+    pS: PString; {╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╤В╨╛╨╗╤М╨║╨╛ ╨┤╨╗╤П QuickDirs, ╨║╨╛╤В╨╛p╤Л╨╡ ShortString}
     R: TRect;
 
   function MouseDelta: Integer;
@@ -1066,7 +1066,7 @@ procedure TInputLine.HandleEvent(var Event: TEvent);
     end;
 
   procedure SetExtendBlock;
-  { Сохранить текущее выделение и подготовить его расширение }
+  { ╨б╨╛╤Е╤А╨░╨╜╨╕╤В╤М ╤В╨╡╨║╤Г╤Й╨╡╨╡ ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨╕ ╨┐╨╛╨┤╨│╨╛╤В╨╛╨▓╨╕╤В╤М ╨╡╨│╨╛ ╤А╨░╤Б╤И╨╕╤А╨╡╨╜╨╕╨╡ }
     begin
     if CurPos = SelEnd then
       Anchor := SelStart
@@ -1076,10 +1076,10 @@ procedure TInputLine.HandleEvent(var Event: TEvent);
     end;
 
   procedure Encode(XLat: TXlat);
-  { Перекодировка строки (нажат Shift), выделения или слова }
+  { ╨Я╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╤А╨╛╨║╨╕ (╨╜╨░╨╢╨░╤В Shift), ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨╕╨╗╨╕ ╤Б╨╗╨╛╨▓╨░ }
     var
       LBound, RBound: Longint;
-        { индексы первого символа участка и первого символа за участком }
+        { ╨╕╨╜╨┤╨╡╨║╤Б╤Л ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╤Г╤З╨░╤Б╤В╨║╨░ ╨╕ ╨┐╨╡╤А╨▓╨╛╨│╨╛ ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╨╖╨░ ╤Г╤З╨░╤Б╤В╨║╨╛╨╝ }
     begin
     if Data = '' then
       Exit;
@@ -1314,12 +1314,12 @@ procedure TInputLine.HandleEvent(var Event: TEvent);
             CurPos := 0;
           kbEnd, kbShiftEnd:
             CurPos := Length(Data);
-          //JO: Для двух нижележащих клавиш (BackSpace и Del) зачем-то ещё со вpемён
-          //    Ритлабовской веpсии в конце вставлено CheckValid. Зачем это надо
-          //    - непонятно, т.к. это пpовеpка на пpевышение длины стpоки ввода и
-          //    наличие в ней недопустимых символов. В pезультате удаления символа ни
-          //    то, ни дpугое появиться не может. А вот невозможность удалить
-          //    недопустимые символы, вставленные из буфеpа - возникает.
+          //JO: ╨Ф╨╗╤П ╨┤╨▓╤Г╤Е ╨╜╨╕╨╢╨╡╨╗╨╡╨╢╨░╤Й╨╕╤Е ╨║╨╗╨░╨▓╨╕╤И (BackSpace ╨╕ Del) ╨╖╨░╤З╨╡╨╝-╤В╨╛ ╨╡╤Й╤С ╤Б╨╛ ╨▓p╨╡╨╝╤С╨╜
+          //    ╨а╨╕╤В╨╗╨░╨▒╨╛╨▓╤Б╨║╨╛╨╣ ╨▓╨╡p╤Б╨╕╨╕ ╨▓ ╨║╨╛╨╜╤Ж╨╡ ╨▓╤Б╤В╨░╨▓╨╗╨╡╨╜╨╛ CheckValid. ╨Ч╨░╤З╨╡╨╝ ╤Н╤В╨╛ ╨╜╨░╨┤╨╛
+          //    - ╨╜╨╡╨┐╨╛╨╜╤П╤В╨╜╨╛, ╤В.╨║. ╤Н╤В╨╛ ╨┐p╨╛╨▓╨╡p╨║╨░ ╨╜╨░ ╨┐p╨╡╨▓╤Л╤И╨╡╨╜╨╕╨╡ ╨┤╨╗╨╕╨╜╤Л ╤Б╤Вp╨╛╨║╨╕ ╨▓╨▓╨╛╨┤╨░ ╨╕
+          //    ╨╜╨░╨╗╨╕╤З╨╕╨╡ ╨▓ ╨╜╨╡╨╣ ╨╜╨╡╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╤Л╤Е ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓. ╨Т p╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╡ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╤П ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╨╜╨╕
+          //    ╤В╨╛, ╨╜╨╕ ╨┤p╤Г╨│╨╛╨╡ ╨┐╨╛╤П╨▓╨╕╤В╤М╤Б╤П ╨╜╨╡ ╨╝╨╛╨╢╨╡╤В. ╨Р ╨▓╨╛╤В ╨╜╨╡╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Г╨┤╨░╨╗╨╕╤В╤М
+          //    ╨╜╨╡╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╤Л╨╡ ╤Б╨╕╨╝╨▓╨╛╨╗╤Л, ╨▓╤Б╤В╨░╨▓╨╗╨╡╨╜╨╜╤Л╨╡ ╨╕╨╖ ╨▒╤Г╤Д╨╡p╨░ - ╨▓╨╛╨╖╨╜╨╕╨║╨░╨╡╤В.
           kbBack:
             if CurPos > 0 then
               begin
@@ -1806,7 +1806,7 @@ constructor TCluster.Load(var S: TStream);
   TView.Load(S);
   if  (Options and ofVersion) >= ofVersion20 then
     begin
-    {Cat:warn глюки при смене порядка полей}
+    {Cat:warn ╨│╨╗╤О╨║╨╕ ╨┐╤А╨╕ ╤Б╨╝╨╡╨╜╨╡ ╨┐╨╛╤А╤П╨┤╨║╨░ ╨┐╨╛╨╗╨╡╨╣}
     S.Read(Value, SizeOf(LongInt)*2+SizeOf(AInt));
     end
   else
@@ -2111,7 +2111,7 @@ procedure TCluster.Press(Item: Integer);
 procedure TCluster.Store(var S: TStream);
   begin
   TView.Store(S);
-  {Cat:warn глюки при смене порядка полей}
+  {Cat:warn ╨│╨╗╤О╨║╨╕ ╨┐╤А╨╕ ╤Б╨╝╨╡╨╜╨╡ ╨┐╨╛╤А╤П╨┤╨║╨░ ╨┐╨╛╨╗╨╡╨╣}
   S.Write(Value, SizeOf(Value)+SizeOf(Sel)+SizeOf(EnableMask));
   Strings.Store(S);
   end;
@@ -2540,7 +2540,7 @@ procedure TLabel.Draw;
   C := ' '; Color1 := Color;
   if (Link <> nil) and (Link^.State and sfTagged <> 0) then
     begin
-    C := '■';
+    C := 'тЦа';
     Color1 := GetColor(5);
     end;
   MoveChar(B[0], C, Byte(Color1), 1);
@@ -2740,7 +2740,7 @@ procedure THistoryViewer.HandleEvent(var Event: TEvent);
     end { Search };
   {- $ WildCat $ -}
 
-  {AK155 27-03-2003 по мотивам ScanMarked из TTHistList.HandleEvent}
+  {AK155 27-03-2003 ╨┐╨╛ ╨╝╨╛╤В╨╕╨▓╨░╨╝ ScanMarked ╨╕╨╖ TTHistList.HandleEvent}
   function SearchNonDeletableItem(D, Bound: Integer): Boolean;
     var
       i: Integer;
@@ -3330,10 +3330,10 @@ procedure TComboBox.HandleEvent(var Event: TEvent);
       MB: PMenuBox;
       C: Word;
     begin
-{ Меню-список открываем поверх строки, совмещая строку
-и соответствующий пункт меню. Меню вставляем в приложение, так
-как если его вставлять в диалог, то в некоторых палитрах цвета
-получаются очень странные.
+{ ╨Ь╨╡╨╜╤О-╤Б╨┐╨╕╤Б╨╛╨║ ╨╛╤В╨║╤А╤Л╨▓╨░╨╡╨╝ ╨┐╨╛╨▓╨╡╤А╤Е ╤Б╤В╤А╨╛╨║╨╕, ╤Б╨╛╨▓╨╝╨╡╤Й╨░╤П ╤Б╤В╤А╨╛╨║╤Г
+╨╕ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╨╣ ╨┐╤Г╨╜╨║╤В ╨╝╨╡╨╜╤О. ╨Ь╨╡╨╜╤О ╨▓╤Б╤В╨░╨▓╨╗╤П╨╡╨╝ ╨▓ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡, ╤В╨░╨║
+╨║╨░╨║ ╨╡╤Б╨╗╨╕ ╨╡╨│╨╛ ╨▓╤Б╤В╨░╨▓╨╗╤П╤В╤М ╨▓ ╨┤╨╕╨░╨╗╨╛╨│, ╤В╨╛ ╨▓ ╨╜╨╡╨║╨╛╤В╨╛╤А╤Л╤Е ╨┐╨░╨╗╨╕╤В╤А╨░╤Е ╤Ж╨▓╨╡╤В╨░
+╨┐╨╛╨╗╤Г╤З╨░╤О╤В╤Б╤П ╨╛╤З╨╡╨╜╤М ╤Б╤В╤А╨░╨╜╨╜╤Л╨╡.
 }
     R.Assign(-2,-Selected,0,0);
     MakeGlobal(R.A, R.A);
@@ -3359,7 +3359,7 @@ procedure TComboBox.HandleEvent(var Event: TEvent);
   case Event.What of
     evMouseDown:
       begin
-      Select; { Вместо TView.HandleEvent }
+      Select; { ╨Т╨╝╨╡╤Б╤В╨╛ TView.HandleEvent }
       OpenList;
       end;
     evKeyDown:
@@ -3384,7 +3384,7 @@ procedure TComboBox.HandleEvent(var Event: TEvent);
           end;
 
 (*
-        kbDown, kbUp: { протез навигации стрелками }
+        kbDown, kbUp: { ╨┐╤А╨╛╤В╨╡╨╖ ╨╜╨░╨▓╨╕╨│╨░╤Ж╨╕╨╕ ╤Б╤В╤А╨╡╨╗╨║╨░╨╝╨╕ }
           begin
           PGroup(Owner)^.SelectNext(Event.KeyCode = kbUp);
           ClearEvent(Event);
@@ -3398,7 +3398,7 @@ procedure TComboBox.HandleEvent(var Event: TEvent);
             OpenList;
       end {case};
   end {case};
-//  inherited HandleEvent делать больше нечего }
+//  inherited HandleEvent ╨┤╨╡╨╗╨░╤В╤М ╨▒╨╛╨╗╤М╤И╨╡ ╨╜╨╡╤З╨╡╨│╨╛ }
   end { TComboBox.HandleEvent };
 
 function TComboBox.DataSize: Word;
@@ -3408,12 +3408,12 @@ function TComboBox.DataSize: Word;
 
 procedure TComboBox.GetData(var Rec);
   begin
-  Word(Rec) := Selected-1; // совместимость с TRadioButtons
+  Word(Rec) := Selected-1; // ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╤Б TRadioButtons
   end;
 
 procedure TComboBox.SetData(var Rec);
   begin
-  Selected := Word(Rec)+1; // совместимость с TRadioButtons
+  Selected := Word(Rec)+1; // ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╤Б TRadioButtons
   DrawView;
   end;
 
@@ -3425,7 +3425,7 @@ constructor TComboBox.Load(var S: TStream);
     P: PString;
   begin
   TView.Load(S);
-  S.Read(Selected, 2*SizeOf(Word)); // включая Count
+  S.Read(Selected, 2*SizeOf(Word)); // ╨▓╨║╨╗╤О╤З╨░╤П Count
   Menu := NewMenu(nil);
   PLastItem := @Menu^.Items;
   for i := 1 to Count do
@@ -3446,7 +3446,7 @@ procedure TComboBox.Store(var S: TStream);
     i: Integer;
   begin
   TView.Store(S);
-  S.Write(Selected, 2*SizeOf(Selected)); // включая Count
+  S.Write(Selected, 2*SizeOf(Selected)); // ╨▓╨║╨╗╤О╤З╨░╤П Count
   for i := 1 to Count do
     S.WriteStr(Items[i]^.Name);
   end;
@@ -3648,11 +3648,11 @@ procedure TNotepadFrame.FrameLine(var FrameBuf; Y, N: Integer; Color: Byte);
   inherited FrameLine(FrameBuf, Y, N, Color);
   BMStart := PNotepad(Owner)^.BookmarkStart;
   if Y = 0 then
-    C :=  '╗'
+    C :=  'тХЧ'
   else if Y = Size.Y-1 then
-    C :=  '╝'
+    C :=  'тХЭ'
   else
-    C :=  '║';
+    C :=  'тХС';
   B[2*BMStart] := C;
   for i := BMStart+1 to Size.X-1 do
     B[2*i] := ' ';
@@ -3660,14 +3660,14 @@ procedure TNotepadFrame.FrameLine(var FrameBuf; Y, N: Integer; Color: Byte);
 
 const
   FrameC: array[boolean] of record
-       H: Char; // горизонтальная линия
-       C0,  // верхние углы (слева и справа)
-       C1,  // вертикальные линии
-       C2:  // нижние углы
+       H: Char; // ╨│╨╛╤А╨╕╨╖╨╛╨╜╤В╨░╨╗╤М╨╜╨░╤П ╨╗╨╕╨╜╨╕╤П
+       C0,  // ╨▓╨╡╤А╤Е╨╜╨╕╨╡ ╤Г╨│╨╗╤Л (╤Б╨╗╨╡╨▓╨░ ╨╕ ╤Б╨┐╤А╨░╨▓╨░)
+       C1,  // ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╤Л╨╡ ╨╗╨╕╨╜╨╕╨╕
+       C2:  // ╨╜╨╕╨╢╨╜╨╕╨╡ ╤Г╨│╨╗╤Л
          array[1..2] of char;
        end =
-    ((H: '─'; C0: ('╟', '┤'); C1: ('║', '│'); C2: ('╟', '┘') ),
-     (H: '═'; C0: ('╚', '╗'); C1: (' ', '║'); C2: ('╔', '╝') )
+    ((H: 'тФА'; C0: ('тХЯ', 'тФд'); C1: ('тХС', 'тФВ'); C2: ('тХЯ', 'тФШ') ),
+     (H: 'тХР'; C0: ('тХЪ', 'тХЧ'); C1: (' ', 'тХС'); C2: ('тХФ', 'тХЭ') )
     );
 
 procedure TBookmark.Draw;
@@ -3681,9 +3681,9 @@ procedure TBookmark.Draw;
   LineColor := Owner^.GetColor(2);
   with FrameC[Light] do
     begin
-    { Снять заусенец на правом верхнем углу верхней неактивной закладки }
+    { ╨б╨╜╤П╤В╤М ╨╖╨░╤Г╤Б╨╡╨╜╨╡╤Ж ╨╜╨░ ╨┐╤А╨░╨▓╨╛╨╝ ╨▓╨╡╤А╤Е╨╜╨╡╨╝ ╤Г╨│╨╗╤Г ╨▓╨╡╤А╤Е╨╜╨╡╨╣ ╨╜╨╡╨░╨║╤В╨╕╨▓╨╜╨╛╨╣ ╨╖╨░╨║╨╗╨░╨┤╨║╨╕ }
     if not Light and (Origin.Y = 1) then
-      C := '┐'
+      C := 'тФР'
     else
       C := C0[2];
 

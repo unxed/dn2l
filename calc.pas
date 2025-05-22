@@ -47,8 +47,8 @@
 {$I STDEFINE.INC}
 {AK155 = Alexey Korop, 2:461/155@fidonet}
 {KV = Kirill Vodonosov}
-{20.08.2002 AK Почти весь текст в той или иной степени переработан.
-  См. также CellsCol. Основное нововведение - TSort и новый Recalc }
+{20.08.2002 AK ╨Я╨╛╤З╤В╨╕ ╨▓╨╡╤Б╤М ╤В╨╡╨║╤Б╤В ╨▓ ╤В╨╛╨╣ ╨╕╨╗╨╕ ╨╕╨╜╨╛╨╣ ╤Б╤В╨╡╨┐╨╡╨╜╨╕ ╨┐╨╡╤А╨╡╤А╨░╨▒╨╛╤В╨░╨╜.
+  ╨б╨╝. ╤В╨░╨║╨╢╨╡ CellsCol. ╨Ю╤Б╨╜╨╛╨▓╨╜╨╛╨╡ ╨╜╨╛╨▓╨╛╨▓╨▓╨╡╨┤╨╡╨╜╨╕╨╡ - TSort ╨╕ ╨╜╨╛╨▓╤Л╨╣ Recalc }
 unit Calc;
 {&Delphi+}
 interface
@@ -110,9 +110,9 @@ type
     function GetPalette: PPalette; virtual;
     procedure HandleEvent(var Event: TEvent); virtual;
     function GetCellValue(const S: String): Boolean;
-    {S - имя ячейки; результат - в calculat.Res}
+    {S - ╨╕╨╝╤П ╤П╤З╨╡╨╣╨║╨╕; ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В - ╨▓ calculat.Res}
     function GetFuncValue(S: String): Boolean;
-    {S - функция SUM или MUL, результат - в calculat.Res}
+    {S - ╤Д╤Г╨╜╨║╤Ж╨╕╤П SUM ╨╕╨╗╨╕ MUL, ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В - ╨▓ calculat.Res}
     procedure CalcError(Index: TStrIdx);
     procedure LoadSheet(FName: String); {DataCompBoy}
     procedure SaveSheet;
@@ -162,20 +162,20 @@ uses
 type
   THeaderDBF = record
     {KV}
-    DBFIdent: Char; { $03 - Нет MEMO; $83 - Есть MEMO }
+    DBFIdent: Char; { $03 - ╨Э╨╡╤В MEMO; $83 - ╨Х╤Б╤В╤М MEMO }
     { FoxBase+, FoxPro, dBaseIII+, dBaseIV, no memo - 0x03 }
     { FoxBase+, dBaseIII+ with memo - 0x83 }
     { FoxPro with memo - 0xF5 }
     { dBaseIV with memo - 0x8B }
     { dBaseIV with SQL Table - 0x8E }
 
-    Yar: Byte; { две последние цифры года }
+    Yar: Byte; { ╨┤╨▓╨╡ ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╕╨╡ ╤Ж╨╕╤Д╤А╤Л ╨│╨╛╨┤╨░ }
     Month: Byte; { month number }
     Day: Byte; { day number }
-    LastRecord: LongInt; { номер последней записи }
+    LastRecord: LongInt; { ╨╜╨╛╨╝╨╡╤А ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╡╨╣ ╨╖╨░╨┐╨╕╤Б╨╕ }
     DataOffset: AWord;
-    { смещение первой записи относительно начала файла}
-    RecSize: AWord; { размер записи с учетом символа удаления }
+    { ╤Б╨╝╨╡╤Й╨╡╨╜╨╕╨╡ ╨┐╨╡╤А╨▓╨╛╨╣ ╨╖╨░╨┐╨╕╤Б╨╕ ╨╛╤В╨╜╨╛╤Б╨╕╤В╨╡╨╗╤М╨╜╨╛ ╨╜╨░╤З╨░╨╗╨░ ╤Д╨░╨╣╨╗╨░}
+    RecSize: AWord; { ╤А╨░╨╖╨╝╨╡╤А ╨╖╨░╨┐╨╕╤Б╨╕ ╤Б ╤Г╤З╨╡╤В╨╛╨╝ ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╤П }
     Reserv1: AWord;
     WaitTrans: Byte; { dB IV }
     Reserv2: array[0..12] of Byte;
@@ -183,7 +183,7 @@ type
     Reserv3: array[0..2] of Byte;
     end;
   TDBFLength = record
-    { длина поля DBF } {KV}
+    { ╨┤╨╗╨╕╨╜╨░ ╨┐╨╛╨╗╤П DBF } {KV}
     case Integer of
       0: (FieldLength: AWord);
       1: (NumericLength: Byte; Decimals: Byte);
@@ -191,10 +191,10 @@ type
   PDBFField = ^TDBFField; {KV}
   TDBFField = record
     { dB field descriptor Length = 32 bytes }
-    FieldName: array[0..10] of Char; { имя поля }
-    FieldType: Char; { тип: C=$43, D=$44, L=$4C, $M=$4D, N=$4E }
-    Reserved: array[0..3] of Char; { Расположение поля внутри записи }
-    FLength: TDBFLength; { длина поля }
+    FieldName: array[0..10] of Char; { ╨╕╨╝╤П ╨┐╨╛╨╗╤П }
+    FieldType: Char; { ╤В╨╕╨┐: C=$43, D=$44, L=$4C, $M=$4D, N=$4E }
+    Reserved: array[0..3] of Char; { ╨а╨░╤Б╨┐╨╛╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╨┐╨╛╨╗╤П ╨▓╨╜╤Г╤В╤А╨╕ ╨╖╨░╨┐╨╕╤Б╨╕ }
+    FLength: TDBFLength; { ╨┤╨╗╨╕╨╜╨░ ╨┐╨╛╨╗╤П }
     Reserved2: array[0..12] of Byte;
     Tag: Byte; { for multiindex, only dB IV }
     end;
@@ -475,14 +475,14 @@ procedure MakeDefaultOptions(const S: String;
     I: Integer;
   begin
   Val(S, R, I);
-  D := 2; { 2 десятичных знака по умолчанию }
+  D := 2; { 2 ╨┤╨╡╤Б╤П╤В╨╕╤З╨╜╤Л╤Е ╨╖╨╜╨░╨║╨░ ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О }
   if I = 0 then
-    { число: вправо, как есть }
+    { ╤З╨╕╤Б╨╗╨╛: ╨▓╨┐╤А╨░╨▓╨╛, ╨║╨░╨║ ╨╡╤Б╤В╤М }
     o := coValue or coRight
   else if (S[1] = '=') and (Length(S) > 1) then
-    { формула: вправо, десятичное, 2 знака }
+    { ╤Д╨╛╤А╨╝╤Г╨╗╨░: ╨▓╨┐╤А╨░╨▓╨╛, ╨┤╨╡╤Б╤П╤В╨╕╤З╨╜╨╛╨╡, 2 ╨╖╨╜╨░╨║╨░ }
     o := coFormula or coDec or coRight
-  else { текст: влево, как есть }
+  else { ╤В╨╡╨║╤Б╤В: ╨▓╨╗╨╡╨▓╨╛, ╨║╨░╨║ ╨╡╤Б╤В╤М }
     begin
     o := 0;
     R := 0;
@@ -529,7 +529,7 @@ procedure TCalcInput.HandleEvent;
         end;
 
       MakeDefaultOptions(NewS, O, D, R);
-      TypeChanged := True; // на случай P=nil
+      TypeChanged := True; // ╨╜╨░ ╤Б╨╗╤Г╤З╨░╨╣ P=nil
       if P <> nil then
         with P^ do
           begin
@@ -537,7 +537,7 @@ procedure TCalcInput.HandleEvent;
             Options := (Options and not coTypeMask) or coFormula;
           TypeChanged := (Options xor O) and coTypeMask <> 0;
           if TypeChanged then
-            begin {Изменен тип ячейки}
+            begin {╨Ш╨╖╨╝╨╡╨╜╨╡╨╜ ╤В╨╕╨┐ ╤П╤З╨╡╨╣╨║╨╕}
             if MessageBox(GetString(dlWkzWarningCellTypeChange),
                 nil, mfOKCancel) <> cmOK
             then
@@ -846,26 +846,26 @@ procedure TCalcView.Draw;
   SetLength(EmptyLine, Size.X);
   FillChar(EmptyLine[1], Size.X, ' ');
   MoveChar(B, ' ', C1, Size.X);
-  BC[6].C := '│';
-  MoveChar(B1, '─', C1, Size.X);
-  WordRec(B1[6]).Lo := Byte('┼');
+  BC[6].C := 'тФВ';
+  MoveChar(B1, 'тФА', C1, Size.X);
+  WordRec(B1[6]).Lo := Byte('тФ╝');
   NumC := 0;
   I := 7;
   J := Delta.X;
   StX := I;
   EnX := Size.X;
 
-  {Заголовки колонок и верхняя черта}
+  {╨Ч╨░╨│╨╛╨╗╨╛╨▓╨║╨╕ ╨║╨╛╨╗╨╛╨╜╨╛╨║ ╨╕ ╨▓╨╡╤А╤Е╨╜╤П╤П ╤З╨╡╤А╤В╨░}
   while (I < Size.X) and (J <= HScroll^.Max) do
     begin
     K := ColWidth[J];
     L := ColWidth[J+1];
     SetLength(S, K);
     FillChar(S[1], K, ' ');
-    S[K] := '│';
+    S[K] := 'тФВ';
     S1 := GetColName(J);
     Move(S1[1], S[K div 2], Length(S1));
-    WordRec(B1[I+K-1]).Lo := Byte('┼');
+    WordRec(B1[I+K-1]).Lo := Byte('тФ╝');
     MoveStr(B[I], S, C1);
     if J < X1 then
       Inc(StX, K);
@@ -914,13 +914,13 @@ procedure TCalcView.Draw;
         begin
         K := ColWidth[Delta.X+J];
         if ShowSeparators then
-          begin { ограничиваем длину по колонке }
+          begin { ╨╛╨│╤А╨░╨╜╨╕╤З╨╕╨▓╨░╨╡╨╝ ╨┤╨╗╨╕╨╜╤Г ╨┐╨╛ ╨║╨╛╨╗╨╛╨╜╨║╨╡ }
           SetLength(S, K);
           FillChar(S[1], K, ' ');
-          S[K] := '│';
+          S[K] := 'тФВ';
           end
         else
-          begin { длина до конца экрана }
+          begin { ╨┤╨╗╨╕╨╜╨░ ╨┤╨╛ ╨║╨╛╨╜╤Ж╨░ ╤Н╨║╤А╨░╨╜╨░ }
           T := Size.X-L+1;
           SetLength(S, T);
           FillChar(S[1], T, ' ');
@@ -959,7 +959,7 @@ procedure TCalcView.Draw;
         L := L+K;
         end;
       end;
-    BC[6].C := '│';
+    BC[6].C := 'тФВ';
     BC[6].A := C1;
     if  (Delta.Y+I >= Y1) and (Delta.Y+I <= Y2) and (StX < EnX)
     then
@@ -1054,10 +1054,10 @@ procedure TCalcView.HandleEvent;
         fdOKButton+fdHelpButton) = cmCancel
     then
       Exit;
-    {KV: разделитель колонок можно определить автоматически, однако при этом
-         возникает несколько проблем: если в файле только одна строка нельзя
-         определить какие символы встречаются во второй строке столько-же раз
-         сколько и в первой. Выполнять проверку только на ',',';' неправильно}
+    {KV: ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤М ╨║╨╛╨╗╨╛╨╜╨╛╨║ ╨╝╨╛╨╢╨╜╨╛ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╕╤В╤М ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╤З╨╡╤Б╨║╨╕, ╨╛╨┤╨╜╨░╨║╨╛ ╨┐╤А╨╕ ╤Н╤В╨╛╨╝
+         ╨▓╨╛╨╖╨╜╨╕╨║╨░╨╡╤В ╨╜╨╡╤Б╨║╨╛╨╗╤М╨║╨╛ ╨┐╤А╨╛╨▒╨╗╨╡╨╝: ╨╡╤Б╨╗╨╕ ╨▓ ╤Д╨░╨╣╨╗╨╡ ╤В╨╛╨╗╤М╨║╨╛ ╨╛╨┤╨╜╨░ ╤Б╤В╤А╨╛╨║╨░ ╨╜╨╡╨╗╤М╨╖╤П
+         ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╕╤В╤М ╨║╨░╨║╨╕╨╡ ╤Б╨╕╨╝╨▓╨╛╨╗╤Л ╨▓╤Б╤В╤А╨╡╤З╨░╤О╤В╤Б╤П ╨▓╨╛ ╨▓╤В╨╛╤А╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ ╤Б╤В╨╛╨╗╤М╨║╨╛-╨╢╨╡ ╤А╨░╨╖
+         ╤Б╨║╨╛╨╗╤М╨║╨╛ ╨╕ ╨▓ ╨┐╨╡╤А╨▓╨╛╨╣. ╨Т╤Л╨┐╨╛╨╗╨╜╤П╤В╤М ╨┐╤А╨╛╨▓╨╡╤А╨║╤Г ╤В╨╛╨╗╤М╨║╨╛ ╨╜╨░ ',',';' ╨╜╨╡╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛}
     S := ';';
     if InputBox(GetString(dlWkzQuerySeparatorTitle),
            GetString(dlWkzQuerySeparatorLabel),
@@ -1084,7 +1084,7 @@ procedure TCalcView.HandleEvent;
       begin
       Readln(F.T, S);
       if S <> '' then
-        begin {KV: Просто на всякий случай}
+        begin {KV: ╨Я╤А╨╛╤Б╤В╨╛ ╨╜╨░ ╨▓╤Б╤П╨║╨╕╨╣ ╤Б╨╗╤Г╤З╨░╨╣}
         CurCol := 0;
         StartCh := 1;
         while StartCh <= Length(S) do
@@ -1152,13 +1152,13 @@ procedure TCalcView.HandleEvent;
         if CellValue <> '' then
           with Cells^.NewItem(i-1, DBF.CurRecord-1, CellValue) do
             case DBF.FieldType(i) of
-              'N': {число}
+              'N': {╤З╨╕╤Б╨╗╨╛}
                 begin
                 DelLeft(S);
                 Options := coValue or coRight;
                 Decimals := DBF.FieldDec(i);
                 end;
-              'L': {логическое}
+              'L': {╨╗╨╛╨│╨╕╤З╨╡╤Б╨║╨╛╨╡}
                 begin
                 if UpCase(CellValue[1]) = 'T' then
                   S := '-1'
@@ -1166,7 +1166,7 @@ procedure TCalcView.HandleEvent;
                   S := '0';
                 Options := coValue or coBool or coRight;
                 end;
-              else {текст, дата, мемо...}
+              else {╤В╨╡╨║╤Б╤В, ╨┤╨░╤В╨░, ╨╝╨╡╨╝╨╛...}
                 if  (CellValue[1] = '=') and (Length(CellValue) > 1)
                 then
                   begin
@@ -1256,8 +1256,8 @@ procedure TCalcView.HandleEvent;
                 S := MakeCellText(P)
               else
                 begin
-                // Оставляем 5 знаков после запятой, на случай если
-                // неправильно указан формат
+                // ╨Ю╤Б╤В╨░╨▓╨╗╤П╨╡╨╝ 5 ╨╖╨╜╨░╨║╨╛╨▓ ╨┐╨╛╤Б╨╗╨╡ ╨╖╨░╨┐╤П╤В╨╛╨╣, ╨╜╨░ ╤Б╨╗╤Г╤З╨░╨╣ ╨╡╤Б╨╗╨╕
+                // ╨╜╨╡╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛ ╤Г╨║╨░╨╖╨░╨╜ ╤Д╨╛╤А╨╝╨░╤В
                 if P^.Decimals <= 5 then
                   Str(P^.Value: 0: 5, S)
                 else
@@ -1295,19 +1295,19 @@ procedure TCalcView.HandleEvent;
       with TypeLenArr[P^.Col] do
         begin
         if  (P^.Options and coValue) <> coValue then
-          // Если в колонке текст или ошибка в формуле,
-          // то эта колонка сохраняется как текстовая
+          // ╨Х╤Б╨╗╨╕ ╨▓ ╨║╨╛╨╗╨╛╨╜╨║╨╡ ╤В╨╡╨║╤Б╤В ╨╕╨╗╨╕ ╨╛╤И╨╕╨▒╨║╨░ ╨▓ ╤Д╨╛╤А╨╝╤Г╨╗╨╡,
+          // ╤В╨╛ ╤Н╤В╨░ ╨║╨╛╨╗╨╛╨╜╨║╨░ ╤Б╨╛╤Е╤А╨░╨╜╤П╨╡╤В╤Б╤П ╨║╨░╨║ ╤В╨╡╨║╤Б╤В╨╛╨▓╨░╤П
           T := 'C'
         else if (T = #0) and ((P^.Options and $F0) = coBool) then
-          // Если тип колонки еще не оределен и первое найденное значение
-          // имеет формат Boolean, то устанавливаем тип Boolean
+          // ╨Х╤Б╨╗╨╕ ╤В╨╕╨┐ ╨║╨╛╨╗╨╛╨╜╨║╨╕ ╨╡╤Й╨╡ ╨╜╨╡ ╨╛╤А╨╡╨┤╨╡╨╗╨╡╨╜ ╨╕ ╨┐╨╡╤А╨▓╨╛╨╡ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨╡ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡
+          // ╨╕╨╝╨╡╨╡╤В ╤Д╨╛╤А╨╝╨░╤В Boolean, ╤В╨╛ ╤Г╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╨╝ ╤В╨╕╨┐ Boolean
           T := 'L'
         else if T = #0 then
-          T := 'N'; // По умолчанию - число
+          T := 'N'; // ╨Я╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О - ╤З╨╕╤Б╨╗╨╛
         end;
       end;
-    // Делаем второй проход когда типы полей уже известны
-    // для определения размерности
+    // ╨Ф╨╡╨╗╨░╨╡╨╝ ╨▓╤В╨╛╤А╨╛╨╣ ╨┐╤А╨╛╤Е╨╛╨┤ ╨║╨╛╨│╨┤╨░ ╤В╨╕╨┐╤Л ╨┐╨╛╨╗╨╡╨╣ ╤Г╨╢╨╡ ╨╕╨╖╨▓╨╡╤Б╤В╨╜╤Л
+    // ╨┤╨╗╤П ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╤П ╤А╨░╨╖╨╝╨╡╤А╨╜╨╛╤Б╤В╨╕
     for i := 0 to Cells^.Count-1 do
       begin
       P := Cells^.At(i);
@@ -1408,8 +1408,8 @@ procedure TCalcView.HandleEvent;
     for CurRow := 0 to MaxRow do
       begin
       kvFillColIndexArray(CurRow, ColIndexArray);
-      i := 1; // Номер текущего поля внутри записи
-      S.AddRecord; // Добавляем новую пустую запись
+      i := 1; // ╨Э╨╛╨╝╨╡╤А ╤В╨╡╨║╤Г╤Й╨╡╨│╨╛ ╨┐╨╛╨╗╤П ╨▓╨╜╤Г╤В╤А╨╕ ╨╖╨░╨┐╨╕╤Б╨╕
+      S.AddRecord; // ╨Ф╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╨╜╨╛╨▓╤Г╤О ╨┐╤Г╤Б╤В╤Г╤О ╨╖╨░╨┐╨╕╤Б╤М
       for CurCol := 0 to MaxCol do
         begin
         if ColIndexArray[CurCol] >= 0 then
@@ -1536,7 +1536,7 @@ procedure TCalcView.HandleEvent;
         begin
         K := ColWidth[I];
         if ShowSeparators then
-          S := Strg(' ', K-1)+'│'
+          S := Strg(' ', K-1)+'тФВ'
         else
           S := Strg(' ', 255);
         if C[I] >= 0 then
@@ -1604,7 +1604,7 @@ procedure TCalcView.HandleEvent;
   procedure ChangeFormat;
     const
       J: Integer = 0;
-      NewOptions: AWord = 0; {см. комментарий к ForRectangle}
+      NewOptions: AWord = 0; {╤Б╨╝. ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╣ ╨║ ForRectangle}
     procedure SetFormat(Item: PCellrec);
       begin
       with Item^ do
@@ -2114,11 +2114,11 @@ function TCalcView.GetCellValue(const S: String): Boolean;
     end;
   end { TCalcView.GetCellValue };
 
-{  Вычисление функций SUM и MUL. В скобках через запятую могут быть
-диапазоны, ячейки и числа. Пробелы игнорируются. Наличие закрывающей
-скобки должно быть проверено перед вызовом.
-   Пример: =SUM(A 1:B7, C1 8, 1).
-   Вычисленное число кладется в Calculat.Res}
+{  ╨Т╤Л╤З╨╕╤Б╨╗╨╡╨╜╨╕╨╡ ╤Д╤Г╨╜╨║╤Ж╨╕╨╣ SUM ╨╕ MUL. ╨Т ╤Б╨║╨╛╨▒╨║╨░╤Е ╤З╨╡╤А╨╡╨╖ ╨╖╨░╨┐╤П╤В╤Г╤О ╨╝╨╛╨│╤Г╤В ╨▒╤Л╤В╤М
+╨┤╨╕╨░╨┐╨░╨╖╨╛╨╜╤Л, ╤П╤З╨╡╨╣╨║╨╕ ╨╕ ╤З╨╕╤Б╨╗╨░. ╨Я╤А╨╛╨▒╨╡╨╗╤Л ╨╕╨│╨╜╨╛╤А╨╕╤А╤Г╤О╤В╤Б╤П. ╨Э╨░╨╗╨╕╤З╨╕╨╡ ╨╖╨░╨║╤А╤Л╨▓╨░╤О╤Й╨╡╨╣
+╤Б╨║╨╛╨▒╨║╨╕ ╨┤╨╛╨╗╨╢╨╜╨╛ ╨▒╤Л╤В╤М ╨┐╤А╨╛╨▓╨╡╤А╨╡╨╜╨╛ ╨┐╨╡╤А╨╡╨┤ ╨▓╤Л╨╖╨╛╨▓╨╛╨╝.
+   ╨Я╤А╨╕╨╝╨╡╤А: =SUM(A 1:B7, C1 8, 1).
+   ╨Т╤Л╤З╨╕╤Б╨╗╨╡╨╜╨╜╨╛╨╡ ╤З╨╕╤Б╨╗╨╛ ╨║╨╗╨░╨┤╨╡╤В╤Б╤П ╨▓ Calculat.Res}
 function TCalcView.GetFuncValue(S: String): Boolean;
   procedure DoSum(PP: PCellrec);
     begin
@@ -2183,7 +2183,7 @@ function TCalcView.GetFuncValue(S: String): Boolean;
         Exit;
       Cells^.ForRectangle(AFromX, AFromY, AFromX, AFromY, Op);
       end;
-    Inc(t); { пропустить запятую или скобку }
+    Inc(t); { ╨┐╤А╨╛╨┐╤Г╤Б╤В╨╕╤В╤М ╨╖╨░╨┐╤П╤В╤Г╤О ╨╕╨╗╨╕ ╤Б╨║╨╛╨▒╨║╤Г }
     end;
   Result := True;
   end { TCalcView.GetFuncValue };
@@ -2425,7 +2425,7 @@ procedure TCalcView.Copy;
   ClipRect.B.Y := Y2;
   end { TCalcView.Copy };
 
-{В формуле S ссылки на ячейки (>=LX,>=LY) сдвигать на (DX,DY) }
+{╨Т ╤Д╨╛╤А╨╝╤Г╨╗╨╡ S ╤Б╤Б╤Л╨╗╨║╨╕ ╨╜╨░ ╤П╤З╨╡╨╣╨║╨╕ (>=LX,>=LY) ╤Б╨┤╨▓╨╕╨│╨░╤В╤М ╨╜╨░ (DX,DY) }
 function ReformFormula(const S: String; LX, LY, DX, DY: Integer): String;
   const
     Signs = [';', '[', ']', '{', '}', #39, ':', '"', '.', '<',
@@ -2463,7 +2463,7 @@ function ReformFormula(const S: String; LX, LY, DX, DY: Integer): String;
           S2 := '?'
         else
           S2 := GetColName(X+DX);
-        { сейчас S2 - имя колонки}
+        { ╤Б╨╡╨╣╤З╨░╤Б S2 - ╨╕╨╝╤П ╨║╨╛╨╗╨╛╨╜╨║╨╕}
 
         for l := 2 to Length(S1)-1 do
           if S1[l] = '@' then
@@ -2476,7 +2476,7 @@ function ReformFormula(const S: String; LX, LY, DX, DY: Integer): String;
         else
           S1 := GetRowName(Y+DY);
         end;
-EndRowName: { сейчас S1 - имя строки }
+EndRowName: { ╤Б╨╡╨╣╤З╨░╤Б S1 - ╨╕╨╝╤П ╤Б╤В╤А╨╛╨║╨╕ }
 
     Result := Result+S2+S1;
     end;
@@ -2665,7 +2665,7 @@ procedure TCalcView.DeleteCol;
   Modified := True;
   end { TCalcView.DeleteCol };
 
-{ вычисление формулы; s[1] = '=' }
+{ ╨▓╤Л╤З╨╕╤Б╨╗╨╡╨╜╨╕╨╡ ╤Д╨╛╤А╨╝╤Г╨╗╤Л; s[1] = '=' }
 function TCalcView.CalcEval(const s: String; var Value: CReal): Boolean;
   var
     R: CReal;
@@ -2713,10 +2713,10 @@ procedure TCalcView.ReCalc(Full: Boolean);
       else if Full and ((Options and coValue) <> 0) then
         if S[1] = '=' then
           begin
-          {После некоторых старых версий DN бывает флаг coValue
-          без флага coFormula для формул, включающих только константные
-          операнды. То, что TSort не воспринимал их, как формулы, не
-          страшно, так как от других ячеек они не зависят. }
+          {╨Я╨╛╤Б╨╗╨╡ ╨╜╨╡╨║╨╛╤В╨╛╤А╤Л╤Е ╤Б╤В╨░╤А╤Л╤Е ╨▓╨╡╤А╤Б╨╕╨╣ DN ╨▒╤Л╨▓╨░╨╡╤В ╤Д╨╗╨░╨│ coValue
+          ╨▒╨╡╨╖ ╤Д╨╗╨░╨│╨░ coFormula ╨┤╨╗╤П ╤Д╨╛╤А╨╝╤Г╨╗, ╨▓╨║╨╗╤О╤З╨░╤О╤Й╨╕╤Е ╤В╨╛╨╗╤М╨║╨╛ ╨║╨╛╨╜╤Б╤В╨░╨╜╤В╨╜╤Л╨╡
+          ╨╛╨┐╨╡╤А╨░╨╜╨┤╤Л. ╨в╨╛, ╤З╤В╨╛ TSort ╨╜╨╡ ╨▓╨╛╤Б╨┐╤А╨╕╨╜╨╕╨╝╨░╨╗ ╨╕╤Е, ╨║╨░╨║ ╤Д╨╛╤А╨╝╤Г╨╗╤Л, ╨╜╨╡
+          ╤Б╤В╤А╨░╤И╨╜╨╛, ╤В╨░╨║ ╨║╨░╨║ ╨╛╤В ╨┤╤А╤Г╨│╨╕╤Е ╤П╤З╨╡╨╡╨║ ╨╛╨╜╨╕ ╨╜╨╡ ╨╖╨░╨▓╨╕╤Б╤П╤В. }
           Value := Evalue(System.Copy(S, 2, 255), @self);
           Options := Options or coValue;
           end
@@ -3087,10 +3087,10 @@ procedure TDbaseWriter.FieldPutString(FieldIndex: Integer;
     StrLen := L;
     FieldValue := System.Copy(FieldValue, 1, StrLen);
     end;
-  StrPCopy(Buf, FieldValue); // Можно было использовать Move,
-  // но при работе с длинными строками
-  // так безопаснее
-  Buf[StrLen] := ' '; // Для удаления #0, который вставляет StrPCopy
+  StrPCopy(Buf, FieldValue); // ╨Ь╨╛╨╢╨╜╨╛ ╨▒╤Л╨╗╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М Move,
+  // ╨╜╨╛ ╨┐╤А╨╕ ╤А╨░╨▒╨╛╤В╨╡ ╤Б ╨┤╨╗╨╕╨╜╨╜╤Л╨╝╨╕ ╤Б╤В╤А╨╛╨║╨░╨╝╨╕
+  // ╤В╨░╨║ ╨▒╨╡╨╖╨╛╨┐╨░╤Б╨╜╨╡╨╡
+  Buf[StrLen] := ' '; // ╨Ф╨╗╤П ╤Г╨┤╨░╨╗╨╡╨╜╨╕╤П #0, ╨║╨╛╤В╨╛╤А╤Л╨╣ ╨▓╤Б╤В╨░╨▓╨╗╤П╨╡╤В StrPCopy
   inherited Seek(FieldOffsetInFile(FieldIndex));
   inherited Write(Buf, L);
   end { TDbaseWriter.FieldPutString };

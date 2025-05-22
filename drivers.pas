@@ -141,8 +141,8 @@ DataCompBoy}
   CurrentBlink: Boolean = False;
   MouseWhere: TPoint = (X: 0; Y: 0);
   WheelEvent: Boolean = False;
-    { Вращение колеса превращается в курсорные клавиши, сопровождаемые
-    WheelEvent=True. Для нормальных курсорных клавиш WheelEvent=False.}
+    { ╨Т╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║╨╛╨╗╨╡╤Б╨░ ╨┐╤А╨╡╨▓╤А╨░╤Й╨░╨╡╤В╤Б╤П ╨▓ ╨║╤Г╤А╤Б╨╛╤А╨╜╤Л╨╡ ╨║╨╗╨░╨▓╨╕╤И╨╕, ╤Б╨╛╨┐╤А╨╛╨▓╨╛╨╢╨┤╨░╨╡╨╝╤Л╨╡
+    WheelEvent=True. ╨Ф╨╗╤П ╨╜╨╛╤А╨╝╨░╨╗╤М╨╜╤Л╤Е ╨║╤Г╤А╤Б╨╛╤А╨╜╤Л╤Е ╨║╨╗╨░╨▓╨╕╤И WheelEvent=False.}
 
 var
 
@@ -198,7 +198,7 @@ var
   OldCursorShape: Word;
   OldCursorPos: Word;
   DownButtons: Byte; // moved from implementation section
-    {` Последняя нажатая кнопка мыши; сохраняется и после отпускания `}
+    {` ╨Я╨╛╤Б╨╗╨╡╨┤╨╜╤П╤П ╨╜╨░╨╢╨░╤В╨░╤П ╨║╨╜╨╛╨┐╨║╨░ ╨╝╤Л╤И╨╕; ╤Б╨╛╤Е╤А╨░╨╜╤П╨╡╤В╤Б╤П ╨╕ ╨┐╨╛╤Б╨╗╨╡ ╨╛╤В╨┐╤Г╤Б╨║╨░╨╜╨╕╤П `}
 
   { ******** SYSTEM ERROR HANDLER ******** }
 
@@ -211,16 +211,16 @@ type
   { Default system error handler routine }
 
 function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
-  {` Выдать красный диалог о системной ошибке со стандартными кнопками,
-    а также с кнопкой "Стоп", если SysErrStopButton=True.
-   Дополнительно устанавливается переменная Abort.
-   Результат - какая кнопка нажата:
-     0 - Ignore (Abort = True), этого не бывает, так как кнопки нет
+  {` ╨Т╤Л╨┤╨░╤В╤М ╨║╤А╨░╤Б╨╜╤Л╨╣ ╨┤╨╕╨░╨╗╨╛╨│ ╨╛ ╤Б╨╕╤Б╤В╨╡╨╝╨╜╨╛╨╣ ╨╛╤И╨╕╨▒╨║╨╡ ╤Б╨╛ ╤Б╤В╨░╨╜╨┤╨░╤А╤В╨╜╤Л╨╝╨╕ ╨║╨╜╨╛╨┐╨║╨░╨╝╨╕,
+    ╨░ ╤В╨░╨║╨╢╨╡ ╤Б ╨║╨╜╨╛╨┐╨║╨╛╨╣ "╨б╤В╨╛╨┐", ╨╡╤Б╨╗╨╕ SysErrStopButton=True.
+   ╨Ф╨╛╨┐╨╛╨╗╨╜╨╕╤В╨╡╨╗╤М╨╜╨╛ ╤Г╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╤В╤Б╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П Abort.
+   ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В - ╨║╨░╨║╨░╤П ╨║╨╜╨╛╨┐╨║╨░ ╨╜╨░╨╢╨░╤В╨░:
+     0 - Ignore (Abort = True), ╤Н╤В╨╛╨│╨╛ ╨╜╨╡ ╨▒╤Л╨▓╨░╨╡╤В, ╤В╨░╨║ ╨║╨░╨║ ╨║╨╜╨╛╨┐╨║╨╕ ╨╜╨╡╤В
      1 - Retry (Abort = False)
      3 - Abort (Abort = True)
      4 - Stop (Abort = False)
-   Если Abort=True или NeedAbort=True в момент вызова, то без всякого
-   диалога возвращается результат 3 с Abort=True `}
+   ╨Х╤Б╨╗╨╕ Abort=True ╨╕╨╗╨╕ NeedAbort=True ╨▓ ╨╝╨╛╨╝╨╡╨╜╤В ╨▓╤Л╨╖╨╛╨▓╨░, ╤В╨╛ ╨▒╨╡╨╖ ╨▓╤Б╤П╨║╨╛╨│╨╛
+   ╨┤╨╕╨░╨╗╨╛╨│╨░ ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В╤Б╤П ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В 3 ╤Б Abort=True `}
 
 const
 
@@ -234,7 +234,7 @@ const
   SaveCtrlBreak: Boolean = False;
   SysErrActive: Boolean = False;
   SysErrStopButton: Boolean = False;
-    {` В диалоге системной ошибки нужна кнопка "Стоп" `}
+    {` ╨Т ╨┤╨╕╨░╨╗╨╛╨│╨╡ ╤Б╨╕╤Б╤В╨╡╨╝╨╜╨╛╨╣ ╨╛╤И╨╕╨▒╨║╨╕ ╨╜╤Г╨╢╨╜╨░ ╨║╨╜╨╛╨┐╨║╨░ "╨б╤В╨╛╨┐" `}
 
   { System error handler routines }
 
@@ -528,19 +528,19 @@ function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
   S := CE_Messages[MsgCode]^;
 
   I := Pos('%', S);
-  {Cat:warn если ошибка для сети, то будет выводиться "ошибка на диске :"}
+  {Cat:warn ╨╡╤Б╨╗╨╕ ╨╛╤И╨╕╨▒╨║╨░ ╨┤╨╗╤П ╤Б╨╡╤В╨╕, ╤В╨╛ ╨▒╤Г╨┤╨╡╤В ╨▓╤Л╨▓╨╛╨┤╨╕╤В╤М╤Б╤П "╨╛╤И╨╕╨▒╨║╨░ ╨╜╨░ ╨┤╨╕╤Б╨║╨╡ :"}
   if I > 0 then
     begin
     S[I] := Char(Drive+65);
     S[I+1] := ':'
     end;
 
-  { Тут мы используем свою функцию, а не SysGetSystemError, так как
-   та только с виду единая, а фактически она работает по-разному
-   под разными операционками. Под OS/2 после неё надо удалять CtrLf
-   в конце, под Win32 надо перекодировать из ANSI в OEM, а под DPMI
-   она формирует бессодержательные строки наподобие System Error #21,
-   которые ничем не лучше того, что у нас в заголовке }
+  { ╨в╤Г╤В ╨╝╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤Б╨▓╨╛╤О ╤Д╤Г╨╜╨║╤Ж╨╕╤О, ╨░ ╨╜╨╡ SysGetSystemError, ╤В╨░╨║ ╨║╨░╨║
+   ╤В╨░ ╤В╨╛╨╗╤М╨║╨╛ ╤Б ╨▓╨╕╨┤╤Г ╨╡╨┤╨╕╨╜╨░╤П, ╨░ ╤Д╨░╨║╤В╨╕╤З╨╡╤Б╨║╨╕ ╨╛╨╜╨░ ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨┐╨╛-╤А╨░╨╖╨╜╨╛╨╝╤Г
+   ╨┐╨╛╨┤ ╤А╨░╨╖╨╜╤Л╨╝╨╕ ╨╛╨┐╨╡╤А╨░╤Ж╨╕╨╛╨╜╨║╨░╨╝╨╕. ╨Я╨╛╨┤ OS/2 ╨┐╨╛╤Б╨╗╨╡ ╨╜╨╡╤С ╨╜╨░╨┤╨╛ ╤Г╨┤╨░╨╗╤П╤В╤М CtrLf
+   ╨▓ ╨║╨╛╨╜╤Ж╨╡, ╨┐╨╛╨┤ Win32 ╨╜╨░╨┤╨╛ ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨░╤В╤М ╨╕╨╖ ANSI ╨▓ OEM, ╨░ ╨┐╨╛╨┤ DPMI
+   ╨╛╨╜╨░ ╤Д╨╛╤А╨╝╨╕╤А╤Г╨╡╤В ╨▒╨╡╤Б╤Б╨╛╨┤╨╡╤А╨╢╨░╤В╨╡╨╗╤М╨╜╤Л╨╡ ╤Б╤В╤А╨╛╨║╨╕ ╨╜╨░╨┐╨╛╨┤╨╛╨▒╨╕╨╡ System Error #21,
+   ╨║╨╛╤В╨╛╤А╤Л╨╡ ╨╜╨╕╤З╨╡╨╝ ╨╜╨╡ ╨╗╤Г╤З╤И╨╡ ╤В╨╛╨│╨╛, ╤З╤В╨╛ ╤Г ╨╜╨░╤Б ╨▓ ╨╖╨░╨│╨╛╨╗╨╛╨▓╨║╨╡ }
   if GetErrorText(ErrorCode, SysMsg) then
     S := SysMsg + ^M^C + S;
   if  (NumButtons[MsgCode] = 3) then
@@ -577,7 +577,7 @@ function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
 
 { Keyboard support routines }
 
-{Cat:warn есть подозрение, что GetAltCode и GetCtrlCode не работают}
+{Cat:warn ╨╡╤Б╤В╤М ╨┐╨╛╨┤╨╛╨╖╤А╨╡╨╜╨╕╨╡, ╤З╤В╨╛ GetAltCode ╨╕ GetCtrlCode ╨╜╨╡ ╤А╨░╨▒╨╛╤В╨░╤О╤В}
 
 const
   AltCodes2: array[$78..$83] of Char =
@@ -589,7 +589,7 @@ function GetAltChar(KeyCode: Word): Char;
   if KeyCode = kbAltSpace then
     GetAltChar := Char(SystemMenuChar);
   if  (KeyCode shr 16) in [0, 8] then
-    {Cat: проверяем, что это Alt-Char, а не Alt-Shift-Char или Ctrl-Alt-Char}
+    {Cat: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝, ╤З╤В╨╛ ╤Н╤В╨╛ Alt-Char, ╨░ ╨╜╨╡ Alt-Shift-Char ╨╕╨╗╨╕ Ctrl-Alt-Char}
     if Lo(KeyCode) = 0 then
       case Hi(KeyCode) of
         $10..$34:
@@ -630,7 +630,7 @@ function GetCtrlChar(KeyCode: Word): Char;
   begin
   GetCtrlChar := #0;
   if  (KeyCode shr 16) in [0, 4] then
-    {Cat: проверяем, что это Ctrl-Char, а не Ctrl-Shift-Char}
+    {Cat: ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝, ╤З╤В╨╛ ╤Н╤В╨╛ Ctrl-Char, ╨░ ╨╜╨╡ Ctrl-Shift-Char}
     if  (Lo(KeyCode) <> 0) and (Lo(KeyCode) <= Byte('Z')-Byte('A')+1)
     then
       GetCtrlChar := Char(Lo(KeyCode)+Byte('A')-1);
@@ -641,8 +641,8 @@ function GetCtrlCode(Ch: Char): Word;
   GetCtrlCode := GetAltCode(Ch) or (Byte(UpCase(Ch))-Byte('A')+1);
   end;
 
-{Cat: а вот это абсолютно точно не работает, т.к. сразу происходит Exit }
-{     закомментировал также все вызовы этой функции }
+{Cat: ╨░ ╨▓╨╛╤В ╤Н╤В╨╛ ╨░╨▒╤Б╨╛╨╗╤О╤В╨╜╨╛ ╤В╨╛╤З╨╜╨╛ ╨╜╨╡ ╤А╨░╨▒╨╛╤В╨░╨╡╤В, ╤В.╨║. ╤Б╤А╨░╨╖╤Г ╨┐╤А╨╛╨╕╤Б╤Е╨╛╨┤╨╕╤В Exit }
+{     ╨╖╨░╨║╨╛╨╝╨╝╨╡╨╜╤В╨╕╤А╨╛╨▓╨░╨╗ ╤В╨░╨║╨╢╨╡ ╨▓╤Б╨╡ ╨▓╤Л╨╖╨╛╨▓╤Л ╤Н╤В╨╛╨╣ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ }
 (*
 function CtrlToArrow(KeyCode: Word): Word;
 const

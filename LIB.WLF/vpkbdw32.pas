@@ -34,12 +34,12 @@ function GetWinShiftState2: byte;
 
 var
   WindowNotFocused: Boolean;
-    { Эта переменная отслеживает потерю и возврат фокуса окном DN }
+    { ╨н╤В╨░ ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П ╨╛╤В╤Б╨╗╨╡╨╢╨╕╨▓╨░╨╡╤В ╨┐╨╛╤В╨╡╤А╤О ╨╕ ╨▓╨╛╨╖╨▓╤А╨░╤В ╤Д╨╛╨║╤Г╤Б╨░ ╨╛╨║╨╜╨╛╨╝ DN }
 const
   WheelScrollLines: Integer = 3;
-    { число "вертикальных стрелок", генерируемых из одного щелчка
-    мышиного колеса. Если -1 - генерировать не стрелки, а страницы.
-    Можно установить снаружи, значение желательно брать из
+    { ╤З╨╕╤Б╨╗╨╛ "╨▓╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╤Л╤Е ╤Б╤В╤А╨╡╨╗╨╛╨║", ╨│╨╡╨╜╨╡╤А╨╕╤А╤Г╨╡╨╝╤Л╤Е ╨╕╨╖ ╨╛╨┤╨╜╨╛╨│╨╛ ╤Й╨╡╨╗╤З╨║╨░
+    ╨╝╤Л╤И╨╕╨╜╨╛╨│╨╛ ╨║╨╛╨╗╨╡╤Б╨░. ╨Х╤Б╨╗╨╕ -1 - ╨│╨╡╨╜╨╡╤А╨╕╤А╨╛╨▓╨░╤В╤М ╨╜╨╡ ╤Б╤В╤А╨╡╨╗╨║╨╕, ╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Л.
+    ╨Ь╨╛╨╢╨╜╨╛ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М ╤Б╨╜╨░╤А╤Г╨╢╨╕, ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨╢╨╡╨╗╨░╤В╨╡╨╗╤М╨╜╨╛ ╨▒╤А╨░╤В╤М ╨╕╨╖
     HCU\Control Panel\Desktop\WheelScrollLines. }
 
 implementation
@@ -126,7 +126,7 @@ end;
 }
 
 const
-  WinShiftState2: byte = 0; {как старший байт KbdGetStatus для OS/2}
+  WinShiftState2: byte = 0; {╨║╨░╨║ ╤Б╤В╨░╤А╤И╨╕╨╣ ╨▒╨░╨╣╤В KbdGetStatus ╨┤╨╗╤П OS/2}
 const
   AdvShiftKeys: array[0..6] of byte =
     ( LEFT_CTRL_PRESSED
@@ -221,7 +221,7 @@ begin
   then
     begin
       {Flash 07-02-2004, AK155 29-02-04:
-        Для работы эмуляции нажатия BS, например, в Punto Switcher}
+        ╨Ф╨╗╤П ╤А╨░╨▒╨╛╤В╤Л ╤Н╨╝╤Г╨╗╤П╤Ж╨╕╨╕ ╨╜╨░╨╢╨░╤В╨╕╤П BS, ╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, ╨▓ Punto Switcher}
       if (CharCode = 8) and (ScanCode = 0) then
         begin // Special treatment for BackSpace
           Result := $E08;
@@ -237,7 +237,7 @@ begin
         // Special treatment for Ctrl-keys
         if (CharCode <> $E0) or ((CharCode = $E0) and (KeyCode = $48) and
             ((ScanCode = $23) or
-            {Flash 07-02-2004: Для работы эмуляции нажатия русской "р"}
+            {Flash 07-02-2004: ╨Ф╨╗╤П ╤А╨░╨▒╨╛╤В╤Л ╤Н╨╝╤Г╨╗╤П╤Ж╨╕╨╕ ╨╜╨░╨╢╨░╤В╨╕╤П ╤А╤Г╤Б╤Б╨║╨╛╨╣ "╤А"}
             (ScanCode = 0)) and
             (ShiftState and AltCtrl_Pressed = 0))
         then
@@ -279,7 +279,7 @@ begin
   // Test code; should not be necessary
     27:
     begin
-      // ∙^~
+      // тИЩ^~
       if ShiftState and Left_Alt_Pressed <> 0 then
         Result := ScanCode shl 8
       else if ShiftState and Right_Alt_Pressed <> 0 then
@@ -287,7 +287,7 @@ begin
       else if ShiftState and Shift_Pressed <> 0 then
         Result := Ord ('^')
       else
-        Result := Ord ('∙');
+        Result := Ord ('тИЩ');
 
       Exit;
     end;
@@ -550,8 +550,8 @@ begin
     if EventCount = 0 then
      Exit;
     {$IFDEF WIN95_HIGHPRIORITY}
-    if SysPlatform = 1 then {Cat: если сидим в Win9x, значит для нормализации работы с консолью у нас увеличен приоритет}
-      Sleep(1);       {     и тогда здесь нужно отдать ConAgent-у время, чтобы не "глотались" нажатия клавиш}
+    if SysPlatform = 1 then {Cat: ╨╡╤Б╨╗╨╕ ╤Б╨╕╨┤╨╕╨╝ ╨▓ Win9x, ╨╖╨╜╨░╤З╨╕╤В ╨┤╨╗╤П ╨╜╨╛╤А╨╝╨░╨╗╨╕╨╖╨░╤Ж╨╕╨╕ ╤А╨░╨▒╨╛╤В╤Л ╤Б ╨║╨╛╨╜╤Б╨╛╨╗╤М╤О ╤Г ╨╜╨░╤Б ╤Г╨▓╨╡╨╗╨╕╤З╨╡╨╜ ╨┐╤А╨╕╨╛╤А╨╕╤В╨╡╤В}
+      Sleep(1);       {     ╨╕ ╤В╨╛╨│╨┤╨░ ╨╖╨┤╨╡╤Б╤М ╨╜╤Г╨╢╨╜╨╛ ╨╛╤В╨┤╨░╤В╤М ConAgent-╤Г ╨▓╤А╨╡╨╝╤П, ╤З╤В╨╛╨▒╤Л ╨╜╨╡ "╨│╨╗╨╛╤В╨░╨╗╨╕╤Б╤М" ╨╜╨░╨╢╨░╤В╨╕╤П ╨║╨╗╨░╨▓╨╕╤И}
     {$ENDIF}
     with InRec do
       case EventType of
@@ -564,16 +564,16 @@ begin
           if SysKeyCount <= High(SysKeyQue) then
           with SysKeyQue[SysKeyCount], KeyEvent do
           begin
-            {Cat: переделал так, чтобы при отпускании клавиш тоже обновлять ShiftState}
+            {Cat: ╨┐╨╡╤А╨╡╨┤╨╡╨╗╨░╨╗ ╤В╨░╨║, ╤З╤В╨╛╨▒╤Л ╨┐╤А╨╕ ╨╛╤В╨┐╤Г╤Б╨║╨░╨╜╨╕╨╕ ╨║╨╗╨░╨▓╨╕╤И ╤В╨╛╨╢╨╡ ╨╛╨▒╨╜╨╛╨▓╨╗╤П╤В╤М ShiftState}
             SysShiftState := CtrlKeysToShiftState(dwControlKeyState); {Cat}
             if bKeyDown then
               begin
                 skeKeyCode:=0;
-{AK155 Под Win9x 'дочитывание' при помощи readConsole необходимо для
-"нормальных" символов, недопустимо для Shift-Tab, а для стрелок, Home,
-End и т.п. на _некоторых_ компьютерах тоже недопустимо при использовании
-стандартной переключалки keyb (от чего это зависит - неизвестно,
-возможно, от BIOS. Условие wVirtualKeyCode >= $30, вроде, накрывает все.}
+{AK155 ╨Я╨╛╨┤ Win9x '╨┤╨╛╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╨╡' ╨┐╤А╨╕ ╨┐╨╛╨╝╨╛╤Й╨╕ readConsole ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨╛ ╨┤╨╗╤П
+"╨╜╨╛╤А╨╝╨░╨╗╤М╨╜╤Л╤Е" ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓, ╨╜╨╡╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛ ╨┤╨╗╤П Shift-Tab, ╨░ ╨┤╨╗╤П ╤Б╤В╤А╨╡╨╗╨╛╨║, Home,
+End ╨╕ ╤В.╨┐. ╨╜╨░ _╨╜╨╡╨║╨╛╤В╨╛╤А╤Л╤Е_ ╨║╨╛╨╝╨┐╤М╤О╤В╨╡╤А╨░╤Е ╤В╨╛╨╢╨╡ ╨╜╨╡╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛ ╨┐╤А╨╕ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╕
+╤Б╤В╨░╨╜╨┤╨░╤А╤В╨╜╨╛╨╣ ╨┐╨╡╤А╨╡╨║╨╗╤О╤З╨░╨╗╨║╨╕ keyb (╨╛╤В ╤З╨╡╨│╨╛ ╤Н╤В╨╛ ╨╖╨░╨▓╨╕╤Б╨╕╤В - ╨╜╨╡╨╕╨╖╨▓╨╡╤Б╤В╨╜╨╛,
+╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨╛╤В BIOS. ╨г╤Б╨╗╨╛╨▓╨╕╨╡ wVirtualKeyCode >= $30, ╨▓╤А╨╛╨┤╨╡, ╨╜╨░╨║╤А╤Л╨▓╨░╨╡╤В ╨▓╤Б╨╡.}
                 if not( (SysPlatform = 1)
                     and (wVirtualKeyCode >= $30){AK155}
                     and (AsciiChar <> #0)
@@ -636,8 +636,8 @@ End и т.п. на _некоторых_ компьютерах тоже недопустимо при использовании
         _mouse_Event:
          begin
           if InRec.MouseEvent.dwEventFlags = 4{MOUSE_WHEELED} then
-            begin { Имитируем клавиши Up/Dn или PgUp/PgDn,
-             но сопровождаем их "регистром" $80. }
+            begin { ╨Ш╨╝╨╕╤В╨╕╤А╤Г╨╡╨╝ ╨║╨╗╨░╨▓╨╕╤И╨╕ Up/Dn ╨╕╨╗╨╕ PgUp/PgDn,
+             ╨╜╨╛ ╤Б╨╛╨┐╤А╨╛╨▓╨╛╨╢╨┤╨░╨╡╨╝ ╨╕╤Е "╤А╨╡╨│╨╕╤Б╤В╤А╨╛╨╝" $80. }
             if SysKeyCount <= High(SysKeyQue) then
               with SysKeyQue[SysKeyCount] do
                 begin

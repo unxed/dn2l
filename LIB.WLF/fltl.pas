@@ -4,7 +4,7 @@
 {$I STDEFINE.INC}
 
 {Cat
-   04/12/2001 - в WinNT поддерживается копирование Security Attributes
+   04/12/2001 - ╨▓ WinNT ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╨╡╤В╤Б╤П ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ Security Attributes
 }
 
 unit FlTl;
@@ -23,15 +23,15 @@ procedure CopySAs(FFromName, FToName: String);
 
 function GetFileAges(S: ShortString;
      var Age_LWr, Age_Cr, Age_LAc: LongInt): LongInt;
-{JO: возвращает время и дату последней модификации (Age_LWr),                   }
-{    время и дату создания (Age_Cr) и время и дату последнего доступа (Age_LAc) }
-{    файла или каталога по полному пути (S), принимает значение кода ошибки     }
+{JO: ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В ╨▓╤А╨╡╨╝╤П ╨╕ ╨┤╨░╤В╤Г ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╡╨╣ ╨╝╨╛╨┤╨╕╤Д╨╕╨║╨░╤Ж╨╕╨╕ (Age_LWr),                   }
+{    ╨▓╤А╨╡╨╝╤П ╨╕ ╨┤╨░╤В╤Г ╤Б╨╛╨╖╨┤╨░╨╜╨╕╤П (Age_Cr) ╨╕ ╨▓╤А╨╡╨╝╤П ╨╕ ╨┤╨░╤В╤Г ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╡╨│╨╛ ╨┤╨╛╤Б╤В╤Г╨┐╨░ (Age_LAc) }
+{    ╤Д╨░╨╣╨╗╨░ ╨╕╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨┐╨╛ ╨┐╨╛╨╗╨╜╨╛╨╝╤Г ╨┐╤Г╤В╨╕ (S), ╨┐╤А╨╕╨╜╨╕╨╝╨░╨╡╤В ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨║╨╛╨┤╨░ ╨╛╤И╨╕╨▒╨║╨╕     }
 
 function SetFileAges(S: ShortString; Age_LWr, Age_Cr, Age_LAc: LongInt)
   : LongInt;
-{JO: устанавливает время и дату последней модификации (Age_LWr),                }
-{    время и дату создания (Age_Cr) и время и дату последнего доступа (Age_LAc) }
-{    файла или каталога по полному пути (S), принимает значение кода ошибки     }
+{JO: ╤Г╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╤В ╨▓╤А╨╡╨╝╤П ╨╕ ╨┤╨░╤В╤Г ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╡╨╣ ╨╝╨╛╨┤╨╕╤Д╨╕╨║╨░╤Ж╨╕╨╕ (Age_LWr),                }
+{    ╨▓╤А╨╡╨╝╤П ╨╕ ╨┤╨░╤В╤Г ╤Б╨╛╨╖╨┤╨░╨╜╨╕╤П (Age_Cr) ╨╕ ╨▓╤А╨╡╨╝╤П ╨╕ ╨┤╨░╤В╤Г ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╡╨│╨╛ ╨┤╨╛╤Б╤В╤Г╨┐╨░ (Age_LAc) }
+{    ╤Д╨░╨╣╨╗╨░ ╨╕╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨┐╨╛ ╨┐╨╛╨╗╨╜╨╛╨╝╤Г ╨┐╤Г╤В╨╕ (S), ╨┐╤А╨╕╨╜╨╕╨╝╨░╨╡╤В ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨║╨╛╨┤╨░ ╨╛╤И╨╕╨▒╨║╨╕     }
 
 procedure GetSerFileSys(Drive: Char; var SerialNo: Longint;
   var VolLab, FileSys: String);
@@ -40,11 +40,11 @@ function GetFSString(Dr: Char): String; {JO}
 function GetShare(Drive: Char): string; {AK155}
 function GetSubst(Drive: Char): string; {AK155}
 function GetDriveTypeNew(Drive: Char): TDrvTypeNew; {JO} {<fltl.001>}
-//JO: Функция, которую следует использовать в исходниках DN/2
-//    вместо неудачной штатной для VP RTL функции SysGetDriveType,
-//    в отличие от которой данная функция определяет тип диска
-//    никогда к нему не обращаясь - используя DosDevIOCtl и не
-//    делая никаких проверок файловой системы
+//JO: ╨д╤Г╨╜╨║╤Ж╨╕╤П, ╨║╨╛╤В╨╛╤А╤Г╤О ╤Б╨╗╨╡╨┤╤Г╨╡╤В ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨▓ ╨╕╤Б╤Е╨╛╨┤╨╜╨╕╨║╨░╤Е DN/2
+//    ╨▓╨╝╨╡╤Б╤В╨╛ ╨╜╨╡╤Г╨┤╨░╤З╨╜╨╛╨╣ ╤И╤В╨░╤В╨╜╨╛╨╣ ╨┤╨╗╤П VP RTL ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ SysGetDriveType,
+//    ╨▓ ╨╛╤В╨╗╨╕╤З╨╕╨╡ ╨╛╤В ╨║╨╛╤В╨╛╤А╨╛╨╣ ╨┤╨░╨╜╨╜╨░╤П ╤Д╤Г╨╜╨║╤Ж╨╕╤П ╨╛╨┐╤А╨╡╨┤╨╡╨╗╤П╨╡╤В ╤В╨╕╨┐ ╨┤╨╕╤Б╨║╨░
+//    ╨╜╨╕╨║╨╛╨│╨┤╨░ ╨║ ╨╜╨╡╨╝╤Г ╨╜╨╡ ╨╛╨▒╤А╨░╤Й╨░╤П╤Б╤М - ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤П DosDevIOCtl ╨╕ ╨╜╨╡
+//    ╨┤╨╡╨╗╨░╤П ╨╜╨╕╨║╨░╨║╨╕╤Е ╨┐╤А╨╛╨▓╨╡╤А╨╛╨║ ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╤Б╨╕╤Б╤В╨╡╨╝╤Л
 
 function GetErrorText(ErrCode: Integer; var Msg: String): Boolean;
 
@@ -64,7 +64,7 @@ function GetBytesPerCluster(Path: PChar): LongInt;
   begin
 (*  i := GetRootStart+1;
   c :=
-  Buffer^[i] := #0; // получается что-то вроде \\server\share\ или C:\
+  Buffer^[i] := #0; // ╨┐╨╛╨╗╤Г╤З╨░╨╡╤В╤Б╤П ╤З╤В╨╛-╤В╨╛ ╨▓╤А╨╛╨┤╨╡ \\server\share\ ╨╕╨╗╨╕ C:\
   RootPtr := nil;
   if Drive > 0 then
     begin
@@ -109,7 +109,7 @@ procedure CopyEAs(FFromName, FToName: String);
   FFromName := FFromName+#0;
   FToName := FToName+#0;
 
-  (*** пока не работает
+  (*** ╨┐╨╛╨║╨░ ╨╜╨╡ ╤А╨░╨▒╨╛╤В╨░╨╡╤В
   hFileSource := CreateFile(@FFromName[1], FILE_READ_EA,
                             FILE_SHARE_READ or FILE_SHARE_WRITE,
                             nil, OPEN_EXISTING, 0, 0);
@@ -276,7 +276,7 @@ function GetFileAges(S: ShortString;
   if not FileTimeToDosDateTime(LocalFileTime_LAc,
            TDateTimeRec(Age_LAc).FDate, TDateTimeRec(Age_LAc).FTime)
   then
-    begin // файловая система не поддержвает время последнего доступа
+    begin // ╤Д╨░╨╣╨╗╨╛╨▓╨░╤П ╤Б╨╕╤Б╤В╨╡╨╝╨░ ╨╜╨╡ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨▓╨░╨╡╤В ╨▓╤А╨╡╨╝╤П ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╡╨│╨╛ ╨┤╨╛╤Б╤В╤Г╨┐╨░
     TDateTimeRec(Age_LAc).FDate := 0;
     TDateTimeRec(Age_LAc).FTime := 0;
     end;

@@ -56,33 +56,33 @@ uses
 
 type
   TPanelDescr = record
-  {` Описатель одной (из двух) панелей }
-    AnyPanel: PView; // если на этой панели что-то видно - то именно это.
-    FilePanel: PFilePanel; { Файловая панель. Имеется всегда, но,
-      возможно, скрыта, чтобы показать нефайловую.
-      Если видна файловая панель, то AnyPanel = FilePanel }
-    PanelType: Byte; // тип AnyPanel
-    Drive: Byte; // для FilePanel
+  {` ╨Ю╨┐╨╕╤Б╨░╤В╨╡╨╗╤М ╨╛╨┤╨╜╨╛╨╣ (╨╕╨╖ ╨┤╨▓╤Г╤Е) ╨┐╨░╨╜╨╡╨╗╨╡╨╣ }
+    AnyPanel: PView; // ╨╡╤Б╨╗╨╕ ╨╜╨░ ╤Н╤В╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╤З╤В╨╛-╤В╨╛ ╨▓╨╕╨┤╨╜╨╛ - ╤В╨╛ ╨╕╨╝╨╡╨╜╨╜╨╛ ╤Н╤В╨╛.
+    FilePanel: PFilePanel; { ╨д╨░╨╣╨╗╨╛╨▓╨░╤П ╨┐╨░╨╜╨╡╨╗╤М. ╨Ш╨╝╨╡╨╡╤В╤Б╤П ╨▓╤Б╨╡╨│╨┤╨░, ╨╜╨╛,
+      ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╤Б╨║╤А╤Л╤В╨░, ╤З╤В╨╛╨▒╤Л ╨┐╨╛╨║╨░╨╖╨░╤В╤М ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О.
+      ╨Х╤Б╨╗╨╕ ╨▓╨╕╨┤╨╜╨░ ╤Д╨░╨╣╨╗╨╛╨▓╨░╤П ╨┐╨░╨╜╨╡╨╗╤М, ╤В╨╛ AnyPanel = FilePanel }
+    PanelType: Byte; // ╤В╨╕╨┐ AnyPanel
+    Drive: Byte; // ╨┤╨╗╤П FilePanel
     end;
   {`}
 
   TPanelNum = boolean;
-  {` Ссылка на одну из двух панелй; для наглядности определны
-  также константы pLeft и pRight. Значения этого типа служат
-  для ответа на вопрос "которая", например, ими индексирутся
+  {` ╨б╤Б╤Л╨╗╨║╨░ ╨╜╨░ ╨╛╨┤╨╜╤Г ╨╕╨╖ ╨┤╨▓╤Г╤Е ╨┐╨░╨╜╨╡╨╗╨╣; ╨┤╨╗╤П ╨╜╨░╨│╨╗╤П╨┤╨╜╨╛╤Б╤В╨╕ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╜╤Л
+  ╤В╨░╨║╨╢╨╡ ╨║╨╛╨╜╤Б╤В╨░╨╜╤В╤Л pLeft ╨╕ pRight. ╨Ч╨╜╨░╤З╨╡╨╜╨╕╤П ╤Н╤В╨╛╨│╨╛ ╤В╨╕╨┐╨░ ╤Б╨╗╤Г╨╢╨░╤В
+  ╨┤╨╗╤П ╨╛╤В╨▓╨╡╤В╨░ ╨╜╨░ ╨▓╨╛╨┐╤А╨╛╤Б "╨║╨╛╤В╨╛╤А╨░╤П", ╨╜╨░╨┐╤А╨╕╨╝╨╡╤А, ╨╕╨╝╨╕ ╨╕╨╜╨┤╨╡╨║╤Б╨╕╤А╤Г╤В╤Б╤П
   TDoubleWindow.Panel.
   `}
 
 const
-  pLeft = false; // для TPanelNum
-  pRight = true; // для TPanelNum
+  pLeft = false; // ╨┤╨╗╤П TPanelNum
+  pRight = true; // ╨┤╨╗╤П TPanelNum
 
 
 type
   PSeparator = ^TSeparator;
-  {`2 Вертикальный разделитель между панелями. Имитирует левую линию
-  рамки правой панели и правую линию рамки левой панели (на самом
-  деле панели рамок не имеют вообще.) }
+  {`2 ╨Т╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╤Л╨╣ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤М ╨╝╨╡╨╢╨┤╤Г ╨┐╨░╨╜╨╡╨╗╤П╨╝╨╕. ╨Ш╨╝╨╕╤В╨╕╤А╤Г╨╡╤В ╨╗╨╡╨▓╤Г╤О ╨╗╨╕╨╜╨╕╤О
+  ╤А╨░╨╝╨║╨╕ ╨┐╤А╨░╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ ╨╕ ╨┐╤А╨░╨▓╤Г╤О ╨╗╨╕╨╜╨╕╤О ╤А╨░╨╝╨║╨╕ ╨╗╨╡╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ (╨╜╨░ ╤Б╨░╨╝╨╛╨╝
+  ╨┤╨╡╨╗╨╡ ╨┐╨░╨╜╨╡╨╗╨╕ ╤А╨░╨╝╨╛╨║ ╨╜╨╡ ╨╕╨╝╨╡╤О╤В ╨▓╨╛╨╛╨▒╤Й╨╡.) }
   TSeparator = object(TView)
     OldX, OldW: AInt;
     constructor Init(R: TRect; AH: Integer);
@@ -94,20 +94,20 @@ type
   {`}
 
   PDoubleWindow = ^TDoubleWindow;
-  {`2 Двухпанельный менеджер.}
+  {`2 ╨Ф╨▓╤Г╤Е╨┐╨░╨╜╨╡╨╗╤М╨╜╤Л╨╣ ╨╝╨╡╨╜╨╡╨┤╨╢╨╡╤А.}
   TDoubleWindow = object( {TStd}TWindow)
-    Separator: PSeparator; // вертикальный между панелями
+    Separator: PSeparator; // ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╤Л╨╣ ╨╝╨╡╨╢╨┤╤Г ╨┐╨░╨╜╨╡╨╗╤П╨╝╨╕
     Panel: array[TPanelNum] of TPanelDescr;
     OldBounds: TRect;
     OldPanelBounds: TRect;
     NonFilePanelType: Byte;
-      {`тип нефайловой панели; 0, если таковой нет`}
+      {`╤В╨╕╨┐ ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕; 0, ╨╡╤Б╨╗╨╕ ╤В╨░╨║╨╛╨▓╨╛╨╣ ╨╜╨╡╤В`}
     NonFilePanel: TPanelNum;
-      {`Которая из панелей нефайловая; мусор, если обе файловые `}
+      {`╨Ъ╨╛╤В╨╛╤А╨░╤П ╨╕╨╖ ╨┐╨░╨╜╨╡╨╗╨╡╨╣ ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨░╤П; ╨╝╤Г╤Б╨╛╤А, ╨╡╤Б╨╗╨╕ ╨╛╨▒╨╡ ╤Д╨░╨╣╨╗╨╛╨▓╤Л╨╡ `}
     PanelZoomed: Boolean;
-      {` Одна из панелей максимизирована `}
+      {` ╨Ю╨┤╨╜╨░ ╨╕╨╖ ╨┐╨░╨╜╨╡╨╗╨╡╨╣ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨░ `}
     SinglePanel: Boolean;
-      {` Была ли панель до максимизации единственной `}
+      {` ╨С╤Л╨╗╨░ ╨╗╨╕ ╨┐╨░╨╜╨╡╨╗╤М ╨┤╨╛ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨░╤Ж╨╕╨╕ ╨╡╨┤╨╕╨╜╤Б╤В╨▓╨╡╨╜╨╜╨╛╨╣ `}
     isValid: Boolean;
     constructor Init(Bounds: TRect; ANumber, ADrive: Integer);
     procedure InitPanel(N: TPanelNum; R: TRect);
@@ -115,23 +115,23 @@ type
     constructor Load(var S: TStream);
     procedure Store(var S: TStream);
     procedure SwitchView(dtType: Byte);
-      {`Сделать неактивную панель указанного типа, если сейчас у
-      неё другой тип; а если именно такой - то сделать панель
-      файловой`}
+      {`╨б╨┤╨╡╨╗╨░╤В╤М ╨╜╨╡╨░╨║╤В╨╕╨▓╨╜╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨│╨╛ ╤В╨╕╨┐╨░, ╨╡╤Б╨╗╨╕ ╤Б╨╡╨╣╤З╨░╤Б ╤Г
+      ╨╜╨╡╤С ╨┤╤А╤Г╨│╨╛╨╣ ╤В╨╕╨┐; ╨░ ╨╡╤Б╨╗╨╕ ╨╕╨╝╨╡╨╜╨╜╨╛ ╤В╨░╨║╨╛╨╣ - ╤В╨╛ ╤Б╨┤╨╡╨╗╨░╤В╤М ╨┐╨░╨╜╨╡╨╗╤М
+      ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣`}
     function Valid(C: Word): Boolean; virtual;
     procedure ChangeBounds(var Bounds: TRect); virtual;
     procedure HandleCommand(var Event: TEvent);
       {`DblWnd`}
     procedure SwitchPanel(N: TPanelNum);
-      {`скрыть/показать панель`}
+      {`╤Б╨║╤А╤Л╤В╤М/╨┐╨╛╨║╨░╨╖╨░╤В╤М ╨┐╨░╨╜╨╡╨╗╤М`}
     procedure ChangeDrv(N: TPanelNum);
-      {`сменить диск с диалогом (Alt-F1/F2)`}
+      {`╤Б╨╝╨╡╨╜╨╕╤В╤М ╨┤╨╕╤Б╨║ ╤Б ╨┤╨╕╨░╨╗╨╛╨│╨╛╨╝ (Alt-F1/F2)`}
     procedure SetMaxiState(P: PFilePanelRoot);
-      {` Установить состояние максимизированности активной файловой
-        панели в соответствии с её настройкой `}
+      {` ╨г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М ╤Б╨╛╤Б╤В╨╛╤П╨╜╨╕╨╡ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╤Б╤В╨╕ ╨░╨║╤В╨╕╨▓╨╜╨╛╨╣ ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣
+        ╨┐╨░╨╜╨╡╨╗╨╕ ╨▓ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╕ ╤Б ╨╡╤С ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╛╨╣ `}
     procedure ToggleViewMaxiState(P: PView; Other: TPanelNum);
-      {` Инвертировать состояние максимизированности активной панели
-        (возможно, нефайловой). Номер другой панели - Other `}
+      {` ╨Ш╨╜╨▓╨╡╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╤Б╨╛╤Б╤В╨╛╤П╨╜╨╕╨╡ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╤Б╤В╨╕ ╨░╨║╤В╨╕╨▓╨╜╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕
+        (╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣). ╨Э╨╛╨╝╨╡╤А ╨┤╤А╤Г╨│╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ - Other `}
     end;
     {`}
 
@@ -423,18 +423,18 @@ procedure TDoubleWindow.Store;
 
 const
   VScrollRect: TRect = (A:(X:1;Y:1);B:(X:2;Y:5));
-    {Существенно, что B.X-A.X = 1, то есть вертикальный.
-    Остальное не важно.}
+    {╨б╤Г╤Й╨╡╤Б╤В╨▓╨╡╨╜╨╜╨╛, ╤З╤В╨╛ B.X-A.X = 1, ╤В╨╛ ╨╡╤Б╤В╤М ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╤Л╨╣.
+    ╨Ю╤Б╤В╨░╨╗╤М╨╜╨╛╨╡ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛.}
 
-{ Создание вертикального скроллбара для панели просмотра }
+{ ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╨╛╨│╨╛ ╤Б╨║╤А╨╛╨╗╨╗╨▒╨░╤А╨░ ╨┤╨╗╤П ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨░ }
 function MakeVScroll: PViewScroll;
   begin
   Result := New(PViewScroll, Init(VScrollRect));
   Result^.Options := Result^.Options or ofPostProcess;
   end;
 
-{ Контроль свежесозданной нефайловой панели P; при ошибках будет P=nil }
-function ValidVP(var P: PView; S: PView {скроллбар}): Boolean;
+{ ╨Ъ╨╛╨╜╤В╤А╨╛╨╗╤М ╤Б╨▓╨╡╨╢╨╡╤Б╨╛╨╖╨┤╨░╨╜╨╜╨╛╨╣ ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ P; ╨┐╤А╨╕ ╨╛╤И╨╕╨▒╨║╨░╤Е ╨▒╤Г╨┤╨╡╤В P=nil }
+function ValidVP(var P: PView; S: PView {╤Б╨║╤А╨╛╨╗╨╗╨▒╨░╤А}): Boolean;
   begin
   Result := False;
   if (S = nil) or (P = nil) or not P^.Valid(0) then
@@ -458,7 +458,7 @@ procedure InsertView(var P: PView; S: PView; Manager: PDoubleWindow);
       end;
   end;
 
-{ Построители нефайловых панелей }
+{ ╨Я╨╛╤Б╤В╤А╨╛╨╕╤В╨╡╨╗╨╕ ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╤Л╤Е ╨┐╨░╨╜╨╡╨╗╨╡╨╣ }
 
 function InsertQView(R1: TRect;
     Manager: PDoubleWindow; Other: PFilePanelRoot): PView;
@@ -490,7 +490,7 @@ function InsertTree(R1: TRect;
   begin
   S := New(PMyScrollBar, Init(VScrollRect));
   S^.Options := S^.Options or ofPostProcess;
-  { Область делим по вертикали между подвалом (2 строки) и деревом}
+  { ╨Ю╨▒╨╗╨░╤Б╤В╤М ╨┤╨╡╨╗╨╕╨╝ ╨┐╨╛ ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╨╕ ╨╝╨╡╨╢╨┤╤Г ╨┐╨╛╨┤╨▓╨░╨╗╨╛╨╝ (2 ╤Б╤В╤А╨╛╨║╨╕) ╨╕ ╨┤╨╡╤А╨╡╨▓╨╛╨╝}
   Dec(R1.B.Y, 2);
   Result := New(PHTreeView, Init(R1, 0, False, S));
   if ValidVP(Result, S) then
@@ -516,7 +516,7 @@ function InsertInfo(R1: TRect;
   Manager.Insert(Result);
   PDiskInfo(Result)^.InsertDriveView;
   PDiskInfo(Result)^.ReadData;
-  // Это надо делать после Insert
+  // ╨н╤В╨╛ ╨╜╨░╨┤╨╛ ╨┤╨╡╨╗╨░╤В╤М ╨┐╨╛╤Б╨╗╨╡ Insert
   end { InsertTree };
 
 
@@ -524,10 +524,10 @@ type
   TPanelConstructor = function(R1: TRect;
     Manager: PDoubleWindow; Other: PFilePanelRoot): PView;
 
-{ В этот массив кто угодно (плагин, к примеру) может добавить свой
-элемент вместо любого nil, после чего этот новый тип нефайловой панели
-можно будет без проблем включать-выключать через SwitchView по
-соответствующеу номеру.}
+{ ╨Т ╤Н╤В╨╛╤В ╨╝╨░╤Б╤Б╨╕╨▓ ╨║╤В╨╛ ╤Г╨│╨╛╨┤╨╜╨╛ (╨┐╨╗╨░╨│╨╕╨╜, ╨║ ╨┐╤А╨╕╨╝╨╡╤А╤Г) ╨╝╨╛╨╢╨╡╤В ╨┤╨╛╨▒╨░╨▓╨╕╤В╤М ╤Б╨▓╨╛╨╣
+╤Н╨╗╨╡╨╝╨╡╨╜╤В ╨▓╨╝╨╡╤Б╤В╨╛ ╨╗╤О╨▒╨╛╨│╨╛ nil, ╨┐╨╛╤Б╨╗╨╡ ╤З╨╡╨│╨╛ ╤Н╤В╨╛╤В ╨╜╨╛╨▓╤Л╨╣ ╤В╨╕╨┐ ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕
+╨╝╨╛╨╢╨╜╨╛ ╨▒╤Г╨┤╨╡╤В ╨▒╨╡╨╖ ╨┐╤А╨╛╨▒╨╗╨╡╨╝ ╨▓╨║╨╗╤О╤З╨░╤В╤М-╨▓╤Л╨║╨╗╤О╤З╨░╤В╤М ╤З╨╡╤А╨╡╨╖ SwitchView ╨┐╨╛
+╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╡╤Г ╨╜╨╛╨╝╨╡╤А╤Г.}
 
 const
   PanelConstructor: array[dtInfo..10] of TPanelConstructor =
@@ -554,20 +554,20 @@ procedure TDoubleWindow.SwitchView(dtType: Byte);
 
   if PanelZoomed then
     Message(@Self, evCommand, cmMaxi, nil);
-      { При PanelZoomed может потребоваться SwitchView только если
-       максимизированная панель - файловая. То есть это что-то вроде
-       Ctrl-Q при максимизированной панели. Чтобы было где открывать
-       нефайловую панель, максимизацию надо убрать. }
+      { ╨Я╤А╨╕ PanelZoomed ╨╝╨╛╨╢╨╡╤В ╨┐╨╛╤В╤А╨╡╨▒╨╛╨▓╨░╤В╤М╤Б╤П SwitchView ╤В╨╛╨╗╤М╨║╨╛ ╨╡╤Б╨╗╨╕
+       ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨╜╨░╤П ╨┐╨░╨╜╨╡╨╗╤М - ╤Д╨░╨╣╨╗╨╛╨▓╨░╤П. ╨в╨╛ ╨╡╤Б╤В╤М ╤Н╤В╨╛ ╤З╤В╨╛-╤В╨╛ ╨▓╤А╨╛╨┤╨╡
+       Ctrl-Q ╨┐╤А╨╕ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕. ╨з╤В╨╛╨▒╤Л ╨▒╤Л╨╗╨╛ ╨│╨┤╨╡ ╨╛╤В╨║╤А╤Л╨▓╨░╤В╤М
+       ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М, ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨░╤Ж╨╕╤О ╨╜╨░╨┤╨╛ ╤Г╨▒╤А╨░╤В╤М. }
 
   Selected := Panel[pRight].AnyPanel^.GetState(sfSelected);
   N := not Selected;
   VisibleN := Panel[N].AnyPanel^.GetState(sfVisible);
   Panel[N].AnyPanel^.GetBounds(R1);
 
-  { Если нефайловая панель была - ее надо в любом случае уничтожить.
-Если она была, и притом именно типа dtType, то надо будет восстановить
-файловую панель; в остальных случаях создать панель dtType. Если её
-не было, надо погасить файловую панель}
+  { ╨Х╤Б╨╗╨╕ ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨░╤П ╨┐╨░╨╜╨╡╨╗╤М ╨▒╤Л╨╗╨░ - ╨╡╨╡ ╨╜╨░╨┤╨╛ ╨▓ ╨╗╤О╨▒╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡ ╤Г╨╜╨╕╤З╤В╨╛╨╢╨╕╤В╤М.
+╨Х╤Б╨╗╨╕ ╨╛╨╜╨░ ╨▒╤Л╨╗╨░, ╨╕ ╨┐╤А╨╕╤В╨╛╨╝ ╨╕╨╝╨╡╨╜╨╜╨╛ ╤В╨╕╨┐╨░ dtType, ╤В╨╛ ╨╜╨░╨┤╨╛ ╨▒╤Г╨┤╨╡╤В ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М
+╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М; ╨▓ ╨╛╤Б╤В╨░╨╗╤М╨╜╤Л╤Е ╤Б╨╗╤Г╤З╨░╤П╤Е ╤Б╨╛╨╖╨┤╨░╤В╤М ╨┐╨░╨╜╨╡╨╗╤М dtType. ╨Х╤Б╨╗╨╕ ╨╡╤С
+╨╜╨╡ ╨▒╤Л╨╗╨╛, ╨╜╨░╨┤╨╛ ╨┐╨╛╨│╨░╤Б╨╕╤В╤М ╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М}
   with Panel[N].AnyPanel^ do
     begin
     if not VisibleN then
@@ -641,7 +641,7 @@ procedure TDoubleWindow.InitInterior;
     end;
   end { TDoubleWindow.InitInterior };
 
-{ Скрыть/показать панель }
+{ ╨б╨║╤А╤Л╤В╤М/╨┐╨╛╨║╨░╨╖╨░╤В╤М ╨┐╨░╨╜╨╡╨╗╤М }
 procedure TDoubleWindow.SwitchPanel(N: TPanelNum);
   var
     R, RN: TRect;
@@ -655,24 +655,24 @@ procedure TDoubleWindow.SwitchPanel(N: TPanelNum);
   GetBounds(R);
   ThisPanel := Panel[N].AnyPanel;
   if ThisPanel^.GetState(sfVisible) then
-    begin // скрыть
+    begin // ╤Б╨║╤А╤Л╤В╤М
     OldBounds := R;
     NewXBound := Separator^.Origin.X+R.A.X+1;
-    if N then {скрываем правую}
+    if N then {╤Б╨║╤А╤Л╨▓╨░╨╡╨╝ ╨┐╤А╨░╨▓╤Г╤О}
       R.B.X := NewXBound
-      { Если ширина менеджера стала меньше MinWinSize.X, то
-      ChangeBounds расширит окно вправо, что и требуется}
-    else {скрываем левую}
+      { ╨Х╤Б╨╗╨╕ ╤И╨╕╤А╨╕╨╜╨░ ╨╝╨╡╨╜╨╡╨┤╨╢╨╡╤А╨░ ╤Б╤В╨░╨╗╨░ ╨╝╨╡╨╜╤М╤И╨╡ MinWinSize.X, ╤В╨╛
+      ChangeBounds ╤А╨░╤Б╤И╨╕╤А╨╕╤В ╨╛╨║╨╜╨╛ ╨▓╨┐╤А╨░╨▓╨╛, ╤З╤В╨╛ ╨╕ ╤В╤А╨╡╨▒╤Г╨╡╤В╤Б╤П}
+    else {╤Б╨║╤А╤Л╨▓╨░╨╡╨╝ ╨╗╨╡╨▓╤Г╤О}
       begin
       R.A.X := NewXBound;
       if R.B.X-R.A.X < MinWinSize.X then
         R.A.X := R.B.X - MinWinSize.X;
-        { А тут надо расширять влево, так что делаем это сами }
+        { ╨Р ╤В╤Г╤В ╨╜╨░╨┤╨╛ ╤А╨░╤Б╤И╨╕╤А╤П╤В╤М ╨▓╨╗╨╡╨▓╨╛, ╤В╨░╨║ ╤З╤В╨╛ ╨┤╨╡╨╗╨░╨╡╨╝ ╤Н╤В╨╛ ╤Б╨░╨╝╨╕ }
       end;
     ThisPanel^.Hide;
     end
   else
-    begin // показать
+    begin // ╨┐╨╛╨║╨░╨╖╨░╤В╤М
     ThisPanel^.Show;
     R.A.X := OldBounds.A.X;
     R.B.X := OldBounds.B.X;
@@ -687,7 +687,7 @@ procedure TDoubleWindow.SwitchPanel(N: TPanelNum);
   UnLock;
   end { TDoubleWindow.SwitchPanel };
 
-{ Смена диска через меню Alt-F1/F2 }
+{ ╨б╨╝╨╡╨╜╨░ ╨┤╨╕╤Б╨║╨░ ╤З╨╡╤А╨╡╨╖ ╨╝╨╡╨╜╤О Alt-F1/F2 }
 procedure TDoubleWindow.ChangeDrv(N: TPanelNum);
   var
     R, R1: TRect;
@@ -757,11 +757,11 @@ procedure TDoubleWindow.SetMaxiState(P: PFilePanelRoot);
     Other: TPanelNum;
   begin
   if PanelZoomed and (P = PassivePanel) then
-    begin { Попытка максимизировать пассивную панель, когда активная уже
-      максимизирована. В этом случае не максимизируем её, а наоборот,
-      сбрасываем в её настройках флаг максимизации. Выявление этой ситуации
-      делается сравнением с PassivePanel, а не проверкой видимости,
-      так как во время Load панель вполне может быть невидимой. }
+    begin { ╨Я╨╛╨┐╤Л╤В╨║╨░ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╤В╤М ╨┐╨░╤Б╤Б╨╕╨▓╨╜╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М, ╨║╨╛╨│╨┤╨░ ╨░╨║╤В╨╕╨▓╨╜╨░╤П ╤Г╨╢╨╡
+      ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨░. ╨Т ╤Н╤В╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡ ╨╜╨╡ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╤Г╨╡╨╝ ╨╡╤С, ╨░ ╨╜╨░╨╛╨▒╨╛╤А╨╛╤В,
+      ╤Б╨▒╤А╨░╤Б╤Л╨▓╨░╨╡╨╝ ╨▓ ╨╡╤С ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨░╤Е ╤Д╨╗╨░╨│ ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨░╤Ж╨╕╨╕. ╨Т╤Л╤П╨▓╨╗╨╡╨╜╨╕╨╡ ╤Н╤В╨╛╨╣ ╤Б╨╕╤В╤Г╨░╤Ж╨╕╨╕
+      ╨┤╨╡╨╗╨░╨╡╤В╤Б╤П ╤Б╤А╨░╨▓╨╜╨╡╨╜╨╕╨╡╨╝ ╤Б PassivePanel, ╨░ ╨╜╨╡ ╨┐╤А╨╛╨▓╨╡╤А╨║╨╛╨╣ ╨▓╨╕╨┤╨╕╨╝╨╛╤Б╤В╨╕,
+      ╤В╨░╨║ ╨║╨░╨║ ╨▓╨╛ ╨▓╤А╨╡╨╝╤П Load ╨┐╨░╨╜╨╡╨╗╤М ╨▓╨┐╨╛╨╗╨╜╨╡ ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╨╜╨╡╨▓╨╕╨┤╨╕╨╝╨╛╨╣. }
     with P^.PanSetup^.Show do
       MiscOptions := MiscOptions and not 1;
     end
@@ -775,7 +775,7 @@ procedure TDoubleWindow.ToggleViewMaxiState(P: PView; Other: TPanelNum);
   begin
   Lock;
   if not PanelZoomed then
-    begin { Максимизировать }
+    begin { ╨Ь╨░╨║╤Б╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╤В╤М }
     SinglePanel := not Panel[Other].AnyPanel^.GetState(sfVisible);
     if not SinglePanel then
       SwitchPanel(Other);
@@ -784,10 +784,10 @@ procedure TDoubleWindow.ToggleViewMaxiState(P: PView; Other: TPanelNum);
     PanelZoomed := True;
     end
   else
-    begin { Убрать максимизацию }
+    begin { ╨г╨▒╤А╨░╤В╤М ╨╝╨░╨║╤Б╨╕╨╝╨╕╨╖╨░╤Ж╨╕╤О }
     if SinglePanel then
-      Hide; {AK155 Почему-то без этого не стираются
-        остатки распахнутой панели }
+      Hide; {AK155 ╨Я╨╛╤З╨╡╨╝╤Г-╤В╨╛ ╨▒╨╡╨╖ ╤Н╤В╨╛╨│╨╛ ╨╜╨╡ ╤Б╤В╨╕╤А╨░╤О╤В╤Б╤П
+        ╨╛╤Б╤В╨░╤В╨║╨╕ ╤А╨░╤Б╨┐╨░╤Е╨╜╤Г╤В╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╨╕ }
     ChangeBounds(OldPanelBounds);
     Show;
     PanelZoomed := False;
@@ -809,8 +809,8 @@ procedure TDoubleWindow.HandleCommand;
     ClearEvent(Event)
     end;
 
-  { Является ли Selected панель файловой, то есть можно ли к ней цеплять
-   нефайловую панель }
+  { ╨п╨▓╨╗╤П╨╡╤В╤Б╤П ╨╗╨╕ Selected ╨┐╨░╨╜╨╡╨╗╤М ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣, ╤В╨╛ ╨╡╤Б╤В╤М ╨╝╨╛╨╢╨╜╨╛ ╨╗╨╕ ╨║ ╨╜╨╡╨╣ ╤Ж╨╡╨┐╨╗╤П╤В╤М
+   ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О ╨┐╨░╨╜╨╡╨╗╤М }
   function isFilePanel: Boolean;
     begin
     result := (NonFilePanelType = 0) or (Selected <> NonFilePanel);
@@ -832,8 +832,8 @@ procedure TDoubleWindow.HandleCommand;
     CE;
     end;
 
-  { Сдвиг разделителя вправо (D=1) или влево (D=-1). Если
-  нажат Shift - то на целую файловую колонку }
+  { ╨б╨┤╨▓╨╕╨│ ╤А╨░╨╖╨┤╨╡╨╗╨╕╤В╨╡╨╗╤П ╨▓╨┐╤А╨░╨▓╨╛ (D=1) ╨╕╨╗╨╕ ╨▓╨╗╨╡╨▓╨╛ (D=-1). ╨Х╤Б╨╗╨╕
+  ╨╜╨░╨╢╨░╤В Shift - ╤В╨╛ ╨╜╨░ ╤Ж╨╡╨╗╤Г╤О ╤Д╨░╨╣╨╗╨╛╨▓╤Г╤О ╨║╨╛╨╗╨╛╨╜╨║╤Г }
   procedure SeparatorMove(D: Integer);
     var
       X: Integer;
@@ -844,9 +844,9 @@ procedure TDoubleWindow.HandleCommand;
       begin
       if ShiftState and (kbLeftShift+kbRightShift) <> 0 then
         begin
-        { При сдвиге на ширину файловой колонку надо выбрать панель,
-        из которй брать эту самую ширину. Берём активную, если она
-        файловая, или другую, если активная - нефайловая.}
+        { ╨Я╤А╨╕ ╤Б╨┤╨▓╨╕╨│╨╡ ╨╜╨░ ╤И╨╕╤А╨╕╨╜╤Г ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨║╨╛╨╗╨╛╨╜╨║╤Г ╨╜╨░╨┤╨╛ ╨▓╤Л╨▒╤А╨░╤В╤М ╨┐╨░╨╜╨╡╨╗╤М,
+        ╨╕╨╖ ╨║╨╛╤В╨╛╤А╨╣ ╨▒╤А╨░╤В╤М ╤Н╤В╤Г ╤Б╨░╨╝╤Г╤О ╤И╨╕╤А╨╕╨╜╤Г. ╨С╨╡╤А╤С╨╝ ╨░╨║╤В╨╕╨▓╨╜╤Г╤О, ╨╡╤Б╨╗╨╕ ╨╛╨╜╨░
+        ╤Д╨░╨╣╨╗╨╛╨▓╨░╤П, ╨╕╨╗╨╕ ╨┤╤А╤Г╨│╤Г╤О, ╨╡╤Б╨╗╨╕ ╨░╨║╤В╨╕╨▓╨╜╨░╤П - ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨░╤П.}
         N := Selected xor (Panel[Selected].PanelType <> dtPanel);
         D := D*Panel[N].FilePanel^.LineLength;
         end;
@@ -943,7 +943,7 @@ procedure TDoubleWindow.HandleCommand;
           Panel[Selected].FilePanel^.ChDir(PString(Event.InfoPtr)^);
           CE;
           end;
-        cmChangeDrv: {комстрока типа C: или *: }
+        cmChangeDrv: {╨║╨╛╨╝╤Б╤В╤А╨╛╨║╨░ ╤В╨╕╨┐╨░ C: ╨╕╨╗╨╕ *: }
           begin
           Event.What := evCommand;
           Panel[Selected].FilePanel^.HandleEvent(Event);
@@ -978,11 +978,11 @@ procedure TDoubleWindow.HandleCommand;
           begin
           CE;
           if (NonFilePanelType <> 0) and (NonFilePanel = Selected) then
-            begin { работа с нефайловой панелью }
+            begin { ╤А╨░╨▒╨╛╤В╨░ ╤Б ╨╜╨╡╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╤М╤О }
             ToggleViewMaxiState(Panel[Selected].AnyPanel, not Selected);
             end
           else
-            begin { работа с файловой панелью }
+            begin { ╤А╨░╨▒╨╛╤В╨░ ╤Б ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╨┐╨░╨╜╨╡╨╗╤М╤О }
             with ActivePanel^.PanSetup^.Show do
               MiscOptions := MiscOptions xor 1;
             SetMaxiState(ActivePanel);
@@ -994,7 +994,7 @@ procedure TDoubleWindow.HandleCommand;
           K := (55-Length(PString(Event.InfoPtr)^)) div 2;
           for N := pLeft to pRight do
             begin
-            S := '??'; // на случай, если окно не обработает cmGetName
+            S := '??'; // ╨╜╨░ ╤Б╨╗╤Г╤З╨░╨╣, ╨╡╤Б╨╗╨╕ ╨╛╨║╨╜╨╛ ╨╜╨╡ ╨╛╨▒╤А╨░╨▒╨╛╤В╨░╨╡╤В cmGetName
             Message(Panel[N].AnyPanel, evCommand, cmGetName, @S);
             PString(Event.InfoPtr)^:= PString(Event.InfoPtr)^+
               Cut({$IFDEF RecodeWhenDraw}CharToOemStr{$ENDIF}(S),K);
@@ -1003,7 +1003,7 @@ procedure TDoubleWindow.HandleCommand;
             end;
           CE
           end;
-        cmPostHideRight, cmPostHideLeft: {Ctrl-F1/F2 из UserScreen}
+        cmPostHideRight, cmPostHideLeft: {Ctrl-F1/F2 ╨╕╨╖ UserScreen}
           begin
           N := Event.Command = cmPostHideRight;
           if not Visible[N] then
@@ -1015,7 +1015,7 @@ procedure TDoubleWindow.HandleCommand;
             SwitchPanel(not N);
           CE
           end;
-        cmChangeInactive: {в панели поиска Shift-Enter }
+        cmChangeInactive: {╨▓ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░ Shift-Enter }
           begin
           Event.Command := cmFindGotoFile;
           with Panel[not Selected] do

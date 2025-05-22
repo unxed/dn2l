@@ -144,7 +144,7 @@ procedure LongCopy(Fn1: String);
     wl: Byte;
     d, Fn2: String;
     n, x: String;
-    PathBuffer: array[0..255] of Char; {целевой каталог}
+    PathBuffer: array[0..255] of Char; {╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨║╨░╤В╨░╨╗╨╛╨│}
     nhd: NHdr;
     ohd: OHdr absolute nhd;
     PInfo: PWhileView;
@@ -509,7 +509,7 @@ Rep:
     else
       D := PDialog(LoadResource(dlgSplitFile));
 
-    // Строка 1 в диалоге должна быть пустой - туда вставляется имя файла
+    // ╨б╤В╤А╨╛╨║╨░ 1 ╨▓ ╨┤╨╕╨░╨╗╨╛╨│╨╡ ╨┤╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨┐╤Г╤Б╤В╨╛╨╣ - ╤В╤Г╨┤╨░ ╨▓╤Б╤В╨░╨▓╨╗╤П╨╡╤В╤Б╤П ╨╕╨╝╤П ╤Д╨░╨╣╨╗╨░
     R.Assign(0, 1, Length(aa)+Length(aaa), 2);
     P := New(PStaticText, Init(R,
           {$IFDEF RecodeWhenDraw}CharToOemStr {$ENDIF}(aa+aaa)));

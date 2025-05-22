@@ -524,7 +524,7 @@ procedure THelpWindow.HandleEvent;
     begin
     ClearEvent(Event);
     {EndModal(cmClose);}
-    {JO - здесь вылетает когда DN запущен в окне и закрываешь хелп}
+    {JO - ╨╖╨┤╨╡╤Б╤М ╨▓╤Л╨╗╨╡╤В╨░╨╡╤В ╨║╨╛╨│╨┤╨░ DN ╨╖╨░╨┐╤Г╤Й╨╡╨╜ ╨▓ ╨╛╨║╨╜╨╡ ╨╕ ╨╖╨░╨║╤А╤Л╨▓╨░╨╡╤И╤М ╤Е╨╡╨╗╨┐}
     if  (Owner^.State and sfModal <> 0) then
       EndModal(cmClose); {JO}
     {???}

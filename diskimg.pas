@@ -64,7 +64,7 @@ uses
   , Files, Tree, VPUtils
   ;
 
-{Cat: §Æ°†¢®´ ·Ó§† Ì‚® ‚®ØÎ, ¢¨•·‚Æ ‚Æ£Æ, Á‚Æ°Î ØÆ§™´ÓÁ†‚Ï ¨Æ§„´Ï DiskTool}
+{Cat: –¥–æ–±–∞–≤–∏–ª —Å—é–¥–∞ —ç—Ç–∏ —Ç–∏–ø—ã, –≤–º–µ—Å—Ç–æ —Ç–æ–≥–æ, —á—Ç–æ–±—ã –ø–æ–¥–∫–ª—é—á–∞—Ç—å –º–æ–¥—É–ª—å DiskTool}
 type
   PBootRec = ^TBootRec;
   TBootRec = record
@@ -495,7 +495,7 @@ function UnpackImage(const FName, DestDir: String; PInfo: PWhileView)
 procedure RereadGlobal(const OutputDir: String);
   var OD1 :String;
   begin
-  OD1 := '>' + OutputDir; //Ø‡®ß≠†™ Ø•‡•Á®‚Î¢†≠®Ô ØÆ§™†‚†´Æ£Æ¢ ¢ ¢•‚¢®
+  OD1 := '>' + OutputDir; //–ø—Ä–∏–∑–Ω–∞–∫ –ø–µ—Ä–µ—á–∏—Ç—ã–≤–∞–Ω–∏—è –ø–æ–¥–∫–∞—Ç–∞–ª–æ–≥–æ–≤ –≤ –≤–µ—Ç–≤–∏
   GlobalMessage(evCommand, cmPanelReread, @OD1);
   GlobalMessage(evCommand, cmRereadTree, @OutputDir);
   end;

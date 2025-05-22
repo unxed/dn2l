@@ -44,8 +44,8 @@
 //  (including the GNU Public Licence).
 //
 //////////////////////////////////////////////////////////////////////////}
-{JO, AK155: 27.11.2002 - добавили раскрытие архивов в ветвь по Ctrl-H}
-{JO:  1.12.2002 - добавил поиск файлов внутри архива}
+{JO, AK155: 27.11.2002 - ╨┤╨╛╨▒╨░╨▓╨╕╨╗╨╕ ╤А╨░╤Б╨║╤А╤Л╤В╨╕╨╡ ╨░╤А╤Е╨╕╨▓╨╛╨▓ ╨▓ ╨▓╨╡╤В╨▓╤М ╨┐╨╛ Ctrl-H}
+{JO:  1.12.2002 - ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╨╛╨╕╤Б╨║ ╤Д╨░╨╣╨╗╨╛╨▓ ╨▓╨╜╤Г╤В╤А╨╕ ╨░╤А╤Е╨╕╨▓╨░}
 {$I STDEFINE.INC}
 
 unit ArcView;
@@ -61,15 +61,15 @@ uses
 type
   PArcDrive = ^TArcDrive;
   TArcDrive = object(TDrive)
-    {Cat: этот объект вынесен в плагинную модель; изменять крайне осторожно!}
+    {Cat: ╤Н╤В╨╛╤В ╨╛╨▒╤К╨╡╨║╤В ╨▓╤Л╨╜╨╡╤Б╨╡╨╜ ╨▓ ╨┐╨╗╨░╨│╨╕╨╜╨╜╤Г╤О ╨╝╨╛╨┤╨╡╨╗╤М; ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╤А╨░╨╣╨╜╨╡ ╨╛╤Б╤В╨╛╤А╨╛╨╢╨╜╨╛!}
     ArcName: String; {DataCompBoy}
     VArcName: String; {JO}
     AType: PARJArchive;
     Files: PDirStorage;
     KillAfterUse: Boolean;
-    FakeKillAfterUse: Boolean; {временная пустышка}
+    FakeKillAfterUse: Boolean; {╨▓╤А╨╡╨╝╨╡╨╜╨╜╨░╤П ╨┐╤Г╤Б╤В╤Л╤И╨║╨░}
     ArcDate: LongInt;
-    ArcSize: TFileSize; {сохраняются вместе}
+    ArcSize: TFileSize; {╤Б╨╛╤Е╤А╨░╨╜╤П╤О╤В╤Б╤П ╨▓╨╝╨╡╤Б╤В╨╡}
     ForceRescan: Boolean;
     Password: String;
     constructor Init(const AName, VAName: String);
@@ -85,20 +85,20 @@ type
          const FileMask: String;
         var TotalInfo: TSize): PFilesCollection; virtual;
     function Exec(Prg, Cmd: String; Lst: AnsiString; B: Boolean): Boolean;
-    {JO:  выделил список файлов в командной строке или путь к               }
-    {     файлу-списку в отдельный параметр Lst;                            }
-    {     параметр B должен быть False, если используем                     }
-    {     файл-список или разархивируем одиночный файл не прибегая к списку }
-    {     и True, если используем список в командной строке                 }
+    {JO:  ╨▓╤Л╨┤╨╡╨╗╨╕╨╗ ╤Б╨┐╨╕╤Б╨╛╨║ ╤Д╨░╨╣╨╗╨╛╨▓ ╨▓ ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ ╨╕╨╗╨╕ ╨┐╤Г╤В╤М ╨║               }
+    {     ╤Д╨░╨╣╨╗╤Г-╤Б╨┐╨╕╤Б╨║╤Г ╨▓ ╨╛╤В╨┤╨╡╨╗╤М╨╜╤Л╨╣ ╨┐╨░╤А╨░╨╝╨╡╤В╤А Lst;                            }
+    {     ╨┐╨░╤А╨░╨╝╨╡╤В╤А B ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М False, ╨╡╤Б╨╗╨╕ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝                     }
+    {     ╤Д╨░╨╣╨╗-╤Б╨┐╨╕╤Б╨╛╨║ ╨╕╨╗╨╕ ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╤Г╨╡╨╝ ╨╛╨┤╨╕╨╜╨╛╤З╨╜╤Л╨╣ ╤Д╨░╨╣╨╗ ╨╜╨╡ ╨┐╤А╨╕╨▒╨╡╨│╨░╤П ╨║ ╤Б╨┐╨╕╤Б╨║╤Г }
+    {     ╨╕ True, ╨╡╤Б╨╗╨╕ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤Б╨┐╨╕╤Б╨╛╨║ ╨▓ ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡                 }
 
     procedure UseFile(P: PFileRec; Command: Word); virtual;
     {DataCompBoy}
     function MakeListFile(PC: PCollection; UseUnp: Boolean;
          var B: Boolean): AnsiString;
-    {JO:  параметр UseUnp указывает, будем использовать полученный      }
-    {     список файлов для распаковщика (True), или паковщика (False); }
-    {     переменная В возвращает, был ли создан фписок в               }
-    {     командной строке (True) или в файле-списке (False)            }
+    {JO:  ╨┐╨░╤А╨░╨╝╨╡╤В╤А UseUnp ╤Г╨║╨░╨╖╤Л╨▓╨░╨╡╤В, ╨▒╤Г╨┤╨╡╨╝ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨┐╨╛╨╗╤Г╤З╨╡╨╜╨╜╤Л╨╣      }
+    {     ╤Б╨┐╨╕╤Б╨╛╨║ ╤Д╨░╨╣╨╗╨╛╨▓ ╨┤╨╗╤П ╤А╨░╤Б╨┐╨░╨║╨╛╨▓╤Й╨╕╨║╨░ (True), ╨╕╨╗╨╕ ╨┐╨░╨║╨╛╨▓╤Й╨╕╨║╨░ (False); }
+    {     ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П ╨Т ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В, ╨▒╤Л╨╗ ╨╗╨╕ ╤Б╨╛╨╖╨┤╨░╨╜ ╤Д╨┐╨╕╤Б╨╛╨║ ╨▓               }
+    {     ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╡ (True) ╨╕╨╗╨╕ ╨▓ ╤Д╨░╨╣╨╗╨╡-╤Б╨┐╨╕╤Б╨║╨╡ (False)            }
 
     procedure CopyFiles(AFiles: PCollection; Own: PView;
          MoveMode: Boolean); virtual;
@@ -156,9 +156,9 @@ uses
   VpSysLow, Eraser,
   Menus, DNApp, Messages, Dialogs, Gauge, FileCopy, Memory, Startup,
   {$IFDEF ARVID}Arvid, {$ENDIF}xTime, VideoMan, DnExec, FileFind
-  , UserMenu {JO: для скрывания панелей при разархивировании }
-  , archZip {JO: для CentralDirRecPresent}
-  , Events {AK155 для LongWorkBegin - LongWorkEnd}
+  , UserMenu {JO: ╨┤╨╗╤П ╤Б╨║╤А╤Л╨▓╨░╨╜╨╕╤П ╨┐╨░╨╜╨╡╨╗╨╡╨╣ ╨┐╤А╨╕ ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╨╕ }
+  , archZip {JO: ╨┤╨╗╤П CentralDirRecPresent}
+  , Events {AK155 ╨┤╨╗╤П LongWorkBegin - LongWorkEnd}
   , PDSetup, FlPanelX, fnotify, Drivers
   , Lfnvp, Files, Tree, Dos, Histries, HistList, FlPanel
   , Advance, Advance1, Advance2, ArchDet
@@ -330,7 +330,7 @@ constructor TArcDrive.Load;
   {S.Read(VArcName[0],1); S.Read(VArcName[1],Length(VArcName));}
   {/Cat}
   S.Read(FakeKillAfterUse, 1);
-  {временно}
+  {╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛}
   KillAfterUse := False;
   S.ReadStrV(Password);
   {S.Read(Password[0],1); S.Read(Password[1],Length(Password));}
@@ -340,15 +340,15 @@ constructor TArcDrive.Load;
   ArcFileName := ArcName;
   VArcFileName := VArcName;
   Files := PDirStorage(S.Get);
-    { AK155 Данные о файлах надо прочитать из потока независио
-    от того, будет ли найден сам архив и надо ли его перечитывать,
-    иначе собьётся дальнейшее чтение потока }
+    { AK155 ╨Ф╨░╨╜╨╜╤Л╨╡ ╨╛ ╤Д╨░╨╣╨╗╨░╤Е ╨╜╨░╨┤╨╛ ╨┐╤А╨╛╤З╨╕╤В╨░╤В╤М ╨╕╨╖ ╨┐╨╛╤В╨╛╨║╨░ ╨╜╨╡╨╖╨░╨▓╨╕╤Б╨╕╨╛
+    ╨╛╤В ╤В╨╛╨│╨╛, ╨▒╤Г╨┤╨╡╤В ╨╗╨╕ ╨╜╨░╨╣╨┤╨╡╨╜ ╤Б╨░╨╝ ╨░╤А╤Е╨╕╨▓ ╨╕ ╨╜╨░╨┤╨╛ ╨╗╨╕ ╨╡╨│╨╛ ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╤В╤М,
+    ╨╕╨╜╨░╤З╨╡ ╤Б╨╛╨▒╤М╤С╤В╤Б╤П ╨┤╨░╨╗╤М╨╜╨╡╨╣╤И╨╡╨╡ ╤З╤В╨╡╨╜╨╕╨╡ ╨┐╨╛╤В╨╛╨║╨░ }
   lFindFirst(ArcName, AnyFileDir, SR); {JO}
   lFindClose(SR);
   if DosError <> 0 then
     goto Failure;
   if  (ArcDate <> SR.SR.Time) or (ArcSize <> SR.SR.Size) then
-    begin {архив изменился, надо его перечитывать заново}
+    begin {╨░╤А╤Е╨╕╨▓ ╨╕╨╖╨╝╨╡╨╜╨╕╨╗╤Б╤П, ╨╜╨░╨┤╨╛ ╨╡╨│╨╛ ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╤В╤М ╨╖╨░╨╜╨╛╨▓╨╛}
     CurDir := '/'; // slash change by unxed
     ReadArchive;
     end
@@ -422,8 +422,8 @@ function TArcDrive.ReadArchive;
     T: TEventTimer;
     SR: lSearchRec;
   begin
-  {AK155 26-11-2002 Перечитываем архив тогда и только тогда, когда
- у него изменилась дата/время или длина }
+  {AK155 26-11-2002 ╨Я╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨░╤А╤Е╨╕╨▓ ╤В╨╛╨│╨┤╨░ ╨╕ ╤В╨╛╨╗╤М╨║╨╛ ╤В╨╛╨│╨┤╨░, ╨║╨╛╨│╨┤╨░
+ ╤Г ╨╜╨╡╨│╨╛ ╨╕╨╖╨╝╨╡╨╜╨╕╨╗╨░╤Б╤М ╨┤╨░╤В╨░/╨▓╤А╨╡╨╝╤П ╨╕╨╗╨╕ ╨┤╨╗╨╕╨╜╨░ }
   lFindFirst(ArcName, AnyFileDir, SR);
   lFindClose(SR);
   if  (ArcDate = SR.SR.Time) and (ArcSize = SR.SR.Size) then
@@ -634,9 +634,9 @@ function TArcDrive.GetDirectory;
        or (FileMask = '*');
   FD^.SortMode := psmLongName; {<sort141.001>}
   Files^.ResetPointer('');
-  {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
-  {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
-  {    доступный изначально объём                                              }
+  {JO: ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╛╨┤╨╕╨╜ p╨░╨╖ ╨╛╨┐p╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╛╨▒╤К╤С╨╝ ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕, ╨░ ╨╖╨░╤В╨╡╨╝ ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░}
+  {    ╨┐╨╛╨┤╤Б╤З╤В╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╜╨░╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Вp╨╡╨▒╨╛╨▓╨░╨╜╨╕╤П ╨┐╨░╨╝╤П╤В╨╕ p╨░╤Б╤В╤Г╤В ╨╕ ╨╜╨╡ ╨┐p╨╡╨▓╤Л╤Б╨╕╨╗╨╕ ╨╗╨╕ ╨╛╨╜╨╕  }
+  {    ╨┤╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╣ ╨╕╨╖╨╜╨░╤З╨░╨╗╤М╨╜╨╛ ╨╛╨▒╤К╤С╨╝                                              }
   MemReq := LowMemSize;
   MAvail := MaxAvail;
   while not Files^.Last and Files^.GetNextFile and (MAvail > MemReq) do
@@ -840,9 +840,9 @@ TryAgain:
         Unp := Copy(Unp, 1, PosChar(';', Unp)-1);
       end;
     { Flash 21-01-2004
-          Директорию нужно запоминать на том диске, где находится
-          временный каталог. А на том, где лежит архив
-          с просматриваемым файлом, она запомнится в любом случае. }
+          ╨Ф╨╕╤А╨╡╨║╤В╨╛╤А╨╕╤О ╨╜╤Г╨╢╨╜╨╛ ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╤В╤М ╨╜╨░ ╤В╨╛╨╝ ╨┤╨╕╤Б╨║╨╡, ╨│╨┤╨╡ ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П
+          ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│. ╨Р ╨╜╨░ ╤В╨╛╨╝, ╨│╨┤╨╡ ╨╗╨╡╨╢╨╕╤В ╨░╤А╤Е╨╕╨▓
+          ╤Б ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╨╝╤Л╨╝ ╤Д╨░╨╣╨╗╨╛╨╝, ╨╛╨╜╨░ ╨╖╨░╨┐╨╛╨╝╨╜╨╕╤В╤Б╤П ╨▓ ╨╗╤О╨▒╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡. }
     LFNvp.lChDir(Copy(TempDir, 1, 2));
     lGetDir(0, DirToChange);
     LFNvp.lChDir(TempDir);
@@ -892,12 +892,12 @@ function TArcDrive.Exec;
     Msg(dlArcMsg8, @L, mfOKButton or mfError);
     end;
 
-  {AK155 20/12/2001 Если под Win32 пытаться в отладчике прошагать
-эту функцию, то получается полная блокировка клавиатуры и мыши
-сразу на входе (даже с begin сойти не получается).
-Этот эффект исчезает, если параметр AnsiString заменить на String.
-Под OS/2 все шагается без проблем. Интересно, чей это глюк -
-виндового отладчика или виндовой RTL? Хорошо, если первое. }
+  {AK155 20/12/2001 ╨Х╤Б╨╗╨╕ ╨┐╨╛╨┤ Win32 ╨┐╤Л╤В╨░╤В╤М╤Б╤П ╨▓ ╨╛╤В╨╗╨░╨┤╤З╨╕╨║╨╡ ╨┐╤А╨╛╤И╨░╨│╨░╤В╤М
+╤Н╤В╤Г ╤Д╤Г╨╜╨║╤Ж╨╕╤О, ╤В╨╛ ╨┐╨╛╨╗╤Г╤З╨░╨╡╤В╤Б╤П ╨┐╨╛╨╗╨╜╨░╤П ╨▒╨╗╨╛╨║╨╕╤А╨╛╨▓╨║╨░ ╨║╨╗╨░╨▓╨╕╨░╤В╤Г╤А╤Л ╨╕ ╨╝╤Л╤И╨╕
+╤Б╤А╨░╨╖╤Г ╨╜╨░ ╨▓╤Е╨╛╨┤╨╡ (╨┤╨░╨╢╨╡ ╤Б begin ╤Б╨╛╨╣╤В╨╕ ╨╜╨╡ ╨┐╨╛╨╗╤Г╤З╨░╨╡╤В╤Б╤П).
+╨н╤В╨╛╤В ╤Н╤Д╤Д╨╡╨║╤В ╨╕╤Б╤З╨╡╨╖╨░╨╡╤В, ╨╡╤Б╨╗╨╕ ╨┐╨░╤А╨░╨╝╨╡╤В╤А AnsiString ╨╖╨░╨╝╨╡╨╜╨╕╤В╤М ╨╜╨░ String.
+╨Я╨╛╨┤ OS/2 ╨▓╤Б╨╡ ╤И╨░╨│╨░╨╡╤В╤Б╤П ╨▒╨╡╨╖ ╨┐╤А╨╛╨▒╨╗╨╡╨╝. ╨Ш╨╜╤В╨╡╤А╨╡╤Б╨╜╨╛, ╤З╨╡╨╣ ╤Н╤В╨╛ ╨│╨╗╤О╨║ -
+╨▓╨╕╨╜╨┤╨╛╨▓╨╛╨│╨╛ ╨╛╤В╨╗╨░╨┤╤З╨╕╨║╨░ ╨╕╨╗╨╕ ╨▓╨╕╨╜╨┤╨╛╨▓╨╛╨╣ RTL? ╨е╨╛╤А╨╛╤И╨╛, ╨╡╤Б╨╗╨╕ ╨┐╨╡╤А╨▓╨╛╨╡. }
   begin { TArcDrive.Exec }
   Exec := True;
   S := Prg+' '+Cmd;
@@ -909,7 +909,7 @@ function TArcDrive.Exec;
       CmdLineLim := 120;
       ListLineLim := CmdLineLim-Length(Prg+Cmd)-7;
       CmdLineOK := False;
-      SS1 := Lst; {для перестраховки}
+      SS1 := Lst; {╨┤╨╗╤П ╨┐╨╡╤А╨╡╤Б╤В╤А╨░╤Е╨╛╨▓╨║╨╕}
       I1 := 1;
       repeat
         ClrIO;
@@ -944,7 +944,7 @@ function TArcDrive.Exec;
           end;
         for J := 1 to Length(SS1) do
           if SS1[J] = #$14 then
-            SS1[J] := #$20; {JO: заменяем временный символ на пробелы}
+            SS1[J] := #$20; {JO: ╨╖╨░╨╝╨╡╨╜╤П╨╡╨╝ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨╜╨░ ╨┐╤А╨╛╨▒╨╡╨╗╤Л}
         Writeln(T.T, '@'+S+' '+SS1);
       until CmdLineOK;
       Write(T.T, '@del '+EX);
@@ -967,21 +967,21 @@ function TArcDrive.Exec;
   DoneVideo;
   DoneDOSMem;
   DoneMemory;
-  {AK155 Под OS/2, во-первых, PATH обычно не умещается
-    в 255 символов, во-вторых, нет проблем с памятью,
-    в третьих архиватор может оказаться ДОСовым.
-    Так что пускай PATH просматривает cmd.exe, а мы не
-    будем заниматься самодеятельностью }
-  {AK155, дописано позже, чем комментарий к OS/2.
-    Под Win32 тоже не следует заниматься самодеятельностью.
-    Во-первых, мы отдаем консоль в каком-то не таком состоянии,
-    так что консольный rar не может вводить с клавиатуры.
-    Во-вторых, стОило ли работать с ansistring, чтобы потом вызвать
+  {AK155 ╨Я╨╛╨┤ OS/2, ╨▓╨╛-╨┐╨╡╤А╨▓╤Л╤Е, PATH ╨╛╨▒╤Л╤З╨╜╨╛ ╨╜╨╡ ╤Г╨╝╨╡╤Й╨░╨╡╤В╤Б╤П
+    ╨▓ 255 ╤Б╨╕╨╝╨▓╨╛╨╗╨╛╨▓, ╨▓╨╛-╨▓╤В╨╛╤А╤Л╤Е, ╨╜╨╡╤В ╨┐╤А╨╛╨▒╨╗╨╡╨╝ ╤Б ╨┐╨░╨╝╤П╤В╤М╤О,
+    ╨▓ ╤В╤А╨╡╤В╤М╨╕╤Е ╨░╤А╤Е╨╕╨▓╨░╤В╨╛╤А ╨╝╨╛╨╢╨╡╤В ╨╛╨║╨░╨╖╨░╤В╤М╤Б╤П ╨Ф╨Ю╨б╨╛╨▓╤Л╨╝.
+    ╨в╨░╨║ ╤З╤В╨╛ ╨┐╤Г╤Б╨║╨░╨╣ PATH ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╤В cmd.exe, ╨░ ╨╝╤Л ╨╜╨╡
+    ╨▒╤Г╨┤╨╡╨╝ ╨╖╨░╨╜╨╕╨╝╨░╤В╤М╤Б╤П ╤Б╨░╨╝╨╛╨┤╨╡╤П╤В╨╡╨╗╤М╨╜╨╛╤Б╤В╤М╤О }
+  {AK155, ╨┤╨╛╨┐╨╕╤Б╨░╨╜╨╛ ╨┐╨╛╨╖╨╢╨╡, ╤З╨╡╨╝ ╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╣ ╨║ OS/2.
+    ╨Я╨╛╨┤ Win32 ╤В╨╛╨╢╨╡ ╨╜╨╡ ╤Б╨╗╨╡╨┤╤Г╨╡╤В ╨╖╨░╨╜╨╕╨╝╨░╤В╤М╤Б╤П ╤Б╨░╨╝╨╛╨┤╨╡╤П╤В╨╡╨╗╤М╨╜╨╛╤Б╤В╤М╤О.
+    ╨Т╨╛-╨┐╨╡╤А╨▓╤Л╤Е, ╨╝╤Л ╨╛╤В╨┤╨░╨╡╨╝ ╨║╨╛╨╜╤Б╨╛╨╗╤М ╨▓ ╨║╨░╨║╨╛╨╝-╤В╨╛ ╨╜╨╡ ╤В╨░╨║╨╛╨╝ ╤Б╨╛╤Б╤В╨╛╤П╨╜╨╕╨╕,
+    ╤В╨░╨║ ╤З╤В╨╛ ╨║╨╛╨╜╤Б╨╛╨╗╤М╨╜╤Л╨╣ rar ╨╜╨╡ ╨╝╨╛╨╢╨╡╤В ╨▓╨▓╨╛╨┤╨╕╤В╤М ╤Б ╨║╨╗╨░╨▓╨╕╨░╤В╤Г╤А╤Л.
+    ╨Т╨╛-╨▓╤В╨╛╤А╤Л╤Е, ╤Б╤В╨Ю╨╕╨╗╨╛ ╨╗╨╕ ╤А╨░╨▒╨╛╤В╨░╤В╤М ╤Б ansistring, ╤З╤В╨╛╨▒╤Л ╨┐╨╛╤В╨╛╨╝ ╨▓╤Л╨╖╨▓╨░╤В╤М
     Dos.Exec?}
   if B then
     begin
-    {JO: разбираем ту часть командной строки, которая содержит список файлов    }
-    {    на куски удобоваримой для командного процессора длины                  }
+    {JO: ╤А╨░╨╖╨▒╨╕╤А╨░╨╡╨╝ ╤В╤Г ╤З╨░╤Б╤В╤М ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨╣ ╤Б╤В╤А╨╛╨║╨╕, ╨║╨╛╤В╨╛╤А╨░╤П ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╤Б╨┐╨╕╤Б╨╛╨║ ╤Д╨░╨╣╨╗╨╛╨▓    }
+    {    ╨╜╨░ ╨║╤Г╤Б╨║╨╕ ╤Г╨┤╨╛╨▒╨╛╨▓╨░╤А╨╕╨╝╨╛╨╣ ╨┤╨╗╤П ╨║╨╛╨╝╨░╨╜╨┤╨╜╨╛╨│╨╛ ╨┐╤А╨╛╤Ж╨╡╤Б╤Б╨╛╤А╨░ ╨┤╨╗╨╕╨╜╤Л                  }
     {$IFNDEF DPMI32}
     if AType^.ShortCmdLine then
       CmdLineLim := {$IFDEF OS2}95 {$ELSE}127 {$ENDIF}
@@ -992,7 +992,7 @@ function TArcDrive.Exec;
     {$ENDIF}
     ListLineLim := CmdLineLim-Length(Prg+Cmd)-7;
     CmdLineOK := False;
-    SS1 := Lst; {для перестраховки}
+    SS1 := Lst; {╨┤╨╗╤П ╨┐╨╡╤А╨╡╤Б╤В╤А╨░╤Е╨╛╨▓╨║╨╕}
     repeat
       if Length(Lst) >= ListLineLim then
         begin
@@ -1011,12 +1011,12 @@ function TArcDrive.Exec;
         end;
       for J := 1 to Length(SS1) do
         if SS1[J] = #$14 then
-          SS1[J] := #$20; {JO: заменяем временный символ на пробелы}
+          SS1[J] := #$20; {JO: ╨╖╨░╨╝╨╡╨╜╤П╨╡╨╝ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨╜╨░ ╨┐╤А╨╛╨▒╨╡╨╗╤Л}
       // DelDoubles('  ', S);{files can have 2 spaces in names}
       // AnsiDelDoubles('  ', SS1);
-      {JO: AnsiExec - процедура из модуля DNExec , которая }
-      {    используется вместо DOS.Exec и в качестве       }
-      {    коммандлайна использует строку типа Ansistring  }
+      {JO: AnsiExec - ╨┐╤А╨╛╤Ж╨╡╨┤╤Г╤А╨░ ╨╕╨╖ ╨╝╨╛╨┤╤Г╨╗╤П DNExec , ╨║╨╛╤В╨╛╤А╨░╤П }
+      {    ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨▓╨╝╨╡╤Б╤В╨╛ DOS.Exec ╨╕ ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡       }
+      {    ╨║╨╛╨╝╨╝╨░╨╜╨┤╨╗╨░╨╣╨╜╨░ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В ╤Б╤В╤А╨╛╨║╤Г ╤В╨╕╨┐╨░ Ansistring  }
       SwapVectors;
       AnsiExec(GetEnv('COMSPEC'), '/c '+S+' '+SS1+' ');
       DE := DosError;
@@ -1048,8 +1048,8 @@ function TArcDrive.Exec;
     else {case}
       StdMsg8;
   end {case};
-  // JO: закомментарил, т.к. теперь после разархивирования идёт копирование
-  //     через временный каталог и после его удаления панель перечитывается
+  // JO: ╨╖╨░╨║╨╛╨╝╨╝╨╡╨╜╤В╨░╤А╨╕╨╗, ╤В.╨║. ╤В╨╡╨┐╨╡╤А╤М ╨┐╨╛╤Б╨╗╨╡ ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╨╕╨┤╤С╤В ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡
+  //     ╤З╨╡╤А╨╡╨╖ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ ╨╕ ╨┐╨╛╤Б╨╗╨╡ ╨╡╨│╨╛ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╤П ╨┐╨░╨╜╨╡╨╗╤М ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╡╤В╤Б╤П
   { GlobalMessage(evCommand, cmPanelReread, nil);
   GlobalMessage(evCommand, cmRereadInfo, nil);}
   {$IFDEF DPMI32}
@@ -1120,7 +1120,7 @@ function TArcDrive.MakeListFile;
       Result := '';
       Exit;
       end;
-    S[2] := ';'; {JO: реально не важно на что меняем, лишь бы не ':'}
+    S[2] := ';'; {JO: ╤А╨╡╨░╨╗╤М╨╜╨╛ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛ ╨╜╨░ ╤З╤В╨╛ ╨╝╨╡╨╜╤П╨╡╨╝, ╨╗╨╕╤И╤М ╨▒╤Л ╨╜╨╡ ':'}
     Result := Copy(S, PosChar(':', S)+1, MaxStringLength);
     end;
 
@@ -1144,14 +1144,14 @@ function TArcDrive.MakeListFile;
                or (Copy(S1, Length(S1)-2, 3) = '/..')
         then
           SetLength(S1, Length(S1)- {2}3); {JO}
-        {JO: нужен ли слэш в конце каталогов - вопрос спорный,          }
-        {    но похоже его отсутствие нигде не мешает, а наличие        }
-        {    вводит RAR в заблуждение, если не использовать файл-список;}
-        {    в дальейшем не исключено, что для каких-то архиваторов     }
-        {    потребуется сделать соотв. опцию;                          }
-        {    zip работает нормально и с тем, и с другим                 }
+        {JO: ╨╜╤Г╨╢╨╡╨╜ ╨╗╨╕ ╤Б╨╗╤Н╤И ╨▓ ╨║╨╛╨╜╤Ж╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓ - ╨▓╨╛╨┐╤А╨╛╤Б ╤Б╨┐╨╛╤А╨╜╤Л╨╣,          }
+        {    ╨╜╨╛ ╨┐╨╛╤Е╨╛╨╢╨╡ ╨╡╨│╨╛ ╨╛╤В╤Б╤Г╤В╤Б╤В╨▓╨╕╨╡ ╨╜╨╕╨│╨┤╨╡ ╨╜╨╡ ╨╝╨╡╤И╨░╨╡╤В, ╨░ ╨╜╨░╨╗╨╕╤З╨╕╨╡        }
+        {    ╨▓╨▓╨╛╨┤╨╕╤В RAR ╨▓ ╨╖╨░╨▒╨╗╤Г╨╢╨┤╨╡╨╜╨╕╨╡, ╨╡╤Б╨╗╨╕ ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╤Д╨░╨╣╨╗-╤Б╨┐╨╕╤Б╨╛╨║;}
+        {    ╨▓ ╨┤╨░╨╗╤М╨╡╨╣╤И╨╡╨╝ ╨╜╨╡ ╨╕╤Б╨║╨╗╤О╤З╨╡╨╜╨╛, ╤З╤В╨╛ ╨┤╨╗╤П ╨║╨░╨║╨╕╤Е-╤В╨╛ ╨░╤А╤Е╨╕╨▓╨░╤В╨╛╤А╨╛╨▓     }
+        {    ╨┐╨╛╤В╤А╨╡╨▒╤Г╨╡╤В╤Б╤П ╤Б╨┤╨╡╨╗╨░╤В╤М ╤Б╨╛╨╛╤В╨▓. ╨╛╨┐╤Ж╨╕╤О;                          }
+        {    zip ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨╜╨╛╤А╨╝╨░╨╗╤М╨╜╨╛ ╨╕ ╤Б ╤В╨╡╨╝, ╨╕ ╤Б ╨┤╤А╤Г╨│╨╕╨╝                 }
 
-        {JO:  используем символ #$14 для временного разделения имён файлов}
+        {JO:  ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤Б╨╕╨╝╨▓╨╛╨╗ #$14 ╨┤╨╗╤П ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╤А╨░╨╖╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨╕╨╝╤С╨╜ ╤Д╨░╨╣╨╗╨╛╨▓}
         if B then
           S := S+#$14+SquashesName(S1)
         else
@@ -1188,7 +1188,7 @@ function TArcDrive.MakeListFile;
   for I := 0 to PC^.Count-1 do
     begin
     PF := PC^.At(I);
-    {JO: проверка для разархивирования из панели поиска в архивах}
+    {JO: ╨┐╤А╨╛╨▓╨╡╤А╨║╨░ ╨┤╨╗╤П ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╨╕╨╖ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░ ╨▓ ╨░╤А╤Е╨╕╨▓╨░╤Е}
     if PathFoundInArc(PF^.Owner^) then
       S1 := MakeNormName(GetArcOwn(PF^.Owner^), PF^.FlName[True])
     else
@@ -1196,7 +1196,7 @@ function TArcDrive.MakeListFile;
     if S1[1] in ['\', '/'] then
       Delete(S1, 1, 1); {DelFC(S1);}
 
-    {JO:  используем символ #$14 для временного разделения имён файлов}
+    {JO:  ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ ╤Б╨╕╨╝╨▓╨╛╨╗ #$14 ╨┤╨╗╤П ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╤А╨░╨╖╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨╕╨╝╤С╨╜ ╤Д╨░╨╣╨╗╨╛╨▓}
     if PF^.Attr and Directory = 0
     then
       if B then
@@ -1259,7 +1259,7 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
     if AType^.UseLFN then
       {$ENDIF}
       lFSplit(VArcName, ExtrDir, Nm, Xt)
-      {JO: для распаковки по F4 архивов, просмотренных через фильтр}
+      {JO: ╨┤╨╗╤П ╤А╨░╤Б╨┐╨░╨║╨╛╨▓╨║╨╕ ╨┐╨╛ F4 ╨░╤А╤Е╨╕╨▓╨╛╨▓, ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╨╡╨╜╨╜╤Л╤Е ╤З╨╡╤А╨╡╨╖ ╤Д╨╕╨╗╤М╤В╤А}
       {$IFNDEF OS2}
     {
     else
@@ -1289,14 +1289,14 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
       end;
     end;
 
-//JO: если извлекаем без сохpанения путей, то файлы внутpи вpеменного
-//    подкаталога оказываются без сохpанения стpуктуpы каталогов, котоpая
-//    была внутpи аpхива
+//JO: ╨╡╤Б╨╗╨╕ ╨╕╨╖╨▓╨╗╨╡╨║╨░╨╡╨╝ ╨▒╨╡╨╖ ╤Б╨╛╤Еp╨░╨╜╨╡╨╜╨╕╤П ╨┐╤Г╤В╨╡╨╣, ╤В╨╛ ╤Д╨░╨╣╨╗╤Л ╨▓╨╜╤Г╤Вp╨╕ ╨▓p╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛
+//    ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨╛╨║╨░╨╖╤Л╨▓╨░╤О╤В╤Б╤П ╨▒╨╡╨╖ ╤Б╨╛╤Еp╨░╨╜╨╡╨╜╨╕╤П ╤Б╤Вp╤Г╨║╤В╤Гp╤Л ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓, ╨║╨╛╤В╨╛p╨░╤П
+//    ╨▒╤Л╨╗╨░ ╨▓╨╜╤Г╤Вp╨╕ ╨░p╤Е╨╕╨▓╨░
   if (Options and 1) = 0 then
     SCurDir := '';
 
   {JO}
-  // проверяем, содержит ли каталог назначения файлы
+  // ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╨╝, ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В ╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╤Д╨░╨╣╨╗╤Л
   DosError := 0;
   lFindFirst(MakeNormName(ExtrDir, x_x), AnyFileDir, SR); {JO}
   if IsDummyDir(SR.FullName) then
@@ -1304,8 +1304,8 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
   if IsDummyDir(SR.FullName) then
     lFindNext(SR);
   lFindClose(SR);
-  // для разархивирования на дискеты и тестирования не используем
-  // временный подкаталог
+  // ╨┤╨╗╤П ╤А╨░╨╖╨░╤А╤Е╨╕╨▓╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╨╜╨░ ╨┤╨╕╤Б╨║╨╡╤В╤Л ╨╕ ╤В╨╡╤Б╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╨╜╨╡ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝
+  // ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│
   if  ( (Options and 8) = 0) or ((Options and 2) <> 0) or
       ( (DosError <> 0) and (SCurDir = ''))
   then
@@ -1315,7 +1315,7 @@ procedure TArcDrive.ExtractFiles(AFiles: PCollection; ExtrDir: String;
     end
   else
     begin
-    { даём имя временному подкаталогу в каталоге назначения}
+    { ╨┤╨░╤С╨╝ ╨╕╨╝╤П ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨╝╤Г ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╤Г ╨▓ ╨║╨░╤В╨░╨╗╨╛╨│╨╡ ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╤П}
     DNN := DNNumber;
     while True do
       begin
@@ -1348,7 +1348,7 @@ TryAgain:
       {$ENDIF}
       if ExecResource(dlgSetPassword, Password) <> cmOK then
         Exit;
-    { Flash >>> } {JO: взял код Flash из Arcview.TArcDrive.UseFile }
+    { Flash >>> } {JO: ╨▓╨╖╤П╨╗ ╨║╨╛╨┤ Flash ╨╕╨╖ Arcview.TArcDrive.UseFile }
     if CheckForSpaces(Password) then
       S := ' '+CnvString(AType^.Garble)+Password+' '
     else
@@ -1383,7 +1383,7 @@ TryAgain:
       (CnvString(AType^.ForceMode) <> '')
   then
     S := S+CnvString(AType^.ForceMode)+' ';
-  S := S+SCr; {установка пути внутpи аpхива}
+  S := S+SCr; {╤Г╤Б╤В╨░╨╜╨╛╨▓╨║╨░ ╨┐╤Г╤В╨╕ ╨▓╨╜╤Г╤Вp╨╕ ╨░p╤Е╨╕╨▓╨░}
   S := ExtrChar+' '+S+ArchiveName;
   Unp := CnvString(AType^.UnPacker);
   if  (AType^.GetID = arcRAR) and (PosChar(';', Unp) > 0) then
@@ -1395,14 +1395,14 @@ TryAgain:
     end;
   Inhr := CreateDirInheritance(ExtrDir, True);
   CreateDirInheritance(TempExtrDir, False);
-  //JO: если каталог назначения не создался (напpимеp, если диск доступен
-  //    только на чтение), то нет смысла и вызывать аpхиватоp
+  //JO: ╨╡╤Б╨╗╨╕ ╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╨╜╨╡ ╤Б╨╛╨╖╨┤╨░╨╗╤Б╤П (╨╜╨░╨┐p╨╕╨╝╨╡p, ╨╡╤Б╨╗╨╕ ╨┤╨╕╤Б╨║ ╨┤╨╛╤Б╤В╤Г╨┐╨╡╨╜
+  //    ╤В╨╛╨╗╤М╨║╨╛ ╨╜╨░ ╤З╤В╨╡╨╜╨╕╨╡), ╤В╨╛ ╨╜╨╡╤В ╤Б╨╝╤Л╤Б╨╗╨░ ╨╕ ╨▓╤Л╨╖╤Л╨▓╨░╤В╤М ╨░p╤Е╨╕╨▓╨░╤В╨╛p
   if not PathExist(TempExtrDir) then
     Exit;
   { Flash 21-01-2004
-    Директорию нужно запоминать на том диске, где находится
-    временный каталог. А на том, где лежит архив
-    с просматриваемым файлом, она запомнится в любом случае. }
+    ╨Ф╨╕╤А╨╡╨║╤В╨╛╤А╨╕╤О ╨╜╤Г╨╢╨╜╨╛ ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╤В╤М ╨╜╨░ ╤В╨╛╨╝ ╨┤╨╕╤Б╨║╨╡, ╨│╨┤╨╡ ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П
+    ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│. ╨Р ╨╜╨░ ╤В╨╛╨╝, ╨│╨┤╨╡ ╨╗╨╡╨╢╨╕╤В ╨░╤А╤Е╨╕╨▓
+    ╤Б ╨┐╤А╨╛╤Б╨╝╨░╤В╤А╨╕╨▓╨░╨╡╨╝╤Л╨╝ ╤Д╨░╨╣╨╗╨╛╨╝, ╨╛╨╜╨░ ╨╖╨░╨┐╨╛╨╝╨╜╨╕╤В╤Б╤П ╨▓ ╨╗╤О╨▒╨╛╨╝ ╤Б╨╗╤Г╤З╨░╨╡. }
   LFNvp.lChDir(Copy(TempExtrDir,1,2));
   lGetDir(0, DirToChange);
   LFNvp.lChDir(TempExtrDir);
@@ -1420,20 +1420,20 @@ TryAgain:
     begin
     LFNvp.lChDir(DirToChange);
     DirToChange := '';
-    ExtrDir := '>' + ExtrDir; //признак перечитывания подкаталогов в ветви
+    ExtrDir := '>' + ExtrDir; //╨┐╤А╨╕╨╖╨╜╨░╨║ ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╤П ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓ ╨▓ ╨▓╨╡╤В╨▓╨╕
     GlobalMessage(evCommand, cmPanelReread, @ExtrDir);
     GlobalMessage(evCommand, cmRereadInfo, nil);
     Exit;
     end
   else
     begin
-    { перекидываем файлы из временного подкаталога в каталог назначения}
+    { ╨┐╨╡╤А╨╡╨║╨╕╨┤╤Л╨▓╨░╨╡╨╝ ╤Д╨░╨╣╨╗╤Л ╨╕╨╖ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨░ ╨▓ ╨║╨░╤В╨░╨╗╨╛╨│ ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╤П}
     PV := New(PUserWindow, Init);
     Desktop^.Insert(PV);
     CopyDirContent(TempExtrDir+SCurDir, ExtrDir, True,
        (Options and 4 <> 0));
     PV^.Free;
-    { удаляем временный каталог со всем, что в нём осталось}
+    { ╤Г╨┤╨░╨╗╤П╨╡╨╝ ╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨║╨░╤В╨░╨╗╨╛╨│ ╤Б╨╛ ╨▓╤Б╨╡╨╝, ╤З╤В╨╛ ╨▓ ╨╜╤С╨╝ ╨╛╤Б╤В╨░╨╗╨╛╤Б╤М}
     SetLength(TempExtrDir, Length(TempExtrDir)-1);
     S := GetPath(TempExtrDir);
     FRT := NewFileRec(GetName(TempExtrDir),
@@ -1455,7 +1455,7 @@ TryAgain:
     Dispose(FCT, Done);
     if Inhr > 0 then
       begin
-      ExtrDir := '>' + ExtrDir; //признак перечитывания подкаталогов в ветви
+      ExtrDir := '>' + ExtrDir; //╨┐╤А╨╕╨╖╨╜╨░╨║ ╨┐╨╡╤А╨╡╤З╨╕╤В╤Л╨▓╨░╨╜╨╕╤П ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓ ╨▓ ╨▓╨╡╤В╨▓╨╕
       GlobalMessage(evCommand, cmPanelReread, @ExtrDir);
       GlobalMessage(evCommand, cmRereadInfo, nil);
       end;
@@ -1497,14 +1497,14 @@ procedure TArcDrive.CopyFiles;
     Exit;
     end;
   {JO}
-  // пpовеpяем, находится ли диск в списке дисков, на котоpые надо
-  // pазаpхивиpовать не чеpез вpеменный подкаталог (по умолчанию A: и B:)
+  // ╨┐p╨╛╨▓╨╡p╤П╨╡╨╝, ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П ╨╗╨╕ ╨┤╨╕╤Б╨║ ╨▓ ╤Б╨┐╨╕╤Б╨║╨╡ ╨┤╨╕╤Б╨║╨╛╨▓, ╨╜╨░ ╨║╨╛╤В╨╛p╤Л╨╡ ╨╜╨░╨┤╨╛
+  // p╨░╨╖╨░p╤Е╨╕╨▓╨╕p╨╛╨▓╨░╤В╤М ╨╜╨╡ ╤З╨╡p╨╡╨╖ ╨▓p╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│ (╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О A: ╨╕ B:)
   if  (DT.S <> '') and (Length(DT.S) >= 2) then
     begin
     if DT.S[2] = ':' then
       DDr := UpCase(DT.S[1])
     else
-      DDr := #1; {любой символ не входящий в 'A'..'Z'}
+      DDr := #1; {╨╗╤О╨▒╨╛╨╣ ╤Б╨╕╨╝╨▓╨╛╨╗ ╨╜╨╡ ╨▓╤Е╨╛╨┤╤П╤Й╨╕╨╣ ╨▓ 'A'..'Z'}
     end
   else
     begin
@@ -1656,8 +1656,8 @@ procedure TArcDrive.HandleCommand;
       CDir: String;
       Opts: Byte;
     begin
-    // JO: пpовеpяем, находится ли диск в списке дисков, на котоpые надо
-    //     pазаpхивиpовать не чеpез вpеменный подкаталог (по умолчанию A: и B:)
+    // JO: ╨┐p╨╛╨▓╨╡p╤П╨╡╨╝, ╨╜╨░╤Е╨╛╨┤╨╕╤В╤Б╤П ╨╗╨╕ ╨┤╨╕╤Б╨║ ╨▓ ╤Б╨┐╨╕╤Б╨║╨╡ ╨┤╨╕╤Б╨║╨╛╨▓, ╨╜╨░ ╨║╨╛╤В╨╛p╤Л╨╡ ╨╜╨░╨┤╨╛
+    //     p╨░╨╖╨░p╤Е╨╕╨▓╨╕p╨╛╨▓╨░╤В╤М ╨╜╨╡ ╤З╨╡p╨╡╨╖ ╨▓p╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╨┐╨╛╨┤╨║╨░╤В╨░╨╗╨╛╨│ (╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О A: ╨╕ B:)
     lGetDir(0, CDir);
     if  (UpCase(CDir[1]) in ['A'..'Z']) and
         (SystemData.Drives[UpCase(CDir[1])] and ossUnarcToDirectly <> 0)
@@ -1719,10 +1719,10 @@ function ArcViewer;
     I: Byte;
     PathInside: String;
   begin
-  {JO: дабы перейти к найденному файлу в архиве из панели поиска}
+  {JO: ╨┤╨░╨▒╤Л ╨┐╨╡╤А╨╡╨╣╤В╨╕ ╨║ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨╝╤Г ╤Д╨░╨╣╨╗╤Г ╨▓ ╨░╤А╤Е╨╕╨▓╨╡ ╨╕╨╖ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░}
   PathInside := AName;
   if PathInside[2] = ':' then
-    PathInside[2] := ';'; {JO: меняем двоеточие не важно на что }
+    PathInside[2] := ';'; {JO: ╨╝╨╡╨╜╤П╨╡╨╝ ╨┤╨▓╨╛╨╡╤В╨╛╤З╨╕╨╡ ╨╜╨╡ ╨▓╨░╨╢╨╜╨╛ ╨╜╨░ ╤З╤В╨╛ }
   I := PosChar(':', PathInside);
   if I > 0 then
     begin
@@ -1740,9 +1740,9 @@ function ArcViewer;
     Exit;
     end;
   { AK155 21-06-2002
-    Если файл не прочитался в качестве архива, то он и любым другим
-    спосбом не прочитается, так что ArcViewer берет ответственность
-    на себя, чтобы во вьювере не продолжать бессмысленные попытки. }
+    ╨Х╤Б╨╗╨╕ ╤Д╨░╨╣╨╗ ╨╜╨╡ ╨┐╤А╨╛╤З╨╕╤В╨░╨╗╤Б╤П ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡ ╨░╤А╤Е╨╕╨▓╨░, ╤В╨╛ ╨╛╨╜ ╨╕ ╨╗╤О╨▒╤Л╨╝ ╨┤╤А╤Г╨│╨╕╨╝
+    ╤Б╨┐╨╛╤Б╨▒╨╛╨╝ ╨╜╨╡ ╨┐╤А╨╛╤З╨╕╤В╨░╨╡╤В╤Б╤П, ╤В╨░╨║ ╤З╤В╨╛ ArcViewer ╨▒╨╡╤А╨╡╤В ╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╡╨╜╨╜╨╛╤Б╤В╤М
+    ╨╜╨░ ╤Б╨╡╨▒╤П, ╤З╤В╨╛╨▒╤Л ╨▓╨╛ ╨▓╤М╤О╨▓╨╡╤А╨╡ ╨╜╨╡ ╨┐╤А╨╛╨┤╨╛╨╗╨╢╨░╤В╤М ╨▒╨╡╤Б╤Б╨╝╤Л╤Б╨╗╨╡╨╜╨╜╤Л╨╡ ╨┐╨╛╨┐╤Л╤В╨║╨╕. }
   if P = nil then
     begin
     {$IFDEF ARVID}
@@ -1765,7 +1765,7 @@ function ArcViewer;
     end
   else
     ArcViewer := True;
-  {JO: переходим к найденному файлу в архиве}
+  {JO: ╨┐╨╡╤А╨╡╤Е╨╛╨┤╨╕╨╝ ╨║ ╨╜╨░╨╣╨┤╨╡╨╜╨╜╨╛╨╝╤Г ╤Д╨░╨╣╨╗╤Г ╨▓ ╨░╤А╤Е╨╕╨▓╨╡}
   if PathInside <> '' then
     begin
     if Copy(PathInside, Length(PathInside)-1, 2) = '\.' then
@@ -1874,9 +1874,9 @@ function TArcDrive.OpenDirectory(const Dir: String;
   Files^.ResetPointer('');
   Root := UpStrg(CurDir)+'/'; // slash change by unxed
   l := Length(Root);
-  {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
-  {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
-  {    доступный изначально объём                                              }
+  {JO: ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╛╨┤╨╕╨╜ p╨░╨╖ ╨╛╨┐p╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╛╨▒╤К╤С╨╝ ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕, ╨░ ╨╖╨░╤В╨╡╨╝ ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░}
+  {    ╨┐╨╛╨┤╤Б╤З╤В╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╜╨░╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Вp╨╡╨▒╨╛╨▓╨░╨╜╨╕╤П ╨┐╨░╨╝╤П╤В╨╕ p╨░╤Б╤В╤Г╤В ╨╕ ╨╜╨╡ ╨┐p╨╡╨▓╤Л╤Б╨╕╨╗╨╕ ╨╗╨╕ ╨╛╨╜╨╕  }
+  {    ╨┤╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╣ ╨╕╨╖╨╜╨░╤З╨░╨╗╤М╨╜╨╛ ╨╛╨▒╤К╤С╨╝                                              }
   MemReq := LowMemSize;
   MAvail := MaxAvail;
   while not Files^.Last and Files^.GetNextFile and (MAvail > MemReq)
@@ -1900,7 +1900,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
       if Dirs^.IndexOf(PDir) = -1 then
         Dirs^.Insert(PDir);
       Fils^.AtInsert(Fils^.Count, FR);
-      {JO: добавляем каталоги}
+      {JO: ╨┤╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╨║╨░╤В╨░╨╗╨╛╨│╨╕}
       if PutDirs and (Length(Files^.LastDir) > L) then
         begin
         LDir := Files^.LastDir;
@@ -1928,7 +1928,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
               Fils^.AtInsert(I, FR);
             end;
         until Length(LDir) <= L;
-        end; {конец добавления каталогов}
+        end; {╨║╨╛╨╜╨╡╤Ж ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓}
       if TimerExpired(tmr) then
         begin
         NewTimer(tmr, 50);
@@ -1938,7 +1938,7 @@ function TArcDrive.OpenDirectory(const Dir: String;
       end;
     end;
   PI^.Free;
-//используем '><' в качестве пpизнака ветви
+//╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ '><' ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡ ╨┐p╨╕╨╖╨╜╨░╨║╨░ ╨▓╨╡╤В╨▓╨╕
   PDrv := New(PFindDrive, Init('><'+Dir, Dirs, Fils));
   PDrv^.NoMemory := MAvail <= MemReq;
   OpenDirectory := PDrv;
@@ -1968,8 +1968,8 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
   begin
   NewTimer(tmr, 0);
   FindRec.AddChar := '';
-//JO: поскольку ArcFindRec по absolute совмещена с FindRec,
-//    то после вызова диалога можно использовать просто FindRec
+//JO: ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ArcFindRec ╨┐╨╛ absolute ╤Б╨╛╨▓╨╝╨╡╤Й╨╡╨╜╨░ ╤Б FindRec,
+//    ╤В╨╛ ╨┐╨╛╤Б╨╗╨╡ ╨▓╤Л╨╖╨╛╨▓╨░ ╨┤╨╕╨░╨╗╨╛╨│╨░ ╨╝╨╛╨╢╨╜╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╤М ╨┐╤А╨╛╤Б╤В╨╛ FindRec
   if ExecResource(dlgArcFileFind, ArcFindRec) = cmCancel then
     Exit;
   ConfigModified := True;
@@ -2015,9 +2015,9 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
   Files^.ResetPointer('');
   Root := UpStrg(CurDir)+'/'; // slash change by unxed
   L := Length(Root);
-  {JO: сначала один pаз опpеделяем объём доступной памяти, а затем по ходу дела}
-  {    подсчтитываем насколько тpебования памяти pастут и не пpевысили ли они  }
-  {    доступный изначально объём                                              }
+  {JO: ╤Б╨╜╨░╤З╨░╨╗╨░ ╨╛╨┤╨╕╨╜ p╨░╨╖ ╨╛╨┐p╨╡╨┤╨╡╨╗╤П╨╡╨╝ ╨╛╨▒╤К╤С╨╝ ╨┤╨╛╤Б╤В╤Г╨┐╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕, ╨░ ╨╖╨░╤В╨╡╨╝ ╨┐╨╛ ╤Е╨╛╨┤╤Г ╨┤╨╡╨╗╨░}
+  {    ╨┐╨╛╨┤╤Б╤З╤В╨╕╤В╤Л╨▓╨░╨╡╨╝ ╨╜╨░╤Б╨║╨╛╨╗╤М╨║╨╛ ╤Вp╨╡╨▒╨╛╨▓╨░╨╜╨╕╤П ╨┐╨░╨╝╤П╤В╨╕ p╨░╤Б╤В╤Г╤В ╨╕ ╨╜╨╡ ╨┐p╨╡╨▓╤Л╤Б╨╕╨╗╨╕ ╨╗╨╕ ╨╛╨╜╨╕  }
+  {    ╨┤╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╣ ╨╕╨╖╨╜╨░╤З╨░╨╗╤М╨╜╨╛ ╨╛╨▒╤К╤С╨╝                                              }
   MemReq := LowMemSize;
   MAvail := MaxAvail;
   while not Files^.Last and Files^.GetNextFile and (MAvail > MemReq)
@@ -2049,7 +2049,7 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
             Dirs^.Insert(PDir);
           Fils^.AtInsert(Fils^.Count, FR);
           end;
-        {JO: добавляем каталоги}
+        {JO: ╨┤╨╛╨▒╨░╨▓╨╗╤П╨╡╨╝ ╨║╨░╤В╨░╨╗╨╛╨│╨╕}
         if Length(Files^.LastDir) > L then
           begin
           LDir := Files^.LastDir;
@@ -2061,9 +2061,9 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
             DrName := Copy(LDir, I+1, MaxStringLength);
             SetLength(LDir, I);
             if  (DrName <> '')
-              //JO: всё равно для каталогов дата и атрибуты показываются
-              //    весьма условно, размер равен нулю, так что при расширенном
-              //    поиске каталоги только мешают
+              //JO: ╨▓╤Б╤С ╤А╨░╨▓╨╜╨╛ ╨┤╨╗╤П ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓ ╨┤╨░╤В╨░ ╨╕ ╨░╤В╤А╨╕╨▒╤Г╤В╤Л ╨┐╨╛╨║╨░╨╖╤Л╨▓╨░╤О╤В╤Б╤П
+              //    ╨▓╨╡╤Б╤М╨╝╨░ ╤Г╤Б╨╗╨╛╨▓╨╜╨╛, ╤А╨░╨╖╨╝╨╡╤А ╤А╨░╨▓╨╡╨╜ ╨╜╤Г╨╗╤О, ╤В╨░╨║ ╤З╤В╨╛ ╨┐╤А╨╕ ╤А╨░╤Б╤И╨╕╤А╨╡╨╜╨╜╨╛╨╝
+              //    ╨┐╨╛╨╕╤Б╨║╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨╕ ╤В╨╛╨╗╤М╨║╨╛ ╨╝╨╡╤И╨░╤О╤В
               and (FindRec.Options and ffoAdvanced = 0)
               and ((FindRec.Options and ffoRecursive <> 0) or
                   (Root = UpStrg(LDir)))
@@ -2085,7 +2085,7 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
                 Fils^.AtInsert(I, FR);
               end;
           until Length(LDir) <= L;
-          end; {конец добавления каталогов}
+          end; {╨║╨╛╨╜╨╡╤Ж ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨╛╨▓}
         if TimerExpired(tmr) then
           begin
           NewTimer(tmr, 50);
@@ -2098,7 +2098,7 @@ procedure TArcDrive.DrvFindFile(FC: PFilesCollection);
   PI^.Free;
   if Fils^.Count > 0 then
     begin
-//используем '<>' в качестве пpизнака панели поиска
+//╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝ '<>' ╨▓ ╨║╨░╤З╨╡╤Б╤В╨▓╨╡ ╨┐p╨╕╨╖╨╜╨░╨║╨░ ╨┐╨░╨╜╨╡╨╗╨╕ ╨┐╨╛╨╕╤Б╨║╨░
     PDrv := New(PFindDrive, Init('<>'+FindRec.Mask,
           Dirs, Fils));
     PDrv^.AMask := NewStr(FindRec.Mask);

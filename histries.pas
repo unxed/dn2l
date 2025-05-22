@@ -66,7 +66,7 @@ type
     fDeskSize: TPoint;
     fViewMode: AInt;
     fKeyMap: TKeyMap;
-    fToAscii: TXLat; // нужно только при fKeyMap = kmXlat
+    fToAscii: TXLat; // ╨╜╤Г╨╢╨╜╨╛ ╤В╨╛╨╗╤М╨║╨╛ ╨┐╤А╨╕ fKeyMap = kmXlat
     fCodeTag: Str8;
     case Byte of
       0: (fPos: Comp;
@@ -173,8 +173,8 @@ const
 
 var
   HistNameSuffix: string;
-    {` Добавки к имени файла истории. Например, если эта переменная имеет
-       значение 'Wrk', то для истории будет использован файл DNWrk.HIS `}
+    {` ╨Ф╨╛╨▒╨░╨▓╨║╨╕ ╨║ ╨╕╨╝╨╡╨╜╨╕ ╤Д╨░╨╣╨╗╨░ ╨╕╤Б╤В╨╛╤А╨╕╨╕. ╨Э╨░╨┐╤А╨╕╨╝╨╡╤А, ╨╡╤Б╨╗╨╕ ╤Н╤В╨░ ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П ╨╕╨╝╨╡╨╡╤В
+       ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ 'Wrk', ╤В╨╛ ╨┤╨╗╤П ╨╕╤Б╤В╨╛╤А╨╕╨╕ ╨▒╤Г╨┤╨╡╤В ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜ ╤Д╨░╨╣╨╗ DNWrk.HIS `}
 
 implementation
 uses
@@ -185,7 +185,7 @@ uses
   Idlers,
   {$ENDIF}
   FViewer, CmdLine, PDSetup, Microed
-  , FlPanelX {для ActivePanel}
+  , FlPanelX {╨┤╨╗╤П ActivePanel}
   {$IFDEF SpreadSheet}, Calc {$ENDIF}
   ;
 
@@ -318,10 +318,10 @@ procedure StoreViewInfo(P: Pointer);
       else
         fViewMode := ViewMode or vmInternal;
 
-      {AK155 25-03-2003 После того, как BufPos стало longint, в
-fBufPos: AWord оно может не помещаться. Но, с другой стороны,
-непонятно, зачем вообще разделять запоминание FilePos и BufPos.
-Работают же закладки без такого разделения.  }
+      {AK155 25-03-2003 ╨Я╨╛╤Б╨╗╨╡ ╤В╨╛╨│╨╛, ╨║╨░╨║ BufPos ╤Б╤В╨░╨╗╨╛ longint, ╨▓
+fBufPos: AWord ╨╛╨╜╨╛ ╨╝╨╛╨╢╨╡╤В ╨╜╨╡ ╨┐╨╛╨╝╨╡╤Й╨░╤В╤М╤Б╤П. ╨Э╨╛, ╤Б ╨┤╤А╤Г╨│╨╛╨╣ ╤Б╤В╨╛╤А╨╛╨╜╤Л,
+╨╜╨╡╨┐╨╛╨╜╤П╤В╨╜╨╛, ╨╖╨░╤З╨╡╨╝ ╨▓╨╛╨╛╨▒╤Й╨╡ ╤А╨░╨╖╨┤╨╡╨╗╤П╤В╤М ╨╖╨░╨┐╨╛╨╝╨╕╨╜╨░╨╜╨╕╨╡ FilePos ╨╕ BufPos.
+╨а╨░╨▒╨╛╤В╨░╤О╤В ╨╢╨╡ ╨╖╨░╨║╨╗╨░╨┤╨║╨╕ ╨▒╨╡╨╖ ╤В╨░╨║╨╛╨│╨╛ ╤А╨░╨╖╨┤╨╡╨╗╨╡╨╜╨╕╤П.  }
       (*
      fPos      := FilePos;
      fBufPos   := BufPos;
@@ -557,8 +557,8 @@ procedure SaveCommands(var S: TStream);
     S1, S2: String;
     M: PCollection;
   begin
-  {AK155 зачем это Message - непонятно. Выполнение пустой команды
-делает ровно ничего (см. cmdline.pas, поиск по cmExecCommandLine)
+  {AK155 ╨╖╨░╤З╨╡╨╝ ╤Н╤В╨╛ Message - ╨╜╨╡╨┐╨╛╨╜╤П╤В╨╜╨╛. ╨Т╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╨╡ ╨┐╤Г╤Б╤В╨╛╨╣ ╨║╨╛╨╝╨░╨╜╨┤╤Л
+╨┤╨╡╨╗╨░╨╡╤В ╤А╨╛╨▓╨╜╨╛ ╨╜╨╕╤З╨╡╨│╨╛ (╤Б╨╝. cmdline.pas, ╨┐╨╛╨╕╤Б╨║ ╨┐╨╛ cmExecCommandLine)
 Message(CommandLine, evCommand, cmExecCommandLine, nil);
 /AK155}
   if  (CmdStrings <> nil) and (CmdStrings^.Count >= 50) then
@@ -602,7 +602,7 @@ procedure LoadCommands(var S: TStream);
     CurString := CmdStrings^.Count
   else
     CurString := 0;
-  {AK155 Перерисовка комстроки не нужна, а очистка даже мешает}
+  {AK155 ╨Я╨╡╤А╨╡╤А╨╕╤Б╨╛╨▓╨║╨░ ╨║╨╛╨╝╤Б╤В╤А╨╛╨║╨╕ ╨╜╨╡ ╨╜╤Г╨╢╨╜╨░, ╨░ ╨╛╤З╨╕╤Б╤В╨║╨░ ╨┤╨░╨╢╨╡ ╨╝╨╡╤И╨░╨╡╤В}
   (*
  StrModified := False;
  if CommandLine <> nil then CommandLine^.DrawView;
@@ -737,7 +737,7 @@ procedure TTHistList.HandleEvent;
   begin { TTHistList.HandleEvent }
   if  (Event.What = evKeyDown) and (List <> nil) then
     case Event.KeyCode of
-      kbCtrlEnter: {AK155: делаем как у всех: CtrlEnter = Drop}
+      kbCtrlEnter: {AK155: ╨┤╨╡╨╗╨░╨╡╨╝ ╨║╨░╨║ ╤Г ╨▓╤Б╨╡╤Е: CtrlEnter = Drop}
         begin
         EndModal(cmYes);
         ClearEvent(Event);
@@ -785,7 +785,7 @@ procedure TTHistList.HandleEvent;
         List^.AtReplace(Focused, NewStr(FreeStr));
         DrawView;
         end;
-      cmYes: { удаление }
+      cmYes: { ╤Г╨┤╨░╨╗╨╡╨╜╨╕╨╡ }
 1:
           begin
           ClearEvent(Event);
@@ -794,9 +794,9 @@ procedure TTHistList.HandleEvent;
             MessageBox(GetString(dlHistDelCurDir), nil, mfOKButton);
             {John_SW}
             Exit;
-            {AK155: 0 - это текущий каталог,
-                  его удалять бесполезно: он опять вставится, но при этом
-                  собьет нумерацию элементов }
+            {AK155: 0 - ╤Н╤В╨╛ ╤В╨╡╨║╤Г╤Й╨╕╨╣ ╨║╨░╤В╨░╨╗╨╛╨│,
+                  ╨╡╨│╨╛ ╤Г╨┤╨░╨╗╤П╤В╤М ╨▒╨╡╤Б╨┐╨╛╨╗╨╡╨╖╨╜╨╛: ╨╛╨╜ ╨╛╨┐╤П╤В╤М ╨▓╤Б╤В╨░╨▓╨╕╤В╤Б╤П, ╨╜╨╛ ╨┐╤А╨╕ ╤Н╤В╨╛╨╝
+                  ╤Б╨╛╨▒╤М╨╡╤В ╨╜╤Г╨╝╨╡╤А╨░╤Ж╨╕╤О ╤Н╨╗╨╡╨╝╨╡╨╜╤В╨╛╨▓ }
             end;
           if Focused >= List^.Count then
             Exit;
@@ -817,7 +817,7 @@ procedure TTHistList.HandleEvent;
           DrawView;
           end;
 
-       cmNo: {встать на}
+       cmNo: {╨▓╤Б╤В╨░╤В╤М ╨╜╨░}
           begin
           ClearEvent(Event);
           if Focused >= List^.Count then
@@ -831,7 +831,7 @@ procedure TTHistList.HandleEvent;
           MakeNoSlash(DirToGo);
           Message(ActivePanel, evCommand, cmStandAt, @DirToGo);
           DrawView;
-          EndModal(cmCancel); //Не важно, какая команда, главное завершить
+          EndModal(cmCancel); //╨Э╨╡ ╨▓╨░╨╢╨╜╨╛, ╨║╨░╨║╨░╤П ╨║╨╛╨╝╨░╨╜╨┤╨░, ╨│╨╗╨░╨▓╨╜╨╛╨╡ ╨╖╨░╨▓╨╡╤А╤И╨╕╤В╤М
           end;
 
     end {case};
@@ -866,7 +866,7 @@ procedure AddToDirectoryHistory(S: String; DriveType: Integer);
   if  (S = '') or ((S[2] <> ':') and ((S[1] <> '/') or (S[2] <> '/'))) // slash change by unxed
   then
     Exit;
-  {Cat: добавил проверку на сетевые пути}
+  {Cat: ╨┤╨╛╨▒╨░╨▓╨╕╨╗ ╨┐╤А╨╛╨▓╨╡╤А╨║╤Г ╨╜╨░ ╤Б╨╡╤В╨╡╨▓╤Л╨╡ ╨┐╤Г╤В╨╕}
   {$IFDEF DPMI32}
   S := lfGetLongFileName(S);
   {$ENDIF}
@@ -919,7 +919,7 @@ function GetDialog(Dlg: TDlgIdx; var List: Pointer): PDialog;
 
   R.Assign(2, 2, D^.Size.X-3, 13);
   L := New(PTHistList, Init(R, 1, PScrollBar(P)));
-  L^.Dlg := Dlg; {AK155: см. TTHistList.HandleEvent, cmYes }
+  L^.Dlg := Dlg; {AK155: ╤Б╨╝. TTHistList.HandleEvent, cmYes }
   D^.Insert(L);
   List := L;
 
@@ -960,8 +960,8 @@ procedure EditHistoryMenu;
     PDNApplication(Application)^.EditFile(
       SystemData.Options and ossEditor <> 0,
       {AK155 28.09.2002:
-             это чтобы через историю всегда вызывался внутренний
-             редактор, поскольку вызов внешнего в историю не попадает}
+             ╤Н╤В╨╛ ╤З╤В╨╛╨▒╤Л ╤З╨╡╤А╨╡╨╖ ╨╕╤Б╤В╨╛╤А╨╕╤О ╨▓╤Б╨╡╨│╨┤╨░ ╨▓╤Л╨╖╤Л╨▓╨░╨╗╤Б╤П ╨▓╨╜╤Г╤В╤А╨╡╨╜╨╜╨╕╨╣
+             ╤А╨╡╨┤╨░╨║╤В╨╛╤А, ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨▓╤Л╨╖╨╛╨▓ ╨▓╨╜╨╡╤И╨╜╨╡╨│╨╛ ╨▓ ╨╕╤Б╤В╨╛╤А╨╕╤О ╨╜╨╡ ╨┐╨╛╨┐╨░╨┤╨░╨╡╤В}
       Copy(PViewRecord(EditHistory^.At(I))^.FName^, 2, MaxStringLength));
     end;
   end { EditHistoryMenu };

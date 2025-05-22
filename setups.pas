@@ -110,14 +110,14 @@ type
   {$ENDIF}
 
 procedure SetupCountryInfo;
-  {` Диалог настоек страны `}
+  {` ╨Ф╨╕╨░╨╗╨╛╨│ ╨╜╨░╤Б╤В╨╛╨╡╨║ ╤Б╤В╤А╨░╨╜╤Л `}
 function ApplyCodetables: Integer;
-  {` Применить настройки кодировок из CountryInfo. Результат:
-     0 - нет ошибок,
-     1 - ошибка в KbdToggleLayout
-     2 - ошибка в ABCSortTable,
-     3 - ошибка в WinCodeTable,
-     4 - ошибка в Codetables,
+  {` ╨Я╤А╨╕╨╝╨╡╨╜╨╕╤В╤М ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╕ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨╛╨║ ╨╕╨╖ CountryInfo. ╨а╨╡╨╖╤Г╨╗╤М╤В╨░╤В:
+     0 - ╨╜╨╡╤В ╨╛╤И╨╕╨▒╨╛╨║,
+     1 - ╨╛╤И╨╕╨▒╨║╨░ ╨▓ KbdToggleLayout
+     2 - ╨╛╤И╨╕╨▒╨║╨░ ╨▓ ABCSortTable,
+     3 - ╨╛╤И╨╕╨▒╨║╨░ ╨▓ WinCodeTable,
+     4 - ╨╛╤И╨╕╨▒╨║╨░ ╨▓ Codetables,
      `}
 procedure DoFMSetup;
 procedure DriveInfoSetup;
@@ -135,7 +135,7 @@ function MakeSaversDialog: PDialog;
 
 const
   CodeErrMessage: array[1..4] of TStrIdx =
- {`AK155 12.01.2004 Собщения об ошибках перекодировочных настроек.}
+ {`AK155 12.01.2004 ╨б╨╛╨▒╤Й╨╡╨╜╨╕╤П ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨░╤Е ╨┐╨╡╤А╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨╛╤З╨╜╤Л╤Е ╨╜╨░╤Б╤В╤А╨╛╨╡╨║.}
    (dlLayoutErr, dlSortError, dlWinErr, dlCodetablesErr);
    {`}
 
@@ -319,7 +319,7 @@ function ApplyCodetables: Integer;
       ABCSortTable := '0';
     Val(ABCSortTable, CP, Err);
     if (Err = 0) and QueryABCSort(CP, ABCSortXlat) then
-      begin { запрос таблицы у ОС удовлетворён }
+      begin { ╨╖╨░╨┐╤А╨╛╤Б ╤В╨░╨▒╨╗╨╕╤Ж╤Л ╤Г ╨Ю╨б ╤Г╨┤╨╛╨▓╨╗╨╡╤В╨▓╨╛╤А╤С╨╜ }
       end
     else if not BuildABCSortXlat(ABCSortTable) then
       begin
@@ -364,7 +364,7 @@ TryDialog:
   if C <> cmOK then
     begin
     CountryInfo := SaveCountryInfo;
-     // CountryInfo мог измениться по cmYes
+     // CountryInfo ╨╝╨╛╨│ ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М╤Б╤П ╨┐╨╛ cmYes
     ApplyCodetables;
     Exit;
     end;
@@ -387,7 +387,7 @@ procedure DoFMSetup;
   if (Startup.FMSetup.RestChar = '') or
      (Startup.FMSetup.RestChar[1] = ' ')
   then
-    Startup.FMSetup.RestChar := #16; { символа обрезки не может не быть }
+    Startup.FMSetup.RestChar := #16; { ╤Б╨╕╨╝╨▓╨╛╨╗╨░ ╨╛╨▒╤А╨╡╨╖╨║╨╕ ╨╜╨╡ ╨╝╨╛╨╢╨╡╤В ╨╜╨╡ ╨▒╤Л╤В╤М }
   Message(Application, evCommand, cmUpdateConfig, nil);
   GlobalMessage(evCommand, cmReboundPanel, nil);
 

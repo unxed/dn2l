@@ -196,9 +196,9 @@ procedure TUC2Archive.GetFile;
     NextRecord;
   begin { TUC2Archive.GetFile }
   if TextRec(ListFile).Handle = 0 then
-    begin { Ø•‡¢Î© ¢ÎßÆ¢: ¢ÎßÆ¢ †‡Â®¢†‚Æ‡† §´Ô ¢Î¢Æ§† Æ£´†¢´•≠®Ô }
-    FreeObject(ArcFile); {AK155 •·´® †‡Â®¢ ≠• ß†™‡Î‚Ï, ‚Æ †‡Â®¢†‚Æ‡
-      ¢Î§†Ò‚ sharing violation }
+    begin { –ø–µ—Ä–≤—ã–π –≤—ã–∑–æ–≤: –≤—ã–∑–æ–≤ –∞—Ä—Ö–∏–≤–∞—Ç–æ—Ä–∞ –¥–ª—è –≤—ã–≤–æ–¥–∞ –æ–≥–ª–∞–≤–ª–µ–Ω–∏—è }
+    FreeObject(ArcFile); {AK155 –µ—Å–ª–∏ –∞—Ä—Ö–∏–≤ –Ω–µ –∑–∞–∫—Ä—ã—Ç—å, —Ç–æ –∞—Ä—Ö–∏–≤–∞—Ç–æ—Ä
+      –≤—ã–¥–∞—ë—Ç sharing violation }
     ListFileName := MakeNormName(TempDir, '!!!DN!!!.TMP');
     S := '/C '
       {$IFDEF OS2}
@@ -225,7 +225,7 @@ procedure TUC2Archive.GetFile;
     System.Reset(ListFile);
     end;
   FileInfo.Last := 0;
-  { Á‚•≠®• §†≠≠ÎÂ Æ° ÆÁ•‡•§≠Æ¨ ‰†©´•}
+  { —á—Ç–µ–Ω–∏–µ –¥–∞–Ω–Ω—ã—Ö –æ–± –æ—á–µ—Ä–µ–¥–Ω–æ–º —Ñ–∞–π–ª–µ}
 NextRecord:
   repeat
     System.Readln(ListFile, S);
@@ -267,7 +267,7 @@ NextRecord:
     if S <> '0' then
       begin
       if not AllVersion then
-        begin { ®£≠Æ‡®‡„•¨ Ì‚Æ‚ ‰†©´ }
+        begin { –∏–≥–Ω–æ—Ä–∏—Ä—É–µ–º —ç—Ç–æ—Ç —Ñ–∞–π–ª }
         repeat
           Readln(ListFile, S);
         until S[7] = 'A';
@@ -285,7 +285,7 @@ NextRecord:
     System.Readln(ListFile, S);
     if S[7] = 'C' then
       System.Readln(ListFile, S); {CHECK=...}
-    { uc 2.0 Ì‚Æ© ·‚‡Æ™® ≠• ‰Æ‡¨®‡„•‚ }
+    { uc 2.0 —ç—Ç–æ–π —Å—Ç—Ä–æ–∫–∏ –Ω–µ —Ñ–æ—Ä–º–∏—Ä—É–µ—Ç }
     ReadDTA;
     end
   else

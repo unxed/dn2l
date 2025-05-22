@@ -90,7 +90,7 @@ procedure TXDoubleWindow.SetState(AState: Word; Enable: Boolean);
     if Enable then
       begin
       Current^.SetState(sfSelected, True);
-        // чтобы установились ActivePanel и PassivePanel
+        // ╤З╤В╨╛╨▒╤Л ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╕╨╗╨╕╤Б╤М ActivePanel ╨╕ PassivePanel
       EnableCommands(DblWndCommands)
       end
     else
@@ -161,11 +161,11 @@ procedure TXDoubleWindow.HandleEvent;
     evCommand:
       case Event.Command of
         cmChangeDirectory:
-          begin {AK155 Это сообщение реально можно получить ТОЛЬКО
-            от дерева, поэтому сравнение с dtTree, мягко говоря,
-            неожиданное, работает правильно. Но, конечно, надо
-            вместо этого трюкачества организовать в дереве прямой
-            вызов ChDir панели }
+          begin {AK155 ╨н╤В╨╛ ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╤А╨╡╨░╨╗╤М╨╜╨╛ ╨╝╨╛╨╢╨╜╨╛ ╨┐╨╛╨╗╤Г╤З╨╕╤В╤М ╨в╨Ю╨Ы╨м╨Ъ╨Ю
+            ╨╛╤В ╨┤╨╡╤А╨╡╨▓╨░, ╨┐╨╛╤Н╤В╨╛╨╝╤Г ╤Б╤А╨░╨▓╨╜╨╡╨╜╨╕╨╡ ╤Б dtTree, ╨╝╤П╨│╨║╨╛ ╨│╨╛╨▓╨╛╤А╤П,
+            ╨╜╨╡╨╛╨╢╨╕╨┤╨░╨╜╨╜╨╛╨╡, ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛. ╨Э╨╛, ╨║╨╛╨╜╨╡╤З╨╜╨╛, ╨╜╨░╨┤╨╛
+            ╨▓╨╝╨╡╤Б╤В╨╛ ╤Н╤В╨╛╨│╨╛ ╤В╤А╤О╨║╨░╤З╨╡╤Б╤В╨▓╨░ ╨╛╤А╨│╨░╨╜╨╕╨╖╨╛╨▓╨░╤В╤М ╨▓ ╨┤╨╡╤А╨╡╨▓╨╡ ╨┐╤А╤П╨╝╨╛╨╣
+            ╨▓╤Л╨╖╨╛╨▓ ChDir ╨┐╨░╨╜╨╡╨╗╨╕ }
           Panel[Selected[NonFilePanelType <> dtTree]].
             FilePanel^.HandleEvent(Event);
           Exit;

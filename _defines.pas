@@ -532,8 +532,8 @@ type
     Name: ShortString;
     Filler: packed array[0..3] of Char;
     {$IFDEF OS2}
-    //JO: Ç≠®¨†≠®•! ‡†ß¨•‡ FindBuf §Æ´¶•≠ °Î‚Ï ·Æ£´†·Æ¢†≠ · ‡†ß¨•‡Æ¨ †≠†´Æ£®Á≠Æ©
-    //    Ø•‡•¨•≠≠Æ© ¢ VpSysLo2.TOSSearchRecNew
+    //JO: –í–Ω–∏–º–∞–Ω–∏–µ! —Ä–∞–∑–º–µ—Ä FindBuf –¥–æ–ª–∂–µ–Ω –±—ã—Ç—å —Å–æ–≥–ª–∞—Å–æ–≤–∞–Ω —Å —Ä–∞–∑–º–µ—Ä–æ–º –∞–Ω–∞–ª–æ–≥–∏—á–Ω–æ–π
+    //    –ø–µ—Ä–µ–º–µ–Ω–Ω–æ–π –≤ VpSysLo2.TOSSearchRecNew
     FindBuf: array[0..8*1024-1] of Byte;
     FindCount: Integer;
     FindPtr: Pointer;
