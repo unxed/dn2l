@@ -1,0 +1,15 @@
+[target]
+programs=dn
+
+[compiler]
+unitdir=../src
+unitdir=../../rtl-console/src/unix
+unitdir=../../rtl-unicode/src/inc
+unitdir=../../rtl-extra/src/inc
+includedir=../../rtl-console/src/inc
+
+[default]
+fpcdir=../../..
+
+[compiler]
+options = -Mobjfpc
