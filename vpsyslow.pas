@@ -56,6 +56,10 @@ type
   PQuad = ^TQuad;
   TSemHandle = Longint;
 
+  //vp2fp
+  TFileSize  = Longint;
+  SmallWord  = System.Word;
+
 {$IFDEF OS2}
 {$IFNDEF NoMouseMove} { не позиционировать мышь в левый верхний угол}
 const
@@ -85,19 +89,22 @@ const
   AllFilesMask  = '*';
 {$ENDIF}
 
-{$IFDEF LINUX}
+// fixme: porting stub
+//{$IFDEF LINUX}
+{
   sysmem_Read    = PROT_READ;
   sysmem_Write   = PROT_WRITE;
   sysmem_Execute = PROT_EXEC;
   sysmem_Guard   = 0; // Not supported
   sysmem_Default = PROT_READ or PROT_EXEC;
-{$ELSE}
+}
+//{$ELSE}
   sysmem_Read    = $01;
   sysmem_Write   = $02;
   sysmem_Execute = $04;
   sysmem_Guard   = $08;
   sysmem_Default = $05;
-{$ENDIF}
+//{$ENDIF}
 
 const
   // SysFileOpen_Create flags
@@ -111,6 +118,7 @@ const
   open_TruncateIfExists   = $0002;  // ocFileOpen truncates existing file
 
 // Required by the System unit
+{
 function SysFileStdIn: Longint;
 function SysFileStdOut: Longint;
 function SysFileStdErr: Longint;
@@ -156,6 +164,7 @@ function SysCmdlnCount: Longint;
 procedure SysCmdlnParam(Index: Longint; var Param: ShortString);
 function SysGetEnvironment: PChar;
 procedure SysFreeEnvironment(_Env: PChar);
+}
 
 // Dos, WinDos, SysUtils
 
@@ -198,6 +207,7 @@ type
   PLongint = ^Longint;  // Define here rather than using Use32 definition
   THandle = Longint;
 
+  {
 function SysOsVersion: Longint;
 procedure SysGetDateTime(Year,Month,Day,DayOfWeek,Hour,Minute,Second,MSec: PLongint);
 procedure SysSetDateTime(Year,Month,Day,Hour,Minute,Second,MSec: PLongint);
@@ -206,8 +216,8 @@ function SysDiskFree(Drive: Byte): Longint;
 function SysDiskSize(Drive: Byte): Longint;
 function SysDiskFreeLong(Drive: Byte): TQuad;
 function SysDiskSizeLong(Drive: Byte): TQuad;
-function SysDiskFreeLongX(Path: PChar): TQuad; {Cat}
-function SysDiskSizeLongX(Path: PChar): TQuad; {Cat}
+function SysDiskFreeLongX(Path: PChar): TQuad; // Cat
+function SysDiskSizeLongX(Path: PChar): TQuad; // Cat
 function SysGetFileAttr(FileName: PChar; var Attr: Longint): Longint;
 function SysSetFileAttr(FileName: PChar; Attr: Longint): Longint;
 function SysGetFileTime(Handle: Longint; var Time: Longint): Longint;
@@ -221,6 +231,7 @@ function SysFileAsOS(FileName: PChar): Boolean;
 function SysExecute(Path,CmdLine,Env: PChar; Async: Boolean; PID: PLongint; StdIn,StdOut,StdErr: Longint): Longint;
 function SysExitCode: Longint;
 function SysFileExists(const FileName: PChar): Boolean;
+}
 
 // Memory mapping functions.  The Alloc and Access functions return
 // a handle or -1 (invalid).
@@ -386,7 +397,8 @@ const
     {$IFDEF OS2}   xcpt_Signal;               {$ENDIF}
     {$IFDEF WIN32} xcpt_Control_C_exit;       {$ENDIF}
     {$IFDEF DPMI32}xcpt_Ctrl_Break;           {$ENDIF}
-    {$IFDEF LINUX} xcpt_Ctrl_Break;           {$ENDIF}
+  //  {$IFDEF LINUX} xcpt_Ctrl_Break;           {$ENDIF}
+  0; // fixme: porting stub
 
 type
   TQuadRec = record
@@ -406,7 +418,7 @@ type
 procedure SysGetCaseMap(TblLen: Longint; Tbl: PChar );
 procedure SysGetWeightTable(TblLen: Longint; WeightTable: PChar);
 function SysLoadResourceString(ID: Longint; Buffer: PChar; BufSize: Longint): PChar;
-function SysFileExpandS(Name: ShortString): ShortString;
+//function SysFileExpandS(Name: ShortString): ShortString;
 function SysGetSystemError(Code: Longint; Buffer: PChar; BufSize: Longint; var MsgLen: Longint): PChar;
 function SysGetModuleName(var Address: Pointer; Buffer: PChar; BufSize: Longint): PChar;
 function SysFileUNCExpand(Dest,Name: PChar): PChar;
@@ -442,8 +454,9 @@ const
 {$ENDIF}
 
 {$IFDEF LINUX}
-function SysConvertFileName(Dest, Source: PChar; DestFS, SourceFS: TFileSystem): PChar;
-function SysIsValidFileName(FileName: PChar; FileSystem: TFileSystem): Boolean;
+//fixme: porting stub
+//function SysConvertFileName(Dest, Source: PChar; DestFS, SourceFS: TFileSystem): PChar;
+//function SysIsValidFileName(FileName: PChar; FileSystem: TFileSystem): Boolean;
 {$ENDIF}
 
 {$IFDEF OS2}
@@ -469,7 +482,8 @@ uses
   Dpmi32, D32Res, // Dpmi support files
   {$Endif}
   {$IFDEF LINUX}
-  LnxRes,
+  //fixme:porting stub
+  //LnxRes,
   {$ELSE}
   ExeHdr,
   {$ENDIF}
@@ -503,6 +517,9 @@ type
   end;
 
 procedure SysSysWaitSem(var Sem: Longint); {&USES None} {&FRAME-}
+begin
+end; // fixme: porting stub
+{
 asm
       @@1:
         mov     eax,Sem
@@ -513,13 +530,17 @@ asm
         jmp     @@1
       @@RET:
 end;
+}
 
+{
+// fixme: porting stub
 function SysFileExpandS(Name: ShortString): ShortString;
 begin
   Name[Length(Name)+1] := #0;
   SysFileExpand(@Result[1], @Name[1]);
   SetLength(Result, strlen(@Result[1]));
 end;
+}
 
 function SysDiskFree(Drive: Byte): Longint;
 var
@@ -544,10 +565,11 @@ end;
 function SysPathSep: Char;
 begin
 {$IFDEF LINUX}
-  if FileSystem = fsUnix then
+// fixme: porting stub
+//  if FileSystem = fsUnix then
     Result := '/'
-  else
-    Result := '\';
+//  else
+//    Result := '\';
 {$ELSE}
   Result := '\';
 {$ENDIF}
@@ -556,10 +578,11 @@ end;
 function PathSeparator: Char;
 begin
 {$IFDEF LINUX}
-  if FileSystem = fsUnix then
+// fixme: porting stub
+//  if FileSystem = fsUnix then
     Result := ':'
-  else
-    Result := ';';
+//  else
+//    Result := ';';
 {$ELSE}
   Result := ';';
 {$ENDIF}
@@ -609,7 +632,8 @@ end;
 {$ENDIF}
 
 {$IFDEF LINUX}
-  {$I VpSysLnx.Pas}
+  // fixme: porting stub
+  //{$I VpSysLnx.Pas}
 {$ENDIF}
 
 end.
