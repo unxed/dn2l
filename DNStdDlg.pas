@@ -873,7 +873,8 @@ procedure TFileInfoPane.HandleEvent(var Event: TEvent);
 { TFileDialog }
 
 {-DataCompBoy-}
-constructor TFileDialog.Init;
+constructor TFileDialog.Init(const AWildCard: String; ATitle: String;
+  InputName: String; AOptions: Word; HistoryId: Byte);
   var
     Control: PView;
     R: TRect;

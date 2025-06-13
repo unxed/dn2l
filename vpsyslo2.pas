@@ -9,6 +9,7 @@ unit VPSysLo2;
 interface
 
 uses
+	SysUtils,
   vp2fp,
   VpSysLow
   {$IFDEF OS2}, Os2Def, Os2Base {$Undef KeyDll} {$ENDIF}
@@ -17,6 +18,7 @@ uses
 
 type
   POSSearchRec = ^TOSSearchRec;
+  PRawbyteSearchRec = ^TRawbyteSearchRec;
 
   TOSSearchRecNew = packed record
     Handle: LongInt;
@@ -74,6 +76,13 @@ type
     LastAccessTime: LongInt;
     end;
 
+function SysFindFirstNew(Path: PChar; Attr: LongInt;
+     var F: TRawbyteSearchRec; IsPChar: Boolean): LongInt;
+
+function SysFindNextNew(var F: TRawbyteSearchRec; IsPChar: Boolean): LongInt;
+
+function SysFindCloseNew(var F: TRawbyteSearchRec): LongInt;
+
 implementation
 
 {&OrgName-}
@@ -81,6 +90,23 @@ implementation
 uses
   Strings
   ;
+
+function SysFindFirstNew(Path: PChar; Attr: LongInt;
+     var F: TRawbyteSearchRec; IsPChar: Boolean): LongInt;
+begin
+  SysFindFirstNew := FindFirst(Path, Attr, PRawbyteSearchRec(@F)^);
+end;
+
+function SysFindNextNew(var F: TRawbyteSearchRec; IsPChar: Boolean): LongInt;
+begin
+  SysFindNextNew := FindNext(PRawbyteSearchRec(@F)^);
+end;
+
+function SysFindCloseNew(var F: TRawbyteSearchRec): LongInt;
+begin
+  //SysFindCloseNew := 
+  FindClose(PRawbyteSearchRec(@F)^);
+end;
 
 (*
 function SysTVGetShiftState2: Byte;
@@ -120,6 +146,7 @@ procedure SysTVKbdDone;
   begin
   end; {$ENDIF}
 *)
+
 
 {$IFDEF OS2}
 function SysTVGetShiftState2: Byte;

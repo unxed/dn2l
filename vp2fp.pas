@@ -44,6 +44,8 @@ function SysFileSetSize(Handle: Longint; NewSize: TFileSize): Longint;
 function lFExpand(const Path: string): string;
 procedure lTrueName(const Name: String; var S: String);
 
+procedure ClrIO;
+
 implementation
 
 // https://www.freepascal.org/docs-html/current/prog/progse37.html
@@ -125,6 +127,12 @@ end;
 procedure lTrueName(const Name: String; var S: String);
 begin
   S := Name;
+end;
+
+procedure ClrIO;
+begin
+//  while KeyPressed do
+//    ReadKey;
 end;
 
 end.

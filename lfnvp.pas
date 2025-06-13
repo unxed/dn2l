@@ -64,6 +64,8 @@ unit LFNVP;
 interface
 
 uses
+  math,
+	SysUtils,
   vp2fp,
   VPSysLow, // см. комментарий в конце vpsysos2
   VPSysLo2, Dos, Defines
@@ -79,7 +81,7 @@ type
 
   {Extended search structure to be used instead of SearchRec}
   lSearchRec = record
-    SR: TOSSearchRecNew; {Basic field set}
+    SR: TRawByteSearchRec; {Basic field set}
     FullSize: TSize; {True file size}
     (*  LoCreationTime: Longint; {Time created (low-order byte)}
     HiCreationTime: Longint; {Time created (high-order byte)}
@@ -1192,12 +1194,12 @@ function lFileNameOf(var lF: lFile): String;
     lFileNameOf := StrPas_(lF.FullName)
   else
 {$ENDIF}
-  lFileNameOf := StrPas_(FileRec(lF.F).Name);
+  lFileNameOf := FileRec(lF.F).Name;
   end;
 
 function lTextNameOf(var lT: lText): String;
   begin
-  lTextNameOf := StrPas_(TextRec(lT.T).Name);
+  lTextNameOf := TextRec(lT.T).Name;
   end;
 
 procedure lResetFileReadOnly(var F: lFile; RecSize: Word);
