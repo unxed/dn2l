@@ -447,7 +447,7 @@ procedure GetDiz(FR: PFileRec);
   for F := High(TUseLFN) downto Low(TUseLFN) do
     CopyShortString(UpStrg(FR^.FlName[F]), GetDizName1[F]);
   PGetDizName1 := @GetDizName1;
-  ReadFileList(GetDizNameProc, GetDizLineProc, GetDizEndProc);
+  ReadFileList(@GetDizNameProc, @GetDizLineProc, @GetDizEndProc);
   GetDizFound := False;
   if GetDizText <> '' then
     begin
@@ -550,7 +550,7 @@ procedure ExportDiz(
   if OpenFileList(ContainerFullName) then
     begin
     GetFAttr(OldConatainerFile, OldContainerAttr);
-    ReadFileList(SaveDizNameProc, SaveDizLineProc, SaveDizEndProc);
+    ReadFileList(@SaveDizNameProc, @SaveDizLineProc, @SaveDizEndProc);
     EraseFile(ContainerFullName);
     end
   else
