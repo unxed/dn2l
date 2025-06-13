@@ -103,4 +103,11 @@ procedure SetTitle(Text: String);
   end;
 {$ENDIF}
 
+{$IFDEF UNIX}
+procedure SetTitle(Text: String);
+  begin
+    // fixme: porting stub
+  end;
+{$ENDIF}
+
 end.

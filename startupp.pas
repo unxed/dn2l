@@ -55,6 +55,7 @@ unit Startupp;
 interface
 
 uses
+  vp2fp,
   Defines, Startup, Collect, CCalc
   ;
 
@@ -136,7 +137,9 @@ StartupDir := SourceDir;
      else
       Writeln('Warning! Path specified in DNVP environment variable does not exist!');
 *)
-SourceDir := Dos.GetEnv('DN2');
+// fixme: porting stub
+//SourceDir := Dos.GetEnv('DN2');
+  SourceDir := StartupDir;
 DelLeft(SourceDir);
 if (SourceDir <> '') and not PathExist(SourceDir) then
   begin
@@ -156,7 +159,9 @@ TempDir := lfGetLongFileName(TempDir);
 TempFile := lfGetLongFileName(TempFile);
 {$ENDIF}
 
-if  (SysPlatformId <> -1) and (SysPlatformId <> 2) then
-  CmdExt := '.BAT'
+// fixme: porting stub
+//if  (SysPlatformId <> -1) and (SysPlatformId <> 2) then
+//  CmdExt := '.BAT'
+
 end.
 

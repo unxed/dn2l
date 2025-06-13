@@ -1114,8 +1114,11 @@ procedure FixHighliteParams(var Params: THighliteParams);
 
 function InsertHighliteRule(var Params: THighliteParams;
      Index: THighliteRule; const Rule: String): Boolean;
+
+  const
+    HighliteRuleCount = Ord(High(THighliteRule)) - Ord(Low(THighliteRule)) + 1;
   var
-    exrules: array[Low(THighliteRule)..Succ(High(THighliteRule))] of PChar;
+    exrules: array[0..HighliteRuleCount] of PChar;
     rules: THiliteRules absolute exrules;
     space: Integer;
     comma: Boolean;
@@ -1137,7 +1140,7 @@ function InsertHighliteRule(var Params: THighliteParams;
       Inc(needed);
     if needed <= space then
       begin
-      exrules[L] := exrules[Succ(Index)]-1;
+      exrules[L] := exrules[Ord(Succ(Index))]-1;
       Move(exrules[L][0], exrules[L][needed], exrules[H]-exrules[L]);
       if comma then
         begin

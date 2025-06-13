@@ -65,6 +65,7 @@ unit Collect;
 interface
 
 uses
+  vp2fp,
   Defines, Objects2, Streams
   ;
 
@@ -387,7 +388,7 @@ procedure TCollection.AtFree(Index: LongInt);
   FreeItem(Item);
   end;
 
-procedure TCollection.AtReplace;
+procedure TCollection.AtReplace(Index: LongInt; Item: Pointer);
   var
     P: Pointer;
   begin
@@ -421,6 +422,10 @@ procedure TCollection.Error(Code, Info: Integer);
 
 {AK155: replace with TCollection.FirstThat from VP2.1 Objects.pas }
 function TCollection.FirstThat(Test: Pointer): Pointer;
+begin
+end;
+// fixme: porting stub
+(*
   assembler; {$USES ebx}
   {$FRAME-}
 asm
@@ -446,9 +451,14 @@ asm
               @@3:
                 mov     eax,ecx
 end; {/AK155}
+*)
 
 {AK155: pick ForEach from VP 2.1.231 RTL source}
 procedure TCollection.ForEach(Action: Pointer);
+begin
+end;
+// fixme: porting stub
+(*
   assembler; {$USES ebx}
   {$FRAME-}
 asm
@@ -468,6 +478,7 @@ asm
                 loop    @@1
               @@2:
 end; {/AK155}
+*)
 
 procedure TCollection.Free(Item: Pointer);
   begin
@@ -513,6 +524,10 @@ procedure TCollection.Insert(Item: Pointer);
   end;
 
 function TCollection.LastThat(Test: Pointer): Pointer;
+begin
+end;
+// fixme: porting stub
+(*
   assembler; {$USES ebx}
   {$FRAME-} {AK155}
 asm
@@ -540,6 +555,7 @@ asm
                 mov     eax,ecx
 
 end; {/AK155}
+*)
 
 procedure TCollection.Pack;
   var
@@ -767,7 +783,7 @@ procedure TLineCollection.FreeItem(P: Pointer);
     DisposeStr(PString(P));
   end;
 
-procedure TLineCollection.PutItem;
+procedure TLineCollection.PutItem(var S: TStream; Item: Pointer);
   begin
   if LongStrings then
     S.WriteLongStr(Item)
@@ -775,7 +791,7 @@ procedure TLineCollection.PutItem;
     S.WriteStr(Item);
   end;
 
-function TLineCollection.GetItem;
+function TLineCollection.GetItem(var S: TStream): Pointer;
   begin
   if LongStrings then
     GetItem := S.ReadLongStr
@@ -1209,7 +1225,7 @@ procedure TSortedCollection.QSort;
 {NOT QSort}
 
 {-DataCompBoy-}
-function TDirCol.Compare;
+function TDirCol.Compare(Key1, Key2: Pointer): Integer;
   var
     a, b, c: Byte;
   begin

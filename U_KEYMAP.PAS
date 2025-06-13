@@ -51,6 +51,7 @@ unit U_KeyMap;
 interface
 
 uses
+  vp2fp,
   Objects2, Defines, Advance1
   ;
 
@@ -210,9 +211,14 @@ function CharToOemStr(const CharS: String): String;
 
 implementation
   uses
-    Country_, advance, Streams;
+    //Country_,
+    advance, Streams;
 
 procedure XLatBuf(var B; Len: Integer; const XTable: TXLat);
+begin
+end;
+// fixme: porting stub
+(*
   assembler;
   {&Frame-} {$USES ESI, EBX, ECX, EDI}
 asm
@@ -231,6 +237,7 @@ asm
     loop @@Loop
  @@1:
   end;
+*)
 
 const
   WinSetA = [#224, #229, #232, #238, #243];
@@ -309,7 +316,7 @@ function ProcessDefCodepage(DefCodepageS: String): TKeyMap;
     end;
   end;
 
-procedure NullXLAT;
+procedure NullXLAT(var X: TXlat);
   var
     C: Char;
   begin
@@ -435,7 +442,8 @@ procedure InitUpcase;
   var
     C, L, U: Char;
   begin
-  QueryUpcaseTable;
+  // fixme: porting stub
+  //QueryUpcaseTable;
   NullXLAT(LowCaseArray);
 {см. комментарий к AcceptToAscii}
   for C := High(TXlat) downto Low(TXlat) do
@@ -476,7 +484,10 @@ function BuildCodeTable(const S: string; var XlatCP: TXLatCP): Boolean;
   Result := False;
   Val(S, CP, Err);
   if Err = 0 then
-    Result := QueryToAscii(CP, XlatCP[ToAscii])
+    begin
+    // fixme: porting stub
+    // Result := QueryToAscii(CP, XlatCP[ToAscii])
+    end
   else
     begin { должно быть имя xlt-файла}
     NullXLAT(XlatCP[ToAscii]);
@@ -602,5 +613,7 @@ begin
 NullXLAT(NullXlatTable);
 NullXlatTable1 := NullXlatTable;
 FreeCodetables; {Это безопасно, так как MaxKeyMap сейчас нулевой }
-GetSysCountryInfo; InitUpcase;
+// fixme: porting stub
+//GetSysCountryInfo;
+InitUpcase;
 end.

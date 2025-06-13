@@ -107,6 +107,10 @@ uses
 { Advance CurString to next string with an ID of CurId }
 
 procedure AdvanceStringPointer;
+begin
+end;
+// fixme: porting stub
+(*
   {$IFNDEF NOASM}
   {$USES ESI, EDX, EBX, ECX} {$FRAME-}
   assembler;
@@ -151,10 +155,15 @@ asm
     CurString := nil;
   end { AdvanceStringPointer };
 {$ENDIF}
+*)
 
 { Deletes the current string from the table }
 
 procedure DeleteString;
+begin
+end;
+// fixme: porting stub
+(*
   {$IFNDEF NOASM}
   {&Frame-} {$USES ESI, EDI, ECX}
   assembler;
@@ -187,10 +196,15 @@ asm
   HistoryUsed := q;
   end { DeleteString };
 {$ENDIF}
+*)
 
 { Insert a string into the table }
 
 procedure InsertString(Id: Byte; const Str: String);
+begin
+end;
+// fixme: porting stub
+(*
   {$IFNDEF NOASM}
   {&Frame-} {$USES EDX, EDI, ESI, EBX, ECX}
   assembler;
@@ -266,6 +280,7 @@ asm
   HistoryUsed := HistoryUsed+Length(Str)+3;
   end { InsertString };
 {$ENDIF}
+*)
 
 procedure StartId(Id: Byte);
   begin
@@ -317,20 +332,25 @@ procedure HistoryAdd(Id: Byte; const Str: String);
     end;
 
   if I > MaxHistorySize-1 then
-    for J := I-1 downto 0 do
-      begin
+  begin
+    J := I - 1;
+    while J >= 0 do
+    begin
       HistoryStr(Id, J);
       if CurString = nil then
         Break;
       if CurString^[Length(CurString^)] <> '+' then
-        begin
+      begin
         DeleteString;
         Dec(I);
         Inc(J);
         if I < MaxHistorySize then
           Break;
-        end;
       end;
+      Dec(J);
+    end;
+  end;
+
   {
   if HistoryUsed < Length(Str) + 4 then
     begin

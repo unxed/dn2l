@@ -8,6 +8,7 @@ type
   TFileSize  = Longint;
   SmallWord  = System.Word;
   i32 = LongInt;
+  lFile = File;
 
 const
   stOK = 0; { No error }
@@ -39,6 +40,9 @@ function SysFileClose(Handle: Longint): Longint;
 
 function SysFileRead(Handle: Longint; var Buffer; Count: Longint; var Actual: Longint): Longint;
 function SysFileSetSize(Handle: Longint; NewSize: TFileSize): Longint;
+
+function lFExpand(const Path: string): string;
+procedure lTrueName(const Name: String; var S: String);
 
 implementation
 
@@ -95,13 +99,32 @@ begin
 end;
 
 function SysFileRead(Handle: Longint; var Buffer; Count: Longint; var Actual: Longint): Longint;
+var
+    res: Longint;
 begin
-  // fixme: porting stub
+    res := FileRead(Handle, Buffer, Count);
+    Actual := res;
+    Result := res;
+    // fixme: porting stub
 end;
 
 function SysFileSetSize(Handle: Longint; NewSize: TFileSize): Longint;
+var
+    res: Boolean;
 begin
-  // fixme: porting stub
+    res := FileTruncate(Handle, NewSize);
+    Result := Longint(res);
+    // fixme: porting stub
+end;
+
+function lFExpand(const Path: string): string;
+begin
+  lFExpand := ExpandFileName(Path);
+end;
+
+procedure lTrueName(const Name: String; var S: String);
+begin
+  S := Name;
 end;
 
 end.

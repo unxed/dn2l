@@ -51,6 +51,7 @@ unit ed2;
 interface
 
 uses
+  vp2fp,
   Commands, U_KeyMap, Collect, Views, Drivers, Defines, Streams,
   Lfn {, SBlocks}
   ;

@@ -53,6 +53,7 @@ unit Advance;
 interface
 
 uses
+  vp2fp,
   Dos,
   Strings,
   Objects2, Lfn {DataCompBoy}
@@ -170,19 +171,6 @@ procedure CheckOS;
 { Check for OS - For checking API please use error codes }
 { Automatically called while program started }
 
-procedure ClrIO;
-  inline;
-  begin
-  InOutRes := 0;
-  DosError := 0;
-  Abort := False;
-  end;
-
-function MemOK: Boolean;
-  inline;
-  begin
-  MemOK := True
-  end; {JO}
 function GetMeMemoStream: PStream; {-$VOL}
 function MemAdjust(L: LongInt): LongInt;
 procedure FillWord(var B; Count, W: Word);
@@ -325,6 +313,21 @@ uses
   VpSysLow, Advance2,
   Commands
   ;
+
+procedure ClrIO;
+  inline;
+  begin
+  InOutRes := 0;
+  DosError := 0;
+  Abort := False;
+  end;
+
+function MemOK: Boolean;
+  inline;
+  begin
+  MemOK := True
+  end; {JO}
+
 
 {-DataCompBoy-}
 constructor TTextReader.Init;

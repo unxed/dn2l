@@ -53,6 +53,7 @@ unit DNStdDlg;
 interface
 
 uses
+  vp2fp,
   FilesCol, Collect, Defines, Streams, Drivers, Views, Dialogs
   ;
 
@@ -250,36 +251,6 @@ function ValidFileName(var FileName: String): Boolean;
 
     { Contains returns true if S1 contains any characters in S2 }
   function Contains(const S1, S2: String): Boolean;
-    {$IFNDEF NOASM}
-    near;
-    assembler;
-    {$Frame-} {$USES ESI, EDI, EDX, EBX, ECX}
-  asm
-        CLD
-        MOV     ESI,S1
-        MOV     EDI,S2
-        MOV     EDX,EDI
-        XOR     EAX,EAX
-        LODSB
-        MOV     EBX,EAX
-        OR      EBX,EBX
-        JZ      @@2
-        MOV     AL,[EDI]
-        XCHG    EAX,ECX
- @@1:   PUSH    ECX
-        MOV     EDI,EDX
-        LODSB
-        REPNE   SCASB
-        POP     ECX
-        JE      @@3
-        DEC     EBX
-        JNZ     @@1
- @@2:   XOR     AL,AL
-        JMP     @@4
- @@3:   MOV     AL,1
- @@4:
- end;
-    {$ELSE}
     var
       q: Integer;
     begin { Contains }
@@ -289,7 +260,6 @@ function ValidFileName(var FileName: String): Boolean;
         Exit;
     Contains := False;
     end { Contains };
-  {$ENDIF}
 
   begin { ValidFileName }
   ValidFileName := True;

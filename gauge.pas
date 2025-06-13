@@ -210,7 +210,7 @@ procedure TWhileView.InsBut;
   Insert(But);
   end;
 
-constructor TWhileView.Init;
+constructor TWhileView.Init(Bounds: TRect);
   var
     I: Integer;
   begin
@@ -226,7 +226,7 @@ constructor TWhileView.Init;
   Bottom := '';
   end;
 
-procedure TWhileView.Write;
+procedure TWhileView.Write(N: Integer; S: String);
   var
     R: TRect;
     B: TDrawBuffer;
@@ -257,7 +257,9 @@ procedure TWhileView.Write;
       R.A.X := Origin.X-(Length(S)-Size.X+4) div 2;
       R.B.X := R.A.X+Length(S)+4;
       end;
-    Boolean(Side) := not Boolean(Side);
+    //Boolean(Side) := not Boolean(Side);
+    // fixme: porting stub
+    if Side = sdLeft then Side := sdRight else Side := sdLeft;
     Locate(R);
     Dispose(But, Done);
     But := nil;
@@ -285,7 +287,7 @@ procedure TWhileView.ClearInterior;
   DrawView;
   end;
 
-procedure TWhileView.SetState;
+procedure TWhileView.SetState(AState: Word; Enable: Boolean);
   var
     WindowCommands: TCommandSet;
   begin
@@ -303,14 +305,14 @@ procedure TWhileView.SetState;
     end;
   end;
 
-function TWhileView.GetPalette;
+function TWhileView.GetPalette: PPalette;
   const
     P: String[Length(CDialog)] = CDialog;
   begin
   GetPalette := @P;
   end;
 
-procedure TWhileView.HandleEvent;
+procedure TWhileView.HandleEvent(var Event: TEvent);
   var
     P: TPoint;
     R: TRect;
@@ -410,7 +412,9 @@ procedure TWhileView.Draw;
       R.A.X := Origin.X-(Length(Top)-Size.X+4) div 2;
       R.B.X := R.A.X+Length(Top)+4;
       end;
-    Boolean(Side) := not Boolean(Side);
+    //Boolean(Side) := not Boolean(Side);
+    // fixme: porting stub
+    if Side = sdLeft then Side := sdRight else Side := sdLeft;
     Locate(R);
     Dispose(But, Done);
     But := nil;
@@ -432,7 +436,9 @@ procedure TWhileView.Draw;
       R.A.X := Origin.X-(Length(Bottom)-Size.X+4) div 2;
       R.B.X := R.A.X+Length(Bottom)+4;
       end;
-    Boolean(Side) := not Boolean(Side);
+    //Boolean(Side) := not Boolean(Side);
+    // fixme: porting stub
+    if Side = sdLeft then Side := sdRight else Side := sdLeft;
     Locate(R);
     Dispose(But, Done);
     But := nil;
@@ -474,7 +480,7 @@ procedure TWhileView.Draw;
   But^.Draw;
   end { TWhileView.Draw };
 
-function TWhileView.Valid;
+function TWhileView.Valid(C: Word): Boolean;
   begin
   Result := (C <> cmQuit) and (C <> cmClose) and inherited Valid(C);
   end;

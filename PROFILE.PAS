@@ -82,6 +82,7 @@ procedure CloseProfile;
 implementation
 
 uses
+  vp2fp,
   Strings, Streams, Advance1
   ;
 
@@ -97,7 +98,7 @@ type
     procedure SeekRel(Delta: Integer);
     end;
 
-procedure TModBufStream.SeekRel;
+procedure TModBufStream.SeekRel(Delta: Integer);
   begin
   Seek(GetPos+Delta);
   end; {DataCompBoy}
@@ -370,7 +371,9 @@ function InQuotes(Str: PChar): Boolean;
       ( (Str[0] = '''') and (P[0] = ''''))
   end;
 
-function GetPrivateProfileString;
+function GetPrivateProfileString(ApplicationName, KeyName: PChar;
+    Default: PChar; ReturnedString: PChar; Size: Integer;
+    FileName: PChar): Integer;
   var
     Buf: array[0..255] of Char;
     P, Copy: PChar;
@@ -435,7 +438,8 @@ function GetInt(Str: PChar): Word;
   GetInt := Res
   end;
 
-function GetPrivateProfileInt;
+function GetPrivateProfileInt(ApplicationName, KeyName: PChar;
+    Default: Integer; FileName: PChar): Word;
   var
     Buf: array[0..255] of Char;
   begin
@@ -446,7 +450,8 @@ function GetPrivateProfileInt;
     GetPrivateProfileInt := GetInt(Buf);
   end;
 
-function WritePrivateProfileString;
+function WritePrivateProfileString(ApplicationName, KeyName, Str,
+    FileName: PChar): Boolean;
   var
     Buf: array[0..255] of Char;
     Res: Boolean;
