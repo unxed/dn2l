@@ -23,6 +23,7 @@ unit VPSysLow;
 interface
 
 uses
+vp2fp,
 SysUtils,
 {$IFDEF OS2}    Os2Def, Os2Base; {$Undef KeyDll} {$ENDIF}
 {$IFDEF LINUX}  Linux;                           {$ENDIF}
@@ -56,10 +57,6 @@ type
   TQuad = Comp;
   PQuad = ^TQuad;
   TSemHandle = Longint;
-
-  //vp2fp
-  TFileSize  = Longint;
-  SmallWord  = System.Word;
 
 {$IFDEF OS2}
 {$IFNDEF NoMouseMove} { не позиционировать мышь в левый верхний угол}

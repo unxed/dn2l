@@ -187,32 +187,8 @@ procedure lAssignText(var T: lText; const Name: String);
 procedure lResetFile(var F: lFile; RecSize: Word);
 procedure lResetFileReadOnly(var F: lFile; RecSize: Word);
 procedure lReWriteFile(var F: lFile; RecSize: Word);
-procedure lResetText(var F: lText);
-  inline;
-  begin
-  Reset(F.T)
-  end;
 procedure lResetTextReadOnly(var F: lText);
 procedure lRewriteText(var F: lText);
-procedure lAppendText(var T: lText);
-  inline;
-  begin
-  Append(T.T);
-  end;
-procedure lEraseFile(var F: lFile);
-{$IFNDEF DPMI32}
-  inline;
-  begin
-  Erase(F.F);
-  end;
-{$ENDIF}
-procedure lEraseText(var T: lText);
-{$IFNDEF DPMI32}
-  inline;
-  begin
-  Erase(T.T);
-  end;
-{$ENDIF}
 procedure lRenameFile(var F: lFile; const NewName: String);
 procedure lRenameText(var T: lText; const NewName: String);
 procedure lChangeFileName(const Name, NewName: String);
@@ -281,6 +257,31 @@ uses
   {$IFDEF DPMI32} ,Startup ,Dpmi32 ,Dpmi32df {$ENDIF}
   , fnotify
   ;
+
+procedure lResetText(var F: lText);
+  inline;
+  begin
+  Reset(F.T)
+  end;
+procedure lAppendText(var T: lText);
+  inline;
+  begin
+  Append(T.T);
+  end;
+procedure lEraseFile(var F: lFile);
+{$IFNDEF DPMI32}
+  inline;
+  begin
+  Erase(F.F);
+  end;
+{$ENDIF}
+procedure lEraseText(var T: lText);
+{$IFNDEF DPMI32}
+  inline;
+  begin
+  Erase(T.T);
+  end;
+{$ENDIF}
 
 function StrPas_(S: array of Char): String;
   var

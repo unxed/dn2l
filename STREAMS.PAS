@@ -11,6 +11,7 @@ unit Streams;
 interface
 
 uses
+  vp2fp,
   VpSysLow, Defines, Objects2
   ;
 

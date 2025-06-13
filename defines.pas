@@ -5,6 +5,7 @@ unit Defines;
 interface
 
 uses
+  vp2fp,
   VpSysLow
   ;
 
@@ -102,13 +103,13 @@ type
     {`Таблица перекодировки. Символ в исходной кодировке - индекс,
      соответствующий элемент - символ в новой кодировке `}
 
+implementation
+
 procedure Beep(Freq, Dur: LongInt);
   inline;
   begin
-  VpSysLow.SysBeepEx(Freq, Dur);
+  //VpSysLow.SysBeepEx(Freq, Dur);
   end;
-
-implementation
 
 procedure CheckEmpty(var Rect: TRect);
   begin

@@ -58,6 +58,7 @@ unit Drivers;
 interface
 
 uses
+  vp2fp,
   Lfn, Defines, xTime, DnIni, Advance6, Commands
   ;
 
@@ -210,6 +211,7 @@ type
 
   { Default system error handler routine }
 
+(*
 function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
   {` Выдать красный диалог о системной ошибке со стандартными кнопками,
     а также с кнопкой "Стоп", если SysErrStopButton=True.
@@ -221,12 +223,13 @@ function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
      4 - Stop (Abort = False)
    Если Abort=True или NeedAbort=True в момент вызова, то без всякого
    диалога возвращается результат 3 с Abort=True `}
+*)
 
 const
 
   { Initialized variables }
 
-  SysErrorFunc: TSysErrorFunc = SystemError;
+//  SysErrorFunc: TSysErrorFunc = SystemError;
   SysColorAttr: Word = $4E4F;
   SysColorButtonAttr: Word = $0E0F;
   SysMonoAttr: Word = $7070;
@@ -475,6 +478,7 @@ asm     cld
         loop    @@4
 end;
 
+(*
 function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
   var
     Res: LongInt;
@@ -572,6 +576,7 @@ function SystemError(ErrorCode: Integer; Drive: Byte): Integer;
       end;
   end {case};
   end { SystemError };
+*)
 
 { ******** UTILITY ROUTINES ******** }
 

@@ -60,6 +60,7 @@ unit Advance1; {String functions}
 interface
 
 uses
+  vp2fp,
   Defines, Dos {Cat}
   ;
 
@@ -88,11 +89,6 @@ function StrGrd(AMax, ACur: TSize; Wide: Byte; Rev: Boolean): String;
 function Percent(AMax, ACur: TSize): String;
   {` Построение строки вида 57%; длина - как получится. `}
 procedure Hex8Lo(L: LongInt; var HexLo);
-procedure AddStr(var S: String; C: Char);
-  inline;
-  begin
-  S := S+C
-  end; {Cat}
 {procedure DelFC(var s:String);}
 
 {---  ' '-related string functions }
@@ -119,22 +115,10 @@ function LongStrg(C: Char; Num: LongInt): LongString;
   {` Создать строку длиной Num, заполненную символом C `}
 
 {case functions}
-function UpCase(c: Char): Char;
-{AK155}
-  inline;
-  begin
-  UpCase := UpCaseArray[C]
-  end;
 
 procedure UpStr(var s: String);
 function UpStrg(s: String): String;
 
-function LowCase(c: Char): Char;
-{AK155}
-  inline;
-  begin
-  LowCase := LowCaseArray[C]
-  end;
 procedure LowStr(var s: String);
 function LowStrg(s: String): String;
 
@@ -271,6 +255,34 @@ function MinBufSize(x: TFileSize; y: LongInt): LongInt;
 function Positive(x: TFileSize): TFileSize;
   {` Размер файла, ограниченный снизу нулём `}
 
+function Str2Comp(const s: String): Comp;
+
+implementation
+
+uses
+  DnIni, Startup, Commands, Advance, U_KeyMap
+  ;
+
+function CompToFSize(x: Comp): TFileSize;
+  {` Comp -> TFileSize `}
+
+  procedure AddStr(var S: String; C: Char);
+  inline;
+  begin
+  S := S+C
+  end; {Cat}
+function UpCase(c: Char): Char;
+{AK155}
+  inline;
+  begin
+  UpCase := UpCaseArray[C]
+  end;
+function LowCase(c: Char): Char;
+{AK155}
+  inline;
+  begin
+  LowCase := LowCaseArray[C]
+  end;
 function i32(x: TFileSize): LongInt;
   {` TFileSize -> LongInt `}
 {$ifndef LargeFileSupport}
@@ -279,10 +291,6 @@ function i32(x: TFileSize): LongInt;
   Result := x;
   end;
 {$endif}
-
-function CompToFSize(x: Comp): TFileSize;
-  {` Comp -> TFileSize `}
-
 function FSizeMod(x: TFileSize; y: LongInt): LongInt;
   {` Остаток от деления x на y `}
 {$ifndef LargeFileSupport}
@@ -292,13 +300,6 @@ function FSizeMod(x: TFileSize; y: LongInt): LongInt;
   end;
 {$endif}
 
-function Str2Comp(const s: String): Comp;
-
-implementation
-
-uses
-  DnIni, Startup, Commands, Advance, U_KeyMap
-  ;
 
 function Dec2(w: Word): Str2;
   begin

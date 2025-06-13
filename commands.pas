@@ -50,11 +50,6 @@ unit Commands;
 
 interface
 
-function Bit(N: Word): Word; inline;
-  begin
-  Result := Word(1) shl N;
-  end;
-
 const
   MaxStringLength = 255;
   MaxReasonableStringLength = 255;
@@ -3174,5 +3169,11 @@ type
     );
 
 implementation
+
+function Bit(N: Word): Word; inline;
+  begin
+  Result := Word(1) shl N;
+  end;
+
 end.
 
