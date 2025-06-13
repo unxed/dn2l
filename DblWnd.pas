@@ -51,6 +51,8 @@ unit DblWnd;
 interface
 
 uses
+  math,
+  vp2fp,
   Views, Defines, Streams, Drivers, FlPanelX, FlPanel
   ;
 
@@ -449,8 +451,9 @@ function ValidVP(var P: PView; S: PView {скроллбар}): Boolean;
 
 procedure InsertView(var P: PView; S: PView; Manager: PDoubleWindow);
   begin
-  if ValidVP(P, S) then
-    with Manager do
+  // fixme: porting stub
+  //if ValidVP(P, S) then
+    with Manager^ do
       begin
       Insert(P);
       Insert(S);
@@ -499,7 +502,7 @@ function InsertTree(R1: TRect;
     Inc(R1.B.Y, 2);
     P := New(PTreeInfoView, Init(R1, PHTreeView(Result)));
     PHTreeView(Result)^.Info := P;
-    with Manager do
+    with Manager^ do
       begin
       Insert(P);
       Insert(Result);
@@ -513,7 +516,7 @@ function InsertInfo(R1: TRect;
   begin
   Result := New(PDiskInfo, Init(R1, Other));
   Result^.Hide;
-  Manager.Insert(Result);
+  Manager^.Insert(Result);
   PDiskInfo(Result)^.InsertDriveView;
   PDiskInfo(Result)^.ReadData;
   // Это надо делать после Insert
@@ -531,10 +534,10 @@ type
 
 const
   PanelConstructor: array[dtInfo..10] of TPanelConstructor =
-    (  InsertInfo
-     , InsertTree
-     , InsertQView
-     , InsertDizView
+    (  @InsertInfo
+     , @InsertTree
+     , @InsertQView
+     , @InsertDizView
      , nil
      , nil
      , nil
@@ -593,7 +596,7 @@ procedure TDoubleWindow.SwitchView(dtType: Byte);
     Panel[N].PanelType := dtType;
     Panel[Selected].AnyPanel^.Select;
     if dtType in [dtQView, dtDizView] then
-      Panel[Selected].FilePanel.QuickViewEnabled := True;
+      Panel[Selected].FilePanel^.QuickViewEnabled := True;
     Redraw;
     end
   else
@@ -607,7 +610,7 @@ procedure TDoubleWindow.SwitchView(dtType: Byte);
       Panel[N].FilePanel^.Locate(R1);
       Panel[N].FilePanel^.Show;
       Panel[N].PanelType := dtPanel;
-      Panel[not N].FilePanel.QuickViewEnabled := False;
+      Panel[not N].FilePanel^.QuickViewEnabled := False;
       if not N <> Selected then
         Panel[not N].FilePanel^.Select;
       end
@@ -708,7 +711,7 @@ procedure TDoubleWindow.ChangeDrv(N: TPanelNum);
   GetBounds(R);
   if not PanelVisible or (Panel[N].PanelType <> dtPanel) then
     begin
-    with ThisPanel do
+    with ThisPanel^ do
       P.X := Origin.X + Size.X div 2 - 8;
     P.Y := Origin.Y+3;
     S := SelectDrive(P.X, P.Y,
@@ -969,7 +972,7 @@ procedure TDoubleWindow.HandleCommand (var Event: TEvent);
             begin
             GetBounds(OldBounds);
             GetBounds(OldPanelBounds);
-            if (Size.X < Desktop.Size.X) or PanelZoomed then
+            if (Size.X < Desktop^.Size.X) or PanelZoomed then
               Message(@Self, evCommand, cmMaxi, nil);
             end;
           { Flash 05-02-2004 <<< }
