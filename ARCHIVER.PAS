@@ -51,6 +51,7 @@ unit Archiver;
 interface
 
 uses
+  vp2fp,
   Files,
   Views, Defines, Objects2, Streams, Collect
   ;
