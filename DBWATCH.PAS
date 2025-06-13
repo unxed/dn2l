@@ -70,8 +70,11 @@ unit DBWatch;
 interface
 
 uses
-  Collect, Objects2, Streams, Defines,
-  use16
+  vp2fp,
+  Lfnvp,
+  Collect, Objects2, Streams, Defines
+  //,
+  //use16
   ;
 
 type
@@ -117,7 +120,7 @@ uses
   Messages, Commands, DNApp, Lfn, Advance1
   ;
 
-procedure TFieldCollection.FreeItem;
+procedure TFieldCollection.FreeItem(P: Pointer);
   begin
   Dispose(PFieldRec(P));
   end;
@@ -159,7 +162,7 @@ procedure TDBFile.OpenMode(Mode: Word);
   BaseFile.Init(BaseName, Mode, 16384);
   end;
 
-constructor TDBFile.Init;
+constructor TDBFile.Init(FileName: String);
 
   {--- start -------- Eugeny Zvyagintzev ---- 17-06-2002 ----}
   type
@@ -315,7 +318,7 @@ constructor TDBFile.Init;
   BaseFile.Seek(HeaderLen);
   end { TDBFile.Init };
 
-procedure TDBFile.Read;
+procedure TDBFile.Read(var Buf; Num: Word);
   var
     I: LongInt;
   begin
@@ -328,18 +331,18 @@ procedure TDBFile.Read;
   Inc(Loc, Num);
   end;
 
-procedure TDBFile.Seek;
+procedure TDBFile.Seek(NewLoc: LongInt);
   begin
   BaseFile.Seek(NewLoc*RecLen+HeaderLen);
   Loc := NewLoc;
   end;
 
-function TDBFile.GetFieldRec;
+function TDBFile.GetFieldRec(N: Integer): PFieldRec;
   begin
   GetFieldRec := Fields^.At(N);
   end;
 
-function TDBFile.GetField;
+function TDBFile.GetField(Name: String; var Buf): String;
   var
     I, K, N: Integer;
     B: array[0..65000] of Char absolute Buf;
@@ -359,7 +362,7 @@ function TDBFile.GetField;
   GetField := S;
   end;
 
-function TDBFile.GetNField;
+function TDBFile.GetNField(N: Word; var Buf): String;
   var
     I, K, J: Integer;
     B: array[0..65000] of Char absolute Buf;

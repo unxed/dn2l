@@ -257,6 +257,8 @@ function Positive(x: TFileSize): TFileSize;
 
 function Str2Comp(const s: String): Comp;
 
+procedure AddStr(var S: String; C: Char);
+
 implementation
 
 uses

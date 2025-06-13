@@ -93,6 +93,8 @@ unit DBView;
 interface
 
 uses
+  vp2fp,
+  Lfnvp,
   DBWatch, Defines, Objects2, Streams,
   Views, Drivers, Dialogs,
   FViewer, Commands, XCode
@@ -145,6 +147,8 @@ type
     function Failed(var FileIsDBF: Boolean): Boolean;
     end;
 
+  {
+  // fixme: porting stub
   PMemoStream = ^TMemoStream;
   TMemoStream = object(TStream)
     StartPos: LongInt;
@@ -159,6 +163,7 @@ type
     procedure Truncate; virtual;
     procedure Write(const Buf; Count: Word); virtual;
     end;
+  }
 
   TDBIndicator = object(TView)
     DBViewer: PDBViewer;

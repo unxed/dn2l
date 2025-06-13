@@ -52,6 +52,7 @@ unit FViewer;
 interface
 
 uses
+  vp2fp,
   SysUtils,
   Defines, Streams, Views, Drivers,
   Advance, highlite, xTime,

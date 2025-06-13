@@ -51,6 +51,7 @@ unit Macro;
 interface
 
 uses
+  math,
   Advance, Defines, Objects2, Views, Collect,
   Microed, highlite, Strings
   ;
@@ -186,7 +187,7 @@ function Token(const S: String; var Pos: LongInt): String;
   Token := A;
   end { Token };
 
-function TIDCollection.Compare;
+function TIDCollection.Compare(P1, P2: Pointer): Integer;
   begin
   if PLngWord(P1)^.Name > PLngWord(P2)^.Name then
     Compare := 1
@@ -196,14 +197,14 @@ function TIDCollection.Compare;
     Compare := 0;
   end;
 
-constructor TLngWord.Init;
+constructor TLngWord.Init(AL: Word; const AName: String);
   begin
   Name := AName;
   UpStr(Name);
   l := AL;
   end;
 
-constructor TEditMacros.Init;
+constructor TEditMacros.Init(S: String; var F: PTextReader);
   var
     I, J: LongInt;
     IDs: PIDCollection;
@@ -413,7 +414,7 @@ constructor TEditMacros.Init;
   IDs := nil;
   end { TEditMacros.Init };
 
-procedure TEditMacros.Play;
+procedure TEditMacros.Play(Editor: PView);
   procedure DoPlay(P: PMacroCommand);
     begin
     P^.ExecCommand(Editor);
@@ -429,14 +430,14 @@ destructor TEditMacros.Done;
   Commands := nil;
   end;
 
-constructor TMacroCommand.Init;
+constructor TMacroCommand.Init(ACommand, ARepetitions: Word);
   begin
   inherited Init;
   Command := ACommand;
   Repetitions := ARepetitions;
   end;
 
-procedure TMacroCommand.ExecCommand;
+procedure TMacroCommand.ExecCommand(Editor: PView);
   var
     I: Integer;
   begin
@@ -444,7 +445,7 @@ procedure TMacroCommand.ExecCommand;
     Message(Editor^.Owner, evCommand, Command, nil);
   end;
 
-procedure TMacroGoto.ExecCommand;
+procedure TMacroGoto.ExecCommand(Editor: PView);
   begin
   if  (Command < 0) then
     PFileEditor(Editor)^.ScrollTo(PFileEditor(Editor)^.Delta.X,
@@ -455,14 +456,14 @@ procedure TMacroGoto.ExecCommand;
     PFileEditor(Editor)^.ScrollTo(Command, Repetitions);
   end;
 
-constructor TMacroMark.Init;
+constructor TMacroMark.Init(AN: Integer; AMark: Boolean);
   begin
   TObject.Init;
   Command := Max(1, Min(AN, 9));
   Mark := AMark;
   end;
 
-procedure TMacroMark.ExecCommand;
+procedure TMacroMark.ExecCommand(Editor: PView);
   begin
   if Mark then
     with PFileEditor(Editor)^ do
@@ -472,14 +473,14 @@ procedure TMacroMark.ExecCommand;
       ScrollTo(MarkPos[Command].X, MarkPos[Command].Y);
   end;
 
-constructor TMacroString.Init;
+constructor TMacroString.Init(const AString: String; ARepetitions: Word);
   begin
   TObject.Init;
   S := NewStr(AString);
   Repetitions := ARepetitions;
   end;
 
-procedure TMacroString.ExecCommand;
+procedure TMacroString.ExecCommand(Editor: PView);
   var
     I, J: Integer;
   begin
@@ -547,7 +548,7 @@ destructor TDOSVar.Done;
 
 { TVarList }
 
-procedure TVarList.FocusItem;
+procedure TVarList.FocusItem(Item: LongInt);
   var
     P: PDOSVar;
   begin
@@ -572,7 +573,7 @@ procedure TVarList.FocusItem;
     end;
   end { TVarList.FocusItem };
 
-function TVarList.GetText;
+function TVarList.GetText(Item: LongInt; MaxLen: Integer): String;
   var
     P: PDOSVar;
   begin
@@ -583,7 +584,7 @@ function TVarList.GetText;
     GetText := '';
   end;
 
-procedure TVarList.HandleEvent;
+procedure TVarList.HandleEvent(var Event: TEvent);
   var
     P: PDOSVar;
 
@@ -673,7 +674,7 @@ procedure TVarList.HandleEvent;
   end {case};
   end { TVarList.HandleEvent };
 
-procedure EditDOSEnvironment;
+procedure EditDOSEnvironment(Env: PByteArray);
   var
     D: PDialog;
     P: PView;
@@ -736,7 +737,8 @@ procedure EditDOSEnvironment;
 
     procedure Put(C: Char);
       begin
-      Env^[i] := Byte(C);
+      // fixme: porting stub
+      //Env^[i] := Byte(C);
       Inc(i);
       end;
 
@@ -758,6 +760,8 @@ procedure EditDOSEnvironment;
   New(PC, Init(10, 10));
 
   I := 0;
+  // fixme: porting stub
+  {
   while Env^[I] <> 0 do
     begin
     n1 := I; n2 := I;
@@ -775,6 +779,7 @@ procedure EditDOSEnvironment;
       PC^.Insert(New(PDOSVar, Init(PChar(Env) + n1, n2-n1, I-n2-1)));
     Inc(I);
     end;
+  }
 
   MakeDialog;
 
@@ -782,12 +787,15 @@ procedure EditDOSEnvironment;
     begin
     I := 0;
     PC^.ForEach(@DoPut);
+    // fixme: porting stub
+    {
     Env^[I] := 0;
     Env^[I+1] := 0;
     Env^[I+2] := 0;
     Env^[I+3] := 0;
     Env^[I+4] := 0;
     Env^[I+5] := 0;
+    }
     end;
 
   D^.Free;

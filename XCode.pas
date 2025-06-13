@@ -3,6 +3,7 @@ unit XCode;
 interface
 
 uses
+  Lfnvp,
   Defines, Objects2, Streams, U_KeyMap
   ;
 
@@ -42,7 +43,7 @@ uses
   Advance, Advance1, Lfn, DNStdDlg, DnApp, Commands, DnIni
   ;
 
-constructor TXCoder.Init;
+constructor TXCoder.Init(AMaxCodeTagLen: Byte);
   begin
   inherited Init;
   KeyMap := kmAscii;
@@ -52,7 +53,7 @@ constructor TXCoder.Init;
   MaxCodeTagLen := AMaxCodeTagLen;
   end;
 
-procedure TXCoder.Store;
+procedure TXCoder.Store(var S: TStream);
   begin
   S.Write(KeyMap, SizeOf(KeyMap));
   S.Write(MaxCodeTagLen, SizeOf(MaxCodeTagLen));
@@ -61,7 +62,7 @@ procedure TXCoder.Store;
     S.Write(XLatCP[ToAscii], SizeOf(TXLat));
   end;
 
-constructor TXCoder.Load;
+constructor TXCoder.Load(var S: TStream);
   var
     FName: PString;
   begin

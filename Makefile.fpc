@@ -12,4 +12,4 @@ includedir=../../rtl-console/src/inc
 fpcdir=../../..
 
 [compiler]
-options = -Mobjfpc
+options = -Mobjfpc -Se4
