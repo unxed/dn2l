@@ -64,6 +64,7 @@ unit LFNVP;
 interface
 
 uses
+  vp2fp,
   VPSysLow, // см. комментарий в конце vpsysos2
   VPSysLo2, Dos, Defines
   ;

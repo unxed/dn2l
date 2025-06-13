@@ -54,6 +54,7 @@ interface
 
 uses
   vp2fp,
+  lfnvp,
   FilesCol, Collect, Defines, Streams, Drivers, Views, Dialogs
   ;
 

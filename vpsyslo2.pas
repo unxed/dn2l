@@ -9,6 +9,7 @@ unit VPSysLo2;
 interface
 
 uses
+  vp2fp,
   VpSysLow
   {$IFDEF OS2}, Os2Def, Os2Base {$Undef KeyDll} {$ENDIF}
   {$IFDEF WIN32}, Windows, VpKbdW32 {$ENDIF}
