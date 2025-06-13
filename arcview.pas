@@ -53,6 +53,7 @@ unit ArcView;
 interface
 
 uses
+  vp2fp,
   Collect, Defines, Objects2, Streams, Views,
   FilesCol, DiskInfo,
   Drives, Commands, Archiver, FStorage
