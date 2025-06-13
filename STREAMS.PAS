@@ -251,6 +251,10 @@ const
   { Uses  eax,edx                                         }
 
 procedure DoStreamError;
+begin
+end;
+// fixme: porting stub
+(*
   assembler; {$USES ecx}
   {$FRAME-}
 asm
@@ -261,6 +265,7 @@ asm
   mov     eax,[ecx]
   call    DWord Ptr [eax].TStream_Error
 end;
+*)
 
 procedure TStream.CopyFrom(var S: TStream; Count: TFileSize);
   var
@@ -306,6 +311,10 @@ procedure TStream.Flush;
   end;
 
 function TStream.Get: PObject;
+begin
+end;
+// fixme: porting stub
+(*
   assembler; {$USES None}
   {$FRAME+}
 asm
@@ -368,6 +377,7 @@ asm
   @@4:
   { Return Self or nil }
 end;
+*)
 
 function TStream.GetPos: TFileSize;
   begin
@@ -386,6 +396,10 @@ function TStream.GetSize: TFileSize;
   end;
 
 procedure TStream.Put(P: PObject);
+begin
+end;
+// fixme: porting stub
+(*
   assembler; {$USES None}
   {$FRAME+}
 asm
@@ -439,6 +453,7 @@ asm
   call    [edx].TStreamRec.Store
   @@5:
 end;
+*)
 
 procedure TStream.Read(var Buf; Count: SW_Word);
   begin
@@ -631,7 +646,7 @@ function AFileClose(Handle: Word): Boolean;
   AFileClose := (SysFileClose(Handle) = 0);
   end;
 
-function AFileOpen(var FileName: AsciiZ; Mode: Word; var Handle: Word)
+function AFileOpen(var FileName: AsciiZ; Mode: Word; var Handle: Longint)
   : Word;
   begin
   if Mode = stCreate then

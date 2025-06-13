@@ -136,7 +136,8 @@ function HeapNotify(Size: Word): Integer;
 
 procedure InitMemory;
   begin
-  HeapError := @HeapNotify;
+  //fixme: porting stub
+  //HeapError := @HeapNotify;
   SafetyPoolSize := LowMemSize*16;
   LowMemory;
   end;
@@ -182,10 +183,11 @@ procedure NewCache(var P: Pointer; Size: Word);
     Cache: PCache;
   begin
   Inc(Size, SizeOf(TCache));
-  if MaxAvail >= Size then
-    GetMem(Cache, Size)
-  else
-    Cache := nil;
+  // fixme: porting stub
+//  if MaxAvail >= Size then
+    GetMem(Cache, Size);
+//  else
+//    Cache := nil;
   if Cache <> nil then
     begin
     if CacheList = nil then
@@ -198,7 +200,9 @@ procedure NewCache(var P: Pointer; Size: Word);
     CacheList := Cache;
     Cache^.Master := @P;
     Cache^.Size := Size;
-    Inc(PtrRec(Cache).Ofs, SizeOf(TCache));
+    // fixme: porting stub
+    //Inc(PtrRec(Cache).Ofs, SizeOf(TCache));
+    Cache := PCache(PtrUInt(Cache) + SizeOf(TCache));
     end;
   P := Cache;
   end { NewCache };
@@ -207,7 +211,9 @@ procedure DisposeCache(P: Pointer);
   var
     Cache, C: PCache;
   begin
-  PtrRec(Cache).Ofs := PtrRec(P).Ofs-SizeOf(TCache);
+  // fixme: porting stub
+  //PtrRec(Cache).Ofs := PtrRec(P).Ofs-SizeOf(TCache);
+  Cache := PCache(PtrUInt(P) - SizeOf(TCache));
   C := CacheList;
   while (C^.Next <> Cache) and (C^.Next <> CacheList) do
     C := C^.Next;
@@ -237,7 +243,9 @@ procedure NewBuffer(var P: Pointer; Size: Word);
     Buffer^.Next := BufferList;
     Buffer^.Size := Size;
     BufferList := Buffer;
-    Inc(PtrRec(Buffer).Ofs, SizeOf(TBuffer));
+    // fixme: porting stub
+    //Inc(PtrRec(Buffer).Ofs, SizeOf(TBuffer));
+    Buffer := PBuffer(PtrUInt(Buffer) + SizeOf(TBuffer));
     end;
   P := Buffer;
   end;
@@ -248,7 +256,9 @@ procedure DisposeBuffer(P: Pointer);
   begin
   if P <> nil then
     begin
-    Dec(PtrRec(P).Ofs, SizeOf(TBuffer));
+    // fixme: porting stub
+    //Dec(PtrRec(P).Ofs, SizeOf(TBuffer));
+    P := PBuffer(PtrUInt(P) - SizeOf(TBuffer));
     Buffer := BufferList;
     PrevBuf := nil;
     while (Buffer <> nil) and (P <> Buffer) do
@@ -273,7 +283,9 @@ function GetBufferSize(P: Pointer): Word;
     GetBufferSize := 0
   else
     begin
-    Dec(PtrRec(P).Ofs, SizeOf(TBuffer));
+    // fixme: porting stub
+    //Dec(PtrRec(P).Ofs, SizeOf(TBuffer));
+    P := PBuffer(PtrUInt(P) - SizeOf(TBuffer));
     GetBufferSize := PBuffer(P)^.Size;
     end;
   end;
