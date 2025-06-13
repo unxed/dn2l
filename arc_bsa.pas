@@ -50,6 +50,7 @@ unit arc_BSA; {BSA}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -76,7 +77,7 @@ implementation
 
 { ----------------------------- BSA ------------------------------------}
 
-constructor TBSAArchive.Init;
+constructor TBSAArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -139,17 +140,17 @@ constructor TBSAArchive.Init;
   {$ENDIF}
   end { TBSAArchive.Init };
 
-function TBSAArchive.GetID;
+function TBSAArchive.GetID : Byte;
   begin
   GetID := arcBSA;
   end;
 
-function TBSAArchive.GetSign;
+function TBSAArchive.GetSign : TStr4;
   begin
   GetSign := sigBSA;
   end;
 
-procedure TBSAArchive.GetFile;
+procedure TBSAArchive.GetFile ;
   var
     P: BSAHdr;
   begin

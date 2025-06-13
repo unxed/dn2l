@@ -74,6 +74,7 @@ unit Arc_7Z; {7-Zip}
 
 interface
 uses
+  vp2fp,
   Archiver
   ;
 
@@ -96,7 +97,7 @@ uses
 
 { --- 7-Zip implemented by piwamoto --- }
 
-constructor TS7ZArchive.Init;
+constructor TS7ZArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -165,17 +166,17 @@ constructor TS7ZArchive.Init;
   {$ENDIF}
   end { TS7ZArchive.Init };
 
-function TS7ZArchive.GetID;
+function TS7ZArchive.GetID : Byte;
   begin
   GetID := arc7Z;
   end;
 
-function TS7ZArchive.GetSign;
+function TS7ZArchive.GetSign : TStr4;
   begin
   GetSign := sig7Z;
   end;
 
-procedure TS7ZArchive.GetFile;
+procedure TS7ZArchive.GetFile ;
   var
     DT: DateTime;
     S: AnsiString;
@@ -222,7 +223,7 @@ procedure TS7ZArchive.GetFile;
   FileInfo.Last := 0;
   end { TS7ZArchive.GetFile };
 
-destructor TS7ZArchive.Done;
+destructor TS7ZArchive.Done ;
   begin
   if TextRec(ListFile).Handle <> 0 then
     begin

@@ -50,6 +50,7 @@ unit arc_HA; {HA}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime
   ;
 
@@ -74,7 +75,7 @@ type
 implementation
 { ----------------------------- HA ------------------------------------}
 
-constructor THAArchive.Init;
+constructor THAArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -143,17 +144,17 @@ constructor THAArchive.Init;
   {$ENDIF}
   end { THAArchive.Init };
 
-function THAArchive.GetID;
+function THAArchive.GetID : Byte;
   begin
   GetID := arcHA;
   end;
 
-function THAArchive.GetSign;
+function THAArchive.GetSign : TStr4;
   begin
   GetSign := sigHA;
   end;
 
-procedure THAArchive.GetFile;
+procedure THAArchive.GetFile ;
   var
     FP: TFileSize;
     P: HAHdr;

@@ -50,6 +50,7 @@ unit arc_RAR; {RAR}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -100,7 +101,7 @@ uses
 
 { ----------------------------- RAR ------------------------------------}
 
-constructor TRARArchive.Init;
+constructor TRARArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -172,12 +173,12 @@ constructor TRARArchive.Init;
   VersionToExtr := 0;
   end { TRARArchive.Init };
 
-function TRARArchive.GetID;
+function TRARArchive.GetID : Byte;
   begin
   GetID := arcRAR;
   end;
 
-function TRARArchive.GetSign;
+function TRARArchive.GetSign : TStr4;
   begin
   GetSign := sigRAR;
   end;
@@ -244,7 +245,7 @@ type
   //         блока HEAD_SIZE + PACK_SIZE (и плюс HIGH_PACK_SIZE,
   //         если установлен бит 0x100)
 
-procedure TRARArchive.GetFile;
+procedure TRARArchive.GetFile ;
   var
     FP: TFileSize;
     Ps: Integer;

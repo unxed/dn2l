@@ -50,6 +50,7 @@ unit arc_HPK; {HPK}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime,
   Collect
   ;
@@ -84,7 +85,7 @@ implementation
 
 { ----------------------------- HPK ------------------------------------}
 
-constructor THPKArchive.Init;
+constructor THPKArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -147,12 +148,12 @@ constructor THPKArchive.Init;
   {$ENDIF}
   end { THPKArchive.Init };
 
-function THPKArchive.GetID;
+function THPKArchive.GetID : Byte;
   begin
   GetID := arcHPK;
   end;
 
-function THPKArchive.GetSign;
+function THPKArchive.GetSign : TStr4;
   begin
   GetSign := sigHPK;
   end;
@@ -166,7 +167,7 @@ procedure THPKCollection.FreeItem(P: Pointer);
     end;
   end;
 
-procedure THPKArchive.GetFile;
+procedure THPKArchive.GetFile ;
   var
     DT: DateTime;
     R: PHPKRec;

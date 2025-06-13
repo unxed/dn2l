@@ -50,6 +50,7 @@ unit arc_HYP; {HYP}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -77,7 +78,7 @@ implementation
 
 { ----------------------------- HYP ------------------------------------}
 
-constructor THYPArchive.Init;
+constructor THYPArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -141,17 +142,17 @@ constructor THYPArchive.Init;
   {$ENDIF}
   end { THYPArchive.Init };
 
-function THYPArchive.GetID;
+function THYPArchive.GetID : Byte;
   begin
   GetID := arcHYP;
   end;
 
-function THYPArchive.GetSign;
+function THYPArchive.GetSign : TStr4;
   begin
   GetSign := sigHYP;
   end;
 
-procedure THYPArchive.GetFile;
+procedure THYPArchive.GetFile ;
   var
     P: HYPHdr;
   begin

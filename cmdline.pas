@@ -52,6 +52,9 @@ unit CmdLine;
 interface
 
 uses
+  math,
+  vp2fp,
+  Lfnvp,
   Drivers, Defines, Views
   ;
 
@@ -115,7 +118,7 @@ const
   CursorMustBeVisible: Boolean = False;
   PrevCmdLineCursorVisible: Boolean = False;
 
-constructor TCommandLine.Init;
+constructor TCommandLine.Init (R: TRect);
   begin
   inherited Init(R);
   EventMask := $FFFF;
@@ -131,23 +134,23 @@ constructor TCommandLine.Init;
   LineType := ltNormal;
   end;
 
-function TCommandLine.DataSize;
+function TCommandLine.DataSize : Word;
   begin
   DataSize := SizeOf(String)
   end;
 
-procedure TCommandLine.GetData;
+procedure TCommandLine.GetData (var S);
   begin
   String(S) := Str;
   end;
-procedure TCommandLine.SetData;
+procedure TCommandLine.SetData (var S);
   begin
   Str := String(S);
   DeltaX := 0;
   CurX := 0
   end;
 
-procedure TCommandLine.GetDir;
+procedure TCommandLine.GetDir ;
   var
     MM: record
       case Byte of
@@ -188,7 +191,7 @@ procedure TCommandLine.GetDir;
   SetDirShape;
   end { TCommandLine.GetDir };
 
-procedure TCommandLine.SetDirShape;
+procedure TCommandLine.SetDirShape ;
   begin
   TimerMark := LineType = ltTimer;
   if Dir[1] in ['[', '(', '{'] then
@@ -207,7 +210,7 @@ procedure TCommandLine.SetDirShape;
   end {case};
   end;
 
-procedure TCommandLine.QueryCursorVisible; {AK155}
+procedure TCommandLine.QueryCursorVisible ; {AK155}
   begin
   CursorMustBeVisible :=
       (State and sfDisabled = 0) and not QuickSearch and
@@ -219,7 +222,7 @@ procedure TCommandLine.QueryCursorVisible; {AK155}
       );
   end;
 
-procedure TCommandLine.Update;
+procedure TCommandLine.Update ;
   var
     P: TPoint;
     A1, A2: SmallWord;
@@ -243,7 +246,8 @@ procedure TCommandLine.Update;
 
   { А теперь делаем, чтобы курсор действиельно имел нужный вид }
   SysGetCurPos(A1, A2);
-  SysTVGetCurType(CursorStartScanLine, CursorEndScanLine, CursorVisible);
+  // fixme: porting stub
+  //SysTVGetCurType(CursorStartScanLine, CursorEndScanLine, CursorVisible);
   if
     {$IFDEF SS}(SSaver <> nil) or {$ENDIF}
       (Size.X = 0) or (Size.Y = 0) or
@@ -268,15 +272,17 @@ procedure TCommandLine.Update;
     CursorMinY := 0;
     if not Overwrite then
       CursorMinY := CursorMaxY-1;
-    SysTVSetCurType(CursorMinY, CursorMaxY, True);
+    // fixme: porting stub
+    //SysTVSetCurType(CursorMinY, CursorMaxY, True);
     OldOverwrite := Ord(Overwrite);
     end;
-  if  (A1 <> P.X) or (A2 <> Origin.Y) then
-    SysTVSetCurPos(P.X, Origin.Y);
+// fixme: porting stub
+//  if  (A1 <> P.X) or (A2 <> Origin.Y) then
+//    SysTVSetCurPos(P.X, Origin.Y);
   {/AK155}
   end { TCommandLine.Update };
 
-procedure TCommandLine.SetState;
+procedure TCommandLine.SetState (AState: Word; Enable: Boolean);
   begin
   TView.SetState(AState, Enable);
   if AState and (sfActive or sfFocused) <> 0 then
@@ -289,7 +295,7 @@ procedure TCommandLine.SetState;
     end
   end;
 
-procedure TCommandLine.Draw;
+procedure TCommandLine.Draw ;
   var
     B: array[0..200] of record
       C: Char;
@@ -334,7 +340,7 @@ procedure TCommandLine.Draw;
   Dispose(S)
   end { TCommandLine.Draw };
 
-procedure TCommandLine.HandleEvent;
+procedure TCommandLine.HandleEvent (var Event: TEvent);
   procedure CE;
     begin
     ClearEvent(Event)
@@ -803,7 +809,7 @@ EndLFN:
   end { TCommandLine.HandleEvent };
 
 (*
-constructor TCmdWindow.Init;
+constructor TCmdWindow.Init (R: TRect);
 begin
  inherited Init(R, 'Command Line', 0);
  GetExtent(R);
@@ -812,7 +818,7 @@ begin
  Insert(New(PCmdLine, Init(R)));
 end;
 
-procedure TCmdLine.Draw;
+procedure TCmdLine.Draw ;
  var B: TDrawBuffer;
      I: Integer;
      S: String;

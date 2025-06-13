@@ -50,6 +50,7 @@ unit arc_QRK; {QuArk}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -66,7 +67,7 @@ implementation
 
 { --------------------- Quark (by Luzin Aleksey) -------------------------}
 
-constructor TQuArkArchive.Init;
+constructor TQuArkArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -129,17 +130,17 @@ constructor TQuArkArchive.Init;
   {$ENDIF}
   end { TQuArkArchive.Init };
 
-function TQuArkArchive.GetID;
+function TQuArkArchive.GetID : Byte;
   begin
   GetID := arcQUARK;
   end;
 
-function TQuArkArchive.GetSign;
+function TQuArkArchive.GetSign : TStr4;
   begin
   GetSign := sigQUARK;
   end;
 
-procedure TQuArkArchive.GetFile;
+procedure TQuArkArchive.GetFile ;
   var
     FH: record
       Tmp: array[1..3] of Char;

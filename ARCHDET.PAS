@@ -50,6 +50,7 @@ unit ArchDet;
 interface
 
 uses
+  vp2fp,
   Archiver
   ;
 
@@ -698,7 +699,7 @@ Function BZ2Detect: Boolean;
   end;
 {$ENDIF}
 
-function DetectArchive;
+function DetectArchive : PARJArchive;
   begin
   if ACEDetect then
     DetectArchive := New(PACEArchive, Init)
@@ -766,7 +767,7 @@ function DetectArchive;
   CloseProfile;
   end { DetectArchive };
 
-function GetArchiveTagBySign;
+function GetArchiveTagBySign (Sign: TStr4): Byte;
   begin
   if Sign = sigACE then
     GetArchiveTagBySign := arcACE
@@ -833,7 +834,7 @@ function GetArchiveTagBySign;
   {$ENDIF}
   end { GetArchiveTagBySign };
 
-function GetArchiveByTag;
+function GetArchiveByTag (ID: Byte): PARJArchive;
   begin
   if ID = arcACE then
     GetArchiveByTag := New(PACEArchive, Init)

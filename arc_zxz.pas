@@ -50,6 +50,7 @@ unit arc_ZXZ; {ZXZ}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -78,7 +79,7 @@ implementation
 
 { ------------------------------ ZXZip aka $Z ----------------------------- }
 
-constructor TZXZArchive.Init;
+constructor TZXZArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -146,17 +147,17 @@ constructor TZXZArchive.Init;
   {$ENDIF}
   end { TZXZArchive.Init };
 
-function TZXZArchive.GetID;
+function TZXZArchive.GetID : Byte;
   begin
   GetID := arcZXZ;
   end;
 
-function TZXZArchive.GetSign;
+function TZXZArchive.GetSign : TStr4;
   begin
   GetSign := sigZXZ;
   end;
 
-procedure TZXZArchive.GetFile;
+procedure TZXZArchive.GetFile ;
   var
     FP: TFileSize;
     P: ZXZHdr;

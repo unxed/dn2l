@@ -52,6 +52,7 @@ unit arc_ZOO; {ZOO}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -82,7 +83,7 @@ implementation
 
 { ----------------------------- ZOO ------------------------------------}
 
-constructor TZOOArchive.Init;
+constructor TZOOArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -149,17 +150,17 @@ constructor TZOOArchive.Init;
   {$ENDIF}
   end { TZOOArchive.Init };
 
-function TZOOArchive.GetID;
+function TZOOArchive.GetID : Byte;
   begin
   GetID := arcZOO;
   end;
 
-function TZOOArchive.GetSign;
+function TZOOArchive.GetSign : TStr4;
   begin
   GetSign := sigZOO;
   end;
 
-procedure TZOOArchive.GetFile;
+procedure TZOOArchive.GetFile ;
   var
     P: ZOOHdr;
     FP: TFileSize;

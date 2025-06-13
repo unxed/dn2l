@@ -162,7 +162,7 @@ function TExtCollection.Compare(Key1, Key2: Pointer): Integer;
 
 procedure TExtCollection.FreeItem(Item: Pointer);
   begin
-  Dispose(Item);
+  Free(Item);
   end;
 
 procedure PutExtFilter(Filter: string; T: Integer);

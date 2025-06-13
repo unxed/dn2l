@@ -50,6 +50,7 @@ unit arc_TAR; {TAR}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime
   ;
 
@@ -111,7 +112,7 @@ implementation
 
 { ----------------------------- TAR ------------------------------------}
 
-constructor TTARArchive.Init;
+constructor TTARArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -210,17 +211,17 @@ constructor TTARArchive.Init;
   {$ENDIF}
   end { TTARArchive.Init };
 
-function TTARArchive.GetID;
+function TTARArchive.GetID : Byte;
   begin
   GetID := arcTAR;
   end;
 
-function TTARArchive.GetSign;
+function TTARArchive.GetSign : TStr4;
   begin
   GetSign := sigTAR;
   end;
 
-procedure TTARArchive.GetFile;
+procedure TTARArchive.GetFile ;
   var
     Buffer: array[0..BlkSize-1] of Char;
     Hdr: TARHdr absolute Buffer;

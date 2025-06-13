@@ -94,7 +94,7 @@ function TInputFName.Execute: Word;
   Result := EndView;
   end;
 
-procedure TInputFName.HandleEvent;
+procedure TInputFName.HandleEvent (var Event: TEvent);
   begin
   case Event.What of
     evKeyDown:
@@ -139,7 +139,7 @@ procedure TColorPoint.Store(var S: TStream);
   S.Write(Color, SizeOf(Color));
   end;
 
-procedure TColorPoint.Draw;
+procedure TColorPoint.Draw ;
   var
     B: Word;
   begin

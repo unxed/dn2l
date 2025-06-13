@@ -50,6 +50,8 @@ unit Filelst;
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Collect
   ;
 
@@ -173,7 +175,7 @@ function ParseAddress(Address: String; var Zone, Net, Node, Point: Word)
   ParseAddress := True;
   end { ParseAddress };
 
-procedure MakeListFile;
+procedure MakeListFile (APP: Pointer; Files: PCollection);
   label AddrError, Retry;
   var
     I, J, K: Integer;
@@ -262,7 +264,7 @@ procedure MakeListFile;
   {S.Header := '';}S.HeaderMode := hfmAuto;
   S.Footer := HistoryStr(hsMakeListFooter, 0); {JO}
   {S.Footer := '';}S.FooterMode := hfmAuto;
-  @PreExecuteDialog := @PrepareMakeListDialog;
+  Pointer(PreExecuteDialog) := Pointer(@PrepareMakeListDialog);
   if  (ExecResource(dlgMakeList, S) <> cmOK) then
     Exit;
   DelRight(S.Action);

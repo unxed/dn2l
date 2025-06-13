@@ -49,6 +49,9 @@ unit FLTools;
 
 interface
 uses
+  vp2fp,
+  math,
+  LFNVp,
   FilesCol, FlPanelX, PDSetup
   ;
 
@@ -367,7 +370,7 @@ procedure TSaveSetupButton.Press;
   EnableCommands([cmOK]); { Диалог фильтра мог задизейблить }
   SavePresetData.ForClass := PanelClass;
   SavePresetData.Target := 1 shl (PresetNum-1);
-  @PreExecuteDialog := @PrepareSaveSetupDialog;
+  Pointer(PreExecuteDialog) := Pointer(@PrepareSaveSetupDialog);
   SaveTaggedDataOnly := TaggedDataOnly;
   TaggedDataOnly := False; // для самого диалога сохранения
   Cmd := ExecResource(dlgSavePanelSetup, SavePresetData);
@@ -553,9 +556,9 @@ destructor TFilterDialog.Done;
   inherited Done;
   end;
 
-procedure CM_AdvancedFilter;
+procedure CM_AdvancedFilter (AFP: Pointer);
   var
-    P: PFilePanelRoot absolute AFP;
+    P: PFilePanelRoot; // absolute AFP; // fixme: porting stub
     i: Byte;
     C: PStringCollection;
     ClrPlus, ClrMinus: Boolean;
@@ -623,9 +626,14 @@ procedure CM_AdvancedFilter;
         ObjChangeType(IL, TypeOf(TFilterLine));
         OkButton := PButton(DirectLink[4]);
         AddButton := PButton(DirectLink[3]);
+
+        {
         for b := 3 to 5 do
           with PButton(DirectLink[b]) do
             Options := Options and not ofSelectable;
+        }
+        // fixme: porting sub
+
           { Кнопки "OK", "Добавить" и "Закрыть" по Tab пропускаются }
         ObjChangeType(Dlg^.DirectLink[7], TypeOf(TSaveSetupButton));
           { Подменяем тип кнопки "Записать", чтобы подсунуть свой Press }
@@ -844,7 +852,7 @@ function GetSelection(P: PFilePanelRoot; Single: Boolean):
   end { GetSelection };
 
 {-DataCompBoy-}
-function SelectFiles;
+function SelectFiles (AFP: Pointer; Select, XORs: Boolean): Boolean;
   var
     S, SN: String;
     I: LongInt;
@@ -921,7 +929,7 @@ function SelectFiles;
   end { SelectFiles };
 {-DataCompBoy-}
 
-procedure CM_CopyFiles;
+procedure CM_CopyFiles (AFP: Pointer; MoveMode, Single: Boolean);
   var
     FC: PFilesCollection;
     P: PFilePanelRoot absolute AFP;
@@ -938,7 +946,7 @@ procedure CM_CopyFiles;
   end;
 
 {-DataCompBoy-}
-procedure InvertSelection;
+procedure InvertSelection (AFP: Pointer; dr: Boolean);
   var
     I: LongInt;
     PF: PFileRec;
@@ -1115,7 +1123,7 @@ procedure CM_CompareDirs(AFP, IP: Pointer);
   end { CM_CompareDirs };
 {-DataCompBoy-}
 
-procedure CM_EraseFiles;
+procedure CM_EraseFiles (AFP: Pointer; Single: Boolean);
   var
     FC: PFilesCollection;
     P: PFilePanelRoot absolute AFP;
@@ -1130,7 +1138,7 @@ procedure CM_EraseFiles;
   P^.SendLocated;
   end;
 
-procedure CM_MakeList;
+procedure CM_MakeList (AFP: Pointer);
   var
     FC: PCollection;
     P: PFilePanelRoot absolute AFP;
@@ -1155,7 +1163,7 @@ procedure CM_MakeList;
   end { CM_MakeList };
 
 {-DataCompBoy-}
-procedure CM_SetAttributes;
+procedure CM_SetAttributes (AFP: Pointer; Single: Boolean; CurPos: Integer);
   var
     D: record
       T: String[8];
@@ -1602,11 +1610,16 @@ procedure PrepareShowDialog(P: PDialog);
     { Подменяем диалогу тип, чтобы подсунуть свой HandleEvent}
   ObjChangeType(P^.DirectLink[4], TypeOf(TSaveSetupButton));
     { Подменяем тип кнопки "Записать", чтобы подсунуть свой Press }
-  PComboBox(P^.DirectLink[2])^.Items[1].Flags := miDisabled;
+  // fixme: porting stub
+  //PComboBox(P^.DirectLink[2])^.Items[1].Flags := miDisabled;
     { Сделали недоступным "Не показывать" для выделенных }
+  {
   with PComboBox(P^.DirectLink[3])^ do
     for i := 2 to 6 do
       Items[i].Flags := miDisabled;
+  }
+  // fixme: porting stub
+
     { Сделали недоступным "В подвале" и "На разделителе" % упаковки }
   end;
 
@@ -1617,7 +1630,7 @@ procedure CM_SetShowParms(AFP: Pointer);
     P: PFilePanelRoot absolute AFP;
     R: TRect;
   begin
-  @PreExecuteDialog := @PrepareShowDialog;
+  Pointer(PreExecuteDialog) := Pointer(@PrepareShowDialog);
   with P^ do
     begin
     TaggedDataOnly := True;
@@ -1655,7 +1668,7 @@ procedure CM_SetShowParms(AFP: Pointer);
     end;
   end { CM_SetShowParms };
 
-procedure CM_CopyTemp;
+procedure CM_CopyTemp (AFP: Pointer);
   var
     FC: PFilesCollection;
     C: TCopyRec;
@@ -1672,7 +1685,7 @@ procedure CM_CopyTemp;
   end;
 
 {-DataCompBoy-}
-procedure CM_ArchiveFiles;
+procedure CM_ArchiveFiles (AFP: Pointer);
   var
     PC: PCollection;
     S: String;
@@ -1701,7 +1714,7 @@ procedure CM_ArchiveFiles;
 {-DataCompBoy-}
 
 {$IFDEF Printer}
-procedure CM_Print;
+procedure CM_Print (AFP: Pointer);
   var
     N: Integer;
     P: PFilePanelRoot absolute AFP;
@@ -1711,7 +1724,7 @@ procedure CM_Print;
   end;
 {$ENDIF}
 
-procedure CM_ToggleDescriptions;
+procedure CM_ToggleDescriptions (AFP: Pointer);
   var
     P: PFilePanelRoot absolute AFP;
   begin
@@ -1738,7 +1751,7 @@ procedure CM_ToggleDescriptions;
   end {case};
   end { CM_ToggleDescriptions };
 
-procedure CM_ToggleLongNames;
+procedure CM_ToggleLongNames (AFP: Pointer);
   var
     P: PFilePanelRoot absolute AFP;
   begin
@@ -1767,7 +1780,7 @@ procedure CM_ToggleLongNames;
   DrawViews(P);
   end { CM_ToggleLongNames };
 
-procedure CM_ToggleShowMode;
+procedure CM_ToggleShowMode (AFP: Pointer);
   var
     P: PFilePanelRoot absolute AFP;
   begin
@@ -1798,7 +1811,7 @@ type
     destructor Done; virtual;
     end;
 
-procedure DragMover;
+procedure DragMover (AP: Pointer; Text: String; AFC, AC: Pointer);
   var
     R: TRect;
     Mover: PView;
@@ -1838,7 +1851,7 @@ procedure DragMover;
   Dispose(FC, Done);
   end { DragMover };
 
-constructor TDragger.Init;
+constructor TDragger.Init(R: TRect; AText: String);
   begin
   AText := ' '+AText+' ';
   R.B.X := R.A.X+Length(AText);
@@ -1865,7 +1878,7 @@ destructor TDragger.Done;
   inherited Done;
   end;
 
-procedure CM_DragDropper;
+procedure CM_DragDropper (AFP: Pointer; CurPos: Integer; EV: Pointer);
   var
     C: TCopyRec;
     FC: PFilesCollection;
@@ -1898,7 +1911,7 @@ procedure CM_DragDropper;
   DragMover(@TEvent(EV^).Where, S, FC, @C);
   end { CM_DragDropper };
 
-procedure CM_Dropped;
+procedure CM_Dropped (AFP, EI: Pointer);
   var
     P: PFilePanelRoot absolute AFP;
     MPos: TPoint;
@@ -2020,7 +2033,7 @@ NameErr:
   end;
 
 {-DataCompBoy-}
-procedure CM_RenameSingleL;
+procedure CM_RenameSingleL (AFP, PEV: Pointer);
   var
     PIF: PInputFName;
     R: TRect;
@@ -2102,7 +2115,8 @@ procedure CM_RenameSingleL;
   {AK155 Чтобы комстрока не забирала курсор себе, отключаем
          ее на время работы }
   ReEnableCmdLine := (CommandLine <> nil) and
-    not CommandLine.GetState(sfDisabled);
+    not CommandLine^.GetState(sfDisabled);
+
   if ReEnableCmdLine then
     begin
     CommandLine^.SetState(sfDisabled, True);
@@ -2116,7 +2130,7 @@ procedure CM_RenameSingleL;
 
   PIF^.HelpCtx := hcRenameFile;
   P^.ScrollBar^.Hide;
-  DlgRes := P^.Owner.ExecView(PIF);
+  DlgRes := P^.Owner^.ExecView(PIF);
   PIF^.GetData(S);
 
   if ReEnableCmdLine then
@@ -2157,7 +2171,7 @@ procedure CM_RenameSingleL;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure CM_RenameSingleDialog;
+procedure CM_RenameSingleDialog (AFP, PEV: Pointer);
   var
     R: TRect;
     S, S2: String;
@@ -2218,7 +2232,7 @@ procedure CM_RenameSingleDialog;
   end { CM_RenameSingleDialog };
 {-DataCompBoy-}
 
-procedure CM_SortBy;
+procedure CM_SortBy (AFP: Pointer);
   var
     Menu: PMenu;
     PM, DefPM: PMenuItem;
@@ -2264,7 +2278,7 @@ procedure CM_SortBy;
     PM := NewSubmenu(GetString(Idx), 0, ActionMenu, PM);
     PM^.Flags := ItemFlags or miParam;
     PM^.Param := NewStr(OnOff[(wFlags and FlagMask) <> 0]);
-    PM.Command := cmSortOwnerToggle+i;
+    PM^.Command := cmSortOwnerToggle+i;
     FlagMask := FlagMask shr 1;
     ToggleItem[i] := PM;
     Dec(Idx);
@@ -2277,7 +2291,7 @@ procedure CM_SortBy;
     begin
     PM := NewSubmenu(GetString(Idx), 0, ActionMenu, PM);
     PM^.Flags := ItemFlags;
-    PM.Command := cmSortName + i;
+    PM^.Command := cmSortName + i;
     if i = Mode then
       DefPM := PM;
     Dec(Idx);
@@ -2316,7 +2330,7 @@ procedure CM_SortBy;
         begin
         Mode := N - cmSortName;
         if CurrentOnly then
-          PanSetup.Sort.SortMode := Mode
+          PanSetup^.Sort.SortMode := Mode
         else
           for PC := Low(TPanelClass) to High(TPanelClass) do
             PanelSetupSet[PC].Sort.SortMode := Mode;
@@ -2331,7 +2345,7 @@ procedure CM_SortBy;
     wFlags := wFlags xor (1 shl i);
     i := N-cmSortOwnerToggle;
     Menu^.Default := ToggleItem[i];
-    with ToggleItem[i] do
+    with ToggleItem[i]^ do
       begin
       DisposeStr(Param);
       Param := NewStr(OnOff[(wFlags and (1 shl i)) <> 0]);
@@ -2339,7 +2353,7 @@ procedure CM_SortBy;
     with P^ do
       begin
       if CurrentOnly then
-        PanSetup.Sort.SortFlags := wFlags
+        PanSetup^.Sort.SortFlags := wFlags
       else
         for PC := Low(TPanelClass) to High(TPanelClass) do
           PanelSetupSet[PC].Sort.SortFlags := wFlags;
@@ -2378,7 +2392,7 @@ procedure PrepareSortDialog(P: PDialog);
     { Подменяем тип кнопки "Записать", чтобы подсунуть свой Press }
   end;
 
-procedure CM_PanelSortSetup;
+procedure CM_PanelSortSetup ;
   var
     J: Word;
   begin
@@ -2386,7 +2400,7 @@ procedure CM_PanelSortSetup;
     begin
     TaggedDataOnly := True;
     TaggedDataCount := 0;
-    @PreExecuteDialog := @PrepareSortDialog;
+    Pointer(PreExecuteDialog) := Pointer(@PrepareSortDialog);
     J := ExecResource(dlgPanelSortSetup, PanSetup^.Sort);
     TaggedDataOnly := False;
     TaggedDataCount := 0;
@@ -2399,7 +2413,7 @@ procedure CM_PanelSortSetup;
   end { CM_PanelSortSetup };
 
 {-DataCompBoy-}
-function CM_ChangeDirectory;
+function CM_ChangeDirectory (AFP: Pointer): String;
   var
     P: PFilePanelRoot absolute AFP;
     S: String;
@@ -2420,7 +2434,7 @@ function CM_ChangeDirectory;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure CM_MakeDir;
+procedure CM_MakeDir (AFP: Pointer);
   var
     Dr: String;
     Nm: String;
@@ -2455,7 +2469,7 @@ procedure CM_MakeDir;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure CM_LongCopy;
+procedure CM_LongCopy (AFP: Pointer);
   var
     S: String;
     P: PFilePanelRoot absolute AFP;
@@ -2662,30 +2676,30 @@ procedure CM_ChangeCase(AFP: Pointer);
 
   case ChangeNamesCaseOptions.Name of
     {LoNg FIle nAMe}0:
-      NameChange := CaseAsIs;
+      NameChange := @CaseAsIs;
     {long file name}1:
-      NameChange := CaseLow;
+      NameChange := @CaseLow;
     {Long file name}2:
-      NameChange := CaseCap;
+      NameChange := @CaseCap;
     {Long File Name}3:
-      NameChange := CaseCapAll;
+      NameChange := @CaseCapAll;
     {LONG FILE NAME}4:
-      NameChange := CaseUp;
+      NameChange := @CaseUp;
     else {case}
       Exit;
   end {case};
 
   case ChangeNamesCaseOptions.ext of
     {LoNg FIle nAMe}0:
-      ExtChange := CaseAsIs;
+      ExtChange := @CaseAsIs;
     {long file name}1:
-      ExtChange := CaseLow;
+      ExtChange := @CaseLow;
     {Long file name}2:
-      ExtChange := CaseCap;
+      ExtChange := @CaseCap;
     {Long File Name}3:
-      ExtChange := CaseCapAll;
+      ExtChange := @CaseCapAll;
     {LONG FILE NAME}4:
-      ExtChange := CaseUp;
+      ExtChange := @CaseUp;
     else {case}
       Exit;
   end {case};

@@ -54,6 +54,7 @@ interface
 
 uses
   vp2fp,
+  Lfnvp,
   Collect, Defines, Objects2, Streams, Views,
   FilesCol, DiskInfo,
   Drives, Commands, Archiver, FStorage
@@ -178,7 +179,7 @@ end;
 
 function MaxAvail: LongInt;
   begin
-  MaxAvail := MemAdjust(System.MaxAvail);
+  MaxAvail := MemAdjust(vp2fp.MaxAvail);
   end;
 
 procedure StdMsg(MsgNo: Byte);
@@ -204,7 +205,7 @@ procedure StdMsg(MsgNo: Byte);
   end {case};
   end;
 
-procedure TArcDrive.StdMsg4;
+procedure TArcDrive.StdMsg4 ;
   begin
   if TempFile <> '' then
     TempFile := '';
@@ -213,7 +214,7 @@ procedure TArcDrive.StdMsg4;
   end;
 
 {-DataCompBoy-}
-constructor TArcDrive.Init;
+constructor TArcDrive.Init (const AName, VAName: String);
   var
     SR: lSearchRec;
     I: Integer;
@@ -274,7 +275,7 @@ constructor TArcDrive.Init;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-constructor TArcDrive.InitCol;
+constructor TArcDrive.InitCol (PC: PDirStorage; const AName, VAName: String);
   var
     SR: lSearchRec;
   begin
@@ -317,7 +318,7 @@ constructor TArcDrive.InitCol;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-constructor TArcDrive.Load;
+constructor TArcDrive.Load (var S: TStream);
   var
     SR: lSearchRec;
   label
@@ -380,7 +381,7 @@ Failure:
   end { TArcDrive.Load };
 {-DataCompBoy-}
 
-procedure TArcDrive.KillUse;
+procedure TArcDrive.KillUse ;
   begin
   if Prev <> nil then
     Prev^.KillUse;
@@ -388,7 +389,7 @@ procedure TArcDrive.KillUse;
     EraseTempFile(ArcName);
   end;
 
-procedure TArcDrive.Store;
+procedure TArcDrive.Store (var S: TStream);
   begin
   inherited Store(S);
   S.WriteStr(@ArcName); {S.Write(ArcName[0],1 + Length(ArcName));}
@@ -401,7 +402,7 @@ procedure TArcDrive.Store;
   S.Write(ForceRescan, 1);
   end;
 
-destructor TArcDrive.Done;
+destructor TArcDrive.Done ;
   begin
   if Files <> nil then
     Dispose(Files, Done);
@@ -413,7 +414,7 @@ destructor TArcDrive.Done;
   end;
 
 {-DataCompBoy-}
-function TArcDrive.ReadArchive;
+function TArcDrive.ReadArchive : Boolean;
   var
     PF: PArcFile;
     P: PWhileView;
@@ -546,7 +547,7 @@ function TArcDrive.ReadArchive;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TArcDrive.lChDir;
+procedure TArcDrive.lChDir (ADir: String);
   var
     Dr: String;
     Nm: String;
@@ -567,7 +568,7 @@ procedure TArcDrive.lChDir;
       do
         SetLength(CurDir, Length(CurDir)-1)
     else
-      LFN.lChDir(GetPath(ArcName));
+      LFNVp.lChDir(GetPath(ArcName));
     Exit;
     end;
   lFSplit(ADir, Dr, Nm, Xt);
@@ -589,7 +590,7 @@ procedure TArcDrive.lChDir;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-function TArcDrive.GetDir;
+function TArcDrive.GetDir : String;
   var
     Dr: String;
     Nm: String;
@@ -607,7 +608,9 @@ function TArcDrive.GetDir;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-function TArcDrive.GetDirectory;
+function TArcDrive.GetDirectory (
+         const FileMask: String;
+        var TotalInfo: TSize): PFilesCollection;
   var
     F: PFileRec;
     I, si: LongInt;
@@ -736,7 +739,7 @@ function TArcDrive.GetDirectory;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TArcDrive.UseFile;
+procedure TArcDrive.UseFile (P: PFileRec; Command: Word);
   var
     SS, S, S2, Q: String;
     C: Char;
@@ -800,10 +803,13 @@ TryAgain:
   if SS[1] = '\' then
     Delete(SS, 1, 1); {DelFC(SS);}
   {$IFNDEF OS2}
+  {
   if AType^.UseLFN then
     S2 := ArcName
   else
     S2 := lfGetShortFileName(ArcName);
+  }
+  S2 := ArcName; // fixme: porting stub
   if ArcName[Length(ArcName)] = '.' then
     S2 := S2+'.';
   S := CnvString(AType^.Extract)+' '+S+
@@ -840,11 +846,11 @@ TryAgain:
           Директорию нужно запоминать на том диске, где находится
           временный каталог. А на том, где лежит архив
           с просматриваемым файлом, она запомнится в любом случае. }
-    LFN.lChDir(Copy(TempDir, 1, 2));
+    LFNVp.lChDir(Copy(TempDir, 1, 2));
     lGetDir(0, DirToChange);
-    LFN.lChDir(TempDir);
+    LFNVp.lChDir(TempDir);
     Exec(Unp, {$IFDEF RecodeWhenDraw}OemToCharStr {$ENDIF}(S), '', False);
-    LFN.lChDir(DirToChange);
+    LFNVp.lChDir(DirToChange);
     DirToChange := '';
     end;
   {$IFDEF DPMI32}
@@ -862,7 +868,7 @@ TryAgain:
   end { TArcDrive.UseFile };
 {-DataCompBoy-}
 
-function TArcDrive.Exec;
+function TArcDrive.Exec (Prg, Cmd: String; Lst: AnsiString; B: Boolean): Boolean;
   var
     S: String;
     SS1: AnsiString;
@@ -879,12 +885,17 @@ function TArcDrive.Exec;
 
   procedure StdMsg8;
     var
-      L: array[0..1] of LongInt;
+      L: array[0..1] of Longint;
+      Temp: Longint;
       ST: String;
     begin
     Application^.Redraw;
     ST := S;
-    Pointer(L[0]) := @ST;
+
+    // fixme: porting stub
+    Temp := Longint(@ST);
+    L[0] := Temp;
+
     L[1] := DE;
     Msg(dlArcMsg8, @L, mfOKButton or mfError);
     end;
@@ -1054,12 +1065,12 @@ function TArcDrive.Exec;
   {$ENDIF}
   end { TArcDrive.Exec };
 
-function TArcDrive.isUp;
+function TArcDrive.isUp : Boolean;
   begin
   isUp := {CurDir = ''}True;
   end;
 
-procedure TArcDrive.ChangeUp;
+procedure TArcDrive.ChangeUp (var S: String);
   begin
   if CurDir <> '' then
     begin
@@ -1095,13 +1106,14 @@ procedure TArcDrive.ChangeUp;
   Dispose(PDrive(@Self), Done);
   end { TArcDrive.ChangeUp };
 
-procedure TArcDrive.ChangeRoot;
+procedure TArcDrive.ChangeRoot ;
   begin
   CurDir := '';
   end;
 
 {-DataCompBoy-}
-function TArcDrive.MakeListFile;
+function TArcDrive.MakeListFile (PC: PCollection; UseUnp: Boolean;
+         var B: Boolean): AnsiString;
   var
     F: lText;
     PF: PFileRec;
@@ -1394,9 +1406,9 @@ TryAgain:
     Директорию нужно запоминать на том диске, где находится
     временный каталог. А на том, где лежит архив
     с просматриваемым файлом, она запомнится в любом случае. }
-  LFN.lChDir(Copy(TempExtrDir,1,2));
+  LFNVp.lChDir(Copy(TempExtrDir,1,2));
   lGetDir(0, DirToChange);
-  LFN.lChDir(TempExtrDir);
+  LFNVp.lChDir(TempExtrDir);
  {$IFDEF DPMI32}
   if AType^.SwapWhenExec and TempDirUsed then
     begin
@@ -1409,7 +1421,7 @@ TryAgain:
   {JO}
   if not TempDirUsed then
     begin
-    LFN.lChDir(DirToChange);
+    LFNVp.lChDir(DirToChange);
     DirToChange := '';
     ExtrDir := '>' + ExtrDir; //признак перечитывания подкаталогов в ветви
     GlobalMessage(evCommand, cmPanelReread, @ExtrDir);
@@ -1437,9 +1449,9 @@ TryAgain:
     FCT^.AtInsert(0, FRT);
     OldConfirms := Confirms;
     Confirms := 0;
-    LFN.lChDir(S);
+    LFNVp.lChDir(S);
     Eraser.EraseFiles(FCT);
-    LFN.lChDir(DirToChange);
+    LFNVp.lChDir(DirToChange);
     DirToChange := '';
     Confirms := OldConfirms;
     FCT^.DeleteAll;
@@ -1456,7 +1468,8 @@ TryAgain:
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TArcDrive.CopyFiles;
+procedure TArcDrive.CopyFiles (AFiles: PCollection; Own: PView;
+         MoveMode: Boolean);
   var
     DT: record
       S: String;
@@ -1531,12 +1544,12 @@ procedure TArcDrive.CopyFiles;
   end { TArcDrive.CopyFiles };
 {-DataCompBoy-}
 
-procedure TArcDrive.MakeDir;
+procedure TArcDrive.MakeDir ;
   begin
   end;
 
 {-DataCompBoy-}
-procedure TArcDrive.EraseFiles;
+procedure TArcDrive.EraseFiles (AFiles: PCollection);
   var
     SS, S: AnsiString;
     PF: PFileRec;
@@ -1594,7 +1607,7 @@ procedure TArcDrive.EraseFiles;
   end { TArcDrive.EraseFiles };
 {-DataCompBoy-}
 
-function TArcDrive.GetRealName;
+function TArcDrive.GetRealName : String;
   var
     S: String;
   begin
@@ -1602,7 +1615,7 @@ function TArcDrive.GetRealName;
   GetRealName := Copy(S, 1, PosChar(':', S))+ArcName;
   end;
 
-function TArcDrive.GetInternalName;
+function TArcDrive.GetInternalName : String;
   var
     IntPath: String;
   begin
@@ -1613,14 +1626,15 @@ function TArcDrive.GetInternalName;
     GetInternalName := '';
   end;
 
-procedure TArcDrive.CopyFilesInto;
+procedure TArcDrive.CopyFilesInto (AFiles: PCollection; Own: PView;
+         MoveMode: Boolean);
   begin
   ForceRescan := True;
   ArchiveFiles(GetRealName, AFiles, MoveMode, nil);
   ForceRescan := False;
   end;
 
-procedure TArcDrive.HandleCommand;
+procedure TArcDrive.HandleCommand (Command: Word; InfoPtr: Pointer);
   var
     C: PCollection absolute InfoPtr;
 
@@ -1694,12 +1708,12 @@ procedure TArcDrive.HandleCommand;
   end {case};
   end { TArcDrive.HandleCommand };
 
-procedure TArcDrive.GetFreeSpace;
+procedure TArcDrive.GetFreeSpace (var S: String);
   begin
   S := '';
   end;
 
-function ArcViewer;
+function ArcViewer (AName, VAName: String): Boolean;
   var
     P: PDrive;
     E: TEvent;
@@ -1767,19 +1781,19 @@ function ArcViewer;
   {/JO}
   end { ArcViewer };
 
-function TArcDrive.GetFullFlags;
+function TArcDrive.GetFullFlags : Word;
   begin
   GetFullFlags :=
      psShowSize+psShowDate+psShowTime+psShowPacked+psShowRatio;
   end;
 
-procedure TArcDrive.RereadDirectory;
+procedure TArcDrive.RereadDirectory (S: String);
   begin
   if Prev <> nil then
     Prev^.RereadDirectory(S);
   end;
 
-procedure TArcDrive.GetDirInfo;
+procedure TArcDrive.GetDirInfo (var B: TDiskInfoRec);
   var
     Fl: Integer;
     PSz, USz: TSize;

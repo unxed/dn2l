@@ -56,6 +56,7 @@ unit arc_BZ2; {bzip2}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Advance2, Objects2
   ;
 
@@ -71,7 +72,7 @@ type
 implementation
 { ----------------------------- BZIP2 ------------------------------------ }
 
-constructor TBZ2Archive.Init;
+constructor TBZ2Archive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -170,17 +171,17 @@ constructor TBZ2Archive.Init;
   {$ENDIF}
   end { TBZ2Archive.Init };
 
-function TBZ2Archive.GetID;
+function TBZ2Archive.GetID : Byte;
   begin
   GetID := arcBZ2;
   end;
 
-function TBZ2Archive.GetSign;
+function TBZ2Archive.GetSign : TStr4;
   begin
   GetSign := sigBZ2;
   end;
 
-procedure TBZ2Archive.GetFile;
+procedure TBZ2Archive.GetFile ;
   var
     S: String;
   begin

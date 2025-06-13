@@ -9,6 +9,8 @@
 
 unit NetBrwsr;
 
+{$IFDEF NetBrowser}
+
 interface
 
 uses
@@ -721,3 +723,9 @@ function TNetDrive.GetDriveLetter: Char;
   Result := chNetDrive;
   end;
 end.
+
+{$ELSE}
+interface
+implementation
+end.
+{$ENDIF}

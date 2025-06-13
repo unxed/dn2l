@@ -133,9 +133,9 @@ function GetName(const S: String): String;
 function GetSName(const S: String): String;
   {` Имя без расширения `}
 function GetAttrStr(Attr: Word): Str6;
-{$IFDEF DualName}
+//{$IFDEF DualName}
 function GetShortRelPath(Path: String): String;
-{$ENDIF}
+//{$ENDIF}
 function GetLongRelPath(Path: String): String;
 
 {-DataCompBoy-}

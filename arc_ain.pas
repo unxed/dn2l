@@ -50,6 +50,7 @@ unit arc_AIN; {AIN}
 interface
 
 uses
+  vp2fp,
   Archiver
   ;
 
@@ -73,7 +74,7 @@ uses
 
 { ------------------------------- AIN ------------------------------------- }
 
-constructor TAINArchive.Init;
+constructor TAINArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -136,12 +137,12 @@ constructor TAINArchive.Init;
   {$ENDIF}
   end { TAINArchive.Init };
 
-function TAINArchive.GetID;
+function TAINArchive.GetID : Byte;
   begin
   GetID := arcAIN;
   end;
 
-function TAINArchive.GetSign;
+function TAINArchive.GetSign : TStr4;
   begin
   GetSign := sigAIN;
   end;
@@ -160,7 +161,7 @@ TEMP\KBM35012\KMBR.BIN
                              338  20.08.97  20:43:38
 
 }
-procedure TAINArchive.GetFile;
+procedure TAINArchive.GetFile ;
   var
     l: LongInt;
     DT: DateTime;

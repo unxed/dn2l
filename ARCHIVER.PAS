@@ -52,6 +52,7 @@ interface
 
 uses
   vp2fp,
+  Lfnvp,
   Files,
   Views, Defines, Objects2, Streams, Collect
   ;
@@ -294,7 +295,7 @@ uses
 
 { ------------------------------- Collections ----------------------------- }
 
-procedure TFileInfo.FreeItem;
+procedure TFileInfo.FreeItem (Item: Pointer);
   begin
   if Item <> nil then
     begin
@@ -303,7 +304,7 @@ procedure TFileInfo.FreeItem;
     end;
   end;
 
-function TFileInfo.Compare;
+function TFileInfo.Compare (P1, P2: Pointer): Integer;
   var
     F1: PArcFile absolute P1;
     F2: PArcFile absolute P2;
@@ -314,14 +315,14 @@ function TFileInfo.Compare;
     Compare := 1-2*Integer(UpStrg(F1^.FName^) > UpStrg(F2^.FName^));
   end;
 
-procedure TFileInfo.PutItem;
+procedure TFileInfo.PutItem (var S: TStream; Item: Pointer);
   begin
   S.WriteStr(PArcFile(Item)^.FName);
   S.Write(PArcFile(Item)^.Select,
        SizeOf(Boolean)+SizeOf(AWord)+3*SizeOf(LongInt));
   end;
 
-function TFileInfo.GetItem;
+function TFileInfo.GetItem (var S: TStream): Pointer;
   var
     P: PArcFile;
   begin
@@ -333,7 +334,7 @@ function TFileInfo.GetItem;
 
 { --------------------------- All archives -------------------------------- }
 
-constructor TARJArchive.Load;
+constructor TARJArchive.Load (var S: TStream);
   begin
   Packer := S.ReadStr;
   UnPacker := S.ReadStr;
@@ -366,7 +367,7 @@ constructor TARJArchive.Load;
 
   end { TARJArchive.Load };
 
-procedure TARJArchive.Store;
+procedure TARJArchive.Store (var S: TStream);
   begin
   S.WriteStr(Packer);
   S.WriteStr(UnPacker);
@@ -402,7 +403,7 @@ procedure TARJArchive.Store;
 {const
   BooleanStr: array[boolean] of string[2] = ('0'#0, '1'#0);}
 
-procedure TARJArchive.Save;
+procedure TARJArchive.Save ;
   var
     Sign: TStr5;
     q: String;
@@ -507,7 +508,7 @@ function TARJArchive.GetVal(const Sign, AFile, Name, Default: PChar)
   GetVal := S;
   end;
 
-destructor TARJArchive.Done;
+destructor TARJArchive.Done ;
   begin
   DisposeStr(Packer);
   DisposeStr(UnPacker);
@@ -537,7 +538,7 @@ destructor TARJArchive.Done;
 
 { ----------------------------- ARJ ------------------------------------}
 
-constructor TARJArchive.Init;
+constructor TARJArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -644,17 +645,17 @@ constructor TARJArchive.Init;
   {$ENDIF}
   end { TARJArchive.Init };
 
-function TARJArchive.GetID;
+function TARJArchive.GetID : Byte;
   begin
   GetID := arcARJ;
   end;
 
-function TARJArchive.GetSign;
+function TARJArchive.GetSign : TStr4;
   begin
   GetSign := sigARJ;
   end;
 
-procedure TARJArchive.GetFile;
+procedure TARJArchive.GetFile ;
   const
 
     {  побитовые флаги для поля ARJ_Flags заголовка }
@@ -756,7 +757,8 @@ procedure TARJArchive.GetFile;
   ArcFile^.Seek(CompToFSize(ArcFile^.GetPos+FileInfo.PSize));
   end { TARJArchive.GetFile };
 
-function ArchiveFiles;
+function ArchiveFiles (const S: String; Files: PCollection;
+     MoveMode: Boolean; Owner: Pointer): Boolean;
   var
     C: TStr4;
     q: Byte;
@@ -783,7 +785,8 @@ function CheckForSpaces(S: String): Boolean;
 { Flash <<< }
 
 {-DataCompBoy-}
-procedure MakeArchive;
+procedure MakeArchive (S: String; Files: PCollection;
+     MoveMode, AddToExisting: Boolean; Owner: Pointer);
 
   var
     AID: Word;
@@ -996,7 +999,7 @@ procedure MakeArchive;
       begin
       Application^.Redraw;
       ST := S;
-      Pointer(L[0]) := @ST;
+      L[0] := Longint(@ST);
       L[1] := DE;
       Msg(dlArcMsg8, @L, mfOKButton or mfError);
       end;
@@ -1297,7 +1300,7 @@ Ex:
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure UnarchiveFiles;
+procedure UnarchiveFiles (const FName: String);
   var
     AType: PARJArchive;
     S: String;
@@ -1495,7 +1498,7 @@ TryAgain:
   if Xt = '' then
     S := S+'.'; {piwamoto: extracting from extensionless archives}
   lGetDir(0, DirToChange);
-  LFN.lChDir(TempExtrDir);
+  LFNVp.lChDir(TempExtrDir);
   DelDoubles('  ', S);
   {$IFDEF DPMI32}
   if AType^.SwapWhenExec then
@@ -1554,7 +1557,7 @@ TryAgain:
     FCT^.AtInsert(0, FRT);
     OldConfirms := Confirms;
     Confirms := 0;
-    LFN.lChDir(S);
+    LFNVp.lChDir(S);
     {$IFDEF DPMI32} {освобождаем каталог}
     if ActiveDir[2] = ':' then
       ChDir(Copy(ActiveDir, 1, 2) + '\');
@@ -1569,7 +1572,7 @@ TryAgain:
     end;
   {/JO}
 ex:
-  LFN.lChDir(DirToChange);
+  LFNVp.lChDir(DirToChange);
   DirToChange := '';
   FreeObject(AType);
   if  (not TempDirUsed) or (Inhr > 0) then
@@ -1581,7 +1584,7 @@ ex:
   end { UnarchiveFiles };
 {-DataCompBoy-}
 
-procedure SkipSFX; {piwamoto}
+procedure SkipSFX ; {piwamoto}
   var
     TempWord: AWord;
     {used for MZExeRec.RelOffs, MZExeRec.NewExe.Type, NEhdrRec.SegmentOffset, PEhdrRec.ObjNum}

@@ -279,6 +279,8 @@ procedure EndFatalError;
 {$ENDIF}
 {function TVCtrlBreak: Boolean;} {JO}
 
+procedure SysGetCurPos(var X, Y: SmallWord);
+
 implementation
 uses
   {$IFDEF DPMI32} dpmi32df, dpmi32, {$ENDIF}
@@ -721,6 +723,12 @@ procedure SliceAwake;
   NewTimer(LSliceTimer, 3*1000);
   LSliceCnt := -2;
   end;
+
+procedure SysGetCurPos(var X, Y: SmallWord);
+begin
+  X := WhereX;
+  Y := WhereY;
+end;
 
 begin
 {?} {CodePage := SysGetCodePage;}

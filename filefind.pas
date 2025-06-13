@@ -52,6 +52,9 @@ unit FileFind;
 interface
 
 uses
+  math,
+  vp2fp,
+  Lfnvp,
   Defines, Objects2, Streams, Views, Dialogs, Drivers,
   FilesCol, Drives, Gauge, DiskInfo, Collect
   ;
@@ -547,8 +550,8 @@ function FindFiles(var Files: PFilesCollection;
               Inc(MemReq, Length(Path)+1);
               end;
             P := NewFileRec(SR.FullName, {$IFDEF DualName}SR.SR.Name,
-                {$ENDIF}SR.FullSize, SR.SR.Time, SR.SR.CreationTime,
-                 SR.SR.LastAccessTime, SR.SR.Attr, PDir);
+                {$ENDIF}SR.FullSize, SR.SR.Time, 0 {SR.SR.CreationTime}, // fixme: porting stub
+                 0 {SR.SR.LastAccessTime}, SR.SR.Attr, PDir); // fixme: porting stub
             Inc(MemReq, SizeOf(TFileRec));
             Inc(MemReq, Length(PDir^+SR.FullName)+2);
             if Pnl = nil then
@@ -1184,8 +1187,8 @@ function InsertFile(S: String; var DC: PSortedCollection;
             {$ENDIF}
             SR.FullSize,
             SR.SR.Time,
-            SR.SR.CreationTime,
-            SR.SR.LastAccessTime,
+            0 {SR.SR.CreationTime}, // fixme: porting stub
+            0 {SR.SR.LastAccessTime}, // fixme: porting stub
             SR.SR.Attr,
             Dr
             )
@@ -1299,7 +1302,8 @@ function GetArcName(S: String): String;
 {/JO}
 
 {-DataCompBoy-}
-constructor TFindDrive.Init;
+constructor TFindDrive.Init (const AName: String; ADirs: PCollection;
+         AFiles: PFilesCollection);
   var
     S: PString;
     SS: String;
@@ -1329,7 +1333,7 @@ constructor TFindDrive.Init;
   end { TFindDrive.Init };
 {-DataCompBoy-}
 
-procedure TFindDrive.NewUpFile;
+procedure TFindDrive.NewUpFile ;
   begin
   UpFile := NewFileRec( {$IFDEF DualName}'..', {$ENDIF}'..', 0, 0, 0, 0,
        Directory, nil); {DataCompBoy}
@@ -1395,7 +1399,7 @@ procedure TFindDrive.Store(var S: TStream);
   S.WriteStr(ListFile);
   end;
 
-destructor TFindDrive.Done;
+destructor TFindDrive.Done ;
   begin
   DisposeStr(AMask);
   DisposeStr(AWhat);
@@ -1411,16 +1415,18 @@ destructor TFindDrive.Done;
   inherited Done;
   end;
 
-procedure TFindDrive.MakeDir;
+procedure TFindDrive.MakeDir ;
   begin
   end;
 
-procedure TFindDrive.lChDir;
+procedure TFindDrive.lChDir (ADir: String);
   begin
   end;
 
 {-DataCompBoy-}
-function TFindDrive.GetDirectory;
+function TFindDrive.GetDirectory (
+         const FileMask: String;
+        var TotalInfo: TSize): PFilesCollection;
   var
     AFiles: PFilesCollection;
     SR: lSearchRec;
@@ -1502,7 +1508,7 @@ function TFindDrive.GetDirectory;
   GetDirectory := AFiles;
   end { TFindDrive.GetDirectory };
 
-procedure TFindDrive.ChangeUp;
+procedure TFindDrive.ChangeUp (var S: String);
   var
     P: PDrive;
   begin
@@ -1538,7 +1544,7 @@ procedure TFindDrive.ChangeUp;
   Dispose(PDrive(@Self), Done);
   end { TFindDrive.ChangeUp };
 
-procedure TFindDrive.ChangeRoot;
+procedure TFindDrive.ChangeRoot ;
   var
     P: PDrive;
   begin
@@ -1578,12 +1584,12 @@ InsertDrive, а в нём FindDrive обязательно получит Prev <> nil.
 *)
   end { TFindDrive.ChangeRoot };
 
-function TFindDrive.isUp;
+function TFindDrive.isUp : Boolean;
   begin
   isUp := True;
   end;
 
-function TFindDrive.Disposable;
+function TFindDrive.Disposable : Boolean;
   begin
   Disposable := isDisposable;
   end;
@@ -1696,7 +1702,7 @@ procedure DosReread(Files: PFilesCollection; Dir: String;
     Files^.Sort;}
   end { DosReread };
 
-procedure TFindDrive.RereadDirectory;
+procedure TFindDrive.RereadDirectory (S: String);
   var
     PV: PView;
     STmp: String;
@@ -1742,12 +1748,12 @@ procedure TFindDrive.RereadDirectory;
   DisposeStr(PDir);
   end;
 
-function TFindDrive.GetRealName;
+function TFindDrive.GetRealName : String;
   begin
   GetRealName := '';
   end;
 
-function TFindDrive.GetInternalName;
+function TFindDrive.GetInternalName : String;
   begin
   GetInternalName := '';
   end;
@@ -1783,7 +1789,7 @@ function TFindDrive.GetDir: String;
   end { TFindDrive.GetDir: };
 
 {JO: 20.06.2002 - возможен просмотр файла найденного в архиве}
-procedure TFindDrive.UseFile;
+procedure TFindDrive.UseFile (P: PFileRec; Command: Word);
   var
     SS, S, S2, Q: String;
     C: Char;
@@ -1875,10 +1881,12 @@ TryAgain:
       Delete(SS, 1, 1);
     S2 := OwnArc;
     {$IFNDEF OS2}
+    {
     if not AType^.UseLFN then
       S2 := lfGetShortFileName(OwnArc);
     if OwnArc[Length(OwnArc)] = '.' then
       S2 := S2+'.';
+    }
     {$ENDIF}
     S := CnvString(AType^.Extract)+' '+S+
       CnvString(AType^.ForceMode)+' '+
@@ -1900,9 +1908,9 @@ TryAgain:
         Unp := Copy(Unp, PosChar(';', Unp)+1, MaxStringLength);
       S := Unp+' '+S;
       lGetDir(0, DirToChange);
-      LFN.lChDir(TempDir);
+      lChDir(TempDir);
       Message(Application, evCommand, cmExecString, @S);
-      LFN.lChDir(DirToChange);
+      lChDir(DirToChange);
       DirToChange := '';
       end;
     {$IFDEF DPMI32}
@@ -1942,7 +1950,8 @@ procedure NewTemp;
   end;
 
 {-DataCompBoy-}
-procedure CopyToTempDrive;
+procedure CopyToTempDrive (AFiles: PCollection; Own: PView;
+     ArchiveName: String);
   var
     Info: PView;
 
@@ -2015,7 +2024,7 @@ procedure CopyToTempDrive;
   end { CopyToTempDrive };
 {-DataCompBoy-}
 
-constructor TTempDrive.Init;
+constructor TTempDrive.Init ;
   var
     S: PString;
     {     I: LongInt;}
@@ -2032,7 +2041,7 @@ constructor TTempDrive.Init;
   DriveType := dtTemp;
   ColAllowed := PanelFileColAllowed[pcList];
   ListFile := nil;
-  Lfn.lGetDir(0, FreeStr); {System.GetDir(0, FreeStr);}
+  lGetDir(0, FreeStr); {System.GetDir(0, FreeStr);}
   {Cat}
   ClrIO;
   S := NewStr(FreeStr);
@@ -2085,7 +2094,7 @@ constructor TTempDrive.Load(var S: TStream);
   UpFile^.Owner := S.ReadStr;
   end { TTempDrive.Load };
 
-procedure TTempDrive.Store;
+procedure TTempDrive.Store (var S: TStream);
   var
     I: LongInt;
     Q: LongInt;
@@ -2101,12 +2110,13 @@ procedure TTempDrive.Store;
   S.WriteStr(UpFile^.Owner)
   end;
 
-procedure TTempDrive.CopyFilesInto;
+procedure TTempDrive.CopyFilesInto (AFiles: PCollection; Own: PView;
+         MoveMode: Boolean);
   begin
   CopyToTempDrive(AFiles, Own, '');
   end;
 
-procedure TTempDrive.EraseFiles;
+procedure TTempDrive.EraseFiles (AFiles: PCollection);
   procedure DoErase(P: PFileRec);
     var
       I: LongInt;
@@ -2122,36 +2132,36 @@ procedure TTempDrive.EraseFiles;
   Drives.RereadDirectory(#22);
   end;
 
-function TTempDrive.GetRealName;
+function TTempDrive.GetRealName : String;
   begin
   GetRealName := cTEMP_;
   end;
 
-function TTempDrive.GetInternalName;
+function TTempDrive.GetInternalName : String;
   begin
   GetInternalName := '';
   end;
 
-destructor TTempDrive.Done;
+destructor TTempDrive.Done ;
   begin
   if UpFile <> nil then
     DelFileRec(UpFile);
   TDrive.Done;
   end;
 
-procedure TFindDrive.GetFreeSpace;
+procedure TFindDrive.GetFreeSpace (var S: String);
   begin
   S := '';
   end;
 
-function TFindDrive.GetFullFlags;
+function TFindDrive.GetFullFlags : Word;
   begin
   GetFullFlags := psShowSize+psShowDate+psShowTime+
     psShowCrDate+psShowCrTime+psShowLADate+psShowLATime+psShowDir;
   end;
 
 {-DataCompBoy-}
-constructor TFindDrive.InitList;
+constructor TFindDrive.InitList (const AName: String);
   var
     FC: PSortedCollection;
     DC: PFilesCollection;
@@ -2165,7 +2175,8 @@ constructor TFindDrive.InitList;
   end;
 {-DataCompBoy-}
 
-procedure TTempDrive.CopyFiles;
+procedure TTempDrive.CopyFiles (AFiles: PCollection; Own: PView;
+         MoveMode: Boolean);
   var
     B: Boolean;
   begin
@@ -2178,7 +2189,7 @@ procedure TTempDrive.CopyFiles;
   end;
 
 {JO}
-procedure TFindDrive.CopyFromArc;
+procedure TFindDrive.CopyFromArc (AFiles: PFilesCollection; Own: PView);
   var
     I: LongInt;
     FCCur: PFilesCollection;
@@ -2297,7 +2308,8 @@ procedure TFindDrive.CopyFromArc;
 {/JO}
 
 {JO}
-procedure TFindDrive.CopyFiles;
+procedure TFindDrive.CopyFiles (AFiles: PCollection; Own: PView;
+         MoveMode: Boolean);
   var
     FC_Disk, FC_Arc: PFilesCollection;
 
@@ -2353,17 +2365,18 @@ procedure TFindDrive.CopyFiles;
   end { TFindDrive.CopyFiles };
 {/JO}
 
-procedure TFindDrive.CopyFilesInto;
+procedure TFindDrive.CopyFilesInto (AFiles: PCollection; Own: PView;
+         MoveMode: Boolean);
   begin
   end;
 
-procedure TFindDrive.EraseFiles;
+procedure TFindDrive.EraseFiles (AFiles: PCollection);
   begin
   if Prev <> nil then
     Prev^.EraseFiles(AFiles);
   end;
 
-procedure TFindDrive.GetDirInfo;
+procedure TFindDrive.GetDirInfo (var B: TDiskInfoRec);
   var
     Fl: Integer;
     Sz: TSize;
@@ -2529,7 +2542,7 @@ procedure TFindDrive.DrvFindFile(FC: PFilesCollection);
   end; { DrvFindFile.DrvFindFile }
 {/JO}
 
-procedure TTempDrive.GetDirInfo;
+procedure TTempDrive.GetDirInfo (var B: TDiskInfoRec);
   var
     Fl: LongInt;
     Sz: TSize;
@@ -2572,7 +2585,7 @@ procedure TTempDrive.GetDirInfo;
     end;
   end { TTempDrive.GetDirInfo };
 
-procedure TTempDrive.ChangeRoot;
+procedure TTempDrive.ChangeRoot ;
   begin
   end;
 

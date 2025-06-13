@@ -50,6 +50,7 @@ unit arc_HAP; {HAP}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -77,7 +78,7 @@ implementation
 
 { ----------------------------- HAP ------------------------------------}
 
-constructor THAPArchive.Init;
+constructor THAPArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -140,17 +141,17 @@ constructor THAPArchive.Init;
   {$ENDIF}
   end { THAPArchive.Init };
 
-function THAPArchive.GetID;
+function THAPArchive.GetID : Byte;
   begin
   GetID := arcHAP;
   end;
 
-function THAPArchive.GetSign;
+function THAPArchive.GetSign : TStr4;
   begin
   GetSign := sigHAP;
   end;
 
-procedure THAPArchive.GetFile;
+procedure THAPArchive.GetFile ;
   var
     P: HAPHdr;
     C: Char;

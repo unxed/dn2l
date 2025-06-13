@@ -50,6 +50,7 @@ unit arc_CAB; {CAB}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -84,7 +85,7 @@ type
 implementation
 { ---------------------- CAB (by Neverowsky A.)---------------------------}
 
-constructor TCABArchive.Init;
+constructor TCABArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -154,17 +155,17 @@ constructor TCABArchive.Init;
   FilesNumber := -1;
   end { TCABArchive.Init };
 
-function TCABArchive.GetID;
+function TCABArchive.GetID : Byte;
   begin
   GetID := arcCAB;
   end;
 
-function TCABArchive.GetSign;
+function TCABArchive.GetSign : TStr4;
   begin
   GetSign := sigCAB;
   end;
 
-procedure TCABArchive.GetFile;
+procedure TCABArchive.GetFile ;
   var
     C: Char;
     FH: record

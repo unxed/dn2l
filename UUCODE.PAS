@@ -69,6 +69,9 @@ unit UUCode;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
   Defines
   {$IFDEF UUDECODE}
   , Collect
@@ -94,7 +97,7 @@ uses
   xTime, FilesCol, DNApp, Drivers, Gauge, Messages, Commands,
   FileCopy, HistList, DNUtil
   , Events
-  , use16
+//  , use16
   ;
 
 function longmul(X, Y: LongInt): LongInt;
@@ -108,7 +111,7 @@ const
 
 function MaxAvail: LongInt;
   begin
-  MaxAvail := MemAdjust(System.MaxAvail);
+  MaxAvail := MemAdjust(vp2fp.MaxAvail);
   end;
 
 var
@@ -401,6 +404,10 @@ function UU_Decode(
     end;
 
   procedure CalcBufCRC(var Buf; Size: LongInt; var PrevSum: Word);
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES esi} {&FRAME-}
   asm
@@ -417,9 +424,14 @@ function UU_Decode(
         mov     word ptr [edi],dx
  @@Ext:
 end;
+*)
 
   {Cat: не всегда она будет возвращать Word, что приводит к глюкам}
   function SmartDiv(L: LongInt; W: LongInt): LongInt;
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES None} {&FRAME-}
   asm
@@ -432,6 +444,7 @@ end;
          inc     eax
 @@Exit:
 end;
+*)
 
   procedure FreeArr(var pp; Index, Sz: LongInt);
     var
@@ -471,6 +484,10 @@ end;
     end;
 
   function UUString(var s: String; var CRC: Word): Boolean;
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES esi} {&FRAME+}
   asm
@@ -525,10 +542,14 @@ end;
         mov     word ptr[esi],dx
         mov     al,1
 @@End:
-
 end;
+*)
 
   function MemEqu(var A, B; Size: LongInt): Boolean;
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES esi} {&FRAME-}
   asm
@@ -541,8 +562,8 @@ end;
          je    @@EQ
          dec   al
 @@EQ:
-
 end;
+*)
 
   procedure DelTBeg(b: Byte);
     begin
@@ -997,6 +1018,10 @@ end;
       end;
 
     procedure CalcLnCRC(var Strng: String; var CRC: Word);
+    begin
+    end;
+    // fixme: porting stub
+    (*
       assembler;
       {&USES esi} {&FRAME-}
     asm
@@ -1018,6 +1043,7 @@ end;
         mov     word ptr [edi],dx
  @@End:
 end;
+*)
 
     procedure CheckSum;
       var
@@ -1317,6 +1343,10 @@ end;
     end { Get_String };
 
   procedure DecodeStr(var Src, Dst);
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES esi,ebx}
     var
@@ -1349,6 +1379,7 @@ end;
         dec     Cnt
         jnz     @@L
 end;
+*)
 
     procedure OutString;
       var
@@ -1839,6 +1870,10 @@ procedure Clear64(n:T64);near;external;
       называются SmartDiv, но вместе с тем этот SmartDiv абсолютно отличается
       от того, который был раньше)}
   function SmartDiv(L: LongInt; W: LongInt): LongInt;
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES None} {&FRAME-}
   asm
@@ -1850,6 +1885,7 @@ procedure Clear64(n:T64);near;external;
          inc     eax
 @@Exit:
 end;
+*)
 
   {-DataCompBoy-}
   procedure UUEncode(const FName: String);
@@ -2039,6 +2075,10 @@ end;
         end;
 
       function GetDecimal(Number: Word): String;
+      begin
+      end;
+      // fixme: porting stub
+      (*
         assembler; {Set 2-b}
         {&Frame-} {$USES EDI}
       asm
@@ -2053,6 +2093,7 @@ end;
         add     ax,3030h
         stosw
  end;
+ *)
 
       function GetMonth(Month: Word): String;
         begin
@@ -2074,7 +2115,7 @@ end;
 
       function CurStdDateTime: String;
         var
-          Dummy, Year, Month, Day, Hour, Minute, Second: LongInt;
+          Dummy, Year, Month, Day, Hour, Minute, Second: Word; // fixme: porting stub
         begin
         GetDate(Year, Month, Day, Dummy);
         GetTime(Hour, Minute, Second, Dummy);

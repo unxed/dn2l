@@ -50,6 +50,7 @@ unit arc_IS3; {IS3}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -89,7 +90,7 @@ implementation
 
 { --- Z --- aka LIB --- aka InstallShield 3.00.xxx --- by piwamoto ------- }
 
-constructor TIS3Archive.Init;
+constructor TIS3Archive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -155,17 +156,17 @@ constructor TIS3Archive.Init;
   FilesNumber := -1;
   end { TIS3Archive.Init };
 
-function TIS3Archive.GetID;
+function TIS3Archive.GetID : Byte;
   begin
   GetID := arcIS3;
   end;
 
-function TIS3Archive.GetSign;
+function TIS3Archive.GetSign : TStr4;
   begin
   GetSign := sigIS3;
   end;
 
-procedure TIS3Archive.GetFile;
+procedure TIS3Archive.GetFile ;
   var
     P: IS3FileHdr;
     P1: IS3FolderHdr;

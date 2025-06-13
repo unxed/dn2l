@@ -52,6 +52,9 @@ unit FlPanel;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
   Defines, Streams, Views, Drivers, FilesCol,
   FlPanelX, Collect, TopView_
   ;
@@ -192,7 +195,7 @@ var
     в результате других сопоставлений с маской (например, при
     автообновлении панелей). `}
 
-constructor TDriveLine.Init;
+constructor TDriveLine.Init (var R: TRect; APanel: PFilePanel);
   begin
   inherited Init(R);
   Panel := APanel;
@@ -214,7 +217,7 @@ constructor TDriveLine.Load(var S: TStream);
   RegisterToBackground(@Self);
   end;
 
-procedure TDriveLine.MakeDriveLine;
+procedure TDriveLine.MakeDriveLine ;
   var
     C: Char;
   begin
@@ -228,14 +231,14 @@ procedure TDriveLine.MakeDriveLine;
               {$ENDIF};
   end;
 
-function TDriveLine.GetPalette;
+function TDriveLine.GetPalette : PPalette;
   const
     S: String[Length(CDriveLine)] = CDriveLine;
   begin
   GetPalette := @S;
   end;
 
-procedure TDriveLine.Draw;
+procedure TDriveLine.Draw ;
   var
     B: TDrawBuffer;
     M: Byte absolute DriveLine;
@@ -292,7 +295,7 @@ procedure TDriveLine.Draw;
   WriteLine(0, 0, Size.X, 1, B);
   end { TDriveLine.Draw };
 
-procedure TDriveLine.HandleEvent;
+procedure TDriveLine.HandleEvent (var Event: TEvent);
   var
     P: TPoint;
 
@@ -439,7 +442,7 @@ procedure TDriveLine.Store(var S: TStream);
   PutPeerViewPtr(S, Panel);
   end;
 
-procedure TDriveLine.Refresh;
+procedure TDriveLine.Refresh ;
   var
     newLogDrvMap: LongInt;
   begin
@@ -452,7 +455,7 @@ procedure TDriveLine.Refresh;
     end;
   end;
 
-procedure TDriveLine.Update;
+procedure TDriveLine.Update ;
   begin
   if (FMSetup.Options and fmoAutorefreshDriveLine) <> 0 then
     Refresh;
@@ -477,7 +480,7 @@ procedure TDriveLine.ShiftLetter(d: Integer);
 
 {                                 TFilePanel                                 }
 {----------------------------------------------------------------------------}
-function TFilePanel.GetPalette;
+function TFilePanel.GetPalette : PPalette;
   const
     S: String[Length(CPanel)] = CPanel;
   begin
@@ -494,7 +497,7 @@ var
     A: Byte;
     end absolute B;
 
-procedure TFilePanel.DrawTop;
+procedure TFilePanel.DrawTop (var B);
   var
     S: String;
     I, J: Integer;
@@ -512,7 +515,7 @@ procedure TFilePanel.DrawTop;
   end;
 
 {-DataCompBoy-}
-procedure TFilePanel.SetState;
+procedure TFilePanel.SetState (AState: Word; Enable: Boolean);
 
   procedure MakeChange;
     var
@@ -670,7 +673,7 @@ procedure TFilePanel.SetState;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TFilePanel.Draw;
+procedure TFilePanel.Draw ;
   label 1;
   var
     P: PFileRec;
@@ -925,25 +928,25 @@ Scroll:
 
 {                                 TInfoView                                  }
 {----------------------------------------------------------------------------}
-constructor TInfoView.Init;
+constructor TInfoView.Init (R: TRect);
   begin
   inherited Init(R);
   EventMask := evMouse;
   end;
 
-constructor TInfoView.Load;
+constructor TInfoView.Load (var S: TStream);
   begin
   inherited Load(S);
   GetPeerViewPtr(S, Panel);
   end;
 
-procedure TInfoView.Store;
+procedure TInfoView.Store (var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, Panel);
   end;
 
-procedure TInfoView.HandleEvent;
+procedure TInfoView.HandleEvent (var Event: TEvent);
   var
     P: TPoint;
     Y: Integer;
@@ -1142,7 +1145,7 @@ function MakeFilter(IV: PInfoView): Boolean;
 
 function MakeQSMask(IV: PInfoView): Boolean;
   begin
-  Result := QuickSearch and (IV^.Panel = ActivePanel);
+  Result := QuickSearch and (PFilePanelRoot(IV^.Panel) = ActivePanel);
    { Flash 25-01-2004:
        Если не сравнивать текущую панель с активной, то
     при включённом автообновлении строка с маской быстрого поиска
@@ -1170,7 +1173,7 @@ function MakeSelected(IV: PInfoView): Boolean;
           S := S+'('+FStr(PackedLen)+')';
 
         S := S+GetString(dlBytesIn)+
-          +ItoS(SelNum)+'~'+GetString(dlSelectedFiles);
+          ItoS(SelNum)+'~'+GetString(dlSelectedFiles);
         end;
       DnD.SelectedY := Y;
       end
@@ -1585,21 +1588,21 @@ procedure TInfoView.Compile(Value: Word;
   begin
   if Value = 0 then
     Exit;
-  @P := @FullProc;
+  P := FullProc;
   if Value > MaxFooterHeight then
     begin { На разделителе, На разделителе кратко }
     if Value = MaxFooterHeight+2 then
-      @P := @BriefProc;
+      P := BriefProc;
     Value := 0;
     end;
   if ElNumber[Value] >= High(LineMaker[Value]) then
     Exit; {! Собщение выдать бы, но вряд ли такой абсурд
       в жизни встретится }
-  @LineMaker[Value][ElNumber[Value]] := @P;
+  LineMaker[Value][ElNumber[Value]] := P;
   inc(ElNumber[Value]);
   end;
 
-procedure TInfoView.CompileShowOptions;
+procedure TInfoView.CompileShowOptions ;
   var
     Y, i: Word;
   begin
@@ -1608,24 +1611,24 @@ procedure TInfoView.CompileShowOptions;
   FillChar(ElNumber, SizeOf(ElNumber), 0);
   with Panel^.PanSetup^.Show do
     begin
-    Compile(MaxFooterHeight+1, MakeDivider, nil);
-    Compile(ShowCurFile, MakeCurFile, nil);
-    Compile(SelectedInfo, MakeQSMask, MakeQSMask);
+    Compile(MaxFooterHeight+1, @MakeDivider, nil);
+    Compile(ShowCurFile, @MakeCurFile, nil);
+    Compile(SelectedInfo, @MakeQSMask, @MakeQSMask);
       { Маска быстрого поиска выводится туда же, куда и
       данные о выделенных, притом маска имеет больший приоритет. }
-    Compile(SelectedInfo, MakeSelected, MakeSelectedBrief);
-    Compile(FilterInfo, MakeFilter, nil);
-    Compile(PathDescrInfo, MakePathDecr, nil);
+    Compile(SelectedInfo, @MakeSelected, @MakeSelectedBrief);
+    Compile(FilterInfo, @MakeFilter, nil);
+    Compile(PathDescrInfo, @MakePathDecr, nil);
     if (Panel^.Drive^.DriveType = dtArc) and
       (ColumnsMask and (psShowRatio or psShowPacked) = 0)
     then
       begin
-      Compile(PackedSizeInfo, MakePacked, nil);
-      Compile(BriefPercentInfo, nil, MakeRatio);
+      Compile(PackedSizeInfo, @MakePacked, nil);
+      Compile(BriefPercentInfo, nil, @MakeRatio);
       end;
-    Compile(LFN_InFooter, MakeLongName, nil);
-    Compile(TotalsInfo, MakeTotals, MakeTotalsBrief);
-    Compile(FreeSpaceInfo, MakeFreeSpace, nil);
+    Compile(LFN_InFooter, @MakeLongName, nil);
+    Compile(TotalsInfo, @MakeTotals, @MakeTotalsBrief);
+    Compile(FreeSpaceInfo, @MakeFreeSpace, nil);
     if (FilterInfo in [1..MaxFooterHeight]) and
        (ElNumber[FilterInfo] = 1) and
        (Panel^.PanSetup^.FileMask = x_x)
@@ -1638,7 +1641,7 @@ procedure TInfoView.CompileShowOptions;
     begin
     if ElNumber[i] <> 0 then
       begin
-      @LineMaker[i][ElNumber[i]] := @Terminate;
+      LineMaker[i][ElNumber[i]] := @Terminate;
       if i <> Y then
         Move(LineMaker[i], LineMaker[Y], SizeOf(LineMaker[i]));
       inc(Y);
@@ -1647,7 +1650,7 @@ procedure TInfoView.CompileShowOptions;
   Size.Y := Y;
   end { TInfoView.CompileShowOptions };
 
-procedure TInfoView.Draw;
+procedure TInfoView.Draw ;
   const
     NoDnD: TPanelBottomDnD =
       (TotalY: 255; SelectedY: 255; CurrentY1: 255; CurrentY2: 255);
@@ -1685,10 +1688,10 @@ procedure TInfoView.Draw;
       I := 0;
       while True do
         begin
-        @P := @LineMaker[Y][I];
-        if @P = @Terminate then
+        P := LineMaker[Y][I];
+        if P = @Terminate then
           Break;
-        if @P = @MakeCurFile then
+        if P = @MakeCurFile then
           begin
           YCurFileLine := Y;
           Exit;
@@ -1730,7 +1733,7 @@ procedure TInfoView.Draw;
     end;
   end { TInfoView.Draw };
 
-function TInfoView.GetPalette;
+function TInfoView.GetPalette : PPalette;
   const
     S: String[Length(CInfoView)] = CInfoView;
   begin
@@ -1746,7 +1749,7 @@ function TDirView.GetText(MaxWidth: Integer): String;
   Result := Cut(Result, MaxWidth);
   end { TDirView.Draw };
 
-procedure TDirView.HandleEvent;
+procedure TDirView.HandleEvent (var Event: TEvent);
   var
     S: String;
     I: LongInt;
@@ -1777,7 +1780,7 @@ procedure TDirView.HandleEvent;
 { FilePanel HandleEvent}
 
 {-DataCompBoy-}
-procedure TFilePanel.HandleEvent;
+procedure TFilePanel.HandleEvent (var Event: TEvent);
   var
     PF: PFileRec;
     CurPos: LongInt;

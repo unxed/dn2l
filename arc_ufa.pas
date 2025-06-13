@@ -50,6 +50,7 @@ unit arc_UFA; {UFA}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -66,7 +67,7 @@ implementation
 
 { ---------------------- UFA (by Luzin Aleksey)---------------------------}
 
-constructor TUFAArchive.Init;
+constructor TUFAArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -129,17 +130,17 @@ constructor TUFAArchive.Init;
   {$ENDIF}
   end { TUFAArchive.Init };
 
-function TUFAArchive.GetID;
+function TUFAArchive.GetID : Byte;
   begin
   GetID := arcUFA;
   end;
 
-function TUFAArchive.GetSign;
+function TUFAArchive.GetSign : TStr4;
   begin
   GetSign := sigUFA;
   end;
 
-procedure TUFAArchive.GetFile;
+procedure TUFAArchive.GetFile ;
   var
     FH: record
       Tmp: array[1..$2A] of Char;

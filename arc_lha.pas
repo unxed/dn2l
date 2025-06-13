@@ -50,6 +50,8 @@ unit arc_LHA; {LHA}
 interface
 
 uses
+  math,
+  vp2fp,
   Archiver
   ;
 
@@ -82,7 +84,7 @@ uses
 
 { ----------------------------- LHA ------------------------------------}
 
-constructor TLHAArchive.Init;
+constructor TLHAArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -184,17 +186,17 @@ constructor TLHAArchive.Init;
   {$ENDIF}
   end { TLHAArchive.Init };
 
-function TLHAArchive.GetID;
+function TLHAArchive.GetID : Byte;
   begin
   GetID := arcLHA;
   end;
 
-function TLHAArchive.GetSign;
+function TLHAArchive.GetSign : TStr4;
   begin
   GetSign := sigLHA;
   end;
 
-procedure TLHAArchive.GetFile;
+procedure TLHAArchive.GetFile ;
   var
     HS, i: AWord;
     FP: TFileSize;

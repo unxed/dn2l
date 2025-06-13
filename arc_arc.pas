@@ -50,6 +50,7 @@ unit arc_ARC; {ARC}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -77,7 +78,7 @@ implementation
 
 { ----------------------------- ARC ------------------------------------}
 
-constructor TARCArchive.Init;
+constructor TARCArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -141,17 +142,17 @@ constructor TARCArchive.Init;
   {$ENDIF}
   end { TARCArchive.Init };
 
-function TARCArchive.GetID;
+function TARCArchive.GetID : Byte;
   begin
   GetID := arcARC;
   end;
 
-function TARCArchive.GetSign;
+function TARCArchive.GetSign : TStr4;
   begin
   GetSign := sigARC;
   end;
 
-procedure TARCArchive.GetFile;
+procedure TARCArchive.GetFile ;
   var
     i: AWord;
     P: ARCHdr;

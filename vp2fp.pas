@@ -48,6 +48,13 @@ procedure ClrIO;
 
 function SysDiskSizeLongX(const fn: PChar): Int64;
 
+procedure SysTVKbdDone;
+procedure SysTVKbdInit;
+
+function lfGetShortFileName(S: String): String;
+
+function SysGetValidDrives: Longint;
+
 implementation
 
 // https://www.freepascal.org/docs-html/current/prog/progse37.html
@@ -154,6 +161,24 @@ begin
 
   // Не удалось определить
   Exit(-1);
+end;
+
+procedure SysTVKbdDone;
+begin
+end;
+
+procedure SysTVKbdInit;
+begin
+end;
+
+function lfGetShortFileName(S: String): String;
+begin
+  Exit(S);
+end;
+
+function SysGetValidDrives: Longint;
+begin
+  Result := 256;
 end;
 
 end.

@@ -12,9 +12,10 @@ Written by Cat 2:5030/1326.13
 
 interface
 
-uses
-  use16
-  ;
+// fixme: porting stub
+//uses
+//  use16
+//  ;
 
 type
   T64 = record

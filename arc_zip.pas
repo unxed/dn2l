@@ -49,6 +49,7 @@ unit arc_Zip; {ZIP}
 
 interface
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -104,7 +105,7 @@ uses
 
 { ----------------------------- ZIP ------------------------------------}
 
-constructor TZIPArchive.Init;
+constructor TZIPArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -247,18 +248,18 @@ constructor TZIPArchive.Init;
   {$ENDIF}
   end { TZIPArchive.Init };
 
-function TZIPArchive.GetID;
+function TZIPArchive.GetID : Byte;
   begin
   GetID := arcZIP;
   end;
 
-function TZIPArchive.GetSign;
+function TZIPArchive.GetSign : TStr4;
   begin
   GetSign := sigZIP;
   end;
 
 {JO} {piwamoto}
-procedure TZIPArchive.GetFile;
+procedure TZIPArchive.GetFile ;
   var
     P: TZIPLocalHdr;
     HCF: TZIPCentralFileRec;

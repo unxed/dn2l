@@ -50,6 +50,7 @@ unit arc_UC2; {UC2}
 interface
 
 uses
+  vp2fp,
   Archiver
   ;
 
@@ -75,7 +76,7 @@ uses
 
 { ----------------------------- UC2 ------------------------------------}
 
-constructor TUC2Archive.Init;
+constructor TUC2Archive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -139,17 +140,17 @@ constructor TUC2Archive.Init;
   {$ENDIF}
   end { TUC2Archive.Init };
 
-function TUC2Archive.GetID;
+function TUC2Archive.GetID : Byte;
   begin
   GetID := arcUC2;
   end;
 
-function TUC2Archive.GetSign;
+function TUC2Archive.GetSign : TStr4;
   begin
   GetSign := sigUC2;
   end;
 
-procedure TUC2Archive.GetFile;
+procedure TUC2Archive.GetFile ;
   const
     FuckName = 'U$~RESLT.OK';
   var
@@ -293,7 +294,7 @@ NextRecord:
 
   end { TUC2Archive.GetFile };
 
-destructor TUC2Archive.Done;
+destructor TUC2Archive.Done ;
   begin
   if TextRec(ListFile).Handle <> 0 then
     begin

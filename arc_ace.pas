@@ -50,6 +50,7 @@ unit arc_ACE; {ACE}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -97,7 +98,7 @@ var
 implementation
 { ---------------------------------- ACE --------------------------------- }
 
-constructor TACEArchive.Init;
+constructor TACEArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -168,17 +169,17 @@ constructor TACEArchive.Init;
   {$ENDIF}
   end { TACEArchive.Init };
 
-function TACEArchive.GetID;
+function TACEArchive.GetID : Byte;
   begin
   GetID := arcACE;
   end;
 
-function TACEArchive.GetSign;
+function TACEArchive.GetSign : TStr4;
   begin
   GetSign := sigACE;
   end;
 
-procedure TACEArchive.GetFile;
+procedure TACEArchive.GetFile ;
   label 1;
   var
     FP: TFileSize;

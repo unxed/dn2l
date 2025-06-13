@@ -50,6 +50,7 @@ unit arc_LIM; {LIM}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -78,7 +79,7 @@ implementation
 
 { ----------------------------- LIM ------------------------------------}
 
-constructor TLIMArchive.Init;
+constructor TLIMArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -142,17 +143,17 @@ constructor TLIMArchive.Init;
   {$ENDIF}
   end { TLIMArchive.Init };
 
-function TLIMArchive.GetID;
+function TLIMArchive.GetID : Byte;
   begin
   GetID := arcLIM;
   end;
 
-function TLIMArchive.GetSign;
+function TLIMArchive.GetSign : TStr4;
   begin
   GetSign := sigLIM;
   end;
 
-procedure TLIMArchive.GetFile;
+procedure TLIMArchive.GetFile ;
   var
     i: AWord;
     P: LIMHdr;

@@ -259,6 +259,10 @@ function Str2Comp(const s: String): Comp;
 
 procedure AddStr(var S: String; C: Char);
 
+function CompToFSize(x: Comp): TFileSize;
+
+function LowCase(c: Char): Char;
+
 implementation
 
 uses

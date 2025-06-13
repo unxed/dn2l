@@ -50,6 +50,7 @@ unit arc_CHZ; {CHZ}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -77,7 +78,7 @@ implementation
 
 { ----------------------------- CHZ ------------------------------------}
 
-constructor TCHZArchive.Init;
+constructor TCHZArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -140,17 +141,17 @@ constructor TCHZArchive.Init;
   {$ENDIF}
   end { TCHZArchive.Init };
 
-function TCHZArchive.GetID;
+function TCHZArchive.GetID : Byte;
   begin
   GetID := arcCHZ;
   end;
 
-function TCHZArchive.GetSign;
+function TCHZArchive.GetSign : TStr4;
   begin
   GetSign := sigCHZ;
   end;
 
-procedure TCHZArchive.GetFile;
+procedure TCHZArchive.GetFile ;
   var
     FP: TFileSize;
     P: CHZHdr;

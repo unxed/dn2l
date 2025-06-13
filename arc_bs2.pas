@@ -50,6 +50,7 @@ unit arc_BS2; {BS2}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams
   ;
 
@@ -77,7 +78,7 @@ implementation
 
 { ----------------------------- BS2 ------------------------------------}
 
-constructor TBS2Archive.Init;
+constructor TBS2Archive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -140,17 +141,17 @@ constructor TBS2Archive.Init;
   {$ENDIF}
   end { TBS2Archive.Init };
 
-function TBS2Archive.GetID;
+function TBS2Archive.GetID : Byte;
   begin
   GetID := arcBS2;
   end;
 
-function TBS2Archive.GetSign;
+function TBS2Archive.GetSign : TStr4;
   begin
   GetSign := sigBS2;
   end;
 
-procedure TBS2Archive.GetFile;
+procedure TBS2Archive.GetFile ;
   var
     P: BSA2Hdr;
   begin

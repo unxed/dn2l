@@ -50,6 +50,7 @@ unit arc_SQZ; {SQZ}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos
   ;
 
@@ -79,7 +80,7 @@ implementation
 
 { ----------------------------- SQZ ------------------------------------}
 
-constructor TSQZArchive.Init;
+constructor TSQZArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -142,17 +143,17 @@ constructor TSQZArchive.Init;
   {$ENDIF}
   end { TSQZArchive.Init };
 
-function TSQZArchive.GetID;
+function TSQZArchive.GetID : Byte;
   begin
   GetID := arcSQZ;
   end;
 
-function TSQZArchive.GetSign;
+function TSQZArchive.GetSign : TStr4;
   begin
   GetSign := sigSQZ;
   end;
 
-procedure TSQZArchive.GetFile;
+procedure TSQZArchive.GetFile ;
   label 1;
   var
     i: AWord;

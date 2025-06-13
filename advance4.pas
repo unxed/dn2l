@@ -60,12 +60,15 @@ procedure RunSession(Command: String; Bckg: Boolean;
 implementation
 
 uses
+  vp2fp,
+  Lfnvp,
   Advance, Lfn, Advance1, Drivers
   , Dos, DnExec, Startup
   ;
 
 {-DataCompBoy-}
-procedure RunSession;
+procedure RunSession (Command: String; Bckg: Boolean;
+     Session: SessionType);
   var
     T: lText;
     I: Integer;

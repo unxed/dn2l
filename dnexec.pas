@@ -50,6 +50,7 @@ unit DnExec;
 interface
 
 uses
+  vp2fp,
   Defines, FilesCol, Commands
   ;
 
@@ -114,8 +115,12 @@ procedure AnsiExec(const Path: String; const ComLine: AnsiString);
   MakeNoSlash(S);
   ChDir(S);
   c := IOResult;
-  DosError := SysExecute(StrPCopy(PathBuf, Path), PChar(Ans1), nil,
-      ExecFlags = efAsync, nil, -1, -1, -1);
+
+  // fixme: porting stub
+  DosError := -1;
+  //DosError := SysExecute(StrPCopy(PathBuf, Path), PChar(Ans1), nil,
+  //    ExecFlags = efAsync, nil, -1, -1, -1);
+
 {$IFNDEF Win32}
 //  освобождаем каталог
   if ActiveDir[2] = ':' then
@@ -303,7 +308,11 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   SetTitle(S);
   fExec := True;
   {$IFNDEF DPMI32}
-  if GUIProgram(S) then
+
+  // fixme: porting stub
+  if FALSE then
+  //if GUIProgram(S) then
+
     {$IFDEF OS2}
     S := 'start /f /PGM '+ S
   else
@@ -362,9 +371,12 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
     Inc(Y);
   if X <> 0 then
     Writeln;
-  SysTvGetScrMode(@ScreenSize, True);
-  if Y >= ScreenSize.Y then
+
+  // fixme: porting stub
+  //SysTvGetScrMode(@ScreenSize, True);
+  //if Y >= ScreenSize.Y then
     Writeln;
+  
   {/AK155, Cat}
   if TimerMark then
     begin
@@ -381,8 +393,11 @@ procedure ExecStringRR(S: AnsiString; const WS: String; RR: Boolean); {JO}
   InitDOSMem;
   InitMemory;
   InitVideo;
-  SysTVDetectMouse; { AK155 Без этого под OS/2 может не появиться мышь,
-    если вызванная программа выполнила SysTVHideMouse }
+  
+  // fixme: porting stub
+  // SysTVDetectMouse; { AK155 Без этого под OS/2 может не появиться мышь,
+  //  если вызванная программа выполнила SysTVHideMouse }
+
   InitEvents;
   InitSysError;
   {$IFDEF OS2}

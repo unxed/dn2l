@@ -50,6 +50,7 @@ unit arc_TGZ; {TGZ & TAZ & TAR.GZ}
 interface
 
 uses
+  vp2fp,
   Archiver, Advance, Advance1, Defines, Objects2, Streams, Dos, xTime,
    Advance2
   ;
@@ -66,7 +67,7 @@ type
 implementation
 { ----------------------------- TAR ------------------------------------}
 
-constructor TTGZArchive.Init;
+constructor TTGZArchive.Init ;
   var
     Sign: TStr5;
     q: String;
@@ -165,17 +166,17 @@ constructor TTGZArchive.Init;
   {$ENDIF}
   end { TTGZArchive.Init };
 
-function TTGZArchive.GetID;
+function TTGZArchive.GetID : Byte;
   begin
   GetID := arcTGZ;
   end;
 
-function TTGZArchive.GetSign;
+function TTGZArchive.GetSign : TStr4;
   begin
   GetSign := sigTGZ;
   end;
 
-procedure TTGZArchive.GetFile;
+procedure TTGZArchive.GetFile ;
   type
     GZipHdr = record
       Id: AWord;
