@@ -67,7 +67,7 @@ uses
   Commands, Advance, Advance1, Advance2, DNApp, DNUtil
   ;
 
-function TXDoubleWindow.GetPalette;
+function TXDoubleWindow.GetPalette : PPalette;
   const
     S: String[Length(CDoubleWindow)] = CDoubleWindow;
   begin
@@ -105,7 +105,7 @@ procedure TXDoubleWindow.SetState(AState: Word; Enable: Boolean);
   {$ENDIF}
   end { TXDoubleWindow.SetState };
 
-procedure TXDoubleWindow.HandleEvent;
+procedure TXDoubleWindow.HandleEvent (var Event: TEvent);
   var
     CE: Boolean;
     Visible, Selected: array[TPanelNum] of Boolean;
