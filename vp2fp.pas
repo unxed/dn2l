@@ -46,6 +46,8 @@ procedure lTrueName(const Name: String; var S: String);
 
 procedure ClrIO;
 
+function SysDiskSizeLongX(const fn: PChar): Int64;
+
 implementation
 
 // https://www.freepascal.org/docs-html/current/prog/progse37.html
@@ -133,6 +135,25 @@ procedure ClrIO;
 begin
 //  while KeyPressed do
 //    ReadKey;
+end;
+
+function SysDiskSizeLongX(const fn: PChar): Int64;
+var
+  Path: string;
+begin
+  Path := string(fn);  // преобразуем PChar в string
+
+  {$ifdef linux}
+  // Это падает на FreeBSD 12 x64
+  Exit(SysUtils.DiskFree(SysUtils.AddDisk(ExtractFileDir(Path))));
+  {$endif}
+
+  {$ifdef windows}
+  Exit(SysUtils.DiskFree(SysUtils.GetDriveIDFromLetter(ExtractFileDrive(Path))));
+  {$endif}
+
+  // Не удалось определить
+  Exit(-1);
 end;
 
 end.

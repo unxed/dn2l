@@ -54,6 +54,10 @@ procedure LongCopy(Fn1: String);
 
 implementation
 uses
+  math,
+  Strings,
+  vp2fp,
+  Lfnvp,
   Lfn, Dos, Tree, VPSysLow, Advance, Advance1, Advance2, FileCopy, DNApp,
   Messages, Views, Defines, Dialogs, Commands, Drivers, Memory, HistList,
   Gauge, Startup, xTime, ErrMess, VPUtils
@@ -303,96 +307,102 @@ procedure LongCopy(Fn1: String);
     end { RequireNew };
 
   procedure MaxWrite;
-    label Rep, 1, 2, 33;
-    var
-      i: Byte;
-      wr: LongInt;
-    begin
-Rep:
+  label Rep, 1, 2, 33;
+  var
+    i: Byte;
+    wr: LongInt;
+  begin
+  Rep:
     if Abort or CopyCancelled then
       Exit;
-    for i := 1 to NBf do
+    i := 1;
+    while i <= NBf do
+    begin
       if Bf[i].NW < Bf[i].NR then
-        begin
-        wr := LongInt(Bf[i].NR)-LongInt(Bf[i].NW);
-2:
+      begin
+        wr := LongInt(Bf[i].NR) - LongInt(Bf[i].NW);
+  2:
         LastPos := FilePos(F2.F);
-        if PartSize <> 0
-        then
-          BlockWrite(F2.F, Bf[i].Buf^[Bf[i].NW+1], Min(wr,
-               PartSize-PartWrt), NumW)
+        if PartSize <> 0 then
+          BlockWrite(F2.F, Bf[i].Buf^[Bf[i].NW + 1], Min(wr, PartSize - PartWrt), NumW)
         else
-          BlockWrite(F2.F, Bf[i].Buf^[Bf[i].NW+1], Word(wr), NumW);
+          BlockWrite(F2.F, Bf[i].Buf^[Bf[i].NW + 1], Word(wr), NumW);
+
         if DiskVerify then
-          begin
+        begin
           {$IFDEF DPMI32}
           asm
-             mov ah,0dh
-             int 21h
-           end;
+            mov ah, 0dh
+            int 21h
+          end;
           {$ENDIF}
           Seek(F2.F, LastPos);
-          if PartSize <> 0
-          then
-            BlockRead(F2.F, Bf[i].Buf^[Bf[i].NW+1], Min(wr,
-                 PartSize-PartWrt), NumW)
+          if PartSize <> 0 then
+            BlockRead(F2.F, Bf[i].Buf^[Bf[i].NW + 1], Min(wr, PartSize - PartWrt), NumW)
           else
-            BlockRead(F2.F, Bf[i].Buf^[Bf[i].NW+1], Word(wr), NumW);
-          end;
-        if  (IOResult <> 0) then
-          begin
-          MessageBox(GetString(dlFBBNoWrite)+Fn2, nil, mfError+mfOKButton);
+            BlockRead(F2.F, Bf[i].Buf^[Bf[i].NW + 1], Word(wr), NumW);
+        end;
+
+        if IOResult <> 0 then
+        begin
+          MessageBox(GetString(dlFBBNoWrite) + Fn2, nil, mfError + mfOKButton);
           Abort := True;
           NewTimer(Timer, 0);
-          end;
+        end;
+
         if Abort then
           goto 33;
-        if  (NumW = 0) or ((PartSize <> 0) and (PartWrt = PartSize))
-        then
-          begin
-          {Cat:warn}
+
+        if (NumW = 0) or ((PartSize <> 0) and (PartWrt = PartSize)) then
+        begin
           wr := DiskFree(dr2);
-          if  (wr = 0) or (PartWrt = PartSize) then
+          if (wr = 0) or (PartWrt = PartSize) then
             goto 1
           else
             goto 2;
-          end;
+        end;
+
         Inc(Bf[i].NW, NumW);
         Inc(CD, NumW);
         Inc(PartWrt, NumW);
         DsplInfo;
         DispatchEvents(PInfo, CopyCancelled);
+
         if Abort or CopyCancelled then
-          begin
-33:
+        begin
+  33:
           CopyCancelled := True;
           Close(F2.F);
           lEraseFile(F2);
           Exit;
-          end;
-1:
-        if  (NumW = 0) or ((PartWrt = PartSize) and (PartSize <> 0))
-        then
+        end;
+
+  1:
+        if (NumW = 0) or ((PartWrt = PartSize) and (PartSize <> 0)) then
+        begin
           if Tuda then
-            begin
-            MessageBox(GetString(dlFBBDiskFull2), nil, mfError+mfOKButton);
+          begin
+            MessageBox(GetString(dlFBBDiskFull2), nil, mfError + mfOKButton);
             NewTimer(Timer, 0);
             Abort := True;
             Exit;
-            end
+          end
           else
-            begin
-            if (ElapsedTime(Timer) > 20*1000) and
-                (FMSetup.Options and fmoBeep <> 0)
-            then
+          begin
+            if (ElapsedTime(Timer) > 20 * 1000) and ((FMSetup.Options and fmoBeep) <> 0) then
               BeepAftercopy;
-            if Cd < Ls then ReQuireNew;
+            if CD < Ls then
+              ReQuireNew;
             goto Rep;
-            end;
-        if Bf[i].NR > Bf[i].NW then
-          Dec(i);
+          end;
         end;
-    end { MaxWrite };
+
+        if Bf[i].NR > Bf[i].NW then
+          Dec(i);  // теперь разрешено
+      end;
+      Inc(i);
+    end;
+  end;
 
   function CheckSvoi: Byte;
     var
