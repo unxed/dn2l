@@ -51,6 +51,7 @@ unit Idlers;
 interface
 
 uses
+  vp2fp,
   Views, Drivers, Defines, xTime
   ;
 
@@ -130,11 +131,11 @@ const
   StarChars: array[0..5] of Char = (#32, #250, #249, #7, #4, #15);
   MColors: array[0..3] of Byte = (1, 3, 9, 11);
 
-procedure TSSaver.Update;
+procedure TSSaver.Update ;
   begin
   end;
 
-function TSSaver.Execute;
+function TSSaver.Execute : Word;
   var
     Event: TEvent;
     W: Word;
@@ -159,7 +160,7 @@ function TSSaver.Execute;
     Execute := cmOK;
   end { TSSaver.Execute };
 
-procedure TSSaver.Draw;
+procedure TSSaver.Draw ;
   var
     B: TDrawBuffer;
   begin
@@ -167,7 +168,7 @@ procedure TSSaver.Draw;
   WriteLine(0, 0, Size.X, Size.Y, B);
   end;
 
-constructor TSSaver.Init;
+constructor TSSaver.Init (var Bounds: TRect);
   begin
   inherited Init(Bounds);
   Options := Options or ofSelectable;
@@ -175,14 +176,14 @@ constructor TSSaver.Init;
   HideMouse;
   end;
 
-destructor TSSaver.Done;
+destructor TSSaver.Done ;
   begin
   SSaver := nil;
   ShowMouse;
   inherited Done;
   end;
 
-constructor TStarSkySaver.Init;
+constructor TStarSkySaver.Init ;
   label 1;
   var
     R: TRect;
@@ -197,7 +198,7 @@ constructor TStarSkySaver.Init;
   CommonDelay := 131 div Size.X*2;
   end;
 
-procedure TStarSkySaver.InitStar;
+procedure TStarSkySaver.InitStar (Index: Integer);
   var
     A, R: Integer;
   begin
@@ -221,7 +222,7 @@ procedure TStarSkySaver.InitStar;
       end;
   end { TStarSkySaver.InitStar };
 
-procedure TStarSkySaver.Draw;
+procedure TStarSkySaver.Draw ;
   var
     B: TDrawBuffer;
     I, K: Integer;
@@ -241,7 +242,7 @@ procedure TStarSkySaver.Draw;
       end;
   end;
 
-procedure TStarSkySaver.Update;
+procedure TStarSkySaver.Update ;
   var
     W, I, J, K: Word;
     M: LongInt;
@@ -293,7 +294,7 @@ procedure TStarSkySaver.Update;
     HideMouse;
   end { TStarSkySaver.Update };
 
-constructor TProjector.Init;
+constructor TProjector.Init ;
   label 1;
   var
     R: TRect;
@@ -317,7 +318,7 @@ type
     l, R: ShortInt
     end;
 
-procedure TProjector.Draw;
+procedure TProjector.Draw ;
   const
     RR: array[1..4] of SpecArray =
       (
@@ -354,7 +355,7 @@ procedure TProjector.Draw;
     end;
   end { TProjector.Draw };
 
-procedure TProjector.Update;
+procedure TProjector.Update ;
   label 1;
   var
     Hour, Min, Sec, Sec100: Word;
@@ -413,7 +414,7 @@ procedure TProjector.Update;
     HideMouse;
   end { TProjector.Update };
 
-constructor TClockSaver.Init;
+constructor TClockSaver.Init ;
   var
     R: TRect;
   begin
@@ -429,7 +430,7 @@ constructor TClockSaver.Init;
   Update;
   end;
 
-procedure TClockSaver.Draw;
+procedure TClockSaver.Draw ;
   var
     B, BB: TDrawBuffer;
     I: Integer;
@@ -450,7 +451,7 @@ procedure TClockSaver.Draw;
       end
   end;
 
-procedure TClockSaver.Update;
+procedure TClockSaver.Update ;
   var
     H, M, S, SS: Word;
     sX, sY: Integer;
@@ -500,7 +501,7 @@ procedure TClockSaver.Update;
     HideMouse;
   end { TClockSaver.Update };
 
-destructor TClockSaver.Done;
+destructor TClockSaver.Done ;
   begin
   SetBlink(CurrentBlink);
   inherited Done;
