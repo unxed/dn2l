@@ -54,6 +54,7 @@ HelpKern;
 interface
 
 uses
+  vp2fp,
   Defines, Objects2, Streams
   ;
 
@@ -161,7 +162,7 @@ type
 procedure NotAssigned(var S: TStream; Value: AInt);
 
 const
-  CrossRefHandler: TCrossRefHandler = NotAssigned;
+  CrossRefHandler: TCrossRefHandler = nil;
 
 implementation
 uses
@@ -416,7 +417,7 @@ procedure THelpTopic.Store(var S: TStream);
       I: AInt;
     begin
     S.Write(NumRefs, SizeOf(NumRefs));
-    if @CrossRefHandler = @NotAssigned then
+    if @CrossRefHandler = nil then
       S.Write(CrossRefs^, SizeOf(TCrossRef)*NumRefs)
     else
       for I := 1 to NumRefs do
@@ -456,6 +457,10 @@ Size - это размер буфера, а не длина зоны поиска.
 не более 256 символов. Не допускается Offset = Size.
 }
   function Scan(var P; Offset, Size: Integer; C: Char): Integer;
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES esi,edi} {&FRAME-}
   asm
@@ -475,9 +480,14 @@ Size - это размер буфера, а не длина зоны поиска.
         neg     ecx
         xchg    eax,ecx
 end;
+*)
 
   procedure TextToLine(var Text; Offset, Length: Integer;
        var Line: String);
+  begin
+  end;
+  // fixme: porting stub
+  (*
     assembler;
     {&USES esi,edi} {&FRAME-}
   asm
@@ -490,6 +500,7 @@ end;
         xchg    eax,ecx
         rep     movsb
 end;
+*)
 
   begin { THelpTopic.WrapText }
   I := Scan(Text, Offset, Size, #13);

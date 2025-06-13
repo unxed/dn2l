@@ -50,6 +50,7 @@ unit Advance7;
 interface
 
 uses
+  Lfnvp,
   Advance, Advance2
   ;
 
