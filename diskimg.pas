@@ -51,6 +51,8 @@ unit DiskImg;
 interface
 
 uses
+  math,
+  LFNVp,
   FilesCol
   ;
 
@@ -533,7 +535,7 @@ procedure DoIt(AOwner: Pointer; AFiles: PFilesCollection;
   RereadGlobal(ADestPath);
   end { DoIt };
 
-procedure UnpackDiskImages;
+procedure UnpackDiskImages (AOwner: Pointer; Files: PFilesCollection);
   var
     DestPath: String;
   begin
