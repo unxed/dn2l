@@ -14,20 +14,6 @@ uses
   {$IFDEF WIN32}, Windows, VpKbdW32 {$ENDIF}
   ;
 
-function SysTVGetShiftState2: Byte;
-{$IFDEF Win32}
-  inline;
-  begin
-  Result := VpKbdW32.GetWinShiftState2;
-  end;
-{$ENDIF}
-{$IFDEF DPMI32}
-  inline;
-  begin
-  Result := 0;
-  end;
-{$ENDIF}
-
 type
   POSSearchRec = ^TOSSearchRec;
 
@@ -87,6 +73,29 @@ type
     LastAccessTime: LongInt;
     end;
 
+implementation
+
+{&OrgName-}
+
+uses
+  Strings
+  ;
+
+(*
+function SysTVGetShiftState2: Byte;
+{$IFDEF Win32}
+  inline;
+  begin
+  Result := VpKbdW32.GetWinShiftState2;
+  end;
+{$ENDIF}
+{$IFDEF DPMI32}
+  inline;
+  begin
+  Result := 0;
+  end;
+{$ENDIF}
+
 function SysFindFirstNew(Path: PChar; Attr: LongInt;
      var F: TOSSearchRecNew; IsPChar: Boolean): LongInt;
 {$IFDEF DPMI32} inline;
@@ -109,14 +118,7 @@ procedure SysTVKbdDone;
 {$IFNDEF OS2} inline;
   begin
   end; {$ENDIF}
-
-implementation
-
-{&OrgName-}
-
-uses
-  Strings
-  ;
+*)
 
 {$IFDEF OS2}
 function SysTVGetShiftState2: Byte;

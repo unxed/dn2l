@@ -23,6 +23,7 @@ unit VPSysLow;
 interface
 
 uses
+SysUtils,
 {$IFDEF OS2}    Os2Def, Os2Base; {$Undef KeyDll} {$ENDIF}
 {$IFDEF LINUX}  Linux;                           {$ENDIF}
 {$IFDEF WIN32}  Windows;                         {$ENDIF}
@@ -233,6 +234,9 @@ function SysExitCode: Longint;
 function SysFileExists(const FileName: PChar): Boolean;
 }
 
+{
+// fixme: porting stub
+
 // Memory mapping functions.  The Alloc and Access functions return
 // a handle or -1 (invalid).
 function SysAllocSharedMemory(var _Base: Pointer; _Name: pChar; _Size: Longint): Longint;
@@ -259,6 +263,7 @@ procedure SemCloseMutex(_Handle: TSemHandle);
 function SysMemInfo(_Base: Pointer; _Size: Longint; var _Flags: Longint): Boolean;
 function SysSetMemProtection(_Base: Pointer; _Size: Longint; _Flags: Longint): Boolean;
 function PhysMemAvail: Longint;  {AK155 20-08-2003}
+}
 
 // GUI
 
@@ -273,6 +278,8 @@ type
                  dtNovellNet, dtCDRom, dtLAN, dtHDNTFS, dtUnknown,
                  dtTVFS, dtHDExt2, dtJFS, dtHDFAT32, dtOptical);
 
+{
+// fixme: porting stub                 
 function SysGetVolumeLabel(Drive: Char): ShortString;
 function SysSetVolumeLabel(Drive: Char; _Label: ShortString): Boolean;
 function SysGetForegroundProcessId: Longint;
@@ -299,6 +306,7 @@ function SysReadCharAt(x,y: SmallWord): Char;
 procedure SysScrollUp(X1,Y1,X2,Y2,Lines,Cell: SmallWord);
 procedure SysScrollDn(X1,Y1,X2,Y2,Lines,Cell: SmallWord);
 procedure SysBeepEx(Freq,Dur: LongInt);
+}
 {$IFDEF DPMI32}
 procedure SysSound(freq:longint);
 procedure SysNoSound;
@@ -329,6 +337,7 @@ type
     skeShiftState: Byte;
   end;
 
+{
 function  SysTVDetectMouse: Longint;
 procedure SysTVInitMouse(var X,Y: Integer);
 procedure SysTVDoneMouse(Close: Boolean);
@@ -352,6 +361,7 @@ procedure SysTVInitCursor;
 procedure SysTvDoneCursor;
 procedure SysCtrlSleep(Delay: Integer);
 function SysGetValidDrives: Longint;
+}
 
 // Other
 
@@ -363,6 +373,7 @@ const
   CtrlBreakHandler: TCtrlBreakHandler = nil;
   TVVioHandle: Word = 0;
 
+{
 function SysGetCodePage: Longint;
 procedure SysCtrlSetCBreakHandler;
 function SysFileIncHandleCount(Count: Longint): Longint;
@@ -371,9 +382,11 @@ function SysCompareStrings(s1, s2: PChar; l1, l2: Longint; IgnoreCase: Boolean):
 procedure SysChangeCase(Source, Dest: PChar; Len: Longint; NewCase: TCharCase);
 function SysLowerCase(s: PChar): PChar;
 function SysUpperCase(s: PChar): PChar;
+}
 
 // IDE
 
+{
 procedure SysDisableHardErrors;
 function SysKillProcess(Process: Longint): Longint;
 function SysAllocSharedMem(Size: Longint; var MemPtr: Pointer): Longint;
@@ -382,6 +395,7 @@ function SysGiveSharedMem(MemPtr: Pointer): Longint;
 function SysPipeCreate(var ReadHandle,WriteHandle: Longint; Size: Longint): Longint;
 function SysPipePeek(Pipe: Longint; Buffer: Pointer; BufSize: Longint; var BytesRead: Longint; var IsClosing: Boolean): Longint;
 function SysPipeClose(Pipe: Longint): Longint;
+}
 
 // Required by SysUtils unit
 const
@@ -415,6 +429,7 @@ type
     fExceptionInfo: array [0..exception_Maximum_Parameters-1] of Longint;
   end;
 
+{
 procedure SysGetCaseMap(TblLen: Longint; Tbl: PChar );
 procedure SysGetWeightTable(TblLen: Longint; WeightTable: PChar);
 function SysLoadResourceString(ID: Longint; Buffer: PChar; BufSize: Longint): PChar;
@@ -436,6 +451,8 @@ procedure SysBeep;
  are inporowed are impowed instead SysLowInit }
 procedure SysLowInit; {for 2.1 build 274 and earlier}
 procedure SysLowInitPostTLS; {for 2.1 build 279 and later}
+
+}
 
 // Clipboard interface
 
@@ -546,7 +563,7 @@ function SysDiskFree(Drive: Byte): Longint;
 var
   Temp: TQuad;
 begin
-  Temp := SysDiskFreeLong(Drive);
+  Temp := 0; // SysDiskFreeLong(Drive); // fixme: porting stub
   Result := TQuadRec(Temp).Lo;
   if Temp > MaxLongint then
     Result := MaxLongint;  // Handle overflow
@@ -556,7 +573,7 @@ function SysDiskSize(Drive: Byte): Longint;
 var
   Temp: TQuad;
 begin
-  Temp := SysDiskSizeLong(Drive);
+  Temp := 0; // SysDiskSizeLong(Drive); // fixme: porting stub
   Result := TQuadRec(Temp).Lo;
   if Temp > MaxLongint then
     Result := MaxLongint;  // Handle overflow
@@ -605,16 +622,19 @@ end;
 
 function SysPlatformName: String;
 begin
-  Result := SysPlatformNameForID( SysPlatformId );
+  // fixme: porting stub
+  //Result := SysPlatformNameForID( SysPlatformId );
+  Result := 'PLATFORM';
 end;
 
 function SysFileExists(const FileName: PChar): Boolean;
 var
-  S: TOSSearchRec;
-begin // $27=allow archive+system+hidden+readonly, no directories
-  Result := SysFindFirst(FileName, $27, S, True) = 0;
+  S: TSearchRec;
+begin
+  // faAnyFile = faReadOnly or faHidden or faSysFile or faArchive
+  Result := FindFirst(StrPas(FileName), faAnyFile, S) = 0;
   if Result then
-    SysFindClose(S);
+    FindClose(S);
 end;
 
 // Include platform specific implementations
