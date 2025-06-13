@@ -51,6 +51,8 @@ unit Eraser;
 interface
 
 uses
+  vp2fp,
+  Lfnvp,
   Collect
   ;
 
@@ -70,7 +72,7 @@ uses
   ;
 
 {-DataCompBoy-}
-function ValidErase;
+function ValidErase(Files: PCollection): Boolean;
   var
     PF: PFileRec;
     S: String;
@@ -114,7 +116,7 @@ function ValidErase;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure EraseFiles;
+procedure EraseFiles(Files: PCollection);
   var
     PInfo: PWhileView;
     R: TRect;
@@ -303,8 +305,9 @@ TryDel:
         lRmDir(s);
         Params.RC := IOResult;
         if Params.RC <> 0 then
-          if SysErrorFunc(Params.RC, Byte(s[1])-Byte('A')) = 1 then
-            goto TryDel;
+        // fixme: porting stub
+        //  if SysErrorFunc(Params.RC, Byte(s[1])-Byte('A')) = 1 then
+        //    goto TryDel;
         if Params.RC <> 0 then
           begin
           DosDelDir := False;
