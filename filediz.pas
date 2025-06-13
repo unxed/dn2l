@@ -51,6 +51,8 @@ unit Filediz;
 interface
 
 uses
+  vp2fp,
+  Lfnvp,
   FilesCol, Defines, Objects2,
   Commands
   ;
@@ -321,13 +323,17 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
       {имя в кавычках - ищем вторую кавычку }
       begin
       NameEnd := 0;
-      for j := 2 to LS do
+      j := 2;
+      while j <= LS do
+      begin
         if LastDizLine[j] = '"' then
-          begin
+        begin
           NameEnd := j;
           Inc(j);
           Break;
-          end;
+        end;
+        Inc(j);
+      end;
       if NameEnd <= 2 then
         goto ReadNextLine;
       if NameEnd = LS then
@@ -369,7 +375,7 @@ procedure ReadFileList(ProcessDizName: TDizNameProc;
       ProcessDizLine;
       end;
 
-    if ProcessDizEnd then
+    if ProcessDizEnd() then
       goto EndFile;
     goto EndDescr;
 

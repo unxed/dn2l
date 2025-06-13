@@ -251,6 +251,11 @@ var
   CurrentRoot: String; // без '\' в конце; может быть шара
   StartDir: String;
 
+procedure lResetText(var F: lText);
+procedure lAppendText(var T: lText);
+procedure lEraseFile(var F: lFile);
+procedure lEraseText(var T: lText);
+
 implementation
 
 uses
