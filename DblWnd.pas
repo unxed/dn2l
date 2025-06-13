@@ -171,7 +171,7 @@ uses
   , Dos, VPUtils
   ;
 
-constructor TDoubleWindow.Init;
+constructor TDoubleWindow.Init (Bounds: TRect; ANumber, ADrive: Integer);
   var
     P: PFilePanel;
     R: TRect;
@@ -263,12 +263,12 @@ procedure TDoubleWindow.InitPanel(N: TPanelNum; R: TRect);
     AnyPanel := P;
     FilePanel := PFilePanel(P);
     PanelType := dtPanel;
-    FilePanel.SelfNum := N;
+    FilePanel^.SelfNum := N;
     P^.Select;
     end;
   end { TDoubleWindow.InitPanel };
 
-function TDoubleWindow.Valid;
+function TDoubleWindow.Valid (C: Word): Boolean;
   begin
   Valid := inherited Valid(C) and isValid;
   end;
@@ -335,7 +335,7 @@ procedure TDoubleWindow.ChangeBounds(var Bounds: TRect);
     end;
   end { TDoubleWindow.ChangeBounds };
 
-constructor TDoubleWindow.Load;
+constructor TDoubleWindow.Load (var S: TStream);
   const
     SaveBlockLen =
       SizeOf(OldBounds) +
@@ -358,7 +358,7 @@ constructor TDoubleWindow.Load;
       if FilePanel = nil then
         Fail;
       AnyPanel := FilePanel;
-      FilePanel.SelfNum := N;
+      FilePanel^.SelfNum := N;
       end;
   PassivePanel := OtherFilePanel(ActivePanel);
 
@@ -395,7 +395,7 @@ constructor TDoubleWindow.Load;
   isValid := True;
   end { TDoubleWindow.Load };
 
-procedure TDoubleWindow.Store;
+procedure TDoubleWindow.Store (var S: TStream);
   const
     SaveBlockLen =
       SizeOf(OldBounds) +
@@ -439,8 +439,8 @@ function ValidVP(var P: PView; S: PView {скроллбар}): Boolean;
   Result := False;
   if (S = nil) or (P = nil) or not P^.Valid(0) then
     begin
-    S.Free;
-    P.Free;
+    S^.Free;
+    P^.Free;
     P := nil;
     Exit;
     end;
@@ -620,7 +620,7 @@ Ex:
   UnLock;
   end { TDoubleWindow.SwitchView };
 
-procedure TDoubleWindow.InitInterior;
+procedure TDoubleWindow.InitInterior ;
   var
     R: TRect;
     RP: array[TPanelNum] of TRect;
@@ -797,7 +797,7 @@ procedure TDoubleWindow.ToggleViewMaxiState(P: PView; Other: TPanelNum);
   UnLock;
   end;
 
-procedure TDoubleWindow.HandleCommand;
+procedure TDoubleWindow.HandleCommand (var Event: TEvent);
   var
     Selected: Boolean;
     Visible: array [TPanelNum] of Boolean;
@@ -1147,19 +1147,19 @@ procedure TDoubleWindow.HandleCommand;
 
 { --------------------------- TSeparator ----------------------------- }
 
-constructor TSeparator.Load;
+constructor TSeparator.Load (var S: TStream);
   begin
   inherited Load(S);
   S.Read(OldX, 4);
   end;
 
-procedure TSeparator.Store;
+procedure TSeparator.Store (var S: TStream);
   begin
   inherited Store(S);
   S.Write(OldX, 4);
   end;
 
-constructor TSeparator.Init;
+constructor TSeparator.Init (R: TRect; AH: Integer);
   begin
   inherited Init(R);
   OldX := Origin.X+1;
@@ -1167,7 +1167,7 @@ constructor TSeparator.Init;
   EventMask := $FFFF;
   end;
 
-procedure TSeparator.HandleEvent;
+procedure TSeparator.HandleEvent (var Event: TEvent);
   var
     P: TPoint;
     R: TRect;
@@ -1200,7 +1200,7 @@ procedure TSeparator.HandleEvent;
   end {case};
   end { TSeparator.HandleEvent };
 
-procedure TSeparator.Draw;
+procedure TSeparator.Draw ;
   var
     B: array[0..128] of record
       C: Char;
