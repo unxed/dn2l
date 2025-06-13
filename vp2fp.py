@@ -5,13 +5,43 @@ import os
 import sys
 import shutil
 
+def find_declarations(text):
+    """
+    Находит полные объявления procedure/function/constructor/destructor в тексте,
+    корректно обрабатывая многострочные параметры и точки с запятой внутри них.
+    """
+    declarations = []
+    # Ищем начало объявления: 'procedure', 'function', 'constructor' или 'destructor' в начале строки
+    for match in re.finditer(r'^\s*(?:procedure|function|constructor|destructor)\s+\w', text, re.IGNORECASE | re.MULTILINE):
+        start_index = match.start()
+        
+        if any(start_index >= decl_start and start_index < decl_end for decl_start, decl_end, _ in declarations):
+            continue
+
+        paren_level = 0
+        end_index = -1
+        
+        for i in range(start_index, len(text)):
+            char = text[i]
+            if char == '(':
+                paren_level += 1
+            elif char == ')':
+                paren_level -= 1
+            elif char == ';' and paren_level == 0:
+                end_index = i + 1
+                break
+        
+        if end_index != -1:
+            declarations.append((start_index, end_index, text[start_index:end_index]))
+
+    return [decl_text for _, _, decl_text in declarations]
+
 def process_pascal_file(filepath, encoding, create_backup):
     """
     Основная функция, которая читает, анализирует и преобразует Pascal-файл.
     """
     print(f"--- Начинаю обработку файла: {filepath} ---")
 
-    # --- Шаг 0: Резервное копирование и чтение файла ---
     if create_backup:
         backup_path = filepath + ".bak"
         try:
@@ -22,17 +52,12 @@ def process_pascal_file(filepath, encoding, create_backup):
             sys.exit(1)
             
     try:
-        # newline='' гарантирует, что переводы строк (CRLF/LF) не будут изменены
         with open(filepath, 'r', encoding=encoding, errors='replace', newline='') as f:
             content = f.read()
-    except FileNotFoundError:
-        print(f"[ОШИБКА] Файл не найден: {filepath}")
-        sys.exit(1)
     except Exception as e:
         print(f"[ОШИБКА] Не удалось прочитать файл: {e}")
         sys.exit(1)
 
-    # Разделяем файл на две части: до 'implementation' и после.
     impl_keyword_match = re.search(r'\bimplementation\b', content, re.IGNORECASE)
     if not impl_keyword_match:
         print(f"[ИНФО] Ключевое слово 'implementation' не найдено. Файл не изменен.")
@@ -42,7 +67,6 @@ def process_pascal_file(filepath, encoding, create_backup):
     header_and_interface_part = content[:split_point]
     implementation_part = content[split_point:]
 
-    # --- Шаг 1: Парсинг блока interface ---
     print("\n[1] Анализ блока interface...")
     signatures = {}
     
@@ -50,57 +74,61 @@ def process_pascal_file(filepath, encoding, create_backup):
         r'^\s*(T\w+)\s*=\s*(?:class|object)\b[\s\S]*?\n\s*end;',
         re.IGNORECASE | re.MULTILINE
     )
-    subprogram_pattern = re.compile(
-        r'^\s*(?:procedure|function)\s+([a-zA-Z_]\w*)\s*([\s\S]*?;)',
-        re.IGNORECASE | re.MULTILINE
+    # Обновленный regex для извлечения имени и хвоста из ПОЛНОГО объявления
+    extractor_pattern = re.compile(
+        r'^\s*(?:procedure|function|constructor|destructor)\s+([a-zA-Z_]\w*)\s*([\s\S]*)$',
+        re.IGNORECASE
     )
 
-    # 1.1: Методы классов
-    print("  Анализ методов классов...")
+    print("  Анализ методов, конструкторов и деструкторов классов...")
     interface_without_classes = header_and_interface_part
     for class_match in class_pattern.finditer(header_and_interface_part):
         class_name = class_match.group(1)
         class_body = class_match.group(0)
         print(f"  Найден класс: {class_name}")
 
-        for method_match in subprogram_pattern.finditer(class_body):
-            method_name = method_match.group(1)
-            method_tail = method_match.group(2).strip()
-            key = f"{class_name.lower()}.{method_name.lower()}"
-            signatures[key] = method_tail
-            print(f"    [+] Найдена сигнатура метода: {key} -> '{' '.join(method_tail.split())}'")
+        declarations = find_declarations(class_body)
+        for decl_text in declarations:
+            match = extractor_pattern.match(decl_text)
+            if match:
+                method_name = match.group(1)
+                method_tail = match.group(2).strip()
+                key = f"{class_name.lower()}.{method_name.lower()}"
+                signatures[key] = method_tail
+                print(f"    [+] Найдена сигнатура: {key} -> '{' '.join(method_tail.split())}'")
         
         interface_without_classes = interface_without_classes.replace(class_body, '')
 
-    # 1.2: Отдельные процедуры и функции
     print("\n  Анализ отдельных процедур и функций...")
-    found_standalone = False
-    for func_match in subprogram_pattern.finditer(interface_without_classes):
-        func_name = func_match.group(1)
-        func_tail = func_match.group(2).strip()
-        key = func_name.lower()
-        signatures[key] = func_tail
-        found_standalone = True
-        print(f"    [+] Найдена сигнатура подпрограммы: {key} -> '{' '.join(func_tail.split())}'")
-        
-    if not found_standalone:
+    standalone_declarations = find_declarations(interface_without_classes)
+    if not standalone_declarations:
         print("    Отдельные подпрограммы не найдены.")
+    else:
+        for decl_text in standalone_declarations:
+            match = extractor_pattern.match(decl_text)
+            if match:
+                func_name = match.group(1)
+                func_tail = match.group(2).strip()
+                key = func_name.lower()
+                signatures[key] = func_tail
+                print(f"    [+] Найдена сигнатура подпрограммы: {key} -> '{' '.join(func_tail.split())}'")
 
     if not signatures:
         print("\n[ИНФО] В блоке interface не найдено подпрограмм для преобразования. Файл не изменен.")
         return
 
-    # --- Шаг 2 и 3: Поиск и замена в блоке implementation ---
     print("\n[2] Обработка блока implementation...")
 
     def replacer(match):
-        qualified_name = match.group(1) # TMyObject.DoSomething или MyFunction
+        qualified_name = match.group(1)
         key = qualified_name.lower()
 
         if key in signatures:
             full_short_declaration = match.group(0)
             base_header = full_short_declaration.rstrip()[:-1]
-            full_header = base_header + signatures[key]
+            # Добавляем пробел перед хвостом, если он не пустой
+            tail = signatures[key]
+            full_header = base_header + (" " + tail if tail else tail)
             
             print(f"  [*] Заменяю:  '{full_short_declaration.strip()}'")
             print(f"  [>] На:       '{' '.join(full_header.strip().split())}'")
@@ -109,8 +137,9 @@ def process_pascal_file(filepath, encoding, create_backup):
             print(f"  [!] ВНИМАНИЕ: Для '{qualified_name}' не найдена сигнатура в interface. Строка не изменена.")
             return match.group(0)
 
+    # Обновленный паттерн для квалифицированных имен, включающий constructor/destructor
     qualified_pattern = re.compile(
-        r'^\s*(?:procedure|function)\s+((?:T\w+)\.\w+);',
+        r'^\s*(?:procedure|function|constructor|destructor)\s+((?:T\w+)\.\w+);',
         re.IGNORECASE | re.MULTILINE
     )
     standalone_pattern = re.compile(
@@ -121,16 +150,13 @@ def process_pascal_file(filepath, encoding, create_backup):
     processed_implementation = qualified_pattern.sub(replacer, implementation_part)
     new_implementation_part = standalone_pattern.sub(replacer, processed_implementation)
     
-    # --- Шаг 4: Сборка и запись в исходный файл ---
     final_content = header_and_interface_part + new_implementation_part
     
-    # Проверяем, изменился ли контент, чтобы не перезаписывать файл без надобности
     if final_content == content:
         print("\n--- Изменений не требуется. Файл остался прежним. ---")
         return
 
     try:
-        # Перезаписываем исходный файл, сохраняя переводы строк (newline='')
         with open(filepath, 'w', encoding=encoding, newline='') as f:
             f.write(final_content)
     except Exception as e:

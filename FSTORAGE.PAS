@@ -51,6 +51,9 @@ unit FStorage;
 interface
 
 uses
+  math,
+  vp2fp,
+  Lfnvp,
   Objects2, Streams, Defines, FilesCol
   ;
 
@@ -127,7 +130,7 @@ procedure __Error;
   RunError(224);
   end;
 
-procedure TDirStorage.TryStream;
+procedure TDirStorage.TryStream (Sz: LongInt);
   begin
   repeat
     SwapLevel := Succ(SwapLevel);
@@ -140,7 +143,7 @@ procedure TDirStorage.TryStream;
   until Stream <> nil;
   end;
 
-constructor TDirStorage.Init;
+constructor TDirStorage.Init ;
   begin
   inherited Init;
   SwapLevel := slNone;
@@ -153,7 +156,7 @@ constructor TDirStorage.Init;
   vSavePos := 0;
   end;
 
-procedure TDirStorage.FixError;
+procedure TDirStorage.FixError ;
   label
     LLL;
   const
@@ -195,7 +198,7 @@ LLL:
   Stream^.Seek(vSavePos);
   end { TDirStorage.FixError };
 
-procedure TDirStorage.InitStream;
+procedure TDirStorage.InitStream (X, E, M: LongInt);
   begin
   Stream := nil;
   Last := True;
@@ -213,7 +216,7 @@ procedure TDirStorage.InitStream;
   end {case};
   end { TDirStorage.InitStream };
 
-destructor TDirStorage.Done;
+destructor TDirStorage.Done ;
   begin
   if Stream <> nil then
     Dispose(Stream, Done);
@@ -221,7 +224,8 @@ destructor TDirStorage.Done;
   end;
 
 {-DataCompBoy-}
-procedure TDirStorage.AddFile;
+procedure TDirStorage.AddFile (FName: String; Size, CSize: TSize; Date: LongInt;
+         Attr: Byte);
   var
     Dr: String;
     Nm: String;
@@ -281,7 +285,7 @@ procedure TDirStorage.AddFile;
   end { TDirStorage.AddFile };
 {-DataCompBoy-}
 
-procedure TDirStorage.ResetPointer;
+procedure TDirStorage.ResetPointer (const Dir: String);
   begin
   if Stream = nil then
     Exit;
@@ -297,7 +301,7 @@ procedure TDirStorage.ResetPointer;
   end;
 
 {-DataCompBoy-}
-function TDirStorage.GetNextFile;
+function TDirStorage.GetNextFile : Boolean;
   var
     SF: TStoredFile;
     Dr: String;
@@ -341,7 +345,7 @@ function TDirStorage.GetNextFile;
   end { TDirStorage.GetNextFile };
 {-DataCompBoy-}
 
-procedure TDirStorage.UpdateRecord;
+procedure TDirStorage.UpdateRecord ;
   var
     s: TStored;
   begin
@@ -357,7 +361,7 @@ procedure TDirStorage.UpdateRecord;
     end;
   end;
 
-constructor TDirStorage.Load;
+constructor TDirStorage.Load (var S: TStream);
   var
     P, L: LongInt; {!!s}
   begin
@@ -384,7 +388,7 @@ constructor TDirStorage.Load;
   until False;
   end { TDirStorage.Load };
 
-procedure TDirStorage.Store;
+procedure TDirStorage.Store (var S: TStream);
   var
     L: LongInt;
   begin
@@ -401,7 +405,7 @@ procedure TDirStorage.Store;
   end;
 
 {-DataCompBoy-}
-procedure TDirStorage.DeleteFile;
+procedure TDirStorage.DeleteFile (P: PFileRec);
   var
     Dr: String;
     Nm: String;
@@ -461,7 +465,7 @@ procedure TDirStorage.Truncate(N: LongInt);
     end;
   end { TDirStorage.Truncate };
 
-procedure TDirStorage.WipeCur;
+procedure TDirStorage.WipeCur ;
   var
     L: LongInt;
     s: TStored;
@@ -479,7 +483,7 @@ procedure TDirStorage.WipeCur;
     Dec(Dirs);
   end;
 
-procedure TDirStorage.vWrite;
+procedure TDirStorage.vWrite (var Buf; Count: Word);
   begin
   repeat
     Stream^.Write(Buf, Count);
@@ -495,13 +499,13 @@ procedure TDirStorage.vWrite;
   until False;
   end;
 
-procedure TDirStorage.vSeek;
+procedure TDirStorage.vSeek (Pos: LongInt);
   begin
   Stream^.Seek(Pos);
   vSavePos := Pos;
   end;
 
-procedure TDirStorage.vTruncate;
+procedure TDirStorage.vTruncate ;
   begin
   Stream^.Truncate;
   if Stream^.Status = stOK
@@ -514,7 +518,7 @@ procedure TDirStorage.vTruncate;
     FixError;
   end;
 
-procedure TDirStorage.vRead;
+procedure TDirStorage.vRead (var Buf; Count: Word);
   begin
   Stream^.Read(Buf, Count);
   if Stream^.Status = stOK
