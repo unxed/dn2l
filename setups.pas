@@ -142,11 +142,13 @@ const
 implementation
 uses
   Dos, Tree, Drives, Advance, Advance1, Advance2, Messages, DNHelp,
-  Advance6, DnIni, DnIni_p, Country_, U_KeyMap, fnotify
+  Advance6, DnIni, DnIni_p,
+  //Country_,
+  U_KeyMap, fnotify
   , lfn, DNApp, Validate
   ;
 
-procedure ConfirmSetup;
+procedure ConfirmSetup ;
   var
     D: Word;
   begin
@@ -160,7 +162,7 @@ procedure ConfirmSetup;
   DoneIniEngine;
   end;
 
-function TerminalSetup;
+function TerminalSetup : Boolean;
   begin
   TerminalSetup := False;
   if ExecResource(dlgSetupTerminal, TerminalDefaults) <> cmOK then
@@ -169,7 +171,7 @@ function TerminalSetup;
   Message(Application, evCommand, cmUpdateConfig, nil);
   end;
 
-procedure SystemSetup;
+procedure SystemSetup ;
   var
     W: Word;
     D: PDialog;
@@ -203,7 +205,7 @@ procedure SystemSetup;
   DoneIniEngine;
   end { SystemSetup };
 
-procedure InterfaceSetup;
+procedure InterfaceSetup ;
   var
     AltTab: Boolean;
     R: TRect;
@@ -237,7 +239,7 @@ procedure InterfaceSetup;
   DoneIniEngine;
   end { InterfaceSetup };
 
-procedure StartupSetup;
+procedure StartupSetup ;
   var
     Data: record
       Load, Unload: Word;
@@ -260,7 +262,7 @@ procedure StartupSetup;
     end;
   end { StartupSetup };
 
-procedure MouseSetup;
+procedure MouseSetup ;
   begin
   if ExecResource(dlgMouseSetup, MouseData) <> cmOK then
     Exit;
@@ -275,7 +277,7 @@ procedure MouseSetup;
   end;
 
 {$IFDEF SS}
-procedure SaversSetup;
+procedure SaversSetup ;
   var
     W: Word;
     D: PDialog;
@@ -343,7 +345,7 @@ function ApplyCodetables: Integer;
   Result := 0;
   end;
 
-procedure SetupCountryInfo;
+procedure SetupCountryInfo ;
   var
     SaveCountryInfo: TCountryInfo;
     C: Word;
@@ -378,7 +380,7 @@ TryDialog:
   ConfigModified := True;
   end;
 
-procedure DoFMSetup;
+procedure DoFMSetup ;
   begin
   if ExecResource(dlgFMSetup, Startup.FMSetup) <> cmOK then
     Exit;
@@ -406,7 +408,7 @@ procedure DoFMSetup;
     end;
   end;
 
-procedure DriveInfoSetup;
+procedure DriveInfoSetup ;
   var
     W: Word;
   begin
@@ -423,7 +425,7 @@ procedure DriveInfoSetup;
   GlobalMessage(evCommand, cmReboundPanel, nil);
   end;
 
-procedure SetupEditorDefaults;
+procedure SetupEditorDefaults ;
   begin
   if ExecResource(dlgEditorDefaults, EditorDefaults) = cmOK then
     begin
@@ -440,7 +442,7 @@ procedure SetupEditorDefaults;
     end;
   end;
 
-procedure TCurrDriveInfo.HandleEvent;
+procedure TCurrDriveInfo.HandleEvent (var Event: TEvent);
   var
     W: Word;
     Data: TSysData;
@@ -460,7 +462,7 @@ procedure TCurrDriveInfo.HandleEvent;
     Press(0);
   end;
 
-procedure TCurrDriveInfo.Press;
+procedure TCurrDriveInfo.Press (Item: Integer);
   var
     Data: TSysData;
   begin
@@ -470,7 +472,7 @@ procedure TCurrDriveInfo.Press;
   ] := Value;
   end;
 
-procedure TSysDialog.Awaken;
+procedure TSysDialog.Awaken ;
   var
     C: Char;
   begin
@@ -488,7 +490,7 @@ procedure TSysDialog.Awaken;
   SetData(SysData);
   end;
 
-destructor TSysDialog.Done;
+destructor TSysDialog.Done ;
   var
     Data: TSysData;
   begin
@@ -497,7 +499,7 @@ destructor TSysDialog.Done;
   Dispose(Data.Drives.List, Done);
   end;
 
-procedure TSysDialog.GetData;
+procedure TSysDialog.GetData (var Rec);
   var
     Data: TSysData;
   begin
@@ -514,7 +516,7 @@ procedure TSysDialog.GetData;
 {----------------------------------------------------------------------------}
 {                                 Mouse Setup                                }
 {----------------------------------------------------------------------------}
-constructor TMouseBar.Init;
+constructor TMouseBar.Init (var Bounds: TRect);
   begin
   inherited Init(Bounds);
   Options := Options or ofSelectable;
@@ -524,21 +526,21 @@ constructor TMouseBar.Init;
 const
   HSenseY = 3;
 
-function TMouseBar.DataSize;
+function TMouseBar.DataSize : Word;
   assembler;
 asm mov eax,4 end;
 
-procedure TMouseBar.SetData;
+procedure TMouseBar.SetData (var Rec);
   begin
   SetValue(Integer(Rec))
   end;
 
-procedure TMouseBar.GetData;
+procedure TMouseBar.GetData (var Rec);
   begin
   Integer(Rec) := Value
   end;
 
-procedure TMouseBar.HandleEvent;
+procedure TMouseBar.HandleEvent (var Event: TEvent);
   begin
   inherited HandleEvent(Event);
   end;
@@ -547,7 +549,7 @@ procedure TMouseBar.HandleEvent;
 {----------------------------------------------------------------------------}
 {                                Savers Setup                                }
 {----------------------------------------------------------------------------}
-procedure TSaversListBox.HandleEvent;
+procedure TSaversListBox.HandleEvent (var Event: TEvent);
   var
     PS: PString;
     F: Integer;
@@ -598,7 +600,7 @@ procedure TSaversListBox.HandleEvent;
   inherited HandleEvent(Event);
   end { TSaversListBox.HandleEvent };
 
-constructor TSaversDialog.Init;
+constructor TSaversDialog.Init ;
   var
     R: TRect;
     D: PDialog;
@@ -699,7 +701,7 @@ procedure TSaversDialog.HandleEvent(var Event: TEvent);
   end;
 
 {-DataCompBoy-}
-procedure TSaversDialog.Awaken;
+procedure TSaversDialog.Awaken ;
   var
     lSR: lSearchRec;
     Data: TSaversData;
@@ -729,7 +731,7 @@ procedure TSaversDialog.Awaken;
   end { TSaversDialog.Awaken };
 {-DataCompBoy-}
 
-destructor TSaversDialog.Done;
+destructor TSaversDialog.Done ;
   var
     Data: TSaversData;
   begin

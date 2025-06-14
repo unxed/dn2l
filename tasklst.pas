@@ -28,6 +28,12 @@ const
   cmButton1 = 65535;
 
 type
+
+  PProcessCollection = ^TProcessCollection;
+  TProcessCollection = object(TSortedCollection)
+    function Compare(P1, P2: Pointer): Integer; virtual;
+    end;
+
   PProcessList = ^TProcessList;
   TProcessList = object(TListBox)
     function GetText(Item: Integer; MaxLen: Integer): String; virtual;
@@ -48,9 +54,16 @@ uses
   DNApp, Commands, DnIni, DNHelp
   ;
 
+function TProcessCollection.Compare(P1, P2: Pointer): Integer;
+  begin
+  // fixme: porting stub
+  //Compare := PProcessItem(P1)^.Pid-PProcessItem(P2)^.Pid;
+  end;
+
 function TProcessList.GetText(Item: Integer; MaxLen: Integer): String;
   begin
-  GetText := PProcessItem(List^.At(Item))^.GetString;
+  // fixme: porting stub
+  //GetText := PProcessItem(List^.At(Item))^.GetString;
   end;
 
 constructor TProcessDialog.Init(Collection: PProcessCollection);
@@ -128,6 +141,8 @@ procedure InsertTaskList;
     Dialog: PProcessDialog;
   label Ret;
   begin
+  // fixme: porting stub
+  (*
   Collection := GetProcessList;
   Dialog := New(PProcessDialog, Init(Collection));
 Ret:
@@ -152,6 +167,7 @@ Ret:
   end {case};
   Dispose(Dialog, Done);
   Dispose(Collection, Done);
+  *)
   end { InsertTaskList };
 
 begin
