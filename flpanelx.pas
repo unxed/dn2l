@@ -54,6 +54,9 @@ FlPanelX;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
   Defines, Streams,
   Views, Drivers, FilesCol, PDSetup, Drives, xTime
   ;
@@ -777,7 +780,7 @@ procedure TFilePanelRoot.ReadDirectory;
   if  (ActivePanel = @Self) and (Drive^.DriveType = dtDisk) then
     CurrentDirectory := DirectoryName
   else
-    Lfn.lChDir(CurrentDirectory);
+    LFNVp.lChDir(CurrentDirectory);
   if Drive^.DriveType = dtDisk then
     Message(CommandLine, evCommand, cmRereadInfo, nil);
   Message(Owner, evCommand, cmRereadInfo, nil);
@@ -1064,6 +1067,7 @@ WrongArc:
       S: String;
       P: PFileRec;
     begin
+    (*
     if Files^.Count = 0 then
       Exit;
     CE;
@@ -1100,6 +1104,8 @@ WrongArc:
    mov Command, eax
   end;
     Drive^.UseFile(P, Command);
+    *)
+    // porting stub
     end { ViewFile };
 
   procedure Recount;
@@ -1179,7 +1185,7 @@ WrongArc:
       end;
     PDrive(Event.InfoPtr)^.Prev := Drive;
     Drive := Event.InfoPtr;
-    Drive.Panel := @Self;
+    Drive^.Panel := @Self;
     SetupPanelFromDrive;
 
     if  (Drive^.DriveType = dtFind) and
@@ -1535,7 +1541,7 @@ WrongArc:
           begin
           ClrIO;
           RedrawPanelInfoDir;
-          Lfn.lChDir(CurrentDirectory);
+          LFNVp.lChDir(CurrentDirectory);
           Exit;
           end;
         Drive^.SizeX := Size.X;
