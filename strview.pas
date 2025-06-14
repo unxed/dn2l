@@ -64,7 +64,7 @@ type
 
 implementation
 
-procedure TDStringView.Draw;
+procedure TDStringView.Draw ;
   var
     B: TDrawBuffer;
     C: Word;
@@ -78,7 +78,7 @@ procedure TDStringView.Draw;
   WriteLine(0, 1, Size.X, Size.Y, B);
   end;
 
-function TDStringView.GetPalette;
+function TDStringView.GetPalette : PPalette;
   const
     S: String[1] = #30;
   begin
