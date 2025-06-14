@@ -52,6 +52,7 @@ unit Phones;
 interface
 
 uses
+  vp2fp,
   Defines, Objects2, Streams, Drivers, Dialogs, Menus,
   Views, DNStdDlg, Collect, StrView
   ;
@@ -247,7 +248,7 @@ procedure PhoneBook(Manual: Boolean);
   PPH := nil;
   end { PhoneBook };
 
-function TPhoneBox.GetKey;
+function TPhoneBox.GetKey (var S: String): Pointer;
   const
     B: Byte = 0;
     ST: String[30] = '';
@@ -264,7 +265,7 @@ begin
                   else EnableCommands([cmDialPhone, cmImportPhones])
 end;
 }
-procedure TPhoneBox.SetList;
+procedure TPhoneBox.SetList (Alpha: Boolean);
   var
     PC: PPhoneCollection;
     S: TBufStream;
@@ -337,7 +338,7 @@ procedure TPhoneBox.SetList;
   NewLisT(Phones);
   end { TPhoneBox.SetList };
 
-procedure TPhoneBox.HandleEvent;
+procedure TPhoneBox.HandleEvent (var Event: TEvent);
   var
     Dt: record
       Name: String[30];
@@ -1033,7 +1034,7 @@ procedure TPhoneBox.HandleEvent;
 
   end { TPhoneBox.HandleEvent };
 
-destructor TPhoneBox.Done;
+destructor TPhoneBox.Done ;
   begin
   { if (List <> nil) and (List <> Phones) }
   {                  then List^.DeleteAll;}
@@ -1048,7 +1049,7 @@ destructor TPhoneBox.Done;
   inherited Done;
   end;
 
-function TPhoneBox.GetText;
+function TPhoneBox.GetText (Item: LongInt; MaxLen: Integer): String;
   var
     S: String;
     P: PPhone;
@@ -1060,13 +1061,13 @@ function TPhoneBox.GetText;
   GetText := S;
   end;
 
-constructor TPhoneCollection.Init;
+constructor TPhoneCollection.Init (ALimit, ADelta: LongInt);
   begin
   inherited Init(ALimit, ADelta);
   Duplicates := True;
   end;
 
-constructor TPhoneCollection.Load;
+constructor TPhoneCollection.Load (var S: TStream);
   begin
   if not inherited Load(S) then
     Fail;
@@ -1134,7 +1135,7 @@ constructor TPhoneCollection.ShortLoad(var S: TStream);
   Sort;
   end { TPhoneCollection.ShortLoad };
 
-function TPhoneCollection.Compare;
+function TPhoneCollection.Compare (P1, P2: Pointer): Integer;
   begin
   if PPhone(P1)^.Name = PPhone(P2)^.Name then
     Compare := 0
@@ -1155,7 +1156,7 @@ procedure TPhoneCollection.FreeItem(Item: Pointer);
     Dispose(PP, Done);
   end;
 
-constructor TPhone.Init;
+constructor TPhone.Init (const ANumber, AName, AMemo1, AMemo2: String);
   begin
   inherited Init;
   Name := AName;
@@ -1164,7 +1165,7 @@ constructor TPhone.Init;
   Memo2 := NewStr(AMemo2);
   end;
 
-constructor TPhone.Load;
+constructor TPhone.Load (var S: TStream);
   begin
   Number := S.ReadStr;
   S.ReadStrV(Name);
@@ -1173,7 +1174,7 @@ constructor TPhone.Load;
   Memo2 := S.ReadStr;
   end;
 
-procedure TPhone.Store;
+procedure TPhone.Store (var S: TStream);
   begin
   S.WriteStr(Number);
   S.WriteStr(@Name);
@@ -1181,7 +1182,7 @@ procedure TPhone.Store;
   S.WriteStr(Memo2);
   end;
 
-destructor TPhone.Done;
+destructor TPhone.Done ;
   begin
   DisposeStr(Number);
   DisposeStr(Memo1);
@@ -1189,7 +1190,7 @@ destructor TPhone.Done;
   inherited Done;
   end;
 
-constructor TPhoneDir.Init;
+constructor TPhoneDir.Init (const APassword, AName, AMemo1, AMemo2: String);
   begin
   inherited Init;
   Name := AName;
@@ -1219,7 +1220,7 @@ procedure CryptCol(Col: PCollection; Pass: String);
     Col^.ForEach(@CryptPhone);
   end;
 
-constructor TPhoneDir.Load;
+constructor TPhoneDir.Load (var S: TStream);
   var
     Q: TFileSize;
   begin
@@ -1244,7 +1245,7 @@ constructor TPhoneDir.Load;
   Encrypted := False;
   end { TPhoneDir.Load };
 
-procedure TPhoneDir.Store;
+procedure TPhoneDir.Store (var S: TStream);
   begin
   S.WriteStr(@Name);
   S.WriteStr(Memo1);
@@ -1264,7 +1265,7 @@ procedure TPhoneDir.Store;
     CryptCol(Phones, Password);
   end;
 
-destructor TPhoneDir.Done;
+destructor TPhoneDir.Done ;
   begin
   DisposeStr(Memo1);
   DisposeStr(Memo2);
