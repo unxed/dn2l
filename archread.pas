@@ -54,6 +54,8 @@ procedure ReadArcList;
 implementation
 
 uses
+  vp2fp,
+  LFNVp,
   Archiver, FStorage, Dos, ArcView, Advance, Advance1, Advance2, Messages,
   DNApp, Commands, Lfn, Views
   ;
