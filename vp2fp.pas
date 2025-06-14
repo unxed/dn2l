@@ -55,6 +55,8 @@ function lfGetShortFileName(S: String): String;
 
 function SysGetValidDrives: Longint;
 
+function SysFileIsDevice(hFile: LongInt) : Byte;
+
 implementation
 
 // https://www.freepascal.org/docs-html/current/prog/progse37.html
@@ -179,6 +181,11 @@ end;
 function SysGetValidDrives: Longint;
 begin
   Result := 256;
+end;
+
+function SysFileIsDevice(hFile: LongInt) : Byte;
+begin
+  Exit(0);
 end;
 
 end.

@@ -52,6 +52,7 @@ interface
 
 {$IFDEF PrintManager}
 uses
+  vp2fp,
   Streams, Defines, Views, Drivers,
   Dialogs, Commands, Collect
   ;
@@ -124,22 +125,22 @@ uses
   {$IFDEF DPMI32}, LfnVP {$ENDIF}
   ;
 
-procedure TStringCol.FreeItem;
+procedure TStringCol.FreeItem (P: Pointer);
   begin
   DisposeStr(PString(P));
   end;
 
-procedure TStringCol.PutItem;
+procedure TStringCol.PutItem (var S: TStream; P: Pointer);
   begin
   S.WriteStr(P);
   end;
 
-function TStringCol.GetItem;
+function TStringCol.GetItem (var S: TStream): Pointer;
   begin
   GetItem := S.ReadStr;
   end;
 
-constructor TPMWindow.Init;
+constructor TPMWindow.Init (R: TRect);
   var
     P: PView;
     S: PView;
@@ -165,19 +166,19 @@ constructor TPMWindow.Init;
   HelpCtx := hcPrintManager;
   end { TPMWindow.Init };
 
-constructor TPrintStatus.Load;
+constructor TPrintStatus.Load (var S: TStream);
   begin
   inherited Load(S);
   GetPeerViewPtr(S, Print);
   end;
 
-procedure TPrintStatus.Store;
+procedure TPrintStatus.Store (var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, Printer);
   end;
 
-procedure TPrintStatus.Draw;
+procedure TPrintStatus.Draw ;
   var
     B: TDrawBuffer;
     C: Word;
@@ -207,7 +208,8 @@ procedure TPrintStatus.Draw;
   WriteLine(0, 1, Size.X, 1, B);
   end { TPrintStatus.Draw };
 
-constructor TPrintManager.Init;
+constructor TPrintManager.Init (var Bounds: TRect; AStatus: PView;
+         AScrollBar: PScrollBar);
   var
     S: String;
   begin
@@ -230,7 +232,7 @@ constructor TPrintManager.Init;
   RegisterToBackground(@Self);
   end;
 
-function TPrintManager.SetDestination;
+function TPrintManager.SetDestination : Boolean;
   var
     S, S1: String;
     P: Boolean;
@@ -341,7 +343,7 @@ function TPrintManager.SetDestination;
   SetDestination := True;
   end { TPrintManager.SetDestination };
 
-constructor TPrintManager.Load;
+constructor TPrintManager.Load (var S: TStream);
   begin
   inherited Load(S);
   GetPeerViewPtr(S, Status);
@@ -374,7 +376,7 @@ constructor TPrintManager.Load;
   RegisterToBackground(@Self);
   end { TPrintManager.Load };
 
-procedure TPrintManager.Store;
+procedure TPrintManager.Store (var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, Status);
@@ -383,7 +385,7 @@ procedure TPrintManager.Store;
   S.Write(FilePos, 4);
   end;
 
-destructor TPrintManager.Done;
+destructor TPrintManager.Done ;
   begin
   Printer := nil;
   if PrintStream <> nil then
@@ -399,7 +401,7 @@ destructor TPrintManager.Done;
   inherited Done;
   end;
 
-function TPrintManager.Valid;
+function TPrintManager.Valid (C: Word): Boolean;
   begin
   Inc(LockUpdate);
   case C of
@@ -419,7 +421,7 @@ function TPrintManager.Valid;
   Dec(LockUpdate);
   end;
 
-procedure TPrintManager.HandleEvent;
+procedure TPrintManager.HandleEvent (var Event: TEvent);
   begin
   inherited HandleEvent(Event);
   case Event.What of
@@ -469,7 +471,7 @@ procedure TPrintManager.HandleEvent;
   end {case};
   end { TPrintManager.HandleEvent };
 
-procedure TPrintManager.PrintFile;
+procedure TPrintManager.PrintFile (const FileName: String);
   begin
   if List = nil then
     List := New(PStringCol, Init(10, 10));
@@ -484,7 +486,7 @@ procedure TPrintManager.PrintFile;
     Status^.DrawView;
   end;
 
-procedure TPrintManager.InitPrinter;
+procedure TPrintManager.InitPrinter ;
 //JO: под многозадачками принтер инициализировать не надо;
 //    нужно будет переписать эту процедуру для DPMI32
  {var
@@ -523,7 +525,7 @@ begin
   Result := $90; //временно! Доделать!
 end;
 
-function TPrintManager.PrintBuffer;
+function TPrintManager.PrintBuffer (Num: Word): Boolean;
   label 1;
   const
     TryCount: Byte = 0;
@@ -561,7 +563,7 @@ function TPrintManager.PrintBuffer;
     goto 1;
   end { TPrintManager.PrintBuffer };
 
-procedure TPrintManager.Update;
+procedure TPrintManager.Update ;
   var
     I, L: LongInt;
     S: Byte;
@@ -656,7 +658,7 @@ procedure TPrintManager.Update;
     Status^.DrawView;
   end { TPrintManager.Update };
 
-procedure SetupPrinter;
+procedure SetupPrinter ;
   var
     LastDest: Word;
   begin
