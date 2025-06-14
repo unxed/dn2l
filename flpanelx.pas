@@ -253,7 +253,7 @@ procedure TFilePanelRoot.ChkNoMem;
     end;
   end;
 
-constructor TFilePanelRoot.Init;
+constructor TFilePanelRoot.Init(var Bounds: TRect; ADrive: Integer; AScrBar: PMyScrollBar);
   begin
   inherited Init(Bounds);
   NewTimer(_Tmr1, 0);
@@ -289,7 +289,7 @@ constructor TFilePanelRoot.Init;
   DecDrawDisabled;
   end { TFilePanelRoot.Init };
 
-constructor TFilePanelRoot.Load;
+constructor TFilePanelRoot.Load(var S: TStream);
   var
     I: LongInt;
     dumm: array[1..20] of Byte;
@@ -369,7 +369,7 @@ procedure TFilePanelRoot.Awaken;
 *)
   end;
 
-procedure TFilePanelRoot.Store;
+procedure TFilePanelRoot.Store(var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, ScrollBar);
@@ -393,7 +393,7 @@ procedure TFilePanelRoot.Store;
   S.Put(Files);} //JO: 11-05-2006 - см. комментаpий к TFilePanelRoot.Load;
   end { TFilePanelRoot.Store };
 
-function TFilePanelRoot.Valid;
+function TFilePanelRoot.Valid(Command: Word): Boolean;
   begin
   Valid := isValid;
   if  (Command = cmClose) then
@@ -445,7 +445,7 @@ procedure TFilePanelRoot.SetState(AState: Word; Enable: Boolean);
     end;
   end;
 
-procedure TFilePanelRoot.ChangeBounds;
+procedure TFilePanelRoot.ChangeBounds(var Bounds: TRect);
   var
     R: TRect;
     InfoViewHeight: LongInt;
@@ -788,7 +788,7 @@ procedure TFilePanelRoot.ReadDirectory;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TFilePanelRoot.GetUserParams;
+procedure TFilePanelRoot.GetUserParams(var FileRec: PFileRec; var List: String; BuildList: Boolean);
   var
     PF: PFileRec;
     S: String[1];
@@ -846,7 +846,7 @@ procedure TFilePanelRoot.GetUserParams;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TFilePanelRoot.CommandHandle;
+procedure TFilePanelRoot.CommandHandle(var Event: TEvent);
   var
     PF: PFileRec;
     CurPos: LongInt;
@@ -3238,7 +3238,7 @@ WrongArc:
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TFilePanelRoot.ChDir;
+procedure TFilePanelRoot.ChDir(Dir: String);
   begin
   if Drive^.DriveType <> dtDisk then
     Exit;
@@ -3316,7 +3316,7 @@ function TFilePanelRoot.CalcColPos(ColFlag: Word): Integer;
     end;
   end;
 
-function TFilePanelRoot.CalcLengthWithoutName;
+function TFilePanelRoot.CalcLengthWithoutName : Integer;
   var
     Flags: Word;
     i: Integer;
@@ -3325,7 +3325,7 @@ function TFilePanelRoot.CalcLengthWithoutName;
   Result := CalcColPos($FFFFFFFF);
   end;
 
-function TFilePanelRoot.CalcNameLength;
+function TFilePanelRoot.CalcNameLength : Integer;
   begin
   Result := LFNLen;
   {$IFDEF DualName}
@@ -3335,7 +3335,7 @@ function TFilePanelRoot.CalcNameLength;
   {$ENDIF}
   end;
 
-function TFilePanelRoot.CalcLength;
+function TFilePanelRoot.CalcLength : Integer;
   begin
   Result := Min(CalcNameLength+1+CalcLengthWithoutName, MaxViewWidth);
   end;
