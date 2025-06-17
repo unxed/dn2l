@@ -51,6 +51,8 @@ unit Setups;
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Defines, Drivers, Views, Dialogs, Collect,
   Commands, Startup, Startupp
   ;
@@ -357,10 +359,13 @@ procedure SetupCountryInfo ;
 TryDialog:
   while True do
     begin
+    {
     C := ExecResource(dlgCountrySetup, CountryInfo);
     if C = cmYes then
       GetSysCountryInfo
     else
+    }
+    // fixme: porting stub
       Break;
     end;
   if C <> cmOK then
@@ -527,8 +532,14 @@ const
   HSenseY = 3;
 
 function TMouseBar.DataSize : Word;
+begin
+  Exit(4);
+end;
+{
   assembler;
 asm mov eax,4 end;
+}
+// fixme: porting stub
 
 procedure TMouseBar.SetData (var Rec);
   begin

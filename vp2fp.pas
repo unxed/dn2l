@@ -10,6 +10,8 @@ type
   i32 = LongInt;
   lFile = File;
 
+  TXlat = array[Char] of Char;
+
 const
   stOK = 0; { No error }
 
@@ -56,6 +58,8 @@ function lfGetShortFileName(S: String): String;
 function SysGetValidDrives: Longint;
 
 function SysFileIsDevice(hFile: LongInt) : Byte;
+
+function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
 
 implementation
 
@@ -186,6 +190,11 @@ end;
 function SysFileIsDevice(hFile: LongInt) : Byte;
 begin
   Exit(0);
+end;
+
+function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
+begin
+  Result := False; //!! Пока не реализовано (04.09.2005)
 end;
 
 end.
