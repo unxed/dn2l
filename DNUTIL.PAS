@@ -56,6 +56,9 @@ unit DNUtil;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
   Defines, Objects2,
    {SBlocks,}Drivers, Streams,
   Views, Scroller, DNApp,
@@ -279,7 +282,7 @@ uses
   CCalc, Collect, {-$VIV}
   DnExec,
   Setups, RegAll, XDblWnd,
-  Idlers, FlPanelX, WinClp,
+  Idlers, FlPanelX, WinClpVp,
   Drives, Archiver, ArchSet,
   ArcView, FViewer, CmdLine, FBB, DNStdDlg,
   Colors, Microed, ed2, Editor, EdWin,
@@ -319,7 +322,7 @@ procedure StoreIndexes(var S: TStream);
     S.Write(ColorIndexes^, ColorSize);
   end;
 
-constructor TDataSaver.Init;
+constructor TDataSaver.Init ;
   var
     R: TRect;
   begin
@@ -344,7 +347,7 @@ const
           читать несколько подряд расположенных переменных - это у нас в
           исходнике они подряд, а компилятор может думать иначе}
 
-constructor TDataSaver.Load;
+constructor TDataSaver.Load (var S: TStream);
   var
     D, L: AWord;
     Q, Q2: LongInt;
@@ -399,7 +402,7 @@ constructor TDataSaver.Load;
   until D = 0;
   end { TDataSaver.Load };
 
-procedure TDataSaver.Store;
+procedure TDataSaver.Store (var S: TStream);
 
   var
     D: AWord;
@@ -455,7 +458,7 @@ procedure TDataSaver.Store;
   S.Write(D, SizeOf(D));
   end { TDataSaver.Store };
 
-destructor TDataSaver.Done;
+destructor TDataSaver.Done ;
   begin
   DataSaver := nil;
   inherited Done;
@@ -502,6 +505,7 @@ procedure ClearSwap;
     DT: Dos.DateTime;
     L: LongInt;
     SR: lSearchRec;
+    Tmp: Word;
 
   procedure ClearFiles(const FileSpec: String);
     begin
@@ -518,7 +522,8 @@ procedure ClearSwap;
 
   begin
   FillChar(DT, SizeOf(DT), 0);
-  GetDate(DT.Year, DT.Month, DT.Day, Word(L));
+  Tmp := L;
+  GetDate(DT.Year, DT.Month, DT.Day, Tmp);
 
   PackTime(DT, L);
   SetFileAttr(SwpDir+'DN.FLG', 0);
@@ -531,7 +536,7 @@ procedure ClearSwap;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-constructor TDNApplication.Init;
+constructor TDNApplication.Init ;
   var
     R: TRect;
     I: Integer;
@@ -636,7 +641,7 @@ constructor TDNApplication.Init;
   end { TDNApplication.Init };
 {-DataCompBoy-}
 
-procedure TDNApplication.InitCommandLine;
+procedure TDNApplication.InitCommandLine ;
   var
     R: TRect;
     HideCL: Boolean;
@@ -667,7 +672,7 @@ procedure SaveRealDsk;
   end;
 {-DataCompBoy-}
 
-procedure SaveDsk;
+procedure SaveDsk ;
   begin
   ClrIO;
   if not TottalExit
@@ -683,7 +688,7 @@ procedure SaveDsk;
   end;
 
 {-DataCompBoy-}
-destructor TDNApplication.Done;
+destructor TDNApplication.Done ;
   var
     B: Word;
     SaveStream: PStream;
@@ -752,7 +757,7 @@ destructor TDNApplication.Done;
   end { TDNApplication.Done };
 {-DataCompBoy-}
 
-procedure TDNApplication.EventError;
+procedure TDNApplication.EventError (var Event: TEvent);
   begin
   {$IFDEF SS}
   if  (Event.What = evMouseMove) and (Event.Where.Y = 0)
@@ -763,7 +768,7 @@ procedure TDNApplication.EventError;
   {$ENDIF}
   end;
 
-procedure TDNApplication.ChgColors;
+procedure TDNApplication.ChgColors ;
   begin
   ChangeColors;
   WriteConfig;
@@ -792,7 +797,7 @@ procedure WriteHighlite;
 {JO}
 
 {-DataCompBoy-}
-procedure WriteConfig;
+procedure WriteConfig ;
   {$IFDEF DNPRG}
   var
     S: TBufStream;
@@ -1062,7 +1067,8 @@ procedure TDNApplication.ProcessTempFile(TFStr: String);
   end;
 
 {-DataCompBoy-}
-procedure TDNApplication.RetrieveDesktop;
+procedure TDNApplication.RetrieveDesktop (const FileName: String; LS: PStream;
+         LoadColors: Boolean);
   var
     S: PStream;
     Sign: String[MaxSignLen];
@@ -1315,7 +1321,7 @@ procedure TDNApplication.SaveDesktop(const FileName: String);
   end { TDNApplication.SaveDesktop };
 {-DataCompBoy-}
 
-procedure TDNApplication.OutOfMemory;
+procedure TDNApplication.OutOfMemory ;
   begin
   Msg(erNotEnoughMemory, nil, mfError+mfOKButton);
   end;
@@ -1575,7 +1581,7 @@ db:
 {-DataCompBoy-} {AK155}
 
 {-DataCompBoy-}
-procedure TDNApplication.EditFile;
+procedure TDNApplication.EditFile (Intern: Boolean; FileName: String);
   var
     W: PWindow;
     R: TRect;
@@ -1699,14 +1705,14 @@ ex:
   end { TDNApplication.EditFile };
 {-DataCompBoy-}
 
-procedure TDNApplication.AddFormat;
+procedure TDNApplication.AddFormat ;
   begin
   { if AddFormatDialog <> cmOK then Exit;
  New(FormatWindow,Init);
  DeskTop^.Insert(FormatWindow);}
   end;
 
-procedure TDNApplication.InitMenuBar;
+procedure TDNApplication.InitMenuBar ;
   var
     R: TRect;
   begin
@@ -1721,7 +1727,7 @@ procedure TDNApplication.InitMenuBar;
      or ofPostProcess;
   end;
 
-procedure TDNApplication.InitStatusLine;
+procedure TDNApplication.InitStatusLine ;
   var
     R: TRect;
   begin
@@ -1732,7 +1738,7 @@ procedure TDNApplication.InitStatusLine;
   StatusLine^.Locate(R);
   end;
 
-procedure TDNApplication.InitDesktop;
+procedure TDNApplication.InitDesktop ;
   var
     R: TRect;
     WS: Word;
@@ -1811,7 +1817,7 @@ procedure LoadPalFromFile(const FN: String);
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TDNApplication.HandleCommand;
+procedure TDNApplication.HandleCommand (var Event: TEvent);
 
   var
     R: TRect;
@@ -2892,6 +2898,7 @@ procedure TDNApplication.HandleCommand;
       ClearEvent(Event);
       Event.InfoPtr := New(PStringCollection, Init($80, $40, False));
       end;
+    (*
     cmHelp:
       begin
       ClearEvent(Event);
@@ -2952,6 +2959,8 @@ procedure TDNApplication.HandleCommand;
         HelpInUse := True;
         end;
       end;
+    *)
+    // fixme: porting stub
     cmTree:
       ExecTree;
     cmClearData:
@@ -2966,7 +2975,7 @@ procedure TDNApplication.HandleCommand;
   end { TDNApplication.HandleCommand };
 {-DataCompBoy-}
 
-procedure ShowTimeInfo;
+procedure ShowTimeInfo ;
   var
     S: String;
   begin
@@ -2980,7 +2989,7 @@ procedure ShowTimeInfo;
 const
   w95QuitEnabled: Byte = 1;
 
-procedure w95QuitInit;
+procedure w95QuitInit ;
   assembler;
 asm
    MOV AL, OpSys {Check Win95}
@@ -3044,7 +3053,7 @@ asm
 @@E:;
 end;
 
-procedure w95QuitCancel;
+procedure w95QuitCancel ;
   begin
   asm
 { Enabling the cancel button ;) }
@@ -3062,7 +3071,7 @@ procedure w95QuitCancel;
 {Gimly}
 {$ENDIF}
 
-procedure ExecDNAutoexec;
+procedure ExecDNAutoexec ;
   var
     I: Integer;
   begin
@@ -3095,7 +3104,7 @@ procedure ClearSelection(AFP: Pointer; FC: Pointer);
   end;
 
 {Cat: переписал для поддержки длинных строк в Clipboard-е}
-procedure GetFromClip;
+procedure GetFromClip (var S: String);
   begin
   if SystemData.Options and ossUseSysClip <> 0 then
     SyncClipOut {(true)};

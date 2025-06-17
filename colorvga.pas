@@ -50,6 +50,8 @@ unit ColorVGA;
 
 interface
 
+uses math;
+
 procedure VGAColorRegister; { dialog }
 
 const
@@ -93,7 +95,7 @@ type
     procedure HandleEvent(var Event: TEvent); virtual;
     end;
 
-procedure TColorView.HandleEvent;
+procedure TColorView.HandleEvent(var Event: TEvent);
   const
     Width = 4;
   var
@@ -285,7 +287,7 @@ constructor TColorVGADialog.Init;
   ThisProcedureExecuteFirstTime := True;
   end { TColorVGADialog.Init };
 
-procedure TColorVGADialog.HandleEvent;
+procedure TColorVGADialog.HandleEvent(var Event: TEvent);
 
   function UpdateRGB: Boolean;
     var
@@ -404,7 +406,7 @@ procedure TColorVGADialog.HandleEvent;
 
   end { TColorVGADialog.HandleEvent };
 
-procedure VGAColorRegister;
+procedure VGAColorRegister ;
 
   var
     DataRec: record

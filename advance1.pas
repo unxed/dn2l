@@ -263,6 +263,8 @@ function CompToFSize(x: Comp): TFileSize;
 
 function LowCase(c: Char): Char;
 
+function FSizeMod(x: TFileSize; y: LongInt): LongInt;
+
 implementation
 
 uses

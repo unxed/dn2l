@@ -61,6 +61,8 @@ function SysFileIsDevice(hFile: LongInt) : Byte;
 
 function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
 
+procedure CopyEAs(FFromName, FToName: String);
+
 implementation
 
 // https://www.freepascal.org/docs-html/current/prog/progse37.html
@@ -196,5 +198,11 @@ function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
 begin
   Result := False; //!! Пока не реализовано (04.09.2005)
 end;
+
+procedure CopyEAs(FFromName, FToName: String);
+begin
+  FFromName := FFromName+#0;
+  FToName := FToName+#0;
+end { CopyEAs };
 
 end.

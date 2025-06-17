@@ -187,7 +187,7 @@ begin
 end;
 }
 (*
-function TEditWindow.Execute;
+function TEditWindow.Execute : Word;
   var
     Event: TEvent;
   begin
@@ -211,7 +211,7 @@ procedure TEditWindow.Store(var S: TStream);
   end;
 
 { TEditWindow }
-constructor TEditWindow.Init;
+constructor TEditWindow.Init (R: TRect; FileName: String);
   var
     pm: PMenu;
     Pi: PMenuItem;
@@ -272,7 +272,7 @@ constructor TEditWindow.Init;
   Intern^.BMrk := ABookLine;
   end { TEditWindow.Init };
 
-procedure TEditWindow.SetState;
+procedure TEditWindow.SetState (AState: Word; Enable: Boolean);
   begin
   inherited SetState(AState, Enable);
   Redraw;

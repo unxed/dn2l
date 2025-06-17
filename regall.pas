@@ -54,6 +54,10 @@ procedure RegisterAll;
 implementation
 
 uses
+  TopView_,
+  Dblwnd,
+  Strview,
+  Startupp,
   {$IFNDEF RCP}
   arc_Zip, arc_LHA, arc_RAR, arc_ACE, arc_HA, arc_CAB,
   {$IFNDEF MINARCH}
@@ -1074,22 +1078,25 @@ RColorPoint : TStreamRec = (
       Load: @SWE.TColorPoint.Load;
       Store: @SWE.TColorPoint.Store);
 
+// fixme: porting stub
 procedure RegisterAll;
-  var
-    P: PStreamRec;
-    I: Integer;
-  type
-    PtrRec = record
-      Ofs: LongInt;
-      end;
-  begin
-    P := @RFilterValidator;
-    I := Ofs(RRangeValidator) - Ofs(RFilterValidator);
-    {use it instead of SizeOf() because of compiler's data align engine}
-    repeat
-      RegisterType(P^);
-      Inc(PtrRec(P).Ofs, I);
-    until PtrRec(P).Ofs > Ofs(RColorPoint);
+type
+  PtrRec = record
+    Ofs: PtrUInt;
   end;
+var
+  P: PStreamRec;
+  I: Integer;
+  PR: ^PtrRec;
+begin
+  P := @RFilterValidator;
+  I := PtrUInt(@RRangeValidator) - PtrUInt(@RFilterValidator);
+  PR := Pointer(@P); // приведение через Pointer
+  repeat
+    RegisterType(P^);
+    Inc(PR^.Ofs, I);
+    P := PStreamRec(PR^.Ofs); // пересчитать P обратно
+  until PR^.Ofs > PtrUInt(@RColorPoint);
+end;
 
 end.

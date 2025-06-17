@@ -70,6 +70,8 @@ unit Microed;
 interface
 
 uses
+  math,
+  vp2fp,
   Defines, Streams, Drivers, Views,
   Advance, Menus,
   Commands, {SBlocks,}ObjType, U_KeyMap, Collect,
@@ -312,17 +314,17 @@ const
 
 function MemAvail: LongInt;
   begin
-  MemAvail := MemAdjust(System.MemAvail)
+  MemAvail := MemAdjust(MemAvail)
   end;
 
-procedure TFileEditor.WorkModify;
+procedure TFileEditor.WorkModify ;
   begin
   WorkModified := True;
   Modified := True;
   LastLine := Delta.Y;
   end;
 
-procedure TFileEditor.FlushWorkString;
+procedure TFileEditor.FlushWorkString ;
   begin
   if WorkModified then
     begin
@@ -331,7 +333,7 @@ procedure TFileEditor.FlushWorkString;
     end;
   end;
 
-procedure TFileEditor.ChangeLine;
+procedure TFileEditor.ChangeLine ;
   begin
   FlushWorkString;
   LastLine := Delta.Y;
@@ -801,12 +803,12 @@ procedure TFileEditor.Store(var S: TStream);
   MIStore(@Self, S);
   end;
 
-procedure TFileEditor.Awaken;
+procedure TFileEditor.Awaken ;
   begin
   MIAwaken(@Self);
   end;
 
-function TFileEditor.GetPalette;
+function TFileEditor.GetPalette : PPalette;
   const
     s: String[Length(CFileEditor)] = CFileEditor;
   begin
@@ -814,7 +816,9 @@ function TFileEditor.GetPalette;
   end;
 
 { TFileEditor }
-constructor TFileEditor.Init;
+constructor TFileEditor.Init (var Bounds: TRect;
+         AHScrollBar, AVScrollBar: PScrollBar;
+        var FileName: String);
   var
     { FileToView: Text; }
     Line: String;
@@ -890,7 +894,7 @@ constructor TFileEditor.Init;
   {/Cat}
   end { TFileEditor.Init };
 
-destructor TFileEditor.Done;
+destructor TFileEditor.Done ;
   begin
   DisposeStr(MenuItemStr[False]);
   DisposeStr(MenuItemStr[True]);
@@ -940,7 +944,7 @@ destructor TFileEditor.Done;
   inherited Done;
   end { TFileEditor.Done };
 
-procedure TFileEditor.StoreUndoInfo;
+procedure TFileEditor.StoreUndoInfo (What: Word; Where: TPoint; var Info);
   var
     P, P1: PUndoRec;
     S: LongString;
@@ -1224,7 +1228,7 @@ procedure TFileEditor.StoreUndoInfo;
   CalcMenu;
   end { TFileEditor.StoreUndoInfo };
 
-procedure TFileEditor.CalcMenu;
+procedure TFileEditor.CalcMenu ;
   var
     GC: TCommandSet;
     MI: PMenuItem;
@@ -1298,7 +1302,7 @@ procedure TFileEditor.CalcMenu;
   SetCommands(GC);
   end { TFileEditor.CalcMenu };
 
-procedure TFileEditor.SetState;
+procedure TFileEditor.SetState (AState: Word; Enable: Boolean);
   begin
   inherited SetState(AState, Enable);
   if  (AState and (sfActive+sfFocused+sfSelected+sfVisible) <> 0)
@@ -1329,7 +1333,7 @@ procedure TFileEditor.SetState;
   { if (BMrk<>nil)  then BMrk^.Draw; }
   end { TFileEditor.SetState };
 
-procedure TFileEditor.ScrollTo;
+procedure TFileEditor.ScrollTo (DeltaX, DeltaY: LongInt);
   begin
   if HScroll <> nil then
     HScroll^.SetValue(DeltaX);
@@ -1338,7 +1342,7 @@ procedure TFileEditor.ScrollTo;
   end;
 
 {-DataCompBoy-}
-function TFileEditor.LimitX;
+function TFileEditor.LimitX : LongInt;
   begin
   if HScroll <> nil then
     LimitX := HScroll^.Max
@@ -1346,7 +1350,7 @@ function TFileEditor.LimitX;
     LimitX := 0;
   end;
 
-function TFileEditor.LimitY;
+function TFileEditor.LimitY : LongInt;
   begin
   if VScroll <> nil then
     LimitY := VScroll^.Max
@@ -1384,7 +1388,7 @@ end;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure OpenEditor;
+procedure OpenEditor ;
   var
     R: TRect;
     P: PWindow;
@@ -1400,13 +1404,13 @@ procedure OpenEditor;
   end;
 {-DataCompBoy-}
 
-procedure TFileEditor.ChangeBounds;
+procedure TFileEditor.ChangeBounds (var R: TRect);
   begin
   inherited ChangeBounds(R);
   SetLimits;
   end;
 
-procedure TFileEditor.SetLimits;
+procedure TFileEditor.SetLimits ;
   begin
   if HScroll <> nil then
     HScroll^.SetParams(Delta.X, 0, MaxLongStringLength, 1, 1);
@@ -1414,7 +1418,7 @@ procedure TFileEditor.SetLimits;
     VScroll^.SetParams(Delta.Y, 0, FileLines^.Count-1, Size.Y, 1);
   end;
 
-function TFileEditor.GetSelection;
+function TFileEditor.GetSelection : PCollection;
   var
     P: PCollection;
     S: LongString;
@@ -1502,7 +1506,7 @@ function TFileEditor.Valid(Command: Word): Boolean;
     end;
   end { TFileEditor.Valid };
 
-function TFileEditor.ValidBlock;
+function TFileEditor.ValidBlock : Boolean;
   begin
   if VertBlock then
     ValidBlock := ((Mark.A.Y <= Mark.B.Y) and (Mark.A.X < Mark.B.X))
@@ -1512,7 +1516,7 @@ function TFileEditor.ValidBlock;
   end;
 
 {Cat: переделал для поиска с регэкспами}
-function TFileEditor.Search;
+function TFileEditor.Search (StartX, StartY: Word): Boolean;
   label
     1, LExit, _LExit, EndReplace;
   var
@@ -1895,7 +1899,7 @@ _LExit:
   end { TFileEditor.Search };
 {/Cat}
 
-procedure TFileEditor.InsertBlock;
+procedure TFileEditor.InsertBlock (ABlock: PCollection; SaveUndo: Boolean);
   var
     I, Q: LongInt;
     S, S1, S2: LongString;
@@ -2017,7 +2021,7 @@ procedure TFileEditor.InsertBlock;
     DrawView;
   end { TFileEditor.InsertBlock };
 
-procedure TFileEditor.Draw;
+procedure TFileEditor.Draw ;
   var
     C, BC, Comments, C1: Byte;
     HP: String[6];
@@ -2336,11 +2340,11 @@ procedure TFileEditor.ModifyLine(Index: LongInt; S: LongString;
   Modified := True;
   end;
 
-function TFileEditor.HandleCommand;
+function TFileEditor.HandleCommand (var Event: TEvent): Boolean;
   begin
   end;
 
-procedure TFileEditor.HandleEvent;
+procedure TFileEditor.HandleEvent (var Event: TEvent);
   label 1, 2;
   var
     ChPos, WM, DelWord, WasMA, WasMB: Boolean;
@@ -4957,7 +4961,7 @@ procedure TFileEditor.DoHighlite
     end;
   end { TFileEditor.DoHighlite };
 
-procedure OpenSmartpad;
+procedure OpenSmartpad ;
   var
     R: TRect;
     PV: Pointer;
@@ -5106,7 +5110,7 @@ procedure OpenSmartpad;
     Desktop^.Insert(SmartWindow);
   end { OpenSmartpad };
 
-procedure OpenClipBoard; {-$VOL begin}
+procedure OpenClipBoard ; {-$VOL begin}
   var
     R: TRect;
     PV: Pointer;

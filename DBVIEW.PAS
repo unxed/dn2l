@@ -147,8 +147,6 @@ type
     function Failed(var FileIsDBF: Boolean): Boolean;
     end;
 
-  {
-  // fixme: porting stub
   PMemoStream = ^TMemoStream;
   TMemoStream = object(TStream)
     StartPos: LongInt;
@@ -158,12 +156,17 @@ type
     destructor Done; virtual;
     function GetPos: TFileSize; virtual;
     function GetSize: TFileSize; virtual;
-    procedure Read(var Buf; Count: Word); virtual;
+
+procedure Read(var Buf; Count: LongInt); virtual;
+procedure Write(const Buf; Count: LongInt); virtual;
+// fixme: porting stub
+
+//    procedure Read(var Buf; Count: Word); virtual;
     procedure Seek(Pos: TFileSize); virtual;
+
     procedure Truncate; virtual;
-    procedure Write(const Buf; Count: Word); virtual;
+//    procedure Write(const Buf; Count: Word); virtual;
     end;
-  }
 
   TDBIndicator = object(TView)
     DBViewer: PDBViewer;
@@ -217,10 +220,10 @@ uses
 
 function MaxAvail: LongInt;
   begin
-  MaxAvail := MemAdjust(System.MaxAvail);
+  MaxAvail := MemAdjust(MaxAvail);
   end;
 
-function TFieldListBox.GetText;
+function TFieldListBox.GetText (Item: LongInt; MaxLen: Integer): String;
   var
     P: PFieldRec;
     S: String;
@@ -228,7 +231,7 @@ function TFieldListBox.GetText;
     M: array[0..4] of Pointer;
   begin
   P := List^.At(Item);
-  LongInt(M[0]) := Item+1;
+  M[0] := Pointer(Item)+1;
   M[1] := @P^.Name;
   M[2] := @S1;
   M[3] := @S2;
@@ -290,7 +293,7 @@ procedure TDBScrollBar.HandleEvent(var Event: TEvent);
   end;
 { -------- Eugeny Zvyagintzev ---------}
 
-constructor TMemoStream.Init;
+constructor TMemoStream.Init (AStream: PStream; Start, len: LongInt);
   begin
   TObject.Init;
   StartPos := Start;
@@ -302,7 +305,7 @@ constructor TMemoStream.Init;
   Status := BaseStream^.Status;
   end;
 
-destructor TMemoStream.Done;
+destructor TMemoStream.Done ;
   begin
   Dispose(BaseStream, Done);
   BaseStream := nil;
@@ -329,7 +332,7 @@ function TMemoStream.GetSize: TFileSize;
   GetSize := Length;
   end;
 
-procedure TMemoStream.Read(var Buf; Count: Word);
+procedure TMemoStream.Read(var Buf; Count: LongInt);
   begin
   BaseStream^.Read(Buf, Count);
   ErrorInfo := BaseStream^.ErrorInfo;
@@ -346,14 +349,14 @@ procedure TMemoStream.Seek(Pos: TFileSize);
   Status := BaseStream^.Status;
   end;
 
-procedure TMemoStream.Truncate;
+procedure TMemoStream.Truncate ;
   begin
   BaseStream^.Truncate;
   ErrorInfo := BaseStream^.ErrorInfo;
   Status := BaseStream^.Status;
   end;
 
-procedure TMemoStream.Write(const Buf; Count: Word);
+procedure TMemoStream.Write(const Buf; Count: LongInt);
   begin
   BaseStream^.Write(Buf, Count);
   ErrorInfo := BaseStream^.ErrorInfo;
@@ -363,7 +366,7 @@ procedure TMemoStream.Write(const Buf; Count: Word);
   end;
 
 {-DataCompBoy-}
-constructor TDBViewer.Init;
+constructor TDBViewer.Init (R: TRect; FName: String; var FileIsDBF: Boolean);
   begin
   inherited Init(R);
   KillAfterUse := TempFile <> '';
@@ -382,7 +385,7 @@ constructor TDBViewer.Init;
   end;
 {-DataCompBoy-}
 
-procedure TDBViewer.Store;
+procedure TDBViewer.Store (var S: TStream);
   begin
   inherited Store(S);
   S.Write(KillAfterUse, SizeOf(KillAfterUse));
@@ -456,7 +459,7 @@ function TDBViewer.Failed(var FileIsDBF: Boolean): Boolean;
   FileIsDBF := isValid;
   end { TDBViewer.Failed };
 
-constructor TDBViewer.Load;
+constructor TDBViewer.Load (var S: TStream);
   var
     FileIsDBF: Boolean;
   begin
@@ -474,7 +477,7 @@ constructor TDBViewer.Load;
   XCoder.Load(S);
   end;
 
-destructor TDBViewer.Done;
+destructor TDBViewer.Done ;
   begin
   DisposeStr(SearchString);
   if Buf <> nil then
@@ -493,21 +496,21 @@ destructor TDBViewer.Done;
   inherited Done;
   end;
 
-function TDBViewer.GetPalette;
+function TDBViewer.GetPalette : PPalette;
   const
     S: String[Length(CDBViewer)] = CDBViewer;
   begin
   GetPalette := @S;
   end;
 
-function TDBWindow.GetPalette;
+function TDBWindow.GetPalette : PPalette;
   const
     S: String[Length(CDBWindow)] = CDBWindow;
   begin
   GetPalette := @S;
   end;
 
-function TDBViewer.GetRecord;
+function TDBViewer.GetRecord (N: LongInt): Pointer;
   var
     I: Integer;
   begin
@@ -527,12 +530,12 @@ function TDBViewer.GetRecord;
   GetRecord := @PByteArray(Buf)^[(N-StartRec)*DBFile^.RecLen];
   end;
 
-function TDBViewer.Valid;
+function TDBViewer.Valid (Command: Word): Boolean;
   begin
   Valid := inherited Valid(Command) and isValid;
   end;
 
-procedure TDBViewer.GetInfo;
+procedure TDBViewer.GetInfo (StrIdx: TStrIdx);
   var
     R: TRect;
     D: PDialog;
@@ -585,7 +588,7 @@ procedure TDBViewer.GetInfo;
   Dispose(D, Done);
   end { TDBViewer.GetInfo };
 
-procedure TDBViewer.HandleEvent;
+procedure TDBViewer.HandleEvent (var Event: TEvent);
 
   {--- start -------- Eugeny Zvyagintzev ---- 31-07-2002 ----}
   procedure GotoRecFld;
@@ -647,6 +650,8 @@ procedure TDBViewer.HandleEvent;
       Nm: String;
       Xt: String;
     begin
+    // fixme: porting stub
+    (*
     P := GetRecord(Delta.Y);
     if P = nil then
       Exit;
@@ -767,6 +772,7 @@ procedure TDBViewer.HandleEvent;
       Exit;
     Desktop^.ExecView(D);
     Dispose(D, Done);
+    *)
     end { ViewMemo };
   {-DataCompBoy-}
 
@@ -1363,7 +1369,7 @@ redat:
   end {case};
   end { TDBViewer.HandleEvent };
 
-procedure TDBViewer.Draw;
+procedure TDBViewer.Draw ;
   var
     B: array[0..1024] of record
       C: Char;
@@ -1504,7 +1510,7 @@ procedure TDBViewer.Draw;
     end;
   end { TDBViewer.Draw };
 
-procedure TDBIndicator.Draw;
+procedure TDBIndicator.Draw ;
   var
     B: TDrawBuffer;
     S, S1: String; {John_SW 18-03-2003}
@@ -1550,7 +1556,7 @@ procedure TDBIndicator.Draw;
   WriteLine(0, 0, Size.X, 1, B);
   end { TDBIndicator.Draw };
 
-constructor TDBWindow.Init;
+constructor TDBWindow.Init (FName: String; var FileIsDBF: Boolean);
   var
     R: TRect;
     I: Integer;
@@ -1615,7 +1621,7 @@ constructor TDBWindow.Init;
   P^.Indicator := P1;
   end { TDBWindow.Init };
 
-constructor TDBWindow.Load;
+constructor TDBWindow.Load (var S: TStream);
   begin
   inherited Load(S);
   GetSubViewPtr(S, P);
@@ -1634,7 +1640,7 @@ constructor TDBWindow.Load;
   Redraw;
   end;
 
-procedure TDBWindow.Store;
+procedure TDBWindow.Store (var S: TStream);
   begin
   inherited Store(S);
   PutSubViewPtr(S, P);
@@ -1655,7 +1661,7 @@ procedure TDBWindow.SetState(AState: Word; Enable: Boolean);
   end;
 {--- finish -------- Eugeny Zvyagintzev ---- 14-03-2003 ----}
 
-destructor TDBWindow.Done;
+destructor TDBWindow.Done ;
   begin
   StoreViewInfo(@Self);
   inherited Done;

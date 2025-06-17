@@ -243,7 +243,7 @@ procedure MISaveFile(AED: PFileEditor);
         FileExist := True;
       if FileExist and (OldAttr and ReadOnly <> 0) then
         begin
-        Pointer(L[0]) := @EditName;
+        L[0] := LongInt(@EditName);
         if Msg(dlED_ModifyRO, @L, mfConfirmation+mfOKCancel) <> cmOK
         then
           begin

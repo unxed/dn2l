@@ -208,7 +208,7 @@ procedure FreeLastUnmarked(C: PCollection);
     C^.AtFree(I);
   end;
 
-function TEditHistoryCol.IndexOf;
+function TEditHistoryCol.IndexOf (P: Pointer): LongInt;
   var
     S, S1: String;
     I: Integer;
@@ -231,13 +231,13 @@ function TEditHistoryCol.IndexOf;
     end;
   end;
 
-procedure TEditHistoryCol.PutItem;
+procedure TEditHistoryCol.PutItem (var S: TStream; P: Pointer);
   begin
   S.WriteStr(PEditRecord(P)^.FName);
   S.Write(PEditRecord(P)^.fOrigin, SizeOf(TEditRecord)-SizeOf(PString));
   end;
 
-function TEditHistoryCol.GetItem;
+function TEditHistoryCol.GetItem (var S: TStream): Pointer;
   var
     R: PEditRecord;
   begin
@@ -247,7 +247,7 @@ function TEditHistoryCol.GetItem;
   S.Read(R^.fOrigin, SizeOf(TEditRecord)-SizeOf(PString));
   end;
 
-procedure TEditHistoryCol.FreeItem;
+procedure TEditHistoryCol.FreeItem (P: Pointer);
   begin
   if P <> nil then
     begin
@@ -256,13 +256,13 @@ procedure TEditHistoryCol.FreeItem;
     end;
   end;
 
-procedure TViewHistoryCol.PutItem;
+procedure TViewHistoryCol.PutItem (var S: TStream; P: Pointer);
   begin
   S.WriteStr(PViewRecord(P)^.FName);
   S.Write(PViewRecord(P)^.fOrigin, SizeOf(TViewRecord)-SizeOf(PString));
   end;
 
-function TViewHistoryCol.GetItem;
+function TViewHistoryCol.GetItem (var S: TStream): Pointer;
   var
     R: PViewRecord;
   begin
@@ -272,7 +272,7 @@ function TViewHistoryCol.GetItem;
   S.Read(R^.fOrigin, SizeOf(TViewRecord)-SizeOf(PString));
   end;
 
-procedure TViewHistoryCol.FreeItem;
+procedure TViewHistoryCol.FreeItem (P: Pointer);
   begin
   if P <> nil then
     begin
@@ -543,7 +543,7 @@ procedure AddCommand(const LastCommand: String);
     end;
   end { AddCommand };
 {DataCompBoy
-procedure InitCommands;
+procedure InitCommands ;
 begin
  if CmdStrings <> nil then Dispose(CmdStrings,Done);
  CmdStrings := New(PLineCollection, Init(40, 10));
@@ -634,7 +634,7 @@ type
     destructor Done; virtual;
     end;
 
-function TTHistList.IsSelected;
+function TTHistList.IsSelected(I: LongInt): Boolean;
   var
     P: PString;
   begin
@@ -642,7 +642,7 @@ function TTHistList.IsSelected;
   IsSelected := (P <> nil) and (P^[1] = '+');
   end;
 
-function TTHistList.ItemStr;
+function TTHistList.ItemStr(I: LongInt): PString;
   begin
   if EVHistory then
     ItemStr := PEditRecord(List^.At(I))^.FName
@@ -650,7 +650,7 @@ function TTHistList.ItemStr;
     ItemStr := List^.At(I);
   end;
 
-function TTHistList.GetText;
+function TTHistList.GetText(Item: LongInt; MaxLen: Integer): String;
   var
     WasSlash: Boolean;
   begin
@@ -681,7 +681,7 @@ function TTHistList.GetText;
   GetText := FreeStr;
   end;
 
-procedure TTHistList.SelectItem;
+procedure TTHistList.SelectItem(Item: LongInt);
   var
     P: PString;
   begin
@@ -694,7 +694,7 @@ procedure TTHistList.SelectItem;
   DrawView;
   end;
 
-procedure TTHistList.HandleEvent;
+procedure TTHistList.HandleEvent(var Event: TEvent);
   label 1;
   var
     P: Pointer;
@@ -804,7 +804,8 @@ procedure TTHistList.HandleEvent;
             begin
             if HistoryErrorBeep then
               begin
-              SysBeepEx {PlaySound}(500, 110);
+              // fixme: porting stub
+              //SysBeepEx {PlaySound}(500, 110);
               end;
             Exit;
             end;
@@ -926,7 +927,7 @@ function GetDialog(Dlg: TDlgIdx; var List: Pointer): PDialog;
   GetDialog := D;
   end;
 
-procedure EditHistoryMenu;
+procedure EditHistoryMenu ;
   var
     D: PDialog;
     P: PTHistList;
@@ -966,7 +967,7 @@ procedure EditHistoryMenu;
     end;
   end { EditHistoryMenu };
 
-procedure ViewHistoryMenu;
+procedure ViewHistoryMenu ;
   var
     D: PDialog;
     P: PTHistList;
@@ -1042,7 +1043,7 @@ function DirHistoryMenu: String;
          MaxStringLength);
   end { DirHistoryMenu: };
 
-procedure CmdHistory;
+procedure CmdHistory ;
   var
     PC: PLineCollection;
     D: PDialog;
@@ -1088,7 +1089,7 @@ const
   HistoryFileSign = 'DN OSP History file'#13#10#26#1#51#05;
 
   {-DataCompBoy-}
-procedure LoadHistories;
+procedure LoadHistories ;
   var
     S: TBufStream;
     A: AWord;
@@ -1119,7 +1120,7 @@ procedure LoadHistories;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure SaveHistories;
+procedure SaveHistories ;
   var
     S: TBufStream;
     A: AWord;
@@ -1138,7 +1139,7 @@ procedure SaveHistories;
   end;
 {-DataCompBoy-}
 
-procedure ClearHistories;
+procedure ClearHistories ;
   var
     I, J, K: Integer;
     B: PChar;
@@ -1207,7 +1208,7 @@ procedure ClearHistories;
   end { ClearHistories };
 
 {Cat}
-procedure DoneHistories;
+procedure DoneHistories ;
   begin
   if CmdStrings <> nil then
     Dispose(CmdStrings, Done);

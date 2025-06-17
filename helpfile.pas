@@ -126,7 +126,7 @@ constructor THelpViewer.Init(var Bounds: TRect; AHScrollBar,
   NumTopics := 1;
   end;
 
-destructor THelpViewer.Done;
+destructor THelpViewer.Done ;
   begin
   inherited Done;
   Dispose(HFile, Done);
@@ -174,7 +174,7 @@ procedure THelpViewer.ChangeBounds(var Bounds: TRect);
   SetLimit( {Limit.X}78+Size.X, Topic^.NumLines+Size.Y);
   end;
 
-procedure THelpViewer.Draw;
+procedure THelpViewer.Draw ;
   var
     B: TDrawBuffer;
     Line: String;
@@ -515,7 +515,7 @@ procedure THelpWindow.GotoContext(Context: AWord);
   HelpView^.GotoContext(Context);
   end;
 
-procedure THelpWindow.HandleEvent;
+procedure THelpWindow.HandleEvent (var Event: TEvent);
   begin
   inherited HandleEvent(Event);
   if  (Event.What = evCommand) and
@@ -549,7 +549,7 @@ procedure THelpWindow.SetState(aState: Word; Enable: Boolean);
       EnableCommands([cmHelp])
   end;
 
-destructor THelpWindow.Done;
+destructor THelpWindow.Done ;
   begin
   if HelpWnd = @Self then
     begin

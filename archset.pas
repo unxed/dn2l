@@ -88,7 +88,7 @@ procedure UpdateARH(Arch: PARJArchive);
   CloseProfile;
   end { UpdateARH };
 
-procedure SetupArchive;
+procedure SetupArchive(ArchCommand: Word);
   var
     D: PDialog;
     P: PView;

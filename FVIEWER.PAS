@@ -52,7 +52,9 @@ unit FViewer;
 interface
 
 uses
+  math,
   vp2fp,
+  LFNVp,
   SysUtils,
   Defines, Streams, Views, Drivers,
   Advance, highlite, xTime,
@@ -261,13 +263,26 @@ uses
 
 function MaxAvail: LongInt;
   begin
-  MaxAvail := MemAdjust(System.MaxAvail);
+  MaxAvail := MemAdjust(MaxAvail);
   end;
 
 const
   ViewerBufSize = (1+MaxILines)*(MaxWrapW+2);
 
-function SearchFileStr;
+function SearchFileStr (
+ {` Поиск строки в уже открытом файле }
+    F: PStream; // Собственно файл
+    var XLAT: TXlat;
+      { перекодировка из кодировки файла в ASCII. Если
+      not CaseSensitive - то одновременно и перевод на верхний регистр}
+    const What: String;
+      { в ASCII. Для not CaseSensitive регистр What не критичен }
+    Pos: TFileSize; // точка старта
+    CaseSensitive,
+    Display, // отображать информацию о ходе поиска
+    WholeWords, Back,
+    AllCP, // если AllCP, то XLAT игнорируется
+    IsRegExp: Boolean): TFileSize;
   label 1, LExit;
   var
     Buf: PByteArray;
@@ -460,7 +475,7 @@ procedure TViewInfo.Store(var S: TStream);
   PutPeerViewPtr(S, Viewer);
   end;
 
-procedure TViewInfo.Draw;
+procedure TViewInfo.Draw ;
   var
     B: TDrawBuffer;
     S: String;
@@ -560,7 +575,7 @@ procedure TViewInfo.Draw;
   Self.WriteLine(0, 0, Size.X, Size.Y, B);
   end { TViewInfo.Draw };
 
-procedure TViewInfo.HandleEvent;
+procedure TViewInfo.HandleEvent (var Event: TEvent);
   var
     P: TPoint;
     BookMark: Byte;
@@ -645,7 +660,7 @@ procedure TViewInfo.HandleEvent;
       end;
   end { TViewInfo.HandleEvent };
 
-function TFileViewer.WriteModify;
+function TFileViewer.WriteModify:boolean;
   var
     B: Boolean;
     I: LongInt;
@@ -734,22 +749,22 @@ const
   SCNViewer: String[Length(CInputLine)] = CInputLine;
   SCViewWindow: String[Length(CViewWindow)] = CViewWindow;
 
-function TFileViewer.GetPalette;
+function TFileViewer.GetPalette: PPalette;
   begin
   GetPalette := @SCViewer;
   end;
 
-function TNFileViewer.GetPalette;
+function TNFileViewer.GetPalette : PPalette;
   begin
   GetPalette := @SCNViewer;
   end;
 
-function THFileViewer.GetPalette;
+function THFileViewer.GetPalette : PPalette;
   begin
   GetPalette := @SCHViewer;
   end;
 
-function TFileWindow.GetPalette;
+function TFileWindow.GetPalette : PPalette;
   begin
   GetPalette := @SCViewWindow;
   end;
@@ -791,7 +806,7 @@ procedure TViewScroll.DrawPos(Pos: Integer);
   WriteBuf(0, 0, Size.X, Size.Y, B);
   end;
 
-procedure TViewScroll.HandleEvent;
+procedure TViewScroll.HandleEvent (var Event: TEvent);
   var
     B: Boolean;
     P: TPoint;
@@ -931,14 +946,14 @@ function TViewScroll.GetPartCode: LongInt;
   {/JO}
   end;
 
-function TViewScroll.GetPalette;
+function TViewScroll.GetPalette : PPalette;
   const
     S: String[Length(CScrollBar)] = CScrollBar;
   begin
   GetPalette := @S;
   end;
 
-procedure TViewScroll.Draw;
+procedure TViewScroll.Draw ;
   var
     B1: TDrawBuffer;
     B: array[0..128] of record
@@ -1024,7 +1039,7 @@ procedure TDFileViewer.HandleEvent(var Event: TEvent);
 
 { THFileViewer }
 
-procedure THFileViewer.ChangeBounds;
+procedure THFileViewer.ChangeBounds (var Bounds: TRect);
   var
     R: TRect;
   begin
@@ -1042,7 +1057,7 @@ procedure THFileViewer.ChangeBounds;
 
 { TFileViewer }
 
-procedure TFileViewer.ChangeBounds;
+procedure TFileViewer.ChangeBounds(var Bounds: TRect);
   var
     R: TRect;
   begin
@@ -1091,7 +1106,10 @@ procedure TFileViewer.Update;
     end;
   end;
 
-constructor TFileViewer.Init;
+constructor TFileViewer.Init(var Bounds: TRect; AStream: PStream;
+  const AFileName, AVFileName: String;
+  ASB: PView; Quick, Hex: Boolean);
+
   var
     C: Char;
   begin
@@ -1155,7 +1173,7 @@ destructor TFileViewer.Done;
   inherited Done;
   end;
 
-constructor TFileViewer.Load;
+constructor TFileViewer.Load(var S: TStream);
   var
     FP: TFileSize;
   begin
@@ -1199,7 +1217,7 @@ constructor TFileViewer.Load;
     end;
   end { TFileViewer.Load };
 
-procedure TFileViewer.Store;
+procedure TFileViewer.Store(var S: TStream);
   var
     FP: TFileSize;
   begin
@@ -1221,6 +1239,10 @@ procedure TFileViewer.Store;
 
 procedure XDumpStr(var S: String; var B; Addr: Comp; Count: Integer;
      Filter: Byte);
+begin
+end;
+// fixme: porting stub
+(*
   begin
   S := HexFilePos(Addr)+' ';
   asm
@@ -1261,6 +1283,7 @@ procedure XDumpStr(var S: String; var B; Addr: Comp; Count: Integer;
     pop  ESI
   end;
   end { XDumpStr };
+*)
 
 { размер поля табуляции }
 function GetTabSize: Word;
@@ -1695,7 +1718,7 @@ procedure TFileViewer.Draw;
     Info^.DrawView;
   end { TFileViewer.Draw };
 
-function TFileViewer.ReadFile;
+function TFileViewer.ReadFile(const FName, VFName: String; NewStream: Boolean): Boolean;
   var
     CodePageDetector: TCodePageDetector;
     I, J: Integer;
@@ -1811,7 +1834,7 @@ procedure TFileViewer.ChangeFile(FR: PFileRec);
   begin
   end;
 
-procedure TFileViewer.SetState;
+procedure TFileViewer.SetState(AState: Word; Enable: Boolean);
   begin
   inherited SetState(AState, Enable);
   if  (AState and (sfActive+sfSelected) <> 0) then
@@ -2135,7 +2158,9 @@ function TFileViewer.BreakOnStreamReadError: Boolean;
     if  (Owner <> nil) and not QuickView then
       Owner^.Free;
     isValid := False;
-    raise E At ReturnAddr;
+    //raise E At ReturnAddr;
+    // fixme: porting stub
+    raise E;
     end;
   end { TFileViewer.BreakOnStreamReadError: };
 {/AK155}
@@ -2248,7 +2273,7 @@ EndProc:
   Owner^.UnLock;
   end { TFileViewer.SeekEof };
 
-procedure TFileViewer.HandleEvent;
+procedure TFileViewer.HandleEvent(var Event: TEvent);
 
   var
     P: TPoint;
@@ -3256,7 +3281,7 @@ procedure TFileViewer.DoHighlite
 {AK155 05.2001 Процедура CountDown почти полностью переписана;
 части, соотвествующие vmAsm, собраны до кучи, но не проверялись}
 
-procedure TFileViewer.CountDown;
+procedure TFileViewer.CountDown(ANumber: Integer);
   {$IFDEF DisAsm}
   var
     D: XCHGData; {GRM!}
@@ -3343,7 +3368,7 @@ procedure TFileViewer.CountDown;
   Message(SB, evCommand, cmChangeValue, @NewPos);
   end { TFileViewer.CountDown };
 
-procedure TFileViewer.CountUp;
+procedure TFileViewer.CountUp(ANumber: Integer);
   var
     I, LineStart, LineEnd: LongInt;
     NextLineStart: LongInt;
@@ -3596,7 +3621,7 @@ procedure TFileViewer.CountUp;
   Message(SB, evCommand, cmChangeValue, @NewFilePos);
   end { TFileViewer.CountUp };
 
-function TFileViewer.Valid;
+function TFileViewer.Valid(Command: Word) : Boolean;
   begin
   Valid := isValid or QuickView;
   if  (Command = cmClose) or (Command = cmQuit) then
@@ -3605,7 +3630,7 @@ function TFileViewer.Valid;
   end;
 
 { TFileWindow }
-constructor TFileWindow.Init;
+constructor TFileWindow.Init (const FileName, VFileName: String; Hex: Boolean);
   var
     R: TRect;
     P: PView;
@@ -3647,7 +3672,7 @@ constructor TFileWindow.Init;
   PV^.Info := P;
   end { TFileWindow.Init };
 
-procedure TFileWindow.ChangeBounds;
+procedure TFileWindow.ChangeBounds (var Bounds: TRect);
   begin
   inherited ChangeBounds(Bounds);
   if not GetState(sfModal) then
@@ -3657,7 +3682,7 @@ procedure TFileWindow.ChangeBounds;
     end;
   end;
 
-function TFileWindow.ReactOnCmd;
+function TFileWindow.ReactOnCmd : Boolean;
   begin
   ReactOnCmd := True
   end;

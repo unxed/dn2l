@@ -77,7 +77,7 @@ uses
   , FileType
   ;
 
-procedure SetHighlightGroups;
+procedure SetHighlightGroups ;
   var
     D: record
       S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11: String[250];
@@ -139,7 +139,7 @@ procedure SetHighlightGroups;
   GlobalMessage(evCommand, cmUpdateHighlight, nil);
   end { SetHighlightGroups };
 
-procedure ChangeColors;
+procedure ChangeColors ;
   var
     CurPal: String;
   begin
@@ -154,11 +154,11 @@ procedure ChangeColors;
     GetPalette(VGA_palette);
   end;
 
-procedure TWindowCol.FreeItem;
+procedure TWindowCol.FreeItem (Item: Pointer);
   begin
   end;
 
-function TWindowList.GetText;
+function TWindowList.GetText (Item: LongInt; MaxLen: Integer): String;
   var
     S: String;
     P: PView;
@@ -173,7 +173,7 @@ function TWindowList.GetText;
     GetText := '  '+S;
   end;
 
-procedure WindowManager;
+procedure WindowManager ;
   label 1;
   var
     D: PDialog;

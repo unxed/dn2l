@@ -51,6 +51,8 @@ unit Editor;
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Drivers, Microed
   ;
 
@@ -80,7 +82,7 @@ type
 var
   BoundStart, BoundEnd: LongInt;
 
-function TSortCollection.Compare;
+function TSortCollection.Compare(Key1, Key2: Pointer): Integer;
   var
     P1: PLongString absolute Key1;
     P2: PLongString absolute Key2;
@@ -111,7 +113,7 @@ function Bigger(const L, R: LongString): Boolean;
 {$F-}
 { <- Added by PaSkol}
 
-function TXFileEditor.HandleCommand;
+function TXFileEditor.HandleCommand(var Event: TEvent): Boolean;
 
   var
     LastX, LastY: LongInt;
@@ -1210,9 +1212,9 @@ function TXFileEditor.HandleCommand;
       Exit;
       end;
     if Reverse then
-      Cmpr := Bigger
+      Cmpr := @Bigger
     else
-      Cmpr := Less;
+      Cmpr := @Less;
     Info := WriteMsg(GetString(dlPleaseStandBy));
     NewTimer(Tmr, 100);
     ChangeLine;

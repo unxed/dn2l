@@ -52,6 +52,7 @@ unit Gauges;
 interface
 
 uses
+  vp2fp,
   Dos, Defines, Objects2, Streams, Views, Drivers,
   Collect, xTime
   ;
@@ -127,7 +128,7 @@ uses
   {$IFDEF Calendar}, Calendar {$ENDIF}
   ; {-$VIV}
 
-constructor TKeyMacros.Init;
+constructor TKeyMacros.Init ;
   begin
   inherited Init;
   Limit := 10;
@@ -137,14 +138,14 @@ constructor TKeyMacros.Init;
     Fail;
   end;
 
-destructor TKeyMacros.Done;
+destructor TKeyMacros.Done ;
   begin
   if Keys <> nil then
     FreeMem(Keys, Limit*SizeOf(Word));
   inherited Done;
   end;
 
-constructor TKeyMacros.Load;
+constructor TKeyMacros.Load (var S: TStream);
   begin
   S.Read(Limit, SizeOf(Limit)*2);
   Keys := MemAlloc(SizeOf(Word)*Limit);
@@ -153,13 +154,13 @@ constructor TKeyMacros.Load;
   S.Read(Keys^, SizeOf(Word)*Count);
   end;
 
-procedure TKeyMacros.Store;
+procedure TKeyMacros.Store (var S: TStream);
   begin
   S.Write(Limit, SizeOf(Limit)*2);
   S.Write(Keys^, SizeOf(Word)*Count);
   end;
 
-procedure TKeyMacros.PutKey;
+procedure TKeyMacros.PutKey (KeyCode: Word);
   var
     P: Pointer;
   begin
@@ -176,7 +177,7 @@ procedure TKeyMacros.PutKey;
   Inc(Count);
   end;
 
-procedure TKeyMacros.Play;
+procedure TKeyMacros.Play ;
   var
     I: Integer;
   begin
@@ -192,7 +193,7 @@ constructor THeapView.Init(var Bounds: TRect);
   OldMem := 0;
   end;
 
-procedure THeapView.Draw;
+procedure THeapView.Draw ;
   var
     S: String;
     B: TDrawBuffer;
@@ -206,7 +207,7 @@ procedure THeapView.Draw;
   WriteLine(0, 0, Size.X, 1, B);
   end;
 
-procedure THeapView.Update;
+procedure THeapView.Update ;
   begin
   if  (OldMem <> MemAvail) then
     DrawView;
@@ -245,7 +246,7 @@ constructor TClockView.Init(var Bounds: TRect);
   NewTimer(Utimer, 1200000+Random(1200000));
   end;
 
-procedure TClockView.Draw;
+procedure TClockView.Draw ;
   var
     B: TDrawBuffer;
     C: Byte;
@@ -271,7 +272,7 @@ procedure TClockView.Draw;
   WriteLine(0, 0, Size.X, 1, B);
   end { TClockView.Draw };
 
-procedure TClockView.HandleEvent;
+procedure TClockView.HandleEvent (var Event: TEvent);
   var
     P: TPoint;
     R: TRect;
@@ -293,7 +294,7 @@ procedure TClockView.HandleEvent;
     end;
   end;
 
-procedure TClockView.Update;
+procedure TClockView.Update ;
   var
     h, m, s, hund: Word;
     d, mn, y: Word;
@@ -422,7 +423,7 @@ const
 
   { TTrashCan }
 
-constructor TTrashCan.Init;
+constructor TTrashCan.Init (var R: TRect);
   begin
   inherited Init(R);
   GrowMode := gfGrowAll;
@@ -436,7 +437,7 @@ function TTrashCan.GetPalette: PPalette;
   GetPalette := @CTrashCan;
   end;
 
-procedure TTrashCan.Draw;
+procedure TTrashCan.Draw ;
   var
     B: TDrawBuffer;
     C: Word;
@@ -506,7 +507,7 @@ procedure TTrashCan.SetState(AState: Word; Enable: Boolean);
 
 {-DataCompBoy-}
 {$IFDEF Printer}
-procedure PrintFiles;
+procedure PrintFiles (Files: PCollection; Own: PView);
   var
     PF: PFileRec;
     I, J: Integer;

@@ -56,6 +56,7 @@ unit ColorSel;
 interface
 
 uses
+  math,
   Defines, Streams, Views, Dialogs, Scroller,
   Advance, Drivers
   ;
