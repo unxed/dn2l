@@ -63,6 +63,8 @@ function QueryABCSort(CP: Word; var ABCSortXlat: TXLat): Boolean;
 
 procedure CopyEAs(FFromName, FToName: String);
 
+function PhysMemAvail: LongInt;
+
 implementation
 
 // https://www.freepascal.org/docs-html/current/prog/progse37.html
@@ -204,5 +206,10 @@ begin
   FFromName := FFromName+#0;
   FToName := FToName+#0;
 end { CopyEAs };
+
+function PhysMemAvail: LongInt;
+begin
+  Exit(MemAvail);
+end;
 
 end.

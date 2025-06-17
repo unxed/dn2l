@@ -52,6 +52,7 @@ interface
 
 uses
   vp2fp,
+  LFNVp,
   Commands, U_KeyMap, Collect, Views, Drivers, Defines, Streams,
   Lfn {, SBlocks}
   ;
@@ -191,14 +192,14 @@ constructor TDoCollection.Init(ReOrUn_do: TDoKind); {-$VOL}
 
 { TInfoLine }
 
-constructor TInfoLine.Init;
+constructor TInfoLine.Init (var R: TRect);
   begin
   inherited Init(R);
   EventMask := evMouseDown;
   GrowMode := gfGrowHiX+gfGrowHiY+gfGrowLoY;
   end;
 
-procedure TInfoLine.HandleEvent;
+procedure TInfoLine.HandleEvent (var Event: TEvent);
   var
     T: TPoint;
     { lS: byte; }
@@ -260,9 +261,12 @@ procedure TInfoLine.HandleEvent;
       else
         Event.What := evNothing;
       end
+    (*
     else if (T.X = 47) then
       with PFileEditor(Owner^.Current) do
         ScrollTo(0, FileLines^.Count) {AK155}
+    *)
+    // fixme: porting stub
     else
       Event.What := evNothing;
     if Event.What <> evNothing then
@@ -271,7 +275,7 @@ procedure TInfoLine.HandleEvent;
     end;
   end { TInfoLine.HandleEvent };
 
-procedure TInfoLine.Draw;
+procedure TInfoLine.Draw ;
   var
     P: PFileEditor;
     X, Y: LongInt;
@@ -371,7 +375,7 @@ procedure TInfoLine.Draw;
   end { TInfoLine.Draw };
 
 {TBookmarkLine}
-procedure TBookmarkLine.Draw;
+procedure TBookmarkLine.Draw ;
   var
     P: PFileEditor;
     Col: Byte;
@@ -437,7 +441,7 @@ constructor TAttrBufStream.Init(FileName: String; Mode, Size: Word);
   OldAttr := $FFFF;
   end;
 
-destructor TAttrBufStream.Done;
+destructor TAttrBufStream.Done ;
   begin
   inherited Done;
   if OldAttr <> $FFFF then
@@ -495,7 +499,7 @@ function CheckForOver(Name: String): PStream; {<Microed2.001>}
       else {case}
         Exit
     end {case};
-    Pointer(L[0]) := @Name;
+    L[0] := LongInt(@Name);
     if Msg(dlED_ModifyRO, @L, mfConfirmation+mfOKCancel) <> cmOK then
       Exit;
     lSetFAttr(F, Archive);

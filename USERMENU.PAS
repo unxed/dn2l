@@ -52,6 +52,9 @@ unit UserMenu;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
   Defines, Views, Scroller, Drivers, FilesCol
   ;
 
@@ -91,7 +94,7 @@ implementation
 uses
   Lfn, {DataCompBoy}
   DNApp, Advance, Advance1, Advance2, Startup, Messages, Menus,
-  Commands, Microed, WinClp, DNHelp, Dos, Memory, Dialogs, Tree
+  Commands, Microed, WinClpVp, DNHelp, Dos, Memory, Dialogs, Tree
   , filediz, Collect, VPUtils
   ;
 
@@ -109,7 +112,7 @@ type
     procedure FreeItem(P: Pointer); virtual;
     end;
 
-constructor TUserWindow.Init;
+constructor TUserWindow.Init ;
   var
     R: TRect;
   begin
@@ -154,7 +157,7 @@ procedure TUserWindow.SetState(AState: Word; Enable: Boolean);
     end;
   end;
 
-constructor TUserView.Init;
+constructor TUserView.Init (var R: TRect; H, V: PScrollBar);
   begin
   inherited Init(R, H, V);
   SetLimit(ScreenWidth, ScreenHeight);
@@ -170,12 +173,12 @@ constructor TUserView.Init;
   Delta.Y := VScrollBar^.Value;
   end;
 
-procedure TUserView.ChangeBounds;
+procedure TUserView.ChangeBounds (var Bounds: TRect);
   begin
   inherited ChangeBounds(Bounds);
   end;
 
-procedure TUserView.Draw;
+procedure TUserView.Draw ;
   var
     I: Integer;
     B: TDrawBuffer;
@@ -191,7 +194,7 @@ procedure TUserView.Draw;
     end;
   end;
 
-procedure TUserView.HandleEvent;
+procedure TUserView.HandleEvent (var Event: TEvent);
   begin
   inherited HandleEvent(Event);
   SetLimit(ScreenWidth, ScreenHeight);
@@ -635,7 +638,7 @@ function MakeString(S: String; UserParams: PUserParams;
 {/AK155}
 {-DataCompBoy-}
 
-function ExecUserMenu;
+function ExecUserMenu (DoGlobal: Boolean): Boolean;
   var
     F: PTextReader;
     F1: lText; {DataCompBoy}
@@ -1085,7 +1088,7 @@ procedure TGrabber.Draw;
     end;
   end { TGrabber.Draw };
 
-function TGrabber.Execute;
+function TGrabber.Execute : Word;
   var
     E: TEvent;
   begin
@@ -1100,7 +1103,7 @@ function TGrabber.Execute;
   until ModalEnd;
   end;
 
-procedure TGrabber.HandleEvent;
+procedure TGrabber.HandleEvent(var Event: TEvent);
   var
     B: Boolean;
     Sh: Boolean;

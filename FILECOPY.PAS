@@ -51,6 +51,10 @@ unit FileCopy;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
+  Strings,
   Collect, FilesCol, Defines, Views
   ;
 
@@ -191,16 +195,16 @@ type
 
 function MemAvail: LongInt;
   begin
-  MemAvail := MemAdjust(System.MemAvail);
+  MemAvail := MemAdjust(MemAvail);
   end;
 
 function MaxAvail: LongInt;
   begin
-  MaxAvail := MemAdjust(System.MaxAvail);
+  MaxAvail := MemAdjust(MaxAvail);
   end;
 
 {-DataCompBoy-}
-procedure TCopyCollection.FreeItem;
+procedure TCopyCollection.FreeItem(P: Pointer);
   begin
   if  (P <> nil) and (PFileCopyRec(P)^.Name <> nil) then
     DisposeStr(PFileCopyRec(P)^.Name);
@@ -209,7 +213,7 @@ procedure TCopyCollection.FreeItem;
   end;
 {-DataCompBoy-}
 
-procedure TDirCollection.FreeItem;
+procedure TDirCollection.FreeItem(P: Pointer);
   begin
   if P <> nil then
     with PDir(P)^ do
@@ -220,7 +224,7 @@ procedure TDirCollection.FreeItem;
       end;
   end;
 
-function TDirCollection.Compare;
+function TDirCollection.Compare(P1, P2: Pointer): Integer;
   var
     S1, S2: String;
   begin
@@ -252,17 +256,19 @@ function TDirCollection.Compare;
     end
   end { TDirCollection.Compare };
 
-procedure BeepAftercopy;
+procedure BeepAftercopy ;
   var
     C: Char;
   begin
 {AK155 Зачем?  DelayTics(1); }
   for C := 'A' to 'D' do
     begin
-    SysBeepEx {PlaySound}(1259, 55);
-    SysBeepEx {PlaySound}(1400, 55);
+    // fixme: porting stub
+    //SysBeepEx {PlaySound}(1259, 55);
+    //SysBeepEx {PlaySound}(1400, 55);
     end;
-  SysBeepEx {PlaySound}(1259, 110);
+  // fixme: porting stub
+  //SysBeepEx {PlaySound}(1259, 110);
   end;
 
 procedure PrepareSelectDialog(P: PDialog);
@@ -278,7 +284,8 @@ procedure PrepareSelectDialog(P: PDialog);
   end;
 
 {-DataCompBoy-}
-function SelectDialog;
+function SelectDialog (Select: Boolean; var ST: String;
+     var XORSelect: Boolean): Boolean;
   var
     P: record
       S: String;
@@ -301,7 +308,7 @@ function SelectDialog;
     S := HistoryStr(hsSelectBox, 0);
     if S = '' then
       S := x_x;
-    @PreExecuteDialog := @PrepareSelectDialog;
+    Pointer(PreExecuteDialog) := Pointer(@PrepareSelectDialog);
     if ExecResource(Idx, P) = cmCancel then
       Exit;
     SelectDialog := True;
@@ -364,7 +371,8 @@ type
 
   { TDirName }
 
-constructor TDirName.Init;
+constructor TDirName.Init(const AOld, ANew: String; ACopy: Boolean;
+ AnOwn: PFileRec; AnAttr: Byte);
   begin
   inherited Init;
   OldName := NewStr(AOld);
@@ -374,7 +382,7 @@ constructor TDirName.Init;
   Attr := AnAttr;
   end;
 
-function TDirName.DNew;
+function TDirName.DNew: String;
   begin
   if NewName = nil then
     DNew := ''
@@ -382,7 +390,7 @@ function TDirName.DNew;
     DNew := NewName^;
   end;
 
-function TDirName.DOld;
+function TDirName.DOld: String;
   begin
   if OldName = nil then
     DOld := ''
@@ -399,7 +407,9 @@ destructor TDirName.Done;
 
 { TLine }
 
-constructor TLine.Init;
+constructor TLine.Init(var ALen: LongInt; AOwner: Pointer;
+  const AOldName, ANewName: String;
+    ASize: TSize; ADate: LongInt; AAttr: Byte; AEOF: ShortInt);
   begin
   inherited Init;
   if MaxAvail < 2048 then
@@ -1025,15 +1035,15 @@ procedure FilesCopy(Files: PCollection; SourcePanel: PView;
           FileMode := $42;
 
           if  (CopyOptions and cpoCheckFree <> 0)
-             and (SysDiskFreeLongX(@PathBuffer) < P^.Size)
+             {and (SysDiskFreeLongX(@PathBuffer) < P^.Size) } // fixme: porting stub
           then
             begin
             {--- start -------- Eugeny Zvyagintzev ---- 29-08-2002 ----}
             {We have to check for existing file's size when not enough free space}
             lFindFirst(CurNewName, AnyFileDir, DirInfo);
             NFBigger := (DosError <> 0) or
-                        (P^.Size > DirInfo.FullSize +
-                                   SysDiskFreeLongX(@PathBuffer));
+                        (P^.Size > DirInfo.FullSize {+
+                                   SysDiskFreeLongX(@PathBuffer)}); // fixme: porting stub
             lFindClose(DirInfo);
             if NFBigger then
               begin
@@ -1130,10 +1140,12 @@ lRetryToReset:
                   end;
                 else {case}
                   begin
+                  (*
                   Ask := SysErrorFunc(Opened,
                          Byte(CurNewName[1])-65);
                   if Ask = 1 then
                     goto lRetryToReset;
+                  *) // fixme: porting stub
                   NoWrite;
                   Break;
                   end;
@@ -1340,8 +1352,12 @@ DoRewrite:
               end {case};
               end
             else
-              Ask := SysErrorFunc(Opened,
-                   Byte(CurNewName[1])-65);
+              begin
+              end;
+//              Ask := SysErrorFunc(Opened,
+//                   Byte(CurNewName[1])-65);
+Ask := 0;
+// fixme: porting stub
             if Ask = 1 then
               goto DoRewrite;
             NoWrite;
@@ -1860,7 +1876,9 @@ FileRead:
         if FName[2] = ':' then
           Drive := Byte(FName[1]);
         SysErrStopButton := True;
-        I := SysErrorFunc(I, Drive-Byte('A'));
+        // I := SysErrorFunc(I, Drive-Byte('A'));
+        // fixme: porting stub
+        I := 0;
         SysErrStopButton := False;
         if I = 1 then
           goto FileRead;
@@ -2080,7 +2098,7 @@ FileRead:
         if DosErrorCode in [5, 80, 183] then
           begin {Возможно, целевой каталог есть, но пустой. Тогда
              его можно удалить и переименование всё-таки проделать }
-          LFN.lRmDir(q);
+          lRmDir(q);
           ClrIO;
           RnFl(SSS, q);
           end;
@@ -2269,7 +2287,8 @@ TrueCopy:
         Drive := Byte('');
         if Source[2] = ':' then
           Drive := Byte(Source[1]);
-        SysErrorFunc(DosError, Drive-Byte('A'));
+        //SysErrorFunc(DosError, Drive-Byte('A'));
+        // fixme: porting stub
         {при этом будет установлен Abort}
         end;
       {/AK155}
@@ -2308,6 +2327,7 @@ TrueCopy:
     else
       begin
 TryGetInfo:
+      (*
       if SysDiskSizeLongX(@PathBuffer) < 0 then
         case SysErrorFunc(21, Drv-1) of
           1:
@@ -2315,6 +2335,8 @@ TryGetInfo:
           3:
             Exit;
         end {case};
+      *)
+      // fixme: porting stub
       end {if};
     New(Dirs, Init(10, 10));
     for I := 0 to Files^.Count-1 do
@@ -2555,7 +2577,8 @@ qqqq:
   Info^.DrawView;
   DrvC := Drv+64;
   if  (CopyOptions and cpoCheckFree <> 0) and (Files^.Count > 1)
-    and (ToDoClusCopy > SysDiskFreeLongX(@PathBuffer))
+    // and (ToDoClusCopy > SysDiskFreeLongX(@PathBuffer))
+    // fixme: porting stub
     and (MessageBox(GetString(erNoDiskSpacePre),
         @DrvC, mfYesButton+mfNoButton) <> cmYes)
   then
@@ -2650,7 +2673,12 @@ var
   DialogMoveMode: Boolean;
 
   {-DataCompBoy-}
-function CopyDialog;
+function CopyDialog (var CopyDir: String; var Mask: String;
+    {DataCompBoy}
+    var CopyOpt: Word; var CopyMode: Word;
+    var CopyPrn: Boolean; {var Inheread: Byte;}
+    MoveMode: Boolean; Files: PCollection;
+    FromTemp: Byte; SourcePanel: PView; Link: Boolean): Boolean;
   var
     PF: PFileRec;
     D: PDialog;
@@ -2818,7 +2846,7 @@ function CopyDialog;
 
   if not SkipCopyDialog then
     begin {AK155 6-12-2001. Собрал до кучи всю работу с диалогом }
-    @PreExecuteDialog := @PrepareDialog;
+    Pointer(PreExecuteDialog) := Pointer(@PrepareDialog);
     if ExecResource(dlgCopyDialog, DT) = cmCancel then
       Exit;
     end;
@@ -3018,7 +3046,8 @@ AK155. При этом то восстанавливалось зацикливание, то становилось
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure CopyFiles;
+procedure CopyFiles (Files: PCollection; SourcePanel: PView;
+     MoveMode: Boolean; FromTemp: Byte);
 
   var
     CopyDir: String;
@@ -3083,8 +3112,9 @@ procedure CopyDirContent(Source, Destination: String;
           {$ENDIF}
           SR.FullSize,
           SR.SR.Time,
-          SR.SR.CreationTime,
-          SR.SR.LastAccessTime,
+          0,//SR.SR.CreationTime,
+          0,//SR.SR.LastAccessTime,
+          // fixme: porting stub
           SR.SR.Attr,
           @Source));
     lFindNext(SR);
@@ -3112,7 +3142,7 @@ procedure CopyDirContent(Source, Destination: String;
   end { CopyDirContent };
 {/JO}
 
-procedure CloseWriteStream;
+procedure CloseWriteStream ;
   begin
   Truncate(WriteStream.F);
   Close(WriteStream.F);
