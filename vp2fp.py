@@ -67,25 +67,25 @@ def process_pascal_file(filepath, encoding, create_backup):
     header_and_interface_part = content[:split_point]
     implementation_part = content[split_point:]
 
-    print("\n[1] Анализ блока interface...")
+    print("\n[1] Сбор сигнатур...")
     signatures = {}
     
     class_pattern = re.compile(
         r'^\s*(T\w+)\s*=\s*(?:class|object)\b[\s\S]*?\n\s*end;',
         re.IGNORECASE | re.MULTILINE
     )
-    # Обновленный regex для извлечения имени и хвоста из ПОЛНОГО объявления
     extractor_pattern = re.compile(
         r'^\s*(?:procedure|function|constructor|destructor)\s+([a-zA-Z_]\w*)\s*([\s\S]*)$',
         re.IGNORECASE
     )
-
-    print("  Анализ методов, конструкторов и деструкторов классов...")
+    
+    # --- 1.1: Анализ блока INTERFACE ---
+    print("  Анализ блока interface...")
     interface_without_classes = header_and_interface_part
     for class_match in class_pattern.finditer(header_and_interface_part):
         class_name = class_match.group(1)
         class_body = class_match.group(0)
-        print(f"  Найден класс: {class_name}")
+        print(f"    Найден public класс: {class_name}")
 
         declarations = find_declarations(class_body)
         for decl_text in declarations:
@@ -95,15 +95,14 @@ def process_pascal_file(filepath, encoding, create_backup):
                 method_tail = match.group(2).strip()
                 key = f"{class_name.lower()}.{method_name.lower()}"
                 signatures[key] = method_tail
-                print(f"    [+] Найдена сигнатура: {key} -> '{' '.join(method_tail.split())}'")
+                print(f"      [+] Найдена сигнатура: {key}")
         
         interface_without_classes = interface_without_classes.replace(class_body, '')
-
-    print("\n  Анализ отдельных процедур и функций...")
+    
+    # Отдельные подпрограммы могут быть только в interface
     standalone_declarations = find_declarations(interface_without_classes)
-    if not standalone_declarations:
-        print("    Отдельные подпрограммы не найдены.")
-    else:
+    if standalone_declarations:
+        print("    Найдены отдельные подпрограммы...")
         for decl_text in standalone_declarations:
             match = extractor_pattern.match(decl_text)
             if match:
@@ -111,13 +110,36 @@ def process_pascal_file(filepath, encoding, create_backup):
                 func_tail = match.group(2).strip()
                 key = func_name.lower()
                 signatures[key] = func_tail
-                print(f"    [+] Найдена сигнатура подпрограммы: {key} -> '{' '.join(func_tail.split())}'")
+                print(f"      [+] Найдена сигнатура: {key}")
+
+    # --- 1.2: Анализ блока IMPLEMENTATION на наличие локальных классов ---
+    print("\n  Анализ блока implementation на наличие локальных классов...")
+    found_local_classes = False
+    for class_match in class_pattern.finditer(implementation_part):
+        found_local_classes = True
+        class_name = class_match.group(1)
+        class_body = class_match.group(0)
+        print(f"    Найден local класс: {class_name}")
+
+        declarations = find_declarations(class_body)
+        for decl_text in declarations:
+            match = extractor_pattern.match(decl_text)
+            if match:
+                method_name = match.group(1)
+                method_tail = match.group(2).strip()
+                key = f"{class_name.lower()}.{method_name.lower()}"
+                signatures[key] = method_tail
+                print(f"      [+] Найдена сигнатура: {key}")
+    
+    if not found_local_classes:
+        print("    Локальные классы не найдены.")
 
     if not signatures:
-        print("\n[ИНФО] В блоке interface не найдено подпрограмм для преобразования. Файл не изменен.")
+        print("\n[ИНФО] Не найдено ни одной сигнатуры для преобразования. Файл не изменен.")
         return
 
-    print("\n[2] Обработка блока implementation...")
+    # --- Шаг 2: Обработка блока implementation ---
+    print("\n[2] Замена коротких объявлений в implementation...")
 
     def replacer(match):
         qualified_name = match.group(1)
@@ -126,7 +148,6 @@ def process_pascal_file(filepath, encoding, create_backup):
         if key in signatures:
             full_short_declaration = match.group(0)
             base_header = full_short_declaration.rstrip()[:-1]
-            # Добавляем пробел перед хвостом, если он не пустой
             tail = signatures[key]
             full_header = base_header + (" " + tail if tail else tail)
             
@@ -134,10 +155,9 @@ def process_pascal_file(filepath, encoding, create_backup):
             print(f"  [>] На:       '{' '.join(full_header.strip().split())}'")
             return full_header
         else:
-            print(f"  [!] ВНИМАНИЕ: Для '{qualified_name}' не найдена сигнатура в interface. Строка не изменена.")
+            print(f"  [!] ВНИМАНИЕ: Для '{qualified_name}' не найдена сигнатура. Строка не изменена.")
             return match.group(0)
 
-    # Обновленный паттерн для квалифицированных имен, включающий constructor/destructor
     qualified_pattern = re.compile(
         r'^\s*(?:procedure|function|constructor|destructor)\s+((?:T\w+)\.\w+);',
         re.IGNORECASE | re.MULTILINE
@@ -167,6 +187,7 @@ def process_pascal_file(filepath, encoding, create_backup):
 
 
 if __name__ == "__main__":
+    # ... (код командной строки остался без изменений) ...
     parser = argparse.ArgumentParser(
         description="Конвертер Pascal-файлов из синтаксиса Virtual Pascal в Free Pascal. Изменяет файл на месте.",
         formatter_class=argparse.RawTextHelpFormatter
@@ -179,10 +200,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-e", "--encoding",
-        default="cp1251",
-        help="Кодировка исходного файла (например, cp1251, utf-8).\n"
-             "Для старых Pascal-проектов часто используется 'cp1251'.\n"
-             "По умолчанию: cp1251"
+        default="cp866",
+        help="Кодировка исходного файла (например, cp866, utf-8).\n"
+             "Для старых Pascal-проектов часто используется 'cp866'.\n"
+             "По умолчанию: cp866"
     )
 
     args = parser.parse_args()

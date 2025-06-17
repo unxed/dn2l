@@ -51,6 +51,8 @@ unit Drives;
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Defines, Objects2, Streams, Views, Drivers,
   FilesCol, DiskInfo, Collect
   , PDSetup
@@ -173,14 +175,14 @@ type
   {-DataCompBoy-}
 
   PDIZCol = ^TDIZCol;
-    {`2 Коллекция описаний из файла описаний. Используется для
+    {2 Коллекция описаний из файла описаний. Используется для
     быстрого поиска описаний по имени при входе в каталог.
     Имена запоминаются в коллекции на верхнем регистре. }
   TDIZCol = object(TSortedCollection)
     procedure FreeItem(P: Pointer); virtual;
     function Compare(P1, P2: Pointer): Integer; virtual;
     end;
-    {`}
+    {}
 
 function ESC_Pressed: Boolean;
   var
@@ -192,7 +194,7 @@ function ESC_Pressed: Boolean;
   end;
 
 {-DataCompBoy-}
-procedure TDIZCol.FreeItem;
+procedure TDIZCol.FreeItem (P: Pointer);
   begin
   if P <> nil then
     begin
@@ -202,7 +204,7 @@ procedure TDIZCol.FreeItem;
   end;
 {-DataCompBoy-}
 
-function TDIZCol.Compare;
+function TDIZCol.Compare (P1, P2: Pointer): Integer;
   var
     Name2: String;
   begin
@@ -225,7 +227,7 @@ procedure TDrive.GetFreeSpace(var S: String);
   end;
 
 {-DataCompBoy-}
-constructor TDrive.Init;
+constructor TDrive.Init (ADrive: Byte; AOwner: Pointer);
   begin
   TObject.Init;
   Panel := AOwner;
@@ -277,20 +279,20 @@ procedure TDrive.Store(var S: TStream);
   end;
 {-DataCompBoy-}
 
-destructor TDrive.Done;
+destructor TDrive.Done ;
   begin
   if Prev <> nil then
     Dispose(Prev, Done);
   inherited Done;
   end;
 
-function TDrive.Disposable;
+function TDrive.Disposable : Boolean;
   begin
   Disposable := True;
   end;
 
 {-DataCompBoy-}
-procedure TDrive.ChangeUp;
+procedure TDrive.ChangeUp (var S: String);
   begin
   S := GetName(CurDir);
   lChDir(MakeNormName(CurDir, '..'));
@@ -303,7 +305,7 @@ procedure TDrive.ChangeUp;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TDrive.ChangeRoot;
+procedure TDrive.ChangeRoot ;
   var
     I: Word;
     B: Boolean;
@@ -360,7 +362,7 @@ function FormatSizeCol(P: PFileRec): String;
     end;
   end;
 
-procedure TDrive.MakeTop;
+procedure TDrive.MakeTop (var S: String);
   var
     Q: String;
     Flags: Word;
@@ -427,7 +429,7 @@ procedure TDrive.MakeTop;
     end;
   end { TDrive.MakeTop };
 
-procedure TDrive.GetFull;
+procedure TDrive.GetFull (var B; P: PFileRec; C, Sc: Word);
   var
     X: Word;
     Flags: Word;
@@ -560,18 +562,19 @@ procedure TDrive.GetFull;
     end;
 end;
 
-procedure TDrive.EraseFiles;
+procedure TDrive.EraseFiles (Files: PCollection);
   begin
   if Disposable then
     Eraser.EraseFiles(Files);
   end;
 
-procedure TDrive.MakeDir;
+procedure TDrive.MakeDir ;
   begin
   MakeDirectory;
   end;
 
-procedure TDrive.CopyFiles;
+procedure TDrive.CopyFiles (Files: PCollection; Own: PView; MoveMode: Boolean)
+      ;
   var
     B: Boolean;
   begin
@@ -585,7 +588,8 @@ procedure TDrive.CopyFiles;
            TypeOf(TFindDrive)));
   end;
 
-procedure TDrive.CopyFilesInto;
+procedure TDrive.CopyFilesInto (Files: PCollection; Own: PView;
+         MoveMode: Boolean);
   var
     B: Boolean;
   begin
@@ -599,7 +603,7 @@ procedure TDrive.CopyFilesInto;
   end;
 
 {-DataCompBoy-}
-procedure TDrive.lChDir;
+procedure TDrive.lChDir (ADir: String);
   var
     I: Word;
     S: String;
@@ -608,7 +612,8 @@ procedure TDrive.lChDir;
     begin
     ClrIO;
     NeedAbort := False;
-    SysErrorFunc(RC, Byte(Drive)-65);
+    //SysErrorFunc(RC, Byte(Drive)-65);
+    // fixme: porting stub
     AskRetry := not Abort;
     end;
 
@@ -647,7 +652,7 @@ procedure TDrive.lChDir;
       repeat
         ClrIO;
         NeedAbort := True;
-        Lfn.lChDir(S);
+        lChDir(S);
         I := IOResult;
         Abort := Abort or (I <> 0);
         if Abort then
@@ -664,7 +669,7 @@ procedure TDrive.lChDir;
       repeat
         ClrIO;
         NeedAbort := True;
-        Lfn.lChDir(ATestDir);
+        lChDir(ATestDir);
         I := IOResult;
         Abort := Abort or (I <> 0);
         if Abort then
@@ -738,7 +743,7 @@ procedure TDrive.lChDir;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-function TDrive.GetDir;
+function TDrive.GetDir : String;
   begin
   {$IFDEF DPMI32}
   GetDir := lfGetLongFileName(CurDir);
@@ -749,7 +754,7 @@ function TDrive.GetDir;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TDrive.UseFile;
+procedure TDrive.UseFile (P: PFileRec; Command: Word);
   var
     S: String;
   begin
@@ -809,7 +814,7 @@ procedure PrepareDIZ(
     begin
     OpenFileList(Container);
     Descriptions := New(PDIZCol, Init($10, $10));
-    ReadFileList(DizNameProc, DizLineProc, DizEndProc);
+    ReadFileList(@DizNameProc, @DizLineProc, @DizEndProc);
     end;
   ClrIO;
   end;
@@ -867,7 +872,9 @@ function TDrive.GetDriveLetter: Char;
   end;
 
 {-DataCompBoy-}
-function TDrive.GetDirectory;
+function TDrive.GetDirectory (
+         const FileMask: String;
+        var TotalInfo: TSize): PFilesCollection;
   var
     SR: lSearchRec;
     P: PFileRec;
@@ -916,8 +923,8 @@ function TDrive.GetDirectory;
     then
       begin
       P := NewFileRec(SR.FullName {$IFDEF DualName}, SR.SR.Name {$ENDIF}
-          , SR.FullSize, SR.SR.Time, SR.SR.CreationTime
-          , SR.SR.LastAccessTime, SR.SR.Attr, @CurDir);
+          , SR.FullSize, SR.SR.Time, 0{SR.SR.CreationTime} // fixme: porting stub
+          , 0{SR.SR.LastAccessTime}, SR.SR.Attr, @CurDir); // fixme: porting stub
       Inc(MemReq, SizeOf(TFileRec));
       Inc(MemReq, Length(CurDir+SR.FullName)+2);
       {$IFDEF Win32}
@@ -946,30 +953,31 @@ function TDrive.GetDirectory;
   end { TDrive.GetDirectory };
 {-DataCompBoy-}
 
-function TDrive.isUp;
+function TDrive.isUp : Boolean;
   begin
   {if Length(CurDir)>3 then}isUp := False { else isUp:=true;}
   end;
 
-procedure TDrive.RereadDirectory;
+procedure TDrive.RereadDirectory (S: String);
   begin
   if Prev <> nil then
     Prev^.RereadDirectory(S);
   end;
 
-procedure TDrive.GetDirInfo;
+procedure TDrive.GetDirInfo (var B: TDiskInfoRec);
   begin
   ReadDiskInfo(CurDir, B);
   B.Free := NewStr(PFilePanelRoot(Panel)^.FreeSpace);
   end;
 
-procedure TDrive.KillUse;
+procedure TDrive.KillUse ;
   begin
   if Prev <> nil then
     Prev^.KillUse;
   end;
 
-procedure TDrive.GetDown;
+procedure TDrive.GetDown (var B; C: Word; P: PFileRec;
+        var LFN_inCurFileLine: Boolean);
   var
     S, S1, S2, SCreat, SLAcc: String;
     w, NameWidht: Word;
@@ -1019,18 +1027,18 @@ procedure TDrive.GetDown;
   MoveStr(TAWordArray(B)[0], S2, C);
   end { TDrive.GetDown };
 
-function TDrive.GetRealName;
+function TDrive.GetRealName : String;
   begin
   GetRealName := GetDir;
   end;
 
-function TDrive.GetInternalName;
+function TDrive.GetInternalName : String;
   begin
   GetInternalName := '';
   end;
 
 {-DataCompBoy-}
-function TDrive.GetRealDir;
+function TDrive.GetRealDir : String;
   var
     S: String;
     C: Char;
@@ -1053,7 +1061,7 @@ function TDrive.GetRealDir;
       if Abort then
         S := CurrentDirectory;
       NeedAbort := True;
-      LFN.lChDir(CurDir);
+      lChDir(CurDir);
       repeat
         Abort := False;
         NeedAbort := True;
@@ -1081,11 +1089,11 @@ function TDrive.GetRealDir;
       until not Abort;
       NeedAbort := False;
       lGetDir(0, CurDir);
-      LFN.lChDir(S);
+      lChDir(S);
       end
     else
       begin
-      LFN.lChDir(CurDir);
+      lChDir(CurDir);
       if not Abort then
         repeat
           Abort := False;
@@ -1121,17 +1129,17 @@ function TDrive.GetRealDir;
   end { TDrive.GetRealDir };
 {-DataCompBoy-}
 
-procedure TDrive.HandleCommand;
+procedure TDrive.HandleCommand (Command: Word; InfoPtr: Pointer);
   begin
   end;
 
-function TDrive.GetFullFlags;
+function TDrive.GetFullFlags : Word;
   begin
   GetFullFlags := psShowSize+psShowDate+psShowTime+
     psShowCrDate+psShowCrTime+psShowLADate+psShowLATime;
   end;
 
-procedure TDrive.EditDescription;
+procedure TDrive.EditDescription (PF: PFileRec);
   begin
   if  (DriveType = dtDisk) and (PF^.TType <> ttUpDir)
   then
@@ -1203,8 +1211,8 @@ function TDrive.OpenDirectory(const Dir: String;
               {$ENDIF}
               SR.FullSize,
               SR.SR.Time,
-              SR.SR.CreationTime,
-              SR.SR.LastAccessTime,
+              0{SR.SR.CreationTime}, // fixme: porting stub
+              0{SR.SR.LastAccessTime}, // fixme: porting stub
               SR.SR.Attr,
               Dr));
           Inc(MemReq, SizeOf(TFileRec));
@@ -1222,8 +1230,8 @@ function TDrive.OpenDirectory(const Dir: String;
                 {$ENDIF}
                 SR.FullSize,
                 SR.SR.Time,
-                SR.SR.CreationTime,
-                SR.SR.LastAccessTime,
+                0{SR.SR.CreationTime}, // fixme: porting stub
+                0{SR.SR.LastAccessTime}, // fixme: porting stub
                 SR.SR.Attr,
                 Dr));
             Inc(MemReq, SizeOf(TFileRec));
@@ -1336,7 +1344,7 @@ procedure TDrive.DrvFindFile(FC: PFilesCollection);
   end; { TDrive.DrvFindFile }
 {-DataCompBoy-}
 
-procedure RereadDirectory;
+procedure RereadDirectory (Dir: String);
   var
     Event: TEvent;
 
