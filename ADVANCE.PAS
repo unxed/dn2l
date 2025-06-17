@@ -306,6 +306,8 @@ type
   TFPos = record X: Integer; Y: TFileSize end;
   TFPosArray = array [1..9] of TFPos;
 
+function MemOK: Boolean;
+
 implementation
 
 uses

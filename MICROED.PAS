@@ -72,6 +72,7 @@ interface
 uses
   math,
   vp2fp,
+  LFNVp,
   Defines, Streams, Drivers, Views,
   Advance, Menus,
   Commands, {SBlocks,}ObjType, U_KeyMap, Collect,
