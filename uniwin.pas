@@ -88,28 +88,28 @@ implementation
 uses
   DnIni, Drivers, Defines;
 
-function TUniWindow.GetPalette;
+function TUniWindow.GetPalette : PPalette;
   const
     p: String[Length(CUniWindow)] = CUniWindow;
   begin
   GetPalette := @P;
   end;
 
-function TEditFrame.GetPalette;
+function TEditFrame.GetPalette : PPalette;
   const
     p: String[9] = #1#1#8#9#10#10#10#9#15;
   begin
   GetPalette := @P;
   end;
 
-function TEditScrollBar.GetPalette;
+function TEditScrollBar.GetPalette : PPalette;
   const
     p: String[3] = #11#12#12;
   begin
   GetPalette := @P;
   end;
 
-procedure TUniWindow.InitFrame;
+procedure TUniWindow.InitFrame ;
   var
     R: TRect;
   begin
@@ -117,7 +117,7 @@ procedure TUniWindow.InitFrame;
   Frame := New(PEditFrame, Init(R));
   end;
 
-function TUniWindow.MakeScrollBar;
+function TUniWindow.MakeScrollBar (AOptions: Word): PScrollBar;
   var
     P: PEditScrollBar;
     R: TRect;
@@ -150,7 +150,7 @@ function TUniWindow.MakeScrollBar;
   MakeScrollBar := P;
   end { TUniWindow.MakeScrollBar };
 
-function TUniWindow.ReactOnCmd;
+function TUniWindow.ReactOnCmd : Boolean;
   begin
   ReactOnCmd := True
   end;

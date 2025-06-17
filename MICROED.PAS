@@ -288,7 +288,7 @@ implementation
 uses
   {$IFDEF PLUGIN}Plugin, {$ENDIF}
   Messages, DNApp, Dos, Lfn, Memory, Advance1, Advance2, Startup,
-  Gauge, FViewer, HistList, Macro, Editor, WinClp, DNUtil, Histries,
+  Gauge, FViewer, HistList, Macro, Editor, WinClpVp, DNUtil, Histries,
   xTime, FileCopy, ASCIITab, DnIni, U_SrchF, EdWin, MicroEd2 {-$VIV}
   , Events, VpSysLow, DNStdDlg, Dialogs, DNHelp, VPUtils
   ;

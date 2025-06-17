@@ -50,6 +50,8 @@ unit MicroEd2;
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Defines, Streams, Microed, EdWin
   ;
 
@@ -78,7 +80,7 @@ const
 implementation
 uses
   DNStdDlg, Advance, DNApp, Commands, Lfn, Advance2, ed2, Advance1, Views,
-  Collect, WinClp, Dos, Messages, Startup, DnIni, DnIni_p, CopyIni,
+  Collect, WinClpVp, Dos, Messages, Startup, DnIni, DnIni_p, CopyIni,
   {SBlocks,}U_KeyMap, Macro,
   xTime, Memory, Drivers,
   FlTl,

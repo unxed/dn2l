@@ -61,6 +61,7 @@ unit WinClpVp;
 interface
 
 uses
+  vp2fp,
   Defines, Streams, Collect
   ;
 
@@ -183,7 +184,8 @@ function SetWinClip(PC: PLineCollection): Boolean;
   {$IFDEF OS2}
   SetWinClip := DN_XClipCopy(B, Size);
   {$ELSE}
-  SetWinClip := SysClipCopy(B, Size);
+  // fixme: porting stub
+  //SetWinClip := SysClipCopy(B, Size);
   {$ENDIF}
   FreeMem(B, Size);
   end { SetWinClip };
@@ -241,6 +243,8 @@ function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
 
   begin { GetWinClip }
   GetWinClip := False;
+
+  (*
   {$IFDEF OS2}
   if not DN_XClipCanPaste then
   {$ELSE}
@@ -248,10 +252,15 @@ function GetWinClip(var PCL: PLineCollection {; NeedStream: boolean})
     {$ENDIF}
     Exit;
   {$IFDEF OS2}
+  *)
+  // fixme: porting stub
+  Exit;
+  (*
   Buf := DN_XClipPaste(Size);
   {$ELSE}
   Buf := SysClipPaste(Size);
   {$ENDIF}
+  *)
   if Buf = nil then
     Exit;
   GetWinClip := True;
@@ -316,7 +325,9 @@ function GetWinClipSize: Boolean;
   {$IFDEF OS2}
   GetWinClipSize := DN_XClipCanPaste;
   {$ELSE}
-  GetWinClipSize := SysClipCanPaste;
+  //GetWinClipSize := SysClipCanPaste;
+  GetWinClipSize := FALSE;
+  // fixme: porting stub
   {$ENDIF}
   end;
 

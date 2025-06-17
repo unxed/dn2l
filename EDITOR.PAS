@@ -66,7 +66,7 @@ implementation
 uses
   Lfn, Views, Defines, Streams, U_KeyMap, Collect, ed2,
   Advance, Advance1, Advance2, Dos, Dialogs, DNApp,
-  {SBlocks,}Memory, Gauge, Startup, WinClp, Messages, Commands, Macro,
+  {SBlocks,}Memory, Gauge, Startup, WinClpVp, Messages, Commands, Macro,
   EdWin, xTime, DnIni, DNUtil, Advance6, Calculat, FViewer {AK155}
   {$IFDEF REGEXP}, RegExp {$ENDIF}
   ;
