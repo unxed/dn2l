@@ -51,6 +51,10 @@ unit DiskInfo;
 interface
 
 uses
+  math,
+  vp2fp,
+  LFNVp,
+  Strings,
   Defines, Streams, Drivers, Views, Collect, TopView_
   ;
 
@@ -172,7 +176,7 @@ function ESC_Pressed: Boolean;
   ESC_Pressed := (E.What = evKeyDown) and (E.KeyCode = kbESC)
   end;
 
-constructor TTeamView.Init;
+constructor TTeamView.Init (var R: TRect);
   begin
   inherited Init(R);
   UpdTicks := 500;
@@ -180,7 +184,7 @@ constructor TTeamView.Init;
   RegisterToBackground(@Self);
   end;
 
-procedure TTeamView.Draw;
+procedure TTeamView.Draw ;
   var
     B: TDrawBuffer;
     S: String;
@@ -204,7 +208,7 @@ procedure TTeamView.Draw;
     end;
   end { TTeamView.Draw };
 
-procedure TTeamView.Update;
+procedure TTeamView.Update ;
   var
     L, I: LongInt;
   begin
@@ -240,7 +244,7 @@ procedure TTeamView.HandleEvent(var Event: TEvent);
     end
   end;
 
-destructor TTeamView.Done;
+destructor TTeamView.Done ;
   begin
   TeamView := nil;
   inherited Done;
@@ -271,7 +275,7 @@ function TDriveView.GetText(MaxWidth: Integer): String;
     end;
   end;
 
-destructor TDriveView.Done;
+destructor TDriveView.Done ;
   begin
   if InfoPanel <> nil then
     InfoPanel^.DriveView := nil;
@@ -306,7 +310,7 @@ procedure DispInfo(var Info: TDiskInfoRec);
   FillChar(Info, SizeOf(Info), 0);
   end { DispInfo };
 
-constructor TDiskInfo.Load;
+constructor TDiskInfo.Load (var S: TStream);
   begin
   TObject.Init;
   inherited Load(S);
@@ -314,14 +318,14 @@ constructor TDiskInfo.Load;
   GetPeerViewPtr(S, DriveView);
   end;
 
-procedure TDiskInfo.Store;
+procedure TDiskInfo.Store (var S: TStream);
   begin
   inherited Store(S);
   S.Write(Delta, SizeOf(Delta));
   PutPeerViewPtr(S, DriveView);
   end;
 
-constructor TDiskInfo.Init;
+constructor TDiskInfo.Init (R: TRect; Panel: PView{PFilePanelRoot});
   begin
   TView.Init(R);
   OtherPanel := Panel;
@@ -330,7 +334,7 @@ constructor TDiskInfo.Init;
   Options := Options or ofSelectable or ofTopSelect;
   end;
 
-procedure TDiskInfo.InsertDriveView;
+procedure TDiskInfo.InsertDriveView ;
   var
     R: TRect;
   begin
@@ -358,7 +362,7 @@ DriveView явно завершать нельзя - он будет завершён, как член
 взаимными ссылками, которые обнуляем при завершении адресата ссылки.
 См. также TDriveView.Done;
 }
-destructor TDiskInfo.Done;
+destructor TDiskInfo.Done ;
   begin
   DispInfo(Info);
   if DriveView <> nil then
@@ -376,14 +380,14 @@ procedure TDiskInfo.SetState(AState: Word; Enable: Boolean);
     DriveView^.Draw;
   end;
 
-function TDiskInfo.GetPalette;
+function TDiskInfo.GetPalette : PPalette;
   const
     S: String[Length(CDiskInfo)] = CDiskInfo;
   begin
   GetPalette := @S;
   end;
 
-procedure TDiskInfo.ReadData;
+procedure TDiskInfo.ReadData ;
   var
     MemBlocks, I: Word;
   begin
@@ -394,7 +398,7 @@ procedure TDiskInfo.ReadData;
   Delta.Assign(0, 0);
   end;
 
-procedure TDiskInfo.HandleEvent;
+procedure TDiskInfo.HandleEvent (var Event: TEvent);
   var
     S: String; {DataCompBoy}
   begin
@@ -478,7 +482,7 @@ procedure TDiskInfo.HandleEvent;
     end {case};
   end { TDiskInfo.HandleEvent };
 
-procedure TDiskInfo.Draw;
+procedure TDiskInfo.Draw ;
   var
     B: TDrawBuffer;
     C, Y, X: Word;
@@ -630,7 +634,13 @@ procedure TDiskInfo.Draw;
 {-DataCompBoy-}
 {AK155: NumFiles включает в себя NumDirs, то есть число
 чисто файлов равно NumFiles-NumDirs}
-function CountDirLen;
+function CountDirLen (const Dir: String; Recurse: Boolean;
+{` Подсчёт числа файлов (NumFiles) и их суммарного размера (Result)
+без захода в подкаталоги. NumFiles включает в себя и каталоги тоже.
+ClusterLen - суммарное занятое место (с учётом хвостов кластеров).
+  Вызывает GetDrInfo, так что все выходные переменные GetDrInfo
+также будут определены }
+    var ClusterLen: TSize; var NumFiles, NumDirs: Integer): TSize;
   var
     Tmr: TEventTimer;
     L: TSize;
