@@ -51,6 +51,8 @@ unit Tree;
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Collect, Drivers, Defines, Streams,
   Dialogs, Views, FilesCol
   ;
@@ -530,7 +532,7 @@ procedure FreeTree(C: Char);
   DrvTrees[C].C := nil;
   end;
 
-procedure TTreeReader.HandleEvent;
+procedure TTreeReader.HandleEvent (var Event: TEvent);
   var
     C: Char;
     S: String;
@@ -582,8 +584,9 @@ Start:
   if not PathExist(Path) then
     (*  if (rc <> 0) and (rc <> 5 {каталог уже существует}) {$IFDEF Win32} and (rc <> 183) {$ENDIF} then*)
     begin
-    if SysErrorFunc(rc, Byte(Path[1])-Byte('A')) = 1 then
-      goto Start;
+    // fixme: porting stub
+    //if SysErrorFunc(rc, Byte(Path[1])-Byte('A')) = 1 then
+    //  goto Start;
     rc := MessageBox(GetString(dlFCNoCreateDir)+Path, nil,
          mfError+mfOKButton);
     Abort := True;
@@ -591,7 +594,7 @@ Start:
   end { CheckMkDir };
 
 {-DataCompBoy-}
-procedure MakeDirectory;
+procedure MakeDirectory ;
   var
     S, S1: String;
     Dr: String;
@@ -664,7 +667,7 @@ procedure MakeDirectory;
   end { MakeDirectory };
 {-DataCompBoy-}
 
-function ChangeDir;
+function ChangeDir (ATitle: TTitleStr; Drv: Byte): String;
   var
     D: PTreeDialog;
     S: String;
@@ -683,13 +686,13 @@ function ChangeDir;
   ChangeDir := S;
   end;
 
-destructor TTreeInfoView.Done;
+destructor TTreeInfoView.Done ;
   begin
-  PHTreeView(Tree).Info := nil;
+  PHTreeView(Tree)^.Info := nil;
   inherited Done;
   end;
 
-constructor TTreeInfoView.Init;
+constructor TTreeInfoView.Init (R: TRect; ATree: PTreeView);
   begin
   inherited Init(R);
   Tree := ATree;
@@ -700,7 +703,7 @@ constructor TTreeInfoView.Init;
   Loaded := False;
   end;
 
-procedure TTreeInfoView.HandleEvent;
+procedure TTreeInfoView.HandleEvent (var Event: TEvent);
   begin
   inherited HandleEvent(Event);
   if  (Event.What = evBroadcast) and (Event.Command = cmDirChanged) then
@@ -710,34 +713,34 @@ procedure TTreeInfoView.HandleEvent;
     end;
   end;
 
-constructor TTreeInfoView.Load;
+constructor TTreeInfoView.Load (var S: TStream);
   begin
   inherited Load(S);
   GetPeerViewPtr(S, Tree);
   Loaded := True;
   end;
 
-procedure TTreeInfoView.Store;
+procedure TTreeInfoView.Store (var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, Tree);
   end;
 
-function TTreeInfoView.GetPalette;
+function TTreeInfoView.GetPalette : PPalette;
   const
     S: String[Length(CTreeInfoView)] = CTreeInfoView;
   begin
   GetPalette := @S;
   end;
 
-function TDTreeInfoView.GetPalette;
+function TDTreeInfoView.GetPalette : PPalette;
   const
     S: String[Length(CDTreeInfoView)] = CDTreeInfoView;
   begin
   GetPalette := @S;
   end;
 
-procedure TTreeInfoView.Draw;
+procedure TTreeInfoView.Draw ;
   var
     B: TDrawBuffer;
     C: Byte;
@@ -754,7 +757,7 @@ procedure TTreeInfoView.Draw;
   WriteLine(0, 1, Size.X, 1, B);
   end;
 
-procedure TTreeInfoView.MakeDown;
+procedure TTreeInfoView.MakeDown ;
   {var L: Array [1..5] of Longint;}
   var
     L1: LongInt;
@@ -777,7 +780,7 @@ procedure TTreeInfoView.MakeDown;
     end;
   end;
 
-constructor TTreeDialog.Init;
+constructor TTreeDialog.Init (R: TRect; const ATitle: String; ADrive: Byte);
   var
     R1, R2: TRect;
     P: PView;
@@ -835,14 +838,14 @@ constructor TTreeDialog.Init;
   Options := Options or ofTopSelect;
   end { TTreeDialog.Init };
 
-function TTreeDialog.GetPalette;
+function TTreeDialog.GetPalette : PPalette;
   const
     S: String[Length(CTreeDialog)] = CTreeDialog;
   begin
   GetPalette := @S;
   end;
 
-function TTreeDialog.Valid;
+function TTreeDialog.Valid (Command: Word): Boolean;
   begin
   Valid := isValid and inherited Valid(Command)
   end;
@@ -853,7 +856,7 @@ begin
  inherited HandleEvent(Event);
 end;*)
 
-constructor TTreeWindow.Init;
+constructor TTreeWindow.Init (var Bounds: TRect);
   var
     R: TRect;
     P: PView;
@@ -878,18 +881,18 @@ constructor TTreeWindow.Init;
   Insert(P);
   end { TTreeWindow.Init };
 
-constructor TTreeWindow.Load;
+constructor TTreeWindow.Load (var S: TStream);
   begin
   inherited Load(S);
   PTreeView(Current)^.ReadAfterLoad;
   end;
 
-procedure TTreeWindow.Store;
+procedure TTreeWindow.Store (var S: TStream);
   begin
   inherited Store(S);
   end;
 
-function TTreeWindow.GetPalette;
+function TTreeWindow.GetPalette : PPalette;
   const
     S: String[Length(CTreeDialog)] = CTreeDialog;
   begin
@@ -909,7 +912,8 @@ procedure TTreeWindow.HandleEvent(var Event: TEvent);
   inherited HandleEvent(Event);
   end;
 
-constructor TTreeView.Init;
+constructor TTreeView.Init (R: TRect; ADrive: Integer; ParitalView: Boolean;
+        ScrBar: PScrollBar);
   var
     I, Lv: Integer;
     S, D: String;
@@ -941,7 +945,7 @@ constructor TTreeView.Init;
   isValid := not Abort and (ScrollBar <> nil);
   end { TTreeView.Init };
 
-destructor TTreeView.Done;
+destructor TTreeView.Done ;
   begin
   if DC <> nil then
     begin
@@ -952,14 +956,14 @@ destructor TTreeView.Done;
   inherited Done;
   end;
 
-function TTreeView.GetPalette;
+function TTreeView.GetPalette : PPalette;
   const
     S: String[Length(CTreeView)] = CTreeView;
   begin
   GetPalette := @S;
   end;
 
-constructor TTreeView.Load;
+constructor TTreeView.Load (var S: TStream);
   var
     P: Pointer;
   begin
@@ -980,21 +984,21 @@ constructor TTreeView.Load;
   MouseTracking := False;
   end;
 
-procedure TTreeView.ReadAfterLoad;
+procedure TTreeView.ReadAfterLoad ;
   begin
   Abort := False;
   ReadTree(False);
   isValid := not Abort and (ScrollBar <> nil);
   end;
 
-function THTreeView.GetPalette;
+function THTreeView.GetPalette : PPalette;
   const
     S: String[Length(CHTreeView)] = CHTreeView;
   begin
   GetPalette := @S;
   end;
 
-procedure TTreeView.Store;
+procedure TTreeView.Store (var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, ScrollBar);
@@ -1002,17 +1006,17 @@ procedure TTreeView.Store;
   S.WriteStr(@LastPath); {S.Write(LastPath, Length(LastPath)+1);}
   end;
 
-function TTreeView.Valid;
+function TTreeView.Valid (Command: Word): Boolean;
   begin
   Valid := isValid and inherited Valid(Command)
   end;
 
-procedure TTreeView.SetData;
+procedure TTreeView.SetData (var Rec);
   begin
   end;
 
 {-DataCompBoy-}
-procedure TTreeView.GetData;
+procedure TTreeView.GetData (var Rec);
   var
     S: String;
   begin
@@ -1022,7 +1026,7 @@ procedure TTreeView.GetData;
   end;
 {-DataCompBoy-}
 
-function TTreeView.GetDirName;
+function TTreeView.GetDirName (N: Integer): String;
   var
     S: String;
     I: Integer;
@@ -1047,12 +1051,12 @@ function TTreeView.GetDirName;
   GetDirName := S;
   end { TTreeView.GetDirName };
 
-function TTreeView.DataSize;
+function TTreeView.DataSize : Word;
   begin
   DataSize := 256;
   end;
 
-procedure TTreeView.CollapseBranch;
+procedure TTreeView.CollapseBranch (N: Integer);
   var
     L, I: Integer;
     P, P1: PDirRec;
@@ -1098,7 +1102,7 @@ procedure TTreeView.CollapseBranch;
   ScrollBar^.SetParams(ScrollBar^.Value, 0, DC^.Count-1, DC^.Count, 1);
   end { TTreeView.CollapseBranch };
 
-procedure TTreeView.HandleEvent;
+procedure TTreeView.HandleEvent (var Event: TEvent);
   begin
   if Valid(0) then
     begin
@@ -1133,7 +1137,7 @@ function MkFcFromDirRec(D: PDirRec; var FullName: String)
   Result^.Insert(fr);
   end;
 
-procedure TTreeView.HandleCommand;
+procedure TTreeView.HandleCommand (var Event: TEvent);
   label NoLoc;
   var
     CurPos, I: Integer;
@@ -1650,7 +1654,7 @@ function TTreeView.Expanded(P: PDirRec; i: Integer): Boolean;
     Expanded := False;
   end;
 
-procedure TTreeView.Draw;
+procedure TTreeView.Draw ;
   var
     Levels: array[0..255] of Boolean;
     I, J, K, CurPos, Idx: Integer;
@@ -1765,21 +1769,21 @@ procedure TTreeView.Draw;
   end { TTreeView.Draw };
 
 {-DataCompBoy-}
-procedure TDirCollection.FreeItem;
+procedure TDirCollection.FreeItem (P: Pointer);
   begin
   Dispose(PDirRec(P));
   end;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TDirCollection.PutItem;
+procedure TDirCollection.PutItem (var S: TStream; Item: Pointer);
   begin
   S.Write(Item^, SizeOf(TDirRec));
   end;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-function TDirCollection.GetItem;
+function TDirCollection.GetItem (var S: TStream): Pointer;
   var
     Item: PDirRec;
   begin
@@ -1794,7 +1798,7 @@ function TDirCollection.GetItem;
   end;
 {-DataCompBoy-}
 
-procedure TTreeView.ReadTree;
+procedure TTreeView.ReadTree (CountLen: Boolean);
   label Rep;
   var
     P: PDirRec;
@@ -1875,7 +1879,7 @@ procedure TTreeView.ReadTree;
   isValid := not Abort;
   end { TTreeView.ReadTree };
 
-function TTreeView.FindDir;
+function TTreeView.FindDir (Dir: String): Integer;
   var
     N, I: Integer;
 
@@ -1926,7 +1930,7 @@ function TTreeView.FindDir;
     FindDir := N;
   end { TTreeView.FindDir };
 
-procedure TTreeView.SetState;
+procedure TTreeView.SetState (AState: Word; Enable: Boolean);
   begin
   inherited SetState(AState, Enable);
   if  (AState and sfFocused <> 0) and not Enable then
@@ -1955,7 +1959,7 @@ procedure TTreeView.SetState;
       end;
   end { TTreeView.SetState };
 
-procedure TTreeView.Reread;
+procedure TTreeView.Reread (CountLen: Boolean);
   var
     S: String;
     I, M: Integer;
@@ -1979,7 +1983,7 @@ procedure TTreeView.Reread;
     end;
   end { TTreeView.Reread };
 
-procedure TTreePanel.HandleEvent;
+procedure TTreePanel.HandleEvent (var Event: TEvent);
   procedure CE;
     begin
     ClearEvent(Event)
@@ -2027,25 +2031,26 @@ procedure TTreePanel.HandleEvent;
   end {case};
   end { TTreePanel.HandleEvent };
 
-constructor THTreeView.Init;
+constructor THTreeView.Init (R: TRect; ADrive: Integer; ParitalView: Boolean;
+        ScrBar: PScrollBar);
   begin
   inherited Init(R, ADrive, True, ScrBar);
   Info := nil;
   end;
 
-constructor THTreeView.Load;
+constructor THTreeView.Load (var S: TStream);
   begin
   inherited Load(S);
   GetPeerViewPtr(S, Info);
   end;
 
-procedure THTreeView.Store;
+procedure THTreeView.Store (var S: TStream);
   begin
   inherited Store(S);
   PutPeerViewPtr(S, Info);
   end;
 
-procedure THTreeView.ChangeBounds;
+procedure THTreeView.ChangeBounds (var Bounds: TRect);
   var
     R: TRect;
   begin
@@ -2074,7 +2079,7 @@ procedure THTreeView.SetState(AState: Word; Enable: Boolean);
   end;
 
 { AK155 26-01-2003. Раньше Info не освобождалось вообще }
-destructor THTreeView.Done;
+destructor THTreeView.Done ;
   begin
   if Info <> nil then
     Info^.Free;
@@ -2082,7 +2087,7 @@ destructor THTreeView.Done;
   end;
 
 {-DataCompBoy-}
-function CreateDirInheritance;
+function CreateDirInheritance (var S: String; Confirm: Boolean): Byte;
   var
     I, J: Integer;
     SR: lSearchRec;
