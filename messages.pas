@@ -52,6 +52,7 @@ unit Messages;
 interface
 
 uses
+  math,
   Defines, Commands, Drivers
   ;
 
@@ -171,7 +172,7 @@ procedure CantWrite(const FName: String);
   Msg(dlCanNotWrite, @PP, mfError+mfOKButton);
   end;
 
-function Msg;
+function Msg (Index: TStrIdx; Params: Pointer; AOptions: Word): Word;
   begin
   if Desktop <> nil then
     {Cat: здесь надо проверять, существует ли
@@ -179,7 +180,9 @@ function Msg;
     Msg := MessageBox(GetString(Index), Params, AOptions);
   end;
 
-function Msg2;
+function Msg2 (Index1, Index2: TStrIdx;
+    Params1, Params2: Pointer;
+    AOptions: Word): Word;
   begin
   if Desktop <> nil then
     {Cat: здесь надо проверять, существует ли
@@ -191,7 +194,8 @@ function Msg2;
         AOptions);
   end;
 
-function MessageBox2;
+function MessageBox2 (Msg1, Msg2: String; Params1, Params2: Pointer;
+     AOptions: Word): Word;
   var
     R: TRect;
     i, j, k, l,
@@ -262,7 +266,8 @@ function MessageBox2;
        AOptions);
   end { MessageBox2 };
 
-function MessageBoxRect;
+function MessageBoxRect (var R: TRect; Msg: String; Params: Pointer;
+    AOptions: Word): Word;
   const
     Cmds: array[0..7] of Word =
       (cmYes, cmOK, cmNo, cmOK, cmOK, cmYes, cmOK, cmCancel);
@@ -348,7 +353,11 @@ function MessageBoxRect;
   MsgActive := False;
   end { MessageBoxRect };
 
-function MessageBox2Rect;
+function MessageBox2Rect (var R: TRect;
+    Msg1, Msg2: String;
+    Lines1: Word;
+    Params1, Params2: Pointer;
+    AOptions: Word): Word;
   const
     Cmds: array[0..7] of Word =
       (cmYes, cmOK, cmNo, cmOK, cmOK, cmYes, cmOK, cmCancel);
@@ -485,7 +494,7 @@ function SysErrorMessageBoxRect(var R: TRect; Msg: String;
   MsgActive := False;
   end { SysErrorMessageBoxRect };
 
-function MessageBox;
+function MessageBox (Msg: String; Params: Pointer; AOptions: Word): Word;
   var
     R: TRect;
     i, j, k, l: Byte;
@@ -525,7 +534,8 @@ function MessageBox;
     MessageBox := MessageBoxRect(R, Msg, Params, AOptions);
   end { MessageBox };
 
-function InputBox;
+function InputBox (Title: String; ALabel: String; var S: String;
+    Limit: Word; HistoryId: Word): Word;
   var
     R: TRect;
   begin
@@ -534,7 +544,8 @@ function InputBox;
   InputBox := InputBoxRect(R, Title, ALabel, S, Limit, HistoryId);
   end;
 
-function BigInputBox;
+function BigInputBox (Title: String; ALabel: String; var S: String;
+    Limit: Word; HistoryId: Word): Word;
   var
     R: TRect;
   begin
@@ -543,7 +554,8 @@ function BigInputBox;
   BigInputBox := InputBoxRect(R, Title, ALabel, S, Limit, HistoryId);
   end;
 
-function InputBoxRect;
+function InputBoxRect (var Bounds: TRect; Title: String; ALabel: String;
+    var S: String; Limit: Word; HistoryId: Word): Word;
   var
     Dialog: PDialog;
     Control: PView;
@@ -588,7 +600,8 @@ function InputBoxRect;
   InputBoxRect := C;
   end { InputBoxRect };
 
-function FmtFile;
+function FmtFile (const Fmt: String; const FName: String; len: Integer)
+  : String;
   var
     s, f: String;
     P: PString;
@@ -612,7 +625,7 @@ function FmtStrId(Id: TStrIdx; const S: String): String;
   FmtStrId := FmtStr(GetString(Id), S);
   end;
 
-function FmtFileId;
+function FmtFileId (Id: TStrIdx; const FName: String): String;
   begin
   FmtFileId := FmtFile(GetString(Id), FName, 40);
   end;

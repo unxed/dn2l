@@ -9,3 +9,6 @@ CreationTime
 
 LastAccessTime
 
+SysDiskFreeLong
+
+:= Pointer(

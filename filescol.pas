@@ -52,6 +52,8 @@ unit FilesCol;
 interface
 
 uses
+  math,
+  LFNVp,
   Files, Defines, Streams,
   Collect, Drivers, Hash
   ;
@@ -279,7 +281,10 @@ function CreateFileRec(Name: String): PFileRec;
       end;
     fr^.Second := D.Sec;
 
-    UnpackTime(lsr.SR.CreationTime, D); {JO}
+    //UnpackTime(lsr.SR.CreationTime, D); {JO}
+    // fixme: porting stub
+    UnpackTime(0, D);
+
     fr^.YrCreat := D.Year;
     with TDate4(fr^.FDateCreat) do
       begin
@@ -290,7 +295,10 @@ function CreateFileRec(Name: String): PFileRec;
       end;
     fr^.SecondCreat := D.Sec;
 
-    UnpackTime(lsr.SR.LastAccessTime, D);
+    //UnpackTime(lsr.SR.LastAccessTime, D);
+    UnpackTime(0, D);
+    // fixme: porting stub
+
     fr^.YrLAcc := D.Year;
     with TDate4(fr^.FDateLAcc) do
       begin
@@ -335,7 +343,7 @@ function CreateFileRec(Name: String): PFileRec;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-function CopyFileRec;
+function CopyFileRec (FR: PFileRec): PFileRec;
   begin
   CopyFileRec := FR;
   with FR^ do
@@ -454,7 +462,7 @@ procedure StoreFileRecOwn(var s: TStream; fr: PFileRec; Dirs: PCollection)
   end;
 
 {-DataCompBoy-}
-constructor TFilesCollection.Load;
+constructor TFilesCollection.Load (var S: TStream);
   var
     C, I: LongInt;
   begin
@@ -483,7 +491,7 @@ constructor TFilesCollection.Load;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TFilesCollection.Store;
+procedure TFilesCollection.Store (var S: TStream);
   var
     I, J, Sel: LongInt;
   begin
@@ -509,7 +517,7 @@ procedure TFilesCollection.Store;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure TFilesCollection.FreeItem;
+procedure TFilesCollection.FreeItem (Item: Pointer);
   var
     P: PFileRec absolute Item;
   begin
@@ -520,7 +528,7 @@ procedure TFilesCollection.FreeItem;
 {-DataCompBoy-}
 //JO: 02-02-2004 - добавил сортировку по пути в панелях отображающих ветвь
 //                 и обратную сортировку
-function TFilesCollection.Compare;
+function TFilesCollection.Compare (Key1, Key2: Pointer): Integer;
   var
     {T1: TFileRec;}
     P1: PFileRec absolute Key1;
@@ -907,7 +915,7 @@ Lab1:
 //    TFilesCollection.Compare сравнение файлов по всем критериям сразу,
 //    используемое для групповых операций с файлами в панели (в данный
 //    момент используется только для разотметки файлов по cmCopyUnselect)
-function TFilesCollection.FileCompare;
+function TFilesCollection.FileCompare (Key1, Key2: Pointer): Integer;
   var
     P1: PFileRec absolute Key1;
     P2: PFileRec absolute Key2;
@@ -1005,7 +1013,8 @@ function TFilesCollection.FileCompare;
 
 // JO: 18-11-2004 - ввёл полностью новые настройки показа информации
 //     в меню выбора диска
-function SelectDrive; {-$VIV, JO}
+function SelectDrive (X, Y: Integer; Default: Char; IncludeTemp: Boolean)
+  : String; {-$VIV, JO}
   var
     R: TRect;
     P: PMenuBox;
@@ -1262,7 +1271,9 @@ function SelectDrive; {-$VIV, JO}
             and (InterfaceData.DrvInfType.VLabShowFor and ditProgr <> 0)))
         then
           begin
-          FullS := FullS + ' ' + GetVolumeLabel(Dr);
+          //FullS := FullS + ' ' + GetVolumeLabel(Dr);
+          FullS := FullS + ' DUMMYLABEL';
+          // fixme: porting stub
           if MaxFullSLength < Length(FullS) then
             MaxFullSLength := Length(FullS);
           end;
@@ -1292,7 +1303,9 @@ function SelectDrive; {-$VIV, JO}
             and (InterfaceData.DrvInfType.FreeSpShowFor and ditProgr <> 0)))
         then
           begin
-          FreeSp := SysDiskFreeLong(Byte(Dr)-64);
+          //FreeSp := SysDiskFreeLong(Byte(Dr)-64);
+          // fixme: porting stub
+          FreeSp := 0;
           if FreeSp >= 0 then
             begin
             SizeStr := RtoS(FreeSp/1048576, MaxSizeDig-1, 1) + 'M';
@@ -1391,7 +1404,9 @@ function SelectDrive; {-$VIV, JO}
   end { SelectDrive };
 
 {-DataCompBoy-}
-function NewFileRec;
+function NewFileRec (const Name: String; Size: TSize;
+     Date, CreationDate, LastAccDate: LongInt; Attr: Word;
+     AOwner: PString): PFileRec;
   var
     PR: PFileRec;
     T: TFileRec;
@@ -1631,10 +1646,10 @@ procedure TFilesCollection.DelDuplicates(var TotalInfo: TSize);
     New(H, Init(@Self));
     if H^.HT <> nil then
       Exit; //! Наверно, памяти мало, сообщить бы об этом
-    @IsDupe := @IsUnsortedDupe;
+    Pointer(IsDupe) := Pointer(@IsUnsortedDupe);
     end
   else
-    @IsDupe := @IsSortedDupe;
+    Pointer(IsDupe) := Pointer(@IsSortedDupe);
 
   { Каждый пакет дупов сначала полностью выявляется, а затем
   удаляется. Удалять по одному некорректно, так как после этого

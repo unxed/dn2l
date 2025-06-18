@@ -55,6 +55,7 @@ uses
   vp2fp,
   LFNVp,
   Strings,
+  sysutils,
   Defines, Streams, Drivers, Views, Collect, TopView_
   ;
 
@@ -746,7 +747,9 @@ procedure GetDrInfo(CurDir: String);
   begin
   MakeNoSlash(CurDir);
   Strings.StrPCopy(@Buffer, CurDir);
-  FreeSpc := SysDiskFreeLongX(@Buffer);
+  //FreeSpc := SysDiskFreeLongX(@Buffer);
+  FreeSpc := 0;
+  // fixme: porting stub
   TotalSpc := SysDiskSizeLongX(@Buffer);
   L := GetRootStart(CurDir);
   Buffer[L] := #0;
@@ -843,8 +846,8 @@ procedure ReadDiskInfo(Dr: String; var B: TDiskInfoRec);
   B.VolumeID := NewStr(GetString(dlDIVolumeID) + VolumeLabel+'~');
   if SerialNo <> 0 then
     begin
-    S := Int2Hex(LongRec(SerialNo).Hi, 4) + '-' +
-         Int2Hex(LongRec(SerialNo).Lo, 4);
+    S := IntToHex(LongRec(SerialNo).Hi, 4) + '-' +
+         IntToHex(LongRec(SerialNo).Lo, 4);
     B.SerialNo := NewStr(GetString(dlDISerialNo) + S + '~');
     end;
   if FileSys <> '' then
