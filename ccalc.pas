@@ -107,7 +107,7 @@ uses
 исключило бы возможность загружать строку ввода из ресурса диалога и
 подменять ей тип на TCalcLine }
 
-constructor TIndicator.Init;
+constructor TIndicator.Init (var R: TRect);
   begin
   inherited Init(R);
   EventMask := evBroadcast;
@@ -130,7 +130,7 @@ procedure TIndicator.Store(var S: TStream);
   end;
 
 
-function TIndicator.GetPalette;
+function TIndicator.GetPalette : PPalette;
   const
     S: String[1] = CCluster;
   begin
@@ -151,7 +151,7 @@ function GetNValue(L: LongInt; A: Integer): String;
   end;
 
 
-procedure TIndicator.HandleEvent;
+procedure TIndicator.HandleEvent (var Event: TEvent);
   var
     SelectedForm: Integer;
     s: string;
@@ -258,7 +258,7 @@ procedure TIndicator.WrtT(X: CReal; var S: String);
   S := sHour+':'+sMin+':'+S;
   end { TIndicator.WrtT };
 
-procedure TIndicator.Draw;
+procedure TIndicator.Draw ;
   var
     B: TDrawBuffer;
     S: String[40];
@@ -323,7 +323,7 @@ procedure TIndicator.Draw;
     end;
   end { TIndicator.Draw };
 
-procedure TCalcLine.HandleEvent;
+procedure TCalcLine.HandleEvent (var Event: TEvent);
   var
     WasKey: Boolean;
   begin
@@ -358,26 +358,26 @@ procedure TCalcLine.HandleEvent;
     end {case};
   end { TCalcLine.HandleEvent };
 
-procedure TCalcLine.SetData;
+procedure TCalcLine.SetData (var B);
   begin
   inherited SetData(B);
   SetValues(False);
   end;
 
-procedure TCalcLine.Awaken;
+procedure TCalcLine.Awaken ;
   begin
   inherited Awaken;
   SetValues(False);
   Calc := Owner;
   end;
 
-destructor TCalcLine.Done;
+destructor TCalcLine.Done ;
   begin
   Calc := nil;
   inherited Done;
   end;
 
-procedure TCalcLine.SetValues;
+procedure TCalcLine.SetValues (SetSelf: Boolean);
   var
     R: CReal;
     SelectedForm: Integer;
@@ -421,7 +421,7 @@ procedure TCalcLine.SetValues;
     end;
   end { TCalcLine.SetValues };
 
-procedure InsertCalc;
+procedure InsertCalc ;
 
   function MakeDialog: PDialog;
     var

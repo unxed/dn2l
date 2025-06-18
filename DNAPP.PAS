@@ -1474,6 +1474,26 @@ function ExecDialog(D: PDialog; var Data): Word;
   end;
 
 function ExecResource(Key: TDlgIdx; var Data): Word;
+var
+  D: PDialog;
+begin
+  Result := cmCancel;
+
+  D := LoadDialog(Key);
+  if D = nil then Exit;
+
+  if Assigned(PreExecuteDialog) then
+    PreExecuteDialog(D);
+
+  Result := ExecDialog(D, Data);
+
+  Dispose(D, Done);
+  PreExecuteDialog := nil;
+end;
+
+// fixme: porting stub
+
+(*  
   assembler; {&USES None} {&FRAME-}
 { AK155. Тут может вызываться PreExecuteDialog, которая вполне
 может оказаться локальной процедурой. Поэтому ExecResource
@@ -1522,7 +1542,7 @@ function ExecResource(Key: TDlgIdx; var Data): Word;
 @@1:
   mov eax,[Res]
   end;
-
+*)
 
 function LoadResource (Key: TDlgIdx): PObject;
   begin

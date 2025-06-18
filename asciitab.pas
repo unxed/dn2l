@@ -105,7 +105,7 @@ uses
 const
   cmCharacterFocused = 0;
 
-procedure TTable.Draw;
+procedure TTable.Draw ;
   var
     Buf: TDrawBuffer;
     X, Y: Integer;
@@ -122,7 +122,7 @@ procedure TTable.Draw;
   ShowCursor;
   end;
 
-procedure ASCIITable;
+procedure ASCIITable ;
   var
     P: PWindow;
     W: Word;
@@ -282,7 +282,7 @@ constructor TReport.Load(var S: TStream);
   S.Read(ASCIIChar, SizeOf(ASCIIChar));
   end;
 
-procedure TReport.Draw;
+procedure TReport.Draw ;
   var
     Ch: LongInt;
     Buf: TDrawBuffer;
@@ -319,17 +319,17 @@ procedure TReport.Store(var S: TStream);
   S.Write(ASCIIChar, SizeOf(ASCIIChar));
   end;
 
-function TTable.DataSize;
+function TTable.DataSize : Word;
   begin
   DataSize := 1;
   end;
 
-procedure TTable.GetData;
+procedure TTable.GetData (var Data);
   begin
   Byte(Data) := Cursor.Y*32+Cursor.X;
   end;
 
-procedure TTable.SetData;
+procedure TTable.SetData (var Data);
   begin
   SetCursor(Byte(Data) mod 32, Byte(Data) div 32);
   MessageL(Owner, evBroadcast, AsciiTableCommandBase+cmCharacterFocused,
@@ -337,7 +337,7 @@ procedure TTable.SetData;
   Owner^.Redraw;
   end;
 
-constructor TASCIIChart.Init;
+constructor TASCIIChart.Init (var R: TRect);
   var
     Control: PView;
   begin
@@ -408,7 +408,7 @@ function TASCIIChart.Execute: Word;
   Execute := Event.Command;
   end { TASCIIChart.Execute: };
 
-destructor TASCIIChart.Done;
+destructor TASCIIChart.Done ;
   begin
   fASCIITable := False;
   inherited Done;

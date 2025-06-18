@@ -824,7 +824,7 @@ constructor TInputLine.Load(var S: TStream);
        0));
   end;
 
-destructor TInputLine.Done;
+destructor TInputLine.Done ;
   begin
   SetValidator(nil);
   TView.Done;
@@ -851,7 +851,7 @@ function TInputLine.DataSize: Word;
     Result := MaxLen+1;
   end;
 
-procedure TInputLine.Draw;
+procedure TInputLine.Draw ;
   var
     Color: Byte;
     L, R: Integer;
@@ -1503,13 +1503,13 @@ constructor TButton.Load(var S: TStream);
     State := State and not sfDisabled;
   end;
 
-destructor TButton.Done;
+destructor TButton.Done ;
   begin
   DisposeStr(Title);
   TView.Done;
   end;
 
-procedure TButton.Draw;
+procedure TButton.Draw ;
   begin
   DrawState(False);
   end;
@@ -1738,7 +1738,7 @@ procedure TButton.MakeDefault(Enable: Boolean);
     end;
   end;
 
-procedure TButton.Press;
+procedure TButton.Press ;
   var
     E: TEvent;
   begin
@@ -1821,7 +1821,7 @@ constructor TCluster.Load(var S: TStream);
   SetButtonState(0, True);
   end;
 
-destructor TCluster.Done;
+destructor TCluster.Done ;
   begin
   Strings.Done;
   TView.Done;
@@ -2171,7 +2171,7 @@ function TCluster.Row(Item: Integer): Integer;
 
 { TRadioButtons }
 
-procedure TRadioButtons.Draw;
+procedure TRadioButtons.Draw ;
   const
     Button = ' ( ) ';
   begin
@@ -2201,7 +2201,7 @@ procedure TRadioButtons.SetData(var Rec);
 
 { TCheckBoxes }
 
-procedure TCheckBoxes.Draw;
+procedure TCheckBoxes.Draw ;
   const
     Button = ' [ ] ';
   begin
@@ -2237,13 +2237,13 @@ constructor TMultiCheckBoxes.Load(var S: TStream);
   States := S.ReadStr;
   end;
 
-destructor TMultiCheckBoxes.Done;
+destructor TMultiCheckBoxes.Done ;
   begin
   DisposeStr(States);
   TCluster.Done;
   end;
 
-procedure TMultiCheckBoxes.Draw;
+procedure TMultiCheckBoxes.Draw ;
   const
     Button = ' [ ] ';
   begin
@@ -2379,13 +2379,13 @@ constructor TStaticText.Load(var S: TStream);
   Text := S.ReadStr;
   end;
 
-destructor TStaticText.Done;
+destructor TStaticText.Done ;
   begin
   DisposeStr(Text);
   TView.Done;
   end;
 
-procedure TStaticText.Draw;
+procedure TStaticText.Draw ;
   var
     Color: Byte;
     Center: Boolean;
@@ -2520,7 +2520,7 @@ constructor TLabel.Load(var S: TStream);
   GetPeerViewPtr(S, Link);
   end;
 
-procedure TLabel.Draw;
+procedure TLabel.Draw ;
   var
     Color, Color1: Word;
     B: TDrawBuffer;
@@ -2560,7 +2560,7 @@ function TLabel.GetPalette: PPalette;
   GetPalette := @P;
   end;
 
-procedure TLabel.FocusLink;
+procedure TLabel.FocusLink ;
   begin
   if  (Link <> nil) and (Link^.Options and ofSelectable <> 0) then
     Link^.Focus;
@@ -2825,7 +2825,8 @@ procedure THistoryViewer.HandleEvent(var Event: TEvent);
       begin
       if HistoryErrorBeep then
         begin
-        SysBeepEx {PlaySound}(500, 110);
+        //SysBeepEx {PlaySound}(500, 110);
+        // fixme: porting stub
         end;
       {NoDelMark;}
       Exit;
@@ -2954,7 +2955,7 @@ constructor THistory.Load(var S: TStream);
   S.Read(HistoryId, SizeOf(AWord));
   end;
 
-procedure THistory.Draw;
+procedure THistory.Draw ;
   var
     B: TDrawBuffer;
   begin
@@ -3068,7 +3069,7 @@ procedure THistory.Store(var S: TStream);
   S.Write(HistoryId, SizeOf(AWord));
   end;
 
-constructor THexLine.Init;
+constructor THexLine.Init (R: TRect; AInputLine: PInputline);
   begin
   if AInputLine = nil then
     Exit;
@@ -3090,7 +3091,7 @@ procedure THexLine.Store(var S: TStream);
   PutPeerViewPtr(S, InputLine);
   end;
 
-procedure THexLine.HandleEvent;
+procedure THexLine.HandleEvent (var Event: TEvent);
   procedure CE;
     begin
     ClearEvent(Event);
@@ -3207,7 +3208,7 @@ procedure THexLine.HandleEvent;
   end {case};
   end { THexLine.HandleEvent };
 
-procedure THexLine.Draw;
+procedure THexLine.Draw ;
   var
     B: TDrawBuffer;
     S: String;
@@ -3280,7 +3281,7 @@ procedure TComboBox.BuildMenu(AStrings: PSItem);
       '',  kbNoKey, 1600+i, 0, nil);
     Items[Count] := LastItem;
     Tail^ := LastItem;
-    Tail := @LastItem.Next;
+    Tail := @LastItem^.Next;
     DisposeStr(AStrings^.Value);
     PrevSItem := AStrings;
     AStrings := AStrings^.Next;
@@ -3288,7 +3289,7 @@ procedure TComboBox.BuildMenu(AStrings: PSItem);
     end;
   end;
 
-destructor TComboBox.Done;
+destructor TComboBox.Done ;
   begin
   DisposeMenu(Menu);
   TView.Done;
@@ -3307,7 +3308,7 @@ function TComboBox.GetPalette: PPalette;
   GetPalette := @P;
   end;
 
-procedure TComboBox.Draw;
+procedure TComboBox.Draw ;
   var
     B: TDrawBuffer;
     C: Byte;
@@ -3437,7 +3438,7 @@ constructor TComboBox.Load(var S: TStream);
     DisposeStr(P);
     PLastItem^ := LastItem;
     Items[i] := LastItem;
-    PLastItem := @PLastItem^.Next;
+    PLastItem := @LastItem^.Next;
     end;
   Selected := 1;
   end;
@@ -3456,7 +3457,7 @@ procedure TComboBox.Store(var S: TStream);
 
 { /------------------ TNotepad -----------------\ }
 
-procedure TPage.InitFrame;
+procedure TPage.InitFrame ;
   var
     R: TRect;
   begin
@@ -3528,7 +3529,7 @@ constructor TBookmark.Init(var Bounds: TRect; AText: String; ALink: PView);
   PPage(ALink)^.Bookmark := @Self;
   end;
 
-procedure TBookmark.FocusLink;
+procedure TBookmark.FocusLink ;
   var
    i: integer;
    P: PPage;
@@ -3539,7 +3540,7 @@ procedure TBookmark.FocusLink;
   with PNotepad(Owner)^ do
     begin
     ActivePage := 0;
-    while Page[ActivePage] <> Link do
+    while PView(Page[ActivePage]) <> Link do
       Inc(ActivePage);
     end;
   Owner^.UnLock;
@@ -3552,7 +3553,7 @@ constructor TNotepad.Init(var Bounds: TRect; ATitle: TTitleStr;
   BookmarkStart := ABookmarkStart;
   end;
 
-procedure TNotepad.InitFrame;
+procedure TNotepad.InitFrame ;
   var
     R: TRect;
   begin
@@ -3568,8 +3569,8 @@ function TNotepad.NewPage(const ATitle: String): PPage;
   R.Grow(-1, -1);
   R.B.X := BookmarkStart;
   New(Result, Init(R, ''));
-  Result.Flags := 0;
-  Result.State := Result.State and not sfShadow;
+  Result^.Flags := 0;
+  Result^.State := Result^.State and not sfShadow;
   Page[NumPages] := Result;
   Inc(NumPages);
   Insert(Result);
@@ -3671,7 +3672,7 @@ const
      (H: 'Í'; C0: ('È', '»'); C1: (' ', 'º'); C2: ('É', '¼') )
     );
 
-procedure TBookmark.Draw;
+procedure TBookmark.Draw ;
   var
     B: TDrawBuffer;
     LineColor: Byte;
@@ -3713,7 +3714,7 @@ function TPageFrame.GetPalette: PPalette;
   Result := @COwner;
   end;
 
-procedure TPageFrame.Draw;
+procedure TPageFrame.Draw ;
   var
     i: integer;
     B: TDrawBuffer;

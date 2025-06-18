@@ -52,6 +52,7 @@ unit RStrings;
 interface
 
 uses
+  vp2fp,
   Defines, Objects2, Streams, Advance6, Commands
   ;
 
@@ -92,7 +93,7 @@ uses
 const
   TempStreamName = '$MAKERES.TMP';
 
-constructor TIdxResource.Init;
+constructor TIdxResource.Init (AStream: PStream);
   begin
   Stream := AStream;
   AStream^.Read(Count, SizeOf(Count));
@@ -100,13 +101,13 @@ constructor TIdxResource.Init;
   AStream^.Read(Index^, Count*SizeOf(TOffsetType));
   end;
 
-destructor TIdxResource.Done;
+destructor TIdxResource.Done ;
   begin
   FreeMem(Index, Count*SizeOf(TOffsetType));
   Dispose(Stream, Done);
   end;
 
-function TIdxResource.Get;
+function TIdxResource.Get (Key: TDlgIdx): PObject;
 
   procedure Chk;
     begin
@@ -122,7 +123,7 @@ function TIdxResource.Get;
   Chk;
   end;
 
-constructor TIdxMaker.Init;
+constructor TIdxMaker.Init (AStream: PStream);
   begin
   New(TempStream, Init(TempStreamName, stCreate, 1024));
   Stream := AStream;
@@ -131,7 +132,7 @@ constructor TIdxMaker.Init;
   FillChar(Index^, 65520, $FF);
   end;
 
-procedure TIdxMaker.Put;
+procedure TIdxMaker.Put (Item: PObject; Key: TDlgIdx);
   begin
   if Count <= Integer(Key) then
     Count := Integer(Key)+1;
@@ -144,12 +145,12 @@ procedure TIdxMaker.Put;
     end;
   end;
 
-function TIdxMaker.Empty;
+function TIdxMaker.Empty (Key: TDlgIdx): Boolean;
   begin
   Empty := Index^[Integer(Key)] = -1
   end;
 
-destructor TIdxMaker.Done;
+destructor TIdxMaker.Done ;
   var
     I: LongInt;
     IdxSize: LongInt;
