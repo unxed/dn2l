@@ -304,7 +304,7 @@ procedure xIncDateTime(var DT1, DT2: DateTimeRec; Days: Integer;
   DT2 := DT1;
 
   {date first}
-  // by unxed
+  // fixme: porting stub
   Inc(DT2.D, Days);
 
   if Secs < 0 then
@@ -357,7 +357,7 @@ function xYMTimeStampToPack(YMTime: LongInt): LongInt;
   {Convert to DT format}
   with DT do
     begin
-    // by unxed
+    // fixme: porting stub
     d2 := day;
     m2 := month;
     y2 := year;
