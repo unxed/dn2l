@@ -51,6 +51,8 @@ unit Advance2; {File related functions}
 interface
 
 uses
+  vp2fp,
+  LFNVp,
   Defines, Advance, Views
   {$IFDEF DPMI32}, Streams{$ENDIF}
   ;
@@ -219,7 +221,7 @@ constructor TTempFile.Init(const AExt: String; ABufSize: SW_Word);
      ABufSize);
   end;
 
-destructor TTempFile.Done;
+destructor TTempFile.Done ;
   var
     S: FNameStr;
   begin
@@ -295,7 +297,8 @@ function FileNewer(FileA, FileB: String): Boolean;
   end;
 
 {-DataCompBoy-}
-function CalcTmpFName;
+function CalcTmpFName (Id: LongInt; const AExt: String; ANew: Boolean)
+  : String;
   var
     I: Integer;
     S: String;
@@ -348,7 +351,7 @@ function CalcTmpId: LongInt;
   end;
 
 {-DataCompBoy-}
-procedure EraseByName;
+procedure EraseByName (const FName: String);
   var
     F: lFile;
   begin
@@ -358,7 +361,7 @@ procedure EraseByName;
 {-DataCompBoy-}
 
 {-DataCompBoy-}
-procedure EraseFile;
+procedure EraseFile (const N: String);
   var
     F: lFile;
     rc: LongInt;
@@ -386,7 +389,7 @@ TryDel:
   ClrIO;
   end { EraseFile };
 
-procedure EraseTempFile;
+procedure EraseTempFile (S: String);
   var
     Dir: String;
     F: lFile;
@@ -467,12 +470,12 @@ procedure GetMask(var m: String);
   m := LowStrg(q);
   end { GetMask };
 
-function GetCurDrive;
+function GetCurDrive : Char;
   begin
   GetCurDrive := Char(GetDrive+65)
   end;
 
-function GetExt;
+function GetExt (const s: String): String;
   var
     i: Byte;
   begin
@@ -483,7 +486,7 @@ function GetExt;
     Result := Copy(s, i, MaxStringLength);
   end;
 
-function Norm12;
+function Norm12 (const s: String): Str12;
   var
     R: String[12];
     I: Byte;
@@ -537,7 +540,7 @@ function DelSquashes(s: String): String;
 
 {-DataCompBoy-}
 {$IFNDEF OS2}
-function GetURZ;
+function GetURZ (const s: String): Str12;
   var
     a, aa, aaa: String;
   begin
@@ -548,7 +551,7 @@ function GetURZ;
 {-DataCompBoy-}
 {$ENDIF}
 {-DataCompBoy-}
-function GetfURZ;
+function GetfURZ (const s: String): String;
   var
     a, aa, aaa: String;
   begin
@@ -568,7 +571,7 @@ function IsSeparatingChars(const s: String): Boolean;
   end;
 {/JO}
 {-DataCompBoy-}
-function SquashesName;
+function SquashesName (const s: String): String;
   begin
   {JO}
   if IsSeparatingChars(s) then
@@ -744,7 +747,7 @@ function InMask(Name, Mask: String): Boolean;
       Dec(LastSuccessPos);
   end { InMask };
 
-function InFilter;
+function InFilter (Name, Filter: String): Boolean;
   var
     i, l: Integer;
     S: String;
@@ -790,7 +793,7 @@ function InFilter;
   end { InFilter };
 
 {JO}
-function InDirFilter;
+function InDirFilter (Name, Filter: String): Boolean;
   var
     i: Integer;
     S: String;
@@ -832,7 +835,7 @@ function InExtFilter(Name: String; const F: String): Boolean;
   Result := InFilter(Copy(Name, PosLastDot(Name)+1, MaxStringLength), F);
   end;
 
-function InSpaceMask;
+function InSpaceMask (Name, Mask: String; ValidSpace: Boolean): Boolean;
   var
     i: Integer;
     j: Boolean;
@@ -853,7 +856,7 @@ function InSpaceMask;
   InSpaceMask := True
   end;
 
-function InSpaceFilter;
+function InSpaceFilter (Name, Filter: String): Boolean;
   var
     i: Integer;
     S: String[13];
@@ -995,14 +998,14 @@ function MkName(const Nm, Mask: String): String;
   end { MkName };
 {-DataCompBoy-}
 
-function GetPath;
+function GetPath (const S: String): String;
   var
     Name, ext: String;
   begin
   lFSplit(S, Result, Name, Ext);
   end;
 
-function GetName;
+function GetName (const S: String): String;
   var
     Name, ext: String;
   begin
@@ -1011,7 +1014,7 @@ function GetName;
   end;
 
 {-DataCompBoy-}
-function GetSName;
+function GetSName (const S: String): String;
   var
     B: Byte;
     Pe: Byte;
@@ -1247,7 +1250,7 @@ procedure InitQuickSearch(Panel: PView);
     end;
   end;
 
-procedure StopQuickSearch;
+procedure StopQuickSearch ;
   begin
   if QuickSearch then
     begin
