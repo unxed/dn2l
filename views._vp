@@ -47,6 +47,7 @@
 
 CursorHidden: Boolean = True;
 
+(*
 procedure ShowBuffer(BufOfs, Len: Word);
   begin
   asm
@@ -98,6 +99,59 @@ procedure ShowBuffer(BufOfs, Len: Word);
   if Len <> 0 then
     SysTvShowBuf(BufOfs, Len);
   end { ShowBuffer };
+*)
+// fixme: porting stub
+procedure ShowBuffer(BufOfs, Len: Word);
+var
+  i, count: Integer;
+  BufPtr, MirrorPtr: PLongWord;
+  FirstDiff, LastDiff: Integer;
+begin
+  if Len = 0 then Exit;
+
+  BufPtr := PLongWord(@PByte(ScreenBuffer)[BufOfs]);
+  MirrorPtr := PLongWord(@PByte(ScreenMirror)[BufOfs]);
+  count := Len div 4;
+
+  // Найти первое несовпадение
+  FirstDiff := -1;
+  for i := 0 to count - 1 do
+  begin
+    if BufPtr[i] <> MirrorPtr[i] then
+    begin
+      FirstDiff := i;
+      Break;
+    end;
+  end;
+
+  if FirstDiff = -1 then
+  begin
+    // Буферы совпадают
+    Exit;
+  end;
+
+  // Найти последнее несовпадение
+  LastDiff := count - 1;
+  for i := count - 1 downto FirstDiff do
+  begin
+    if BufPtr[i] <> MirrorPtr[i] then
+    begin
+      LastDiff := i;
+      Break;
+    end;
+  end;
+
+  // Обновляем зеркало (копируем изменённую часть)
+  for i := FirstDiff to LastDiff do
+    MirrorPtr[i] := BufPtr[i];
+
+  // Вычисляем новое смещение и длину
+  BufOfs := BufOfs + FirstDiff * 4;
+  Len := (LastDiff - FirstDiff + 1) * 4;
+
+  SysTvShowBuf(BufOfs, Len);
+end;
+
 
 { Convert color into attribute                          }
 { In    AL = Color                                      }
