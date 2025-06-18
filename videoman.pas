@@ -49,6 +49,9 @@ unit VideoMan;
 
 interface
 
+uses
+  vp2fp;
+
 var
   ScreenMirror: Pointer;
    {` Выводимая информаци сравнивается с содержимым, и, если всё совпадает,
@@ -226,11 +229,6 @@ procedure DetectVideoType; {JO}
     VideoType := vtUnknown;
   end { DetectVideoType }; {/JO}
 {$ENDIF}
-{$IFDEF WIN32}
-  begin { DetectVideoType }
-  VideoType := vtUnknown;
-  end { DetectVideoType };
-{$ENDIF}
 {$IFDEF DPMI32}
   var
     regs: real_mode_call_structure_typ;
@@ -251,6 +249,10 @@ procedure DetectVideoType; {JO}
 
   end { DetectVideoType };
 {$ENDIF}
+
+  begin { DetectVideoType }
+  VideoType := vtUnknown;
+  end { DetectVideoType };
 
 {  vtUnknown, vtMONO, vtCGA, vtEGA, vtVGA, vtXGA, vtSVGA, vtVBE2 }
 
@@ -307,7 +309,10 @@ procedure SetCrtData;
     Visible: Boolean;
     SrcSize: TSysPoint;
   begin
-  SysTvGetScrMode(@SrcSize, True);
+
+//  SysTvGetScrMode(@SrcSize, True);
+// fixme: porting stub
+
 (*
   {AK155 при SrcSize.Y=300 (w2k, wXP) DN падает}
   if  (SrcSize.Y > 100) or (SrcSize.X*SrcSize.Y*2 > 32768) then
@@ -317,6 +322,10 @@ procedure SetCrtData;
     end;
   {/AK155}
 *)
+
+// fixme: porting stub
+(*
+
   ScreenHeight := SrcSize.Y;
   ScreenWidth := SrcSize.X;
   ReallocBuffers;
@@ -348,13 +357,17 @@ procedure SetCrtData;
   WordRec(CursorLines).Hi := Y1;
   WordRec(CursorLines).Lo := Y2;
   SysTVSetCurType(Y1, Y2, False); // Hide cursor
+
+*)  
+  
   end { SetCrtData };
 
 // Detects video modes
 
 procedure DetectVideo;
   begin
-  ScreenMode := FixCrtMode(SysTvGetScrMode(nil, True));
+  // fixme: porting stub
+  //ScreenMode := FixCrtMode(SysTvGetScrMode(nil, True));
   end;
 
 // Sets the video mode. Mode is one of the constants smCO80, smBW80, or smMono,
@@ -406,6 +419,8 @@ VPSYSD32.SysSetVideoMode всегда чистит экран при смене видеорежима и делает
      (Cols = Byte(MemL[seg0040+$4A]))
     then Exit;
 {$ENDIF}
+  // fixme: porting stub
+  (*
   if Rows <> 0 then
     if SysSetVideoMode(Cols, Rows) then
       begin
@@ -421,6 +436,7 @@ VPSYSD32.SysSetVideoMode всегда чистит экран при смене видеорежима и делает
       {/AK155}
       end;
 //  ReallocBuffers;
+  *)
   end { SetVideoMode };
 
 // Initializes Turbo Vision's video manager. Saves the current screen
@@ -461,8 +477,9 @@ procedure InitVideo;
   end;
   {$ENDIF}
   begin { InitVideo }
-  SysTVGetCurType(StrtCurY1, StrtCurY2, StrtCurVisible);
-  SysTVInitCursor; {KV}
+  //SysTVGetCurType(StrtCurY1, StrtCurY2, StrtCurVisible);
+  //SysTVInitCursor; {KV}
+  // fixme: porting stub
   SysGetCurPos(X, Y); {KV}
   WordRec(OldCursorPos).Lo := X; {KV}
   WordRec(OldCursorPos).Hi := Y; {KV}
@@ -530,16 +547,18 @@ procedure DoneVideo;
      уменьшении высоты окна в пользовательский экран попадают клочья
      от нижней части старого (бОльшего) окна}
   {$ENDIF}
-  SysTvShowBuf(0, UserScreenSize);
-  SysTVSetCurType(StrtCurY1, StrtCurY2, StrtCurVisible);
+  //SysTvShowBuf(0, UserScreenSize);
+  //SysTVSetCurType(StrtCurY1, StrtCurY2, StrtCurVisible);
+  // fixme: porting stub
   if WordRec(OldCursorPos).Hi > ScreenHeight-1 then
     WordRec(OldCursorPos).Hi := ScreenHeight-1; {KV}
   if WordRec(OldCursorPos).Lo > ScreenWidth-1 then
     WordRec(OldCursorPos).Lo := ScreenWidth-1; {KV}
   {JO: под OS/2 после смены видеорежима SysGetCurPos даёт нулевые координаты}
   {    как с этим бороться - пока не знаю                                   }
-  if OldCursorPos <> 0 then
-    SysTVSetCurPos(WordRec(OldCursorPos).Lo, WordRec(OldCursorPos).Hi);
+  // fixme: porting stub
+  //if OldCursorPos <> 0 then
+  //  SysTVSetCurPos(WordRec(OldCursorPos).Lo, WordRec(OldCursorPos).Hi);
   {KV}
   {$IFDEF Win32}
   SysCtrlSleep(1); {KV}
@@ -556,138 +575,14 @@ procedure DoneVideo;
 
 procedure ClearScreen;
   begin
-  SysTVClrScr;
+  //SysTVClrScr;
+  // fixme: porting stub
   {$IFDEF Win32}
   SysCtrlSleep(50);
   {Cat: даём время курсорной нитке установить курсор в угол}
   {$ENDIF}
   end;
 
-{$IFDEF OS2} {JO} {установка VGA-палитры в окне}
-
-procedure ResetVGApalette(Update: Boolean);
-  begin
-  if Update then
-    VGA_palette := vga_default;
-  SetPalette(vga_default);
-  end;
-
-function VGASystem: Boolean;
-  begin
-  VGASystem := VideoType >= vtVGA; { PZ 2000.06.14 }
-  end;
-
-type
-  RGB = record
-    Red, green, Blue: Byte
-    end;
-  VGAPalette = array[Byte] of RGB;
-
-procedure SetGetVGAPal(var p: VGAPalette; Get: Boolean);
-  const
-    ColorReg: VioColorReg = (
-      cb: SizeOf(VioColorReg); // Size of this structure
-      RType: 3; // 3 = Color registers
-      FirstColorReg: 0; // Specifies the first color registers
-      NumColorRegs: 256; // Number of color registers
-      ColorRegAddr: nil // Pointer to array with color values
-      );
-  begin
-  with ColorReg do
-    begin
-    ColorRegAddr := @p;
-    FLatToSel(ColorRegAddr);
-    end;
-  if Get then
-    VioGetState(ColorReg, 0)
-  else
-    VioSetState(ColorReg, 0)
-  end;
-
-procedure Set_palette(color, r, g, b: Byte);
-  var
-    curpal: VGAPalette;
-  begin
-  SetGetVGAPal(curpal, True);
-  with curpal[color] do
-    begin
-    Red := r;
-    green := g;
-    Blue := b;
-    end;
-  SetGetVGAPal(curpal, False);
-  end;
-
-procedure Get_palette(color: Byte; var R, G, B: Byte);
-  var
-    curpal: VGAPalette;
-  begin
-  SetGetVGAPal(curpal, True);
-  with curpal[color] do
-    begin
-    R := Red;
-    G := green;
-    B := Blue;
-    end;
-  end;
-
-procedure GetPalette(var Buf);
-  var
-    PAL: vga_pal absolute Buf;
-    curpal: VGAPalette;
-    I: Byte;
-  begin
-  if not (VGASystem and not PMWindowed) then
-    Exit;
-  PAL := vga_default;
-  SetGetVGAPal(curpal, True);
-  for I := 0 to 15 do
-    with curpal[SL[I]] do
-      begin
-      PAL[1, I] := Red;
-      PAL[2, I] := green;
-      PAL[3, I] := Blue;
-      end;
-  end;
-
-procedure SetPalette(var Buf);
-  var
-    PAL: vga_pal absolute Buf;
-    curpal: VGAPalette;
-    I: Byte;
-  begin
-  if not (VGASystem and not PMWindowed) then
-    Exit;
-  SetGetVGAPal(curpal, True);
-  for I := 0 to 15 do
-    with curpal[SL[I]] do
-      begin
-      Red := PAL[1, I];
-      green := PAL[2, I];
-      Blue := PAL[3, I];
-      end;
-  SetGetVGAPal(curpal, False);
-  end;
-
-procedure SetBlink(Mode: Boolean); {JO}
-  var
-    I: VioIntensity;
-  begin
-  with I do
-    begin
-    cb := SizeOf(VioIntensity);
-    RType := 2;
-    if Mode then
-      fs := 0
-    else
-      fs := 1;
-    end;
-  VioSetState(I, TVVioHandle);
-  end;
-
-{$ENDIF}
-
-{$IFDEF WIN32}
 procedure ResetVGApalette(Update: Boolean);
   begin
   end;
@@ -709,77 +604,6 @@ procedure Get_palette(color: Byte; var R, G, B: Byte);
 procedure SetBlink(Mode: Boolean);
   begin
   end;
-{$ENDIF}
-
-{$IFDEF DPMI32}
-procedure ResetVGApalette(Update: Boolean);
-begin
-  if Update then VGA_palette := VGA_default;
-  SetPalette(VGA_default);
-end;
-
-procedure GetPalette(var Buf);
-var
-  PAL: VGA_pal absolute Buf;
-  I: byte;
-begin
-  PAL:=VGA_default;
-  if not VGAsystem then Exit;
-  for I:=0 to 15 do
-    Get_palette(sl[I], pal[1,i], pal[2,i], pal[3,i]);
-end;
-
-procedure SetPalette(var Buf);
-var
-  PAL: VGA_pal absolute Buf;
-  I: byte;
-begin
-  if not VGAsystem then Exit;
-  for i:=0 to 15 do
-    Set_palette(sl[i], pal[1,i], pal[2,i], pal[3,i]);
-end;
-
-function VGASystem: Boolean;
-begin
-  VGASystem := VideoType >= vtVGA;
-end;
-
-procedure Set_palette(color, r, g, b: Byte);
-var
-  regs: real_mode_call_structure_typ;
-begin
-  init_register(regs);
-  regs.ax_ := $1010;
-  regs.bx_ := color;
-  regs.dh_ := r;
-  regs.ch_ := g;
-  regs.cl_ := b;
-  intr_realmode(regs, $10);
-end;
-
-procedure Get_palette(color: Byte; var R, G, B: Byte);
-var
-  regs: real_mode_call_structure_typ;
-begin
-  init_register(regs);
-  regs.ax_ := $1015;
-  regs.bx_ := color;
-  intr_realmode(regs, $10);
-  r := regs.dh_;
-  g := regs.ch_;
-  b := regs.cl_;
-end;
-
-procedure SetBlink(Mode: Boolean);
-var
-  regs: real_mode_call_structure_typ;
-begin
-  init_register(regs);
-  regs.ax_ := $1003;
-  regs.bl_ := Byte(Mode);
-  intr_realmode(regs, $10);
-end;
-{$ENDIF}
 
 {Procedure GetCrtMode;                                begin end;}
 
