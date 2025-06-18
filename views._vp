@@ -149,7 +149,8 @@ begin
   BufOfs := BufOfs + FirstDiff * 4;
   Len := (LastDiff - FirstDiff + 1) * 4;
 
-  SysTvShowBuf(BufOfs, Len);
+// fixme: porting stub
+//  SysTvShowBuf(BufOfs, Len);
 end;
 
 
