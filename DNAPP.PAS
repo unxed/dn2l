@@ -51,6 +51,7 @@ unit DNApp;
 interface
 
 uses
+  vp2fp,
   Defines, Objects2, Streams, Drivers, Memory, Views, Menus,
   Dialogs, RStrings, Commands, xTime, Collect
   , Startup, Startupp
@@ -360,7 +361,7 @@ constructor TBackground.Load(var S: TStream);
   S.Read(Pattern, SizeOf(Pattern));
   end;
 
-procedure TBackground.Draw;
+procedure TBackground.Draw ;
   var
     B, B1: TDrawBuffer;
     I, H, Src: Integer;
@@ -433,7 +434,7 @@ function Tileable(P: PView): Boolean;
       (P^.State and sfVisible <> 0);
   end;
 
-procedure TDesktop.Clear;
+procedure TDesktop.Clear ;
   procedure CloseView(P: PView);
     begin
     Message(P, evCommand, cmClose, nil)
@@ -583,7 +584,7 @@ procedure TDesktop.HandleEvent(var Event: TEvent);
     end;
   end { TDesktop.HandleEvent };
 
-procedure TDesktop.InitBackground;
+procedure TDesktop.InitBackground ;
   var
     R: TRect;
   begin
@@ -592,6 +593,10 @@ procedure TDesktop.InitBackground;
   end;
 
 function ISqr(X: Integer): Integer;
+begin
+end;
+// fixme: porting stub
+(*
   assembler;
   {&Frame-} {$USES EBX, ECX}
 asm
@@ -605,13 +610,16 @@ asm
         MOV     EAX,EBX
         DEC     EAX
 end;
+*)
 
 procedure MostEqualDivisors(N: Integer; var X, Y: Integer;
      FavorY: Boolean);
   var
     I: Integer;
   begin
-  I := ISqr(N);
+  //I := ISqr(N);
+  I := Sqr(N);
+  // fixme: porting stub
   if  ( (N mod I) <> 0) then
     if  (N mod (I+1)) = 0 then
       Inc(I);
@@ -713,13 +721,13 @@ procedure TDesktop.Tile(var R: TRect);
     end;
   end { TDesktop.Tile };
 
-procedure TDesktop.TileError;
+procedure TDesktop.TileError ;
   begin
   end;
 
 { TProgram }
 
-constructor TProgram.Init;
+constructor TProgram.Init ;
   var
     R: TRect;
   begin
@@ -748,7 +756,7 @@ constructor TProgram.Init;
   NewTimer(IdleSecs, 0);
   end { TProgram.Init };
 
-destructor TProgram.Done;
+destructor TProgram.Done ;
   begin
   if MenuBar <> nil then
     Dispose(MenuBar, Done);
@@ -795,7 +803,8 @@ procedure ExecExit;
     begin
     TottalExit := True;
     Application^.Done;
-    SysTVInitCursor;
+    // fixme: porting stub
+    //SysTVInitCursor;
     Halt(0);
     end
   else
@@ -803,7 +812,7 @@ procedure ExecExit;
   end;
 
 {$IFDEF SS}
-procedure TProgram.InsertIdler;
+procedure TProgram.InsertIdler ;
   begin
   if {$IFDEF OS2}PMWindowed or {$ENDIF}(SkyEnabled > 0)
      or SaversData.Mouse and
@@ -816,7 +825,7 @@ procedure TProgram.InsertIdler;
   InsertIdlerN(Random(SaversData.Selected.List^.Count));
   end;
 
-procedure TProgram.InsertIdlerN;
+procedure TProgram.InsertIdlerN (N: Integer);
   var
     I: Integer;
     S: String;
@@ -860,7 +869,7 @@ procedure TProgram.InsertIdlerN;
     end;
   end { TProgram.InsertIdlerN };
 
-procedure TProgram.InsertAvIdlerN;
+procedure TProgram.InsertAvIdlerN (Data: TSaversData; n: Integer);
   var
     I: Integer;
     S: String;
@@ -922,7 +931,9 @@ procedure TProgram.GetEvent(var Event: TEvent);
   label 11;
   begin
 11:
-  ShiftState := SysTVGetShiftState;
+  //ShiftState := SysTVGetShiftState;
+  ShiftState := 0;
+  // fixme: porting stub
   if EventsLen > 0 then
     begin
     Event := EventQueue[1];
@@ -1062,7 +1073,7 @@ function TProgram.GetPalette: PPalette;
   GetPalette := @SystemColors[appPalette];
   end;
 
-procedure TProgram.Redraw;
+procedure TProgram.Redraw ;
   begin
   if  (Size.X <> ScreenWidth) or (Size.Y <> ScreenHeight) then
     GrowTo(ScreenWidth, ScreenHeight)
@@ -1093,7 +1104,7 @@ procedure TProgram.HandleEvent(var Event: TEvent);
       end;
   end;
 
-procedure TProgram.Idle;
+procedure TProgram.Idle ;
   var
     P: PView;
     E: TEvent;
@@ -1113,7 +1124,7 @@ procedure TProgram.Idle;
     end;
   end;
 
-procedure TProgram.InitDesktop;
+procedure TProgram.InitDesktop ;
   var
     R: TRect;
   begin
@@ -1125,7 +1136,7 @@ procedure TProgram.InitDesktop;
   New(Desktop, Init(R));
   end;
 
-procedure TProgram.InitMenuBar;
+procedure TProgram.InitMenuBar ;
   var
     R: TRect;
   begin
@@ -1134,7 +1145,7 @@ procedure TProgram.InitMenuBar;
   MenuBar := New(PMenuBar, Init(R, nil));
   end;
 
-procedure TProgram.InitScreen;
+procedure TProgram.InitScreen ;
   begin
   if ScreenMode <> smMono then
     begin
@@ -1157,7 +1168,7 @@ procedure TProgram.InitScreen;
     end;
   end;
 
-procedure TProgram.InitStatusLine;
+procedure TProgram.InitStatusLine ;
   var
     R: TRect;
   begin
@@ -1169,7 +1180,7 @@ procedure TProgram.InitStatusLine;
           nil), nil)));
   end;
 
-procedure TProgram.InitCommandLine;
+procedure TProgram.InitCommandLine ;
   begin
   end;
 
@@ -1193,7 +1204,7 @@ function TProgram.InsertWindow(P: PWindow): PWindow;
   Idle;
   end;
 
-procedure TProgram.ActivateView;
+procedure TProgram.ActivateView (P: PView);
   var
     EV: TEvent;
     PP: TPoint;
@@ -1208,7 +1219,7 @@ procedure TProgram.ActivateView;
   EV.Buttons := mbRightButton; {PutEvent(EV);}
   end;
 
-procedure TProgram.OutOfMemory;
+procedure TProgram.OutOfMemory ;
   begin
   end;
 
@@ -1223,7 +1234,7 @@ procedure TProgram.PutEvent(var Event: TEvent);
   EventQueue[EventsLen] := Event;
   end;
 
-procedure TProgram.Run;
+procedure TProgram.Run ;
   begin
   Execute;
   end;
@@ -1286,7 +1297,7 @@ function TProgram.ValidView(P: PView): PView;
 
 { TApplication }
 
-constructor TApplication.Init;
+constructor TApplication.Init ;
   begin
   InitMemory;
   InitVideo;
@@ -1295,7 +1306,7 @@ constructor TApplication.Init;
   TProgram.Init;
   end;
 
-destructor TApplication.Done;
+destructor TApplication.Done ;
   begin
   if LStringList <> nil then
     Dispose(LStringList, Done);
@@ -1314,7 +1325,7 @@ destructor TApplication.Done;
   DoneMemory;
   end;
 
-procedure TApplication.ShowUserScreen;
+procedure TApplication.ShowUserScreen ;
   var
     PV: PView;
     R: TRect;
@@ -1336,7 +1347,7 @@ procedure TApplication.ShowUserScreen;
   PV^.Free;
   end { TApplication.ShowUserScreen };
 
-procedure TApplication.WhenShow;
+procedure TApplication.WhenShow ;
   var
     Event: TEvent;
   begin
@@ -1348,7 +1359,7 @@ procedure TApplication.WhenShow;
   ClearEvent(Event);
   end;
 
-procedure TApplication.Cascade;
+procedure TApplication.Cascade ;
   var
     R: TRect;
   begin
@@ -1394,7 +1405,7 @@ procedure TApplication.HandleEvent(var Event: TEvent);
   end {case};
   end { TApplication.HandleEvent };
 
-procedure TApplication.Tile;
+procedure TApplication.Tile ;
   var
     R: TRect;
   begin
@@ -1406,7 +1417,8 @@ procedure TApplication.Tile;
 procedure ResourceFail(const S: String);
   begin
   Writeln('Could not open resource file ('+S+')');
-  SysTVInitCursor;
+  // fixme: porting stub
+  //SysTVInitCursor;
   Halt(219);
   end;
 
@@ -1433,7 +1445,7 @@ function OpenResourceStream(Ext: ExtStr): PBufStream;
   OpenResourceStream := PS;
   end { OpenResourceStream };
 
-procedure OpenResource;
+procedure OpenResource ;
   begin
   if Resource <> nil then
     Exit;
@@ -1512,7 +1524,7 @@ function ExecResource(Key: TDlgIdx; var Data): Word;
   end;
 
 
-function LoadResource;
+function LoadResource (Key: TDlgIdx): PObject;
   begin
   LoadResource := nil;
   OpenResource;
@@ -1521,7 +1533,7 @@ function LoadResource;
   LoadResource := Resource^.Get(Key);
   end;
 
-function GlobalMessage;
+function GlobalMessage (What, Command: Word; InfoPtr: Pointer): Pointer;
 
   var
     Event: TEvent;
@@ -1547,7 +1559,7 @@ function GlobalMessage;
   GlobalMessage := Ptr;
   end { GlobalMessage };
 
-function GlobalMessageL;
+function GlobalMessageL (What, Command: Word; InfoLng: LongInt): Pointer;
 
   var
     Event: TEvent;
@@ -1573,7 +1585,7 @@ function GlobalMessageL;
   GlobalMessageL := Ptr;
   end { GlobalMessageL };
 
-procedure GlobalEvent;
+procedure GlobalEvent (What, Command: Word; InfoPtr: Pointer);
 
   var
     Event: TEvent;
@@ -1600,7 +1612,7 @@ var
   V: PView;
   Event: TEvent;
 
-function ViewPresent;
+function ViewPresent (Command: Word; InfoPtr: Pointer): PView;
 
   procedure FAction(View: PView);
     begin
@@ -1646,7 +1658,7 @@ procedure UpdateWriteView(P: Pointer);
     end;
   end { UpdateWriteView };
 
-function WriteMsg;
+function WriteMsg (Text: String): PView;
   var
     W: PWriteWin;
     R: TRect;
@@ -1671,7 +1683,7 @@ function WriteMsg;
   WriteMsg := W;
   end { WriteMsg };
 
-procedure ForceWriteShow;
+procedure ForceWriteShow (P: Pointer);
   begin
   if P = nil then
     Exit;
@@ -1679,7 +1691,7 @@ procedure ForceWriteShow;
   UpdateWriteView(P);
   end;
 
-function _WriteMsg;
+function _WriteMsg (const Text: String): PView;
   var
     W: PWriteWin;
   begin
@@ -1723,7 +1735,7 @@ procedure InitLngStream;
 
   end { InitLngStream };
 
-function GetString;
+function GetString (Index: TStrIdx): String;
   var
     S: String;
     I: Integer;
