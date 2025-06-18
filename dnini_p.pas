@@ -58,6 +58,7 @@ unit DnIni_p;
 interface
 
 uses
+  LFNVp,
   Commands, DnIni
   ;
 
@@ -82,7 +83,8 @@ implementation
 uses
   Dos, Lfn, profile, Advance, Advance1, Collect, Messages, DNApp,
   {$IFDEF WIN32}VpSysLow, {$ENDIF}
-  U_KeyMap, Country_,
+  U_KeyMap,
+  //Country_,
   Strings, Streams, Advance2
   ;
 
@@ -165,7 +167,7 @@ procedure AddIniError(Size: Byte; Group: PChar; Parameter: PChar);
   IniErrors^.Insert(p);
   end;
 
-procedure ShowIniErrors;
+procedure ShowIniErrors ;
 
   procedure Show(P: Pointer);
     type
@@ -214,7 +216,7 @@ procedure ShowIniErrors;
     end;
   end { ShowIniErrors };
 
-procedure ClearIniErrors;
+procedure ClearIniErrors ;
   begin
   if IniErrors <> nil then
     begin
@@ -365,8 +367,9 @@ procedure Proceed(RegisterVar: TDoProc);
      @ShowExePaths); {JO}
   RegisterVar(CSTaskList, 'FilteredList', ikBool, SizeOf(FilteredList),
      @FilteredList); {JO}
-  RegisterVar(CSTaskList, 'UserTaskFilter', ikStr,
-     SizeOf(UserTaskFilter), @UserTaskFilter); {JO}
+// fixme: porting stub
+//  RegisterVar(CSTaskList, 'UserTaskFilter', ikStr,
+//     SizeOf(UserTaskFilter), @UserTaskFilter); {JO}
   {Language}
   RegisterVar(CSLanguage, 'ActiveLanguage', ikStr,
      SizeOf(ActiveLanguage), @ActiveLanguage);
@@ -689,10 +692,10 @@ procedure Saver(Group, Parameter: PChar; Kind: TIniItemKind; Size: Word;
     );
   end { Saver };
 
-procedure LoadDnIniSettings;
+procedure LoadDnIniSettings ;
   begin
   FreeStr := DnIniFileName+#0;
-  Proceed(Loader);
+  Proceed(@Loader);
   CloseProfile;
   end;
 
@@ -700,11 +703,11 @@ procedure SaveDnIniSettings(PVar: Pointer);
   begin
   SaveVar := PVar;
   FreeStr := DnIniFileName+#0;
-  Proceed(Saver);
+  Proceed(@Saver);
   CloseProfile;
   end;
 
-procedure DoneIniEngine;
+procedure DoneIniEngine ;
   begin
   CloseProfile;
   INIModified := True;
