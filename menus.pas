@@ -1212,13 +1212,13 @@ constructor TMenuBar.Init(var Bounds: TRect; AMenu: PMenu);
   Options := Options or ofPreProcess;
   end;
 
-destructor TMenuBar.Done;
+destructor TMenuBar.Done ;
   begin
   TMenuView.Done;
   DisposeMenu(Menu);
   end;
 
-procedure TMenuBar.Draw;
+procedure TMenuBar.Draw ;
   var
     X, L: Integer;
     CNormal, CSelect, CNormDisabled, CSelDisabled, Color: Word;
@@ -1301,7 +1301,7 @@ constructor TMenuBox.Init(var Bounds: TRect; AMenu: PMenu;
   ComboBoxPal := False;
   end;
 
-procedure TMenuBox.Draw;
+procedure TMenuBox.Draw ;
   var
     CNormal, CSelect, CNormDisabled, CSelDisabled, Color: Word;
     Y: Integer;
@@ -1420,7 +1420,7 @@ procedure TMenuBox.Draw;
           Color := CSelect;
         FrameLine(10);
         MoveCStr(B[3], P^.Name^, Color);
-        if (P = Menu.Default) and (ParentMenu <> nil) and
+        if (P = Menu^.Default) and (ParentMenu <> nil) and
           (ParentMenu^.Current^.Flags and miExecDefault <> 0)
         then { помечаем алмазиком пункт, который выполняется по
           Enter на пункте родительского меню }
@@ -1640,7 +1640,7 @@ constructor TStatusLine.Load(var S: TStream);
   FindItems;
   end { TStatusLine.Load };
 
-destructor TStatusLine.Done;
+destructor TStatusLine.Done ;
   var
     T: PStatusDef;
 
@@ -1668,7 +1668,7 @@ destructor TStatusLine.Done;
   TView.Done;
   end { TStatusLine.Done };
 
-procedure TStatusLine.Draw;
+procedure TStatusLine.Draw ;
   begin
   DrawSelect(nil);
   end;
@@ -1745,7 +1745,7 @@ procedure TStatusLine.DrawSelect(Selected: PStatusItem);
   WriteLine(0, 0, Size.X, 1, B);
   end { TStatusLine.DrawSelect };
 
-procedure TStatusLine.FindItems;
+procedure TStatusLine.FindItems ;
   var
     P: PStatusDef;
   begin
@@ -1928,7 +1928,7 @@ procedure TStatusLine.Store(var S: TStream);
   DoStoreStatusDefs(Defs);
   end { TStatusLine.Store };
 
-procedure TStatusLine.Update;
+procedure TStatusLine.Update ;
   var
     H: Word;
     P: PView;

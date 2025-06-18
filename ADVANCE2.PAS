@@ -51,6 +51,7 @@ unit Advance2; {File related functions}
 interface
 
 uses
+  math,
   vp2fp,
   LFNVp,
   Defines, Advance, Views
@@ -135,9 +136,9 @@ function GetName(const S: String): String;
 function GetSName(const S: String): String;
   {` Имя без расширения `}
 function GetAttrStr(Attr: Word): Str6;
-//{$IFDEF DualName}
+{$IFDEF DualName}
 function GetShortRelPath(Path: String): String;
-//{$ENDIF}
+{$ENDIF}
 function GetLongRelPath(Path: String): String;
 
 {-DataCompBoy-}
@@ -383,8 +384,11 @@ TryDel:
       lEraseFile(F);
       end;
     else {case}
-      if SysErrorFunc(rc, Byte(N[1])-Byte('A')) = 1 then
-        goto TryDel;
+      begin
+      end;
+      // fixme: porting stub
+      //if SysErrorFunc(rc, Byte(N[1])-Byte('A')) = 1 then
+      //  goto TryDel;
   end {case};
   ClrIO;
   end { EraseFile };
@@ -1344,6 +1348,7 @@ function CompareFiles(const N1, N2: String): Boolean;
     B: Boolean;
     I: LongInt;
   begin
+  (*
   CompareFiles := False;
   B := False;
   B1 := nil;
@@ -1400,6 +1405,8 @@ Finish:
     FreeMem(B2, BufSize);
   S1.Done;
   S2.Done;
+  *)
+  // fixme: porting stub
   end { CompareFiles };
 
 procedure MakeSlash(var S: String);

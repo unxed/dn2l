@@ -589,6 +589,8 @@ uses
 
 const
   Numbers: AWord = 0;
+
+(*
 function GetNum: AInt;
   assembler;
 asm
@@ -615,6 +617,25 @@ asm
  pop bx
  pop cx
 end;
+*)
+// fixme: porting stub
+function GetNum: AInt;
+var
+  i: Integer;
+  Mask: Word;
+begin
+  for i := 0 to 9 do
+  begin
+    Mask := 1 shl i;
+    if (Numbers and Mask) = 0 then
+    begin
+      Numbers := Numbers or Mask;
+      Exit(i);
+    end;
+  end;
+  Result := 0; // если ничего не нашли — вернём 0
+end;
+
 
 type
   PFixupList = ^TFixupList;

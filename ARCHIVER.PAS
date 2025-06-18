@@ -836,11 +836,12 @@ procedure MakeArchive (S: String; Files: PCollection;
       while (DosError = 0) and not Abort {and (Length(S) < 100)} do
         begin
         {$IFNDEF OS2}
-        if Arc^.UseLFN
-        then
-          S1 := GetLongRelPath(MakeNormName(SS, SR.FullName))
-        else
-          S1 := GetShortRelPath(MakeNormName(SS, SR.SR.Name));
+        //if Arc^.UseLFN
+        //then
+          S1 := GetLongRelPath(MakeNormName(SS, SR.FullName));
+        //else
+        //  S1 := GetShortRelPath(MakeNormName(SS, SR.SR.Name));
+        // fixme: porting stub
         {$ELSE}
         S1 := GetLongRelPath(MakeNormName(SS, SR.FullName));
         {$ENDIF}
@@ -898,6 +899,10 @@ procedure MakeArchive (S: String; Files: PCollection;
       PF := Files^.At(I);
       if PathFoundInArc(PF^.Owner^) then
         Continue; {JO}
+
+
+      S1 := GetLongRelPath(MakeNormName(PF^.Owner^, PF^.FlName[True]));
+      (*
       {$IFNDEF OS2}
       if Arc^.UseLFN
       then
@@ -908,6 +913,9 @@ procedure MakeArchive (S: String; Files: PCollection;
         S1 := GetShortRelPath(MakeNormName(PF^.Owner^, PF^.FlName[True]))
           {$ENDIF}
           ;
+      *)
+      // fixme: porting stub
+
       {JO:  используем символ #$14 для временного разделения имён файлов}
       if PF^.Attr and Directory = 0
       then
