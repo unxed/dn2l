@@ -1,2 +1,2 @@
 # dn2l
-dos navigator open source linux port tryouts
+Discontinued in favor of https://github.com/unxed/dn/
